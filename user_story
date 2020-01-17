@@ -1,0 +1,39 @@
+Différents rôles (du plus bas au plus haut) :
+	- Soldat
+	- CDG
+	- CDS
+	- Admin
+
+Actions Soldat :
+	-> accéder à son espace personnel
+	-> modifier son profil
+	-> accéder au différents cours
+	-> voir la liste des evenements à venir
+	-> se rendre disponible ou pas pour un event
+	-> voir les evenements précedents
+	-> voir ses participations
+	-> changer sa disponibilité à un evenement
+	-> voir son CDG et CDS
+	-> accéder au mail et telephone de son CDG / CDS
+	
+Action CDG / CDS
+	-> ajouter ou supprimer des cours
+	-> ajouter un nouvelle evenement
+	-> modifier un evenement
+	-> voir la liste de leur groupe / section
+	-> accéder au contact (mail / telephone) de leur groupe / section
+	-> supprimer ou ajouter un soldat dans leur groupe / section
+	-> voir les present / non present aux evenements
+	-> valider la participation si mission
+	
+Un evenement :
+	-> un type : WE instruction / excercice / stage / mission
+	-> un nom
+	-> une description
+	-> date de début
+	-> date de fin
+	-> effectif si mission ou stage
+	-> date limite de réponse
+	-> durée minimum si mission
+	-> un patracDR (modifiable)
+	
