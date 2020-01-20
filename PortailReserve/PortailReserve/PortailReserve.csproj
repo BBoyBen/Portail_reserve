@@ -191,10 +191,37 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="DAL\IAdresseDal.cs" />
+    <Compile Include="DAL\ICoursDal.cs" />
+    <Compile Include="DAL\IDisponibiliteDal.cs" />
+    <Compile Include="DAL\IEffectifDal.cs" />
+    <Compile Include="DAL\IEvenementDal.cs" />
+    <Compile Include="DAL\IGroupeDal.cs" />
+    <Compile Include="DAL\Impl\AdresseDal.cs" />
+    <Compile Include="DAL\Impl\CoursDal.cs" />
+    <Compile Include="DAL\Impl\DisponibiliteDal.cs" />
+    <Compile Include="DAL\Impl\EffectifDal.cs" />
+    <Compile Include="DAL\Impl\EvenementDal.cs" />
+    <Compile Include="DAL\Impl\GroupeDal.cs" />
+    <Compile Include="DAL\Impl\ParticipationDal.cs" />
+    <Compile Include="DAL\Impl\SectionDal.cs" />
+    <Compile Include="DAL\Impl\UtilisateurDal.cs" />
+    <Compile Include="DAL\IParticipationDal.cs" />
+    <Compile Include="DAL\ISectionDal.cs" />
+    <Compile Include="DAL\IUtilisateurDal.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Adresse.cs" />
     <Compile Include="Models\BddContext.cs" />
+    <Compile Include="Models\Cours.cs" />
+    <Compile Include="Models\Disponibilite.cs" />
+    <Compile Include="Models\Effectif.cs" />
+    <Compile Include="Models\Evenement.cs" />
+    <Compile Include="Models\Groupe.cs" />
+    <Compile Include="Models\Participation.cs" />
+    <Compile Include="Models\Section.cs" />
+    <Compile Include="Models\Utilisateur.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -336,7 +363,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Images\" />
-    <Folder Include="DAL\Impl\" />
     <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>
