@@ -128,3 +128,7 @@ D:\Developpement\Portail_reserve\PortailReserve\PortailReserve\obj\Debug\Portail
 D:\Developpement\Portail_reserve\PortailReserve\PortailReserve\obj\Debug\PortailReserve.csproj.CopyComplete
 D:\Developpement\Portail_reserve\PortailReserve\PortailReserve\obj\Debug\PortailReserve.dll
 D:\Developpement\Portail_reserve\PortailReserve\PortailReserve\obj\Debug\PortailReserve.pdb
+D:\Developpement\Portail_reserve\PortailReserve\PortailReserve\bin\EntityFramework.dll
+D:\Developpement\Portail_reserve\PortailReserve\PortailReserve\bin\EntityFramework.SqlServer.dll
+D:\Developpement\Portail_reserve\PortailReserve\PortailReserve\bin\EntityFramework.xml
+D:\Developpement\Portail_reserve\PortailReserve\PortailReserve\bin\EntityFramework.SqlServer.xml

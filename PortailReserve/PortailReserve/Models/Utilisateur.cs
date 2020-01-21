@@ -17,5 +17,6 @@ namespace PortailReserve.Models
         public String MotDePasse { get; set; }
         public long Id_Groupe { get; set; }
         public int Role { get; set; }
+        public bool PremiereCo { get; set; }
     }
 }
