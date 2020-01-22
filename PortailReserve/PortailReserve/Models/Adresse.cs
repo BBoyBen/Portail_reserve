@@ -8,9 +8,9 @@ namespace PortailReserve.Models
     public class Adresse
     {
         public long Id { get; set; }
-        public String Voie { get; set; }
-        public String CodePostal { get; set; }
-        public String Ville { get; set; }
-        public String Pays { get; set; }
+        public string Voie { get; set; }
+        public string CodePostal { get; set; }
+        public string Ville { get; set; }
+        public string Pays { get; set; }
     }
 }

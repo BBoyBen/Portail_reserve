@@ -11,7 +11,7 @@ namespace PortailReserve.Models
         public int Numero { get; set; }
         public long CDS { get; set; }
         public long SOA { get; set; }
-        public String Chant { get; set; }
-        public String Devise { get; set; }
+        public string Chant { get; set; }
+        public string Devise { get; set; }
     }
 }

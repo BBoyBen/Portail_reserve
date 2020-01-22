@@ -10,10 +10,11 @@ namespace PortailReserve.DAL
     public interface IUtilisateurDal : IDisposable
     {
         Utilisateur GetUtilisateurById(long id);
+        Utilisateur GetUtilisateurByMatricule(string matricule);
         List<Utilisateur> GetUtilisateursByGroupe(long id_groupe);
-        Utilisateur Authentifier(String matricule, String motDePasse);
-        int ChangerMotDePasse(long id, String old_mdp, String new_mdp);
-        int MotDePassePerdu(long id, String nom, String matricule);
+        Utilisateur Authentifier(string matricule, string motDePasse);
+        int ChangerMotDePasse(long id, string old_mdp, string new_mdp);
+        int MotDePassePerdu(long id, string nom, string matricule);
         int ModifierUtilisateur(long id, Utilisateur utilisateur);
         int PremiereCoOk(long id);
         int PremiereCoKO(long id);

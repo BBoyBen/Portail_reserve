@@ -9,7 +9,7 @@ namespace PortailReserve.Models
     {
         public long Id { get; set; }
         public long Id_Message { get; set; }
-        public String Texte { get; set; }
+        public string Texte { get; set; }
         public DateTime Date { get; set; }
     }
 }

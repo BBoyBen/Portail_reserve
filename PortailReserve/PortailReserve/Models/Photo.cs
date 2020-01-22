@@ -9,7 +9,7 @@ namespace PortailReserve.Models
     {
         public long Id { get; set; }
         public long Id_Album { get; set; }
-        public String Fichier { get; set; }
+        public string Fichier { get; set; }
         public DateTime Ajout { get; set; }
     }
 }

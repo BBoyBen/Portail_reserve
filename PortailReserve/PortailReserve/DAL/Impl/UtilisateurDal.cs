@@ -19,6 +19,7 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
+                utilisateur.MotDePasse = Utils.Utils.EncodeSHA256(utilisateur.MotDePasse);
                 bdd.Utilisateurs.Add(utilisateur);
                 bdd.SaveChanges();
 
@@ -32,7 +33,7 @@ namespace PortailReserve.DAL.Impl
 
         public Utilisateur Authentifier(string matricule, string motDePasse)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public int ChangerMotDePasse(long id, string old_mdp, string new_mdp)
@@ -54,6 +55,19 @@ namespace PortailReserve.DAL.Impl
             }catch(Exception e)
             {
                 Console.WriteLine("Erreur récupération utilisateurs par id : " + id + " -> " + e);
+                return null;
+            }
+        }
+
+        public Utilisateur GetUtilisateurByMatricule(string matricule)
+        {
+            try
+            {
+                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Matricule.Equals(matricule));
+                return utilisateur;
+            }catch(Exception e)
+            {
+                Console.WriteLine("Erreur récupération utilisateur par matricule : " + matricule + " -> " + e);
                 return null;
             }
         }
