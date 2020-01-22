@@ -63,8 +63,12 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Matricule.Equals(matricule));
-                return utilisateur;
+                if (Utils.Utils.ValideMatricule(matricule))
+                {
+                    Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Matricule.Equals(matricule));
+                    return utilisateur;
+                }
+                return null;
             }catch(Exception e)
             {
                 Console.WriteLine("Erreur récupération utilisateur par matricule : " + matricule + " -> " + e);
@@ -74,7 +78,15 @@ namespace PortailReserve.DAL.Impl
 
         public List<Utilisateur> GetUtilisateursByGroupe(long id_groupe)
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<Utilisateur> utilisateurs = bdd.Utilisateurs.Where(u => u.Id_Groupe == id_groupe).ToList();
+                return utilisateurs;
+            }catch(Exception e)
+            {
+                Console.WriteLine("Erreur récupération utilisateur par id groupe : " + id_groupe + " -> " + e);
+                return new List<Utilisateur>();
+            }
         }
 
         public int ModifierUtilisateur(long id, Utilisateur utilisateur)

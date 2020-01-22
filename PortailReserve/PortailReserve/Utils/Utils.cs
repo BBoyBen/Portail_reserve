@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace PortailReserve.Utils
@@ -17,7 +18,8 @@ namespace PortailReserve.Utils
 
         public static bool ValideMatricule(string matricule)
         {
-            return true;
+            Regex rgx = new Regex(@"^[0-9]{10}$");
+            return rgx.IsMatch(matricule);
         }
     }
 }
