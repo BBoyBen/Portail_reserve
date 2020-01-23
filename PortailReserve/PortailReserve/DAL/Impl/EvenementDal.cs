@@ -51,37 +51,142 @@ namespace PortailReserve.DAL.Impl
 
         public Evenement GetEvenementById(long id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Evenement evenement = bdd.Evenements.FirstOrDefault(e => e.Id == id);
+                return evenement;
+            }catch(Exception e)
+            {
+                Console.WriteLine("Erreur récupération de l'evenement id : " + id + " -> " + e);
+                return null;
+            }
         }
 
         public List<Evenement> GetEvenementsAVenir()
         {
-            throw new NotImplementedException();
+            try
+            {
+                DateTime today = DateTime.Today;
+                List<Evenement> aVenir = new List<Evenement>();
+
+                foreach(Evenement e in bdd.Evenements)
+                {
+                    int ecart = DateTime.Compare(today, e.Debut);
+                    if (ecart < 0)
+                        aVenir.Add(e);
+                }
+
+                return aVenir;
+            }catch(Exception e)
+            {
+                Console.WriteLine("Erreur récupération des evenements à venir -> " + e);
+                return new List<Evenement>();
+            }
         }
 
         public List<Evenement> GetEvenementsByType(string type)
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<Evenement> byType = bdd.Evenements.Where(e => e.Type.Equals(type)).ToList();
+                return byType;
+            }catch(Exception e)
+            {
+                Console.WriteLine("Erreur récupération des evenements du type : " + type + " -> " + e);
+                return new List<Evenement>();
+            }
         }
 
         public List<Evenement> GetEvenementsPasse()
         {
-            throw new NotImplementedException();
+            try
+            {
+                DateTime today = DateTime.Today;
+                List<Evenement> passe = new List<Evenement>();
+
+                foreach(Evenement e in bdd.Evenements)
+                {
+                    int ecart = DateTime.Compare(today, e.Fin);
+                    if (ecart >= 0)
+                        passe.Add(e);
+                }
+                return passe;
+            }catch(Exception e)
+            {
+                Console.WriteLine("Erreur récupération des evenements passe -> " + e);
+                return new List<Evenement>();
+            }
         }
 
         public Evenement GetProchainEvenement()
         {
-            throw new NotImplementedException();
+            try
+            {
+                DateTime today = DateTime.Today;
+                List<Evenement> aVenir = GetEvenementsAVenir();
+                Evenement evenement = aVenir.ElementAt(0);
+
+                for(int i = 1; i<aVenir.Count; i++)
+                {
+                    if (DateTime.Compare(evenement.Debut, aVenir.ElementAt(i).Debut) > 0)
+                        evenement = aVenir.ElementAt(i);
+                }
+
+                return evenement;
+
+            }catch(Exception e)
+            {
+                Console.WriteLine("Erreur récupération du prochain evenement -> " + e);
+                return null;
+            }
         }
 
         public int ModifierEvenement(long id, Evenement evenement)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Evenement toModify = bdd.Evenements.FirstOrDefault(e => e.Id == id);
+                if (toModify == null)
+                    return 0;
+
+                toModify.Debut = evenement.Debut;
+                toModify.Description = evenement.Description;
+                toModify.Duree = evenement.Duree;
+                toModify.Effectif = evenement.Effectif;
+                toModify.Fin = evenement.Fin;
+                toModify.Lieu = evenement.Lieu;
+                toModify.LimiteReponse = evenement.LimiteReponse;
+                toModify.Nom = evenement.Nom;
+                toModify.Patracdr = evenement.Patracdr;
+                toModify.Type = evenement.Type;
+
+                bdd.SaveChanges();
+
+                return 1;
+            }catch(Exception e)
+            {
+                Console.WriteLine("Erreur modification evenement -> " + e);
+                return -1;
+            }
         }
 
         public int SupprimerEvenement(long id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Evenement evenement = bdd.Evenements.FirstOrDefault(e => e.Id == id);
+                if (evenement == null)
+                    return 0;
+
+                bdd.Evenements.Remove(evenement);
+                bdd.SaveChanges();
+
+                return 1;
+            }catch(Exception e)
+            {
+                Console.WriteLine("Erreur suppression evenement id : " + id + " -> " + e);
+                return -1;
+            }
         }
     }
 }
