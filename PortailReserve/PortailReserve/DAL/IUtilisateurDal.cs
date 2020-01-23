@@ -11,10 +11,10 @@ namespace PortailReserve.DAL
     {
         Utilisateur GetUtilisateurById(long id);
         Utilisateur GetUtilisateurByMatricule(string matricule);
-        List<Utilisateur> GetUtilisateursByGroupe(long id_groupe);
+        List<Utilisateur> GetUtilisateursByGroupe(long idGroupe);
         Utilisateur Authentifier(string matricule, string motDePasse);
-        int ChangerMotDePasse(long id, string old_mdp, string new_mdp);
-        int MotDePassePerdu(long id, string nom, string matricule);
+        int ChangerMotDePasse(long id, string oldMdp, string nouvMdp, string nouvMdpBis);
+        int MotDePassePerdu(string nom, string matricule, DateTime naissance);
         int ModifierUtilisateur(long id, Utilisateur utilisateur);
         int PremiereCoOk(long id);
         int PremiereCoKO(long id);

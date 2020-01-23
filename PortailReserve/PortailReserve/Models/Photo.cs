@@ -8,7 +8,7 @@ namespace PortailReserve.Models
     public class Photo
     {
         public long Id { get; set; }
-        public long Id_Album { get; set; }
+        public Album Album { get; set; }
         public string Fichier { get; set; }
         public DateTime Ajout { get; set; }
     }

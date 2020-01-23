@@ -9,8 +9,8 @@ namespace PortailReserve.Models
     {
         public long Id { get; set; }
         public int Numero { get; set; }
-        public long CDS { get; set; }
-        public long SOA { get; set; }
+        public Utilisateur CDS { get; set; }
+        public Utilisateur SOA { get; set; }
         public string Chant { get; set; }
         public string Devise { get; set; }
     }

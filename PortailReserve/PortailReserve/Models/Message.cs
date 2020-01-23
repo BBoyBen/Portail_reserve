@@ -8,8 +8,8 @@ namespace PortailReserve.Models
     public class Message
     {
         public long Id { get; set; }
-        public long Id_Utilisateur { get; set; }
-        public long Id_Evenement { get; set; }
+        public Utilisateur Utilisateur { get; set; }
+        public Utilisateur Evenement { get; set; }
         public string Texte { get; set; }
         public DateTime Date { get; set; }
     }

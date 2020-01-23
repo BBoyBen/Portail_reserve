@@ -8,8 +8,8 @@ namespace PortailReserve.Models
     public class Disponibilite
     {
         public long Id { get; set; }
-        public long Id_Evenement { get; set; }
-        public long Id_Utilisateur { get; set; }
+        public Evenement Evenement { get; set; }
+        public Utilisateur Utilisateur { get; set; }
         public bool TouteLaPeriode { get; set; }
         public DateTime Debut { get; set; }
         public DateTime Fin { get; set; }

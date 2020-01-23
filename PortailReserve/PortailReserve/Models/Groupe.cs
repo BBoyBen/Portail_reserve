@@ -8,8 +8,8 @@ namespace PortailReserve.Models
     public class Groupe
     {
         public long Id { get; set; }
-        public long Id_Section { get; set; }
+        public Section Section { get; set; }
         public int Numero { get; set; }
-        public long CDG { get; set; }
+        public Utilisateur CDG { get; set; }
     }
 }

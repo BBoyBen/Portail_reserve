@@ -33,12 +33,44 @@ namespace PortailReserve.DAL.Impl
 
         public Utilisateur Authentifier(string matricule, string motDePasse)
         {
-            return null;
+            try
+            {
+                String encodeMdp = Utils.Utils.EncodeSHA256(motDePasse);
+                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.MotDePasse.Equals(encodeMdp) && u.Matricule.Equals(matricule));
+
+                return utilisateur;
+            }catch(Exception e)
+            {
+                Console.WriteLine("Erreur authentification matricule : " + matricule + " -> " + e);
+                return null;
+            }
         }
 
-        public int ChangerMotDePasse(long id, string old_mdp, string new_mdp)
+        public int ChangerMotDePasse(long id, string old_mdp, string nouvMdp, string nouvMdpBis)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (!nouvMdp.Equals(nouvMdpBis))
+                    return 0;
+
+                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id == id);
+                if (utilisateur == null)
+                    return -1;
+
+                string encodeOldMdp = Utils.Utils.EncodeSHA256(old_mdp);
+                if (!utilisateur.MotDePasse.Equals(encodeOldMdp))
+                    return -2;
+
+                string encodeNewMdp = Utils.Utils.EncodeSHA256(nouvMdp);
+                utilisateur.MotDePasse = encodeNewMdp;
+                bdd.SaveChanges();
+
+                return 1;
+            }catch (Exception e)
+            {
+                Console.WriteLine("Erreur changement de mot de mot pour l'utilisateur : " + id + " -> " + e);
+                return -10;
+            }
         }
 
         public void Dispose()
@@ -76,42 +108,121 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public List<Utilisateur> GetUtilisateursByGroupe(long id_groupe)
+        public List<Utilisateur> GetUtilisateursByGroupe(long idGroupe)
         {
             try
             {
-                List<Utilisateur> utilisateurs = bdd.Utilisateurs.Where(u => u.Id_Groupe == id_groupe).ToList();
+                List<Utilisateur> utilisateurs = bdd.Utilisateurs.Where(u => u.Groupe.Id == idGroupe).ToList();
                 return utilisateurs;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération utilisateur par id groupe : " + id_groupe + " -> " + e);
+                Console.WriteLine("Erreur récupération utilisateur par id groupe : " + idGroupe + " -> " + e);
                 return new List<Utilisateur>();
             }
         }
 
         public int ModifierUtilisateur(long id, Utilisateur utilisateur)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Utilisateur util = bdd.Utilisateurs.FirstOrDefault(u => u.Id == id);
+                if (util == null)
+                    return 0;
+
+                util.Nom = utilisateur.Nom;
+                util.Prenom = utilisateur.Prenom;
+                util.Grade = utilisateur.Grade;
+                util.Matricule = utilisateur.Grade;
+                util.Naissance = utilisateur.Naissance;
+                util.Telephone = utilisateur.Telephone;
+                util.Email = utilisateur.Email;
+                util.Adresse.CodePostal = utilisateur.Adresse.CodePostal;
+                util.Adresse.Voie = utilisateur.Adresse.Voie;
+                util.Adresse.Ville = utilisateur.Adresse.Ville;
+                util.Adresse.Pays = utilisateur.Adresse.Pays;
+
+                bdd.SaveChanges();
+
+                return 1;
+            }catch(Exception e)
+            {
+                Console.WriteLine("Erreur modification utilisateur id : " + id + " -> " + e);
+                return -1;
+            }
         }
 
-        public int MotDePassePerdu(long id, string nom, string matricule)
+        public int MotDePassePerdu(string nom, string matricule, DateTime naissance)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Nom.Equals(nom) && u.Matricule.Equals(matricule) && u.Naissance.Equals(naissance));
+
+                if (utilisateur == null)
+                    return 0;
+
+                return 1;
+            }catch(Exception e)
+            {
+                Console.WriteLine("Erreur mot de passe oublié nom : " + nom + " matricule : " + matricule + " date de naissance " + naissance.ToString() + " -> " + e);
+                return -1;
+            }
         }
 
         public int PremiereCoKO(long id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id == id);
+                if (utilisateur == null)
+                    return 0;
+
+                utilisateur.PremiereCo = true;
+                bdd.SaveChanges();
+
+                return 1;
+            }catch(Exception e)
+            {
+                Console.WriteLine("Erreur reset de la premiere co id : " + id + " -> " + e);
+                return -1;
+            }
         }
 
         public int PremiereCoOk(long id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id == id);
+                if (utilisateur == null)
+                    return 0;
+
+                utilisateur.PremiereCo = false;
+                bdd.SaveChanges();
+
+                return 1;
+            }catch(Exception e)
+            {
+                Console.WriteLine("Erreur passage de la premier co a false pour id : " + id + " -> " + e);
+                return -1;
+            }
         }
 
         public int SupprimerUtilisateur(long id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id == id);
+                if (utilisateur == null)
+                    return 0;
+
+                bdd.Utilisateurs.Remove(utilisateur);
+                bdd.SaveChanges();
+
+                return 1;
+            }catch(Exception e)
+            {
+                Console.WriteLine("Erreur suppression utilisateur id : " + id + " -> " + e);
+                return -1;
+            }
         }
     }
 }
