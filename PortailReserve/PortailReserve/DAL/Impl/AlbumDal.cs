@@ -1,4 +1,5 @@
 ﻿using PortailReserve.Models;
+using PortailReserve.Models.NullObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,12 @@ namespace PortailReserve.DAL.Impl
             {
                 Album album = bdd.Albums.FirstOrDefault(a => a.Id.Equals(id));
                 return album;
-            }catch(Exception e)
+            }catch(NullReferenceException nfe)
+            {
+                Console.WriteLine("Aucun album trouve pour l'id : " + id + " -> " + nfe);
+                return new AlbumNull() { Error = "Album introuvable." };
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("Erreur récupération albums id : " + id + " -> " + e);
                 return null;
@@ -52,8 +58,8 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                Album toModify = bdd.Albums.FirstOrDefault(a => a.Id.Equals(id));
-                if (toModify == null)
+                Album toModify = GetAlbumById(id);
+                if (toModify == null || toModify.Equals(typeof(AlbumNull)))
                     return 0;
 
                 toModify.Titre = album.Titre;
@@ -73,8 +79,8 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                Album toDelete = bdd.Albums.FirstOrDefault(a => a.Id.Equals(id));
-                if (toDelete == null)
+                Album toDelete = GetAlbumById(id);
+                if (toDelete == null || toDelete.Equals(typeof(AlbumNull)))
                     return 0;
 
                 List<Photo> phToDelete = bdd.Photos.Where(p => p.Album.Id.Equals(id)).ToList();

@@ -1,4 +1,5 @@
 ﻿using PortailReserve.Models;
+using PortailReserve.Models.NullObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +43,12 @@ namespace PortailReserve.DAL.Impl
                 Effectif effectif = bdd.Effectifs.FirstOrDefault(e => e.Id.Equals(id));
 
                 return effectif;
-            }catch(Exception e)
+            }catch(NullReferenceException nfe)
+            {
+                Console.WriteLine("Aucun effectif trouve pour l'id : " + id + " -> " + nfe);
+                return new EffectifNull() { Error = "Effectif introuvable." };
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("Erreur récupération effectif par id : " + id + " -> " + e);
                 return null;
@@ -54,7 +60,7 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Effectif toModif = GetEffectifById(id);
-                if (toModif == null)
+                if (toModif == null || toModif.Equals(typeof(EffectifNull)))
                     return 0;
 
                 toModif.Officier = effectif.Officier;
@@ -75,7 +81,7 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Effectif toDelete = GetEffectifById(id);
-                if (toDelete == null)
+                if (toDelete == null || toDelete.Equals(typeof(EffectifNull)))
                     return 0;
 
                 bdd.Effectifs.Remove(toDelete);

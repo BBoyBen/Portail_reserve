@@ -1,4 +1,5 @@
 ﻿using PortailReserve.Models;
+using PortailReserve.Models.NullObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,7 +55,12 @@ namespace PortailReserve.DAL.Impl
             {
                 Groupe byCdg = bdd.Groupes.FirstOrDefault(g => g.CDG.Id.Equals(idCdg));
                 return byCdg;
-            }catch(Exception e)
+            }catch(NullReferenceException nfe)
+            {
+                Console.WriteLine("Aucun groupe trouve avec comme cdg : " + idCdg + " -> " + nfe);
+                return new GroupeNull() { Error = "Goupe avec ce CDG introuvable." };
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("Erreur récupération du groupe du cdg : " + idCdg + " -> " + e);
                 return null;
@@ -67,7 +73,12 @@ namespace PortailReserve.DAL.Impl
             {
                 Groupe groupe = bdd.Groupes.FirstOrDefault(g => g.Id.Equals(id));
                 return groupe;
-            }catch(Exception e)
+            }catch(NullReferenceException nfe)
+            {
+                Console.WriteLine("Auncun groupe trouve avec l'id : " + id + " -> " + nfe);
+                return new GroupeNull() { Error = "Groupe introuvable." };
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("Erreur récupération du group id : " + id + " -> " + e);
                 return null;
@@ -92,7 +103,7 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Groupe toModif = GetGroupeById(id);
-                if (toModif == null)
+                if (toModif == null || toModif.Equals(typeof(GroupeNull)))
                     return 0;
 
                 toModif.CDG = groupe.CDG;
@@ -113,7 +124,7 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Groupe toDelete = GetGroupeById(id);
-                if (toDelete == null)
+                if (toDelete == null || toDelete.Equals(typeof(GroupeNull)))
                     return 0;
 
                 bdd.Groupes.Remove(toDelete);

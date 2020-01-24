@@ -1,4 +1,5 @@
 ﻿using PortailReserve.Models;
+using PortailReserve.Models.NullObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,7 @@ namespace PortailReserve.DAL.Impl
             }catch(Exception e)
             {
                 Console.WriteLine("Erreur ajout de photo -> " + e);
+                return Guid.Empty;
             }
         }
 
@@ -55,7 +57,12 @@ namespace PortailReserve.DAL.Impl
             {
                 Photo photo = bdd.Photos.FirstOrDefault(p => p.Id.Equals(id));
                 return photo;
-            }catch(Exception e)
+            }catch(NullReferenceException nfe)
+            {
+                Console.WriteLine("Aucune photo trouvee pour l'id : " + id + " -> " + nfe);
+                return new PhotoNull() { Error = "Photo introuvable." };
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("Erreur récupération photo par id : " + id + " -> " + e);
                 return null;
@@ -80,7 +87,7 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Photo toDelete = GetPhotoById(id);
-                if (toDelete == null)
+                if (toDelete == null || toDelete.Equals(typeof(PhotoNull)))
                     return 0;
 
                 bdd.Photos.Remove(toDelete);

@@ -1,4 +1,5 @@
 ﻿using PortailReserve.Models;
+using PortailReserve.Models.NullObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +50,12 @@ namespace PortailReserve.DAL.Impl
             {
                 Participation participation = bdd.Participations.FirstOrDefault(p => p.Id.Equals(id));
                 return participation;
-            }catch(Exception e)
+            }catch(NullReferenceException nfe)
+            {
+                Console.WriteLine("Aucune participation trouvee pour l'id : " + id + " -> " + nfe);
+                return new ParticipationNull() { Error = "Partiticpation introuvable." };
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("Erreur récupération de la participation id : " + id + " -> " + e);
                 return null;
@@ -62,7 +68,12 @@ namespace PortailReserve.DAL.Impl
             {
                 Participation participation = bdd.Participations.FirstOrDefault(p => p.Utilisateur.Id.Equals(idUtil) && p.Evenement.Id.Equals(idEvent));
                 return participation;
-            }catch(Exception e)
+            }catch(NullReferenceException nfe)
+            {
+                Console.WriteLine("Aucune particiation de l'utiliateur " + idUtil + " à l'event " + idEvent + " -> " + nfe);
+                return new ParticipationNull() { Error = "Participation introuvalbe." };
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("Erreur récupération participation de l'util : " + idUtil + " pour l'event : " + idEvent + " -> " + e);
                 return null;
@@ -87,7 +98,7 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Participation toModif = GetParticipationById(id);
-                if (toModif == null)
+                if (toModif == null || toModif.Equals(typeof(ParticipationNull)))
                     return 0;
 
                 if (!toModif.Utilisateur.Id.Equals(idUtil))

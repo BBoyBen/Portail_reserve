@@ -1,4 +1,5 @@
 ﻿using PortailReserve.Models;
+using PortailReserve.Models.NullObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +43,12 @@ namespace PortailReserve.DAL.Impl
                 Adresse adresse = bdd.Adresses.FirstOrDefault(a => a.Id.Equals(id));
 
                 return adresse;
-            }catch(Exception e)
+            }catch(NullReferenceException nfe)
+            {
+                Console.WriteLine("Aucune adresse trouvee avec l'id : " + id + " -> " + nfe);
+                return new AdresseNull() { Error = "Aucune adresse trouvée."};
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("Erreur récupéation de l'adresse id : " + id + " -> " + e);
                 return null;
@@ -53,8 +59,8 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                Adresse toMod = bdd.Adresses.FirstOrDefault(a => a.Id.Equals(id));
-                if (toMod == null)
+                Adresse toMod = GetAdresseById(id);
+                if (toMod == null || toMod.Equals(typeof(AdresseNull)))
                     return 0;
 
                 toMod.Pays = adresse.Pays;
@@ -77,7 +83,7 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Adresse toDelete = bdd.Adresses.FirstOrDefault(a => a.Id.Equals(id));
-                if (toDelete == null)
+                if (toDelete == null || toDelete.Equals(typeof(AdresseNull)))
                     return 0;
 
                 bdd.Adresses.Remove(toDelete);

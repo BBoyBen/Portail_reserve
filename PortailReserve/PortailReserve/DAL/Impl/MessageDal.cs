@@ -1,4 +1,5 @@
 ﻿using PortailReserve.Models;
+using PortailReserve.Models.NullObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,7 +55,12 @@ namespace PortailReserve.DAL.Impl
             {
                 Message message = bdd.Messages.FirstOrDefault(m => m.Id.Equals(id));
                 return message;
-            }catch(Exception e)
+            }catch(NullReferenceException nfe)
+            {
+                Console.WriteLine("Aucun message trouve avec l'id : " + id + " -> " + nfe);
+                return new MessageNull() { Error = "Message introuvable." };
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("Erreur récupértion messag par id : " + id + " -> " + e);
                 return null;
@@ -79,7 +85,7 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Message toDelete = GetMessageById(id);
-                if (toDelete == null)
+                if (toDelete == null || toDelete.Equals(typeof(MessageNull)))
                     return 0;
 
                 bdd.Messages.Remove(toDelete);

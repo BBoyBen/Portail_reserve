@@ -1,4 +1,5 @@
 ﻿using PortailReserve.Models;
+using PortailReserve.Models.NullObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,7 +73,12 @@ namespace PortailReserve.DAL.Impl
                 Disponibilite dispo = bdd.Disponibilites.FirstOrDefault(d => d.Id.Equals(id));
 
                 return dispo;
-            }catch(Exception e)
+            }catch(NullReferenceException nfe)
+            {
+                Console.WriteLine("Aucune disponibilité trouvee pour l'id : " + id + " -> " + nfe);
+                return new DisponibiliteNull() { Error = "Disponibilité introuvable." };
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("Erreur récupération de la dispo par id : " + id + " -> " + e);
                 return null;
@@ -84,7 +90,7 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Disponibilite toModif = GetDispoById(id);
-                if (toModif == null)
+                if (toModif == null || toModif.Equals(typeof(DisponibiliteNull)))
                     return 0;
 
                 toModif.TouteLaPeriode = dispo.TouteLaPeriode;
@@ -106,7 +112,7 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Disponibilite dispo = GetDispoById(id);
-                if (dispo == null)
+                if (dispo == null || dispo.Equals(typeof(DisponibiliteNull)))
                     return 0;
 
                 dispo.Valide = -1;
@@ -125,7 +131,7 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Disponibilite toDelete = GetDispoById(id);
-                if (toDelete == null)
+                if (toDelete == null || toDelete.Equals(typeof(DisponibiliteNull)))
                     return 0;
 
                 bdd.Disponibilites.Remove(toDelete);
@@ -144,7 +150,7 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Disponibilite dispo = GetDispoById(id);
-                if (dispo == null)
+                if (dispo == null || dispo.Equals(typeof(DisponibiliteNull)))
                     return 0;
 
                 dispo.Valide = 1;

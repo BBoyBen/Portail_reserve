@@ -1,4 +1,5 @@
 ﻿using PortailReserve.Models;
+using PortailReserve.Models.NullObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +56,12 @@ namespace PortailReserve.DAL.Impl
             {
                 Evenement evenement = bdd.Evenements.FirstOrDefault(e => e.Id.Equals(id));
                 return evenement;
-            }catch(Exception e)
+            }catch(NullReferenceException nfe)
+            {
+                Console.WriteLine("Aucun evenement trouvable pour l'id : " + id + " -> " + nfe);
+                return new EvenementNull() { Error = "Evenement introuvable." };
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("Erreur récupération de l'evenement id : " + id + " -> " + e);
                 return null;
@@ -145,8 +151,8 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                Evenement toModify = bdd.Evenements.FirstOrDefault(e => e.Id.Equals(id));
-                if (toModify == null)
+                Evenement toModify = GetEvenementById(id);
+                if (toModify == null || toModify.Equals(typeof(EvenementNull)))
                     return 0;
 
                 toModify.Debut = evenement.Debut;
@@ -174,8 +180,8 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                Evenement evenement = bdd.Evenements.FirstOrDefault(e => e.Id.Equals(id));
-                if (evenement == null)
+                Evenement evenement = GetEvenementById(id);
+                if (evenement == null || evenement.Equals(typeof(EvenementNull)))
                     return 0;
 
                 bdd.Evenements.Remove(evenement);

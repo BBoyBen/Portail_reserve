@@ -1,4 +1,5 @@
 ﻿using PortailReserve.Models;
+using PortailReserve.Models.NullObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +40,12 @@ namespace PortailReserve.DAL.Impl
                 Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.MotDePasse.Equals(encodeMdp) && u.Matricule.Equals(matricule));
 
                 return utilisateur;
-            }catch(Exception e)
+            }catch(NullReferenceException nfe)
+            {
+                Console.WriteLine("Authentification échouer pour matricule : " + matricule + " -> " + nfe);
+                return new UtilisateurNull() { Error = "Matricule ou mot de passe incorrect." };
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("Erreur authentification matricule : " + matricule + " -> " + e);
                 return null;
@@ -53,8 +59,8 @@ namespace PortailReserve.DAL.Impl
                 if (!nouvMdp.Equals(nouvMdpBis))
                     return 0;
 
-                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id.Equals(id));
-                if (utilisateur == null)
+                Utilisateur utilisateur = GetUtilisateurById(id);
+                if (utilisateur == null || utilisateur.Equals(typeof(UtilisateurNull)))
                     return -1;
 
                 string encodeOldMdp = Utils.Utils.EncodeSHA256(old_mdp);
@@ -84,7 +90,12 @@ namespace PortailReserve.DAL.Impl
             {
                 Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id.Equals(id));
                 return utilisateur;
-            }catch(Exception e)
+            }catch(NullReferenceException nfe)
+            {
+                Console.WriteLine("Aucun utilisateur trouve pour l'id : " + id + " -> " + nfe);
+                return new UtilisateurNull() { Error = "Utilisateur introuvable." };
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("Erreur récupération utilisateurs par id : " + id + " -> " + e);
                 return null;
@@ -101,7 +112,12 @@ namespace PortailReserve.DAL.Impl
                     return utilisateur;
                 }
                 return null;
-            }catch(Exception e)
+            }catch(NullReferenceException nfe)
+            {
+                Console.WriteLine("Aucun utilisateur trouve avec le matricule : " + matricule + " -> " + nfe);
+                return new UtilisateurNull() { Error = "Utilisateur introuvable." };
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("Erreur récupération utilisateur par matricule : " + matricule + " -> " + e);
                 return null;
@@ -125,8 +141,8 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                Utilisateur util = bdd.Utilisateurs.FirstOrDefault(u => u.Id.Equals(id));
-                if (util == null)
+                Utilisateur util = GetUtilisateurById(id);
+                if (util == null || util.Equals(typeof(UtilisateurNull)))
                     return 0;
 
                 util.Nom = utilisateur.Nom;
@@ -158,7 +174,12 @@ namespace PortailReserve.DAL.Impl
                     return 0;
 
                 return 1;
-            }catch(Exception e)
+            }catch(NullReferenceException nfe)
+            {
+                Console.WriteLine("Aucun utilisateur trouvé pour le matricule : " + matricule + " et le nom : " + nom + " et nait le " + naissance.ToString() + " -> " + nfe);
+                return 0;
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("Erreur mot de passe oublié nom : " + nom + " matricule : " + matricule + " date de naissance " + naissance.ToString() + " -> " + e);
                 return -1;
@@ -169,8 +190,8 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id.Equals(id));
-                if (utilisateur == null)
+                Utilisateur utilisateur = GetUtilisateurById(id);
+                if (utilisateur == null || utilisateur.Equals(typeof(UtilisateurNull)))
                     return 0;
 
                 utilisateur.PremiereCo = true;
@@ -188,8 +209,8 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id.Equals(id));
-                if (utilisateur == null)
+                Utilisateur utilisateur = GetUtilisateurById(id);
+                if (utilisateur == null || utilisateur.Equals(typeof(UtilisateurNull)))
                     return 0;
 
                 utilisateur.PremiereCo = false;
@@ -207,8 +228,8 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id.Equals(id));
-                if (utilisateur == null)
+                Utilisateur utilisateur = GetUtilisateurById(id);
+                if (utilisateur == null || utilisateur.Equals(typeof(UtilisateurNull)))
                     return 0;
 
                 bdd.Utilisateurs.Remove(utilisateur);

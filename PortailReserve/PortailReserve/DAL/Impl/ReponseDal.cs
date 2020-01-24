@@ -1,4 +1,5 @@
 ﻿using PortailReserve.Models;
+using PortailReserve.Models.NullObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,7 +57,12 @@ namespace PortailReserve.DAL.Impl
             {
                 Reponse reponse = bdd.Reponses.FirstOrDefault(r => r.Id.Equals(id));
                 return reponse;
-            }catch(Exception e)
+            }catch(NullReferenceException nfe)
+            {
+                Console.WriteLine("Aucune reponse trouve pour l'id : " + id + " -> " + nfe);
+                return new ReponseNull() { Error = "Reponse introuvable." };
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("Erreur récupération de la reponse id : " + id + " -> " + e);
                 return null;
@@ -81,7 +87,7 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Reponse toDelete = GetReponseById(id);
-                if (toDelete == null)
+                if (toDelete == null || toDelete.Equals(typeof(ReponseNull)))
                     return 0;
 
                 bdd.Reponses.Remove(toDelete);

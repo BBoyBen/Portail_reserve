@@ -1,4 +1,5 @@
 ﻿using PortailReserve.Models;
+using PortailReserve.Models.NullObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,7 +55,12 @@ namespace PortailReserve.DAL.Impl
             {
                 Section section = bdd.Sections.FirstOrDefault(s => s.Id.Equals(id));
                 return section;
-            }catch(Exception e)
+            }catch(NullReferenceException nfe)
+            {
+                Console.WriteLine("Aucune section trouvee pour l'id : " + id + " -> " + nfe);
+                return new SectionNull() { Error = "Section introuvable" };
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("Erreur récupération de la section id : " + id + " -> " + e);
                 return null;
@@ -66,7 +72,7 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Section toModif = GetSectionById(id);
-                if (toModif == null)
+                if (toModif == null || toModif.Equals(typeof(SectionNull)))
                     return 0;
 
                 toModif.CDS = section.CDS;
@@ -89,7 +95,7 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Section toDelete = GetSectionById(id);
-                if (toDelete == null)
+                if (toDelete == null || toDelete.Equals(typeof(SectionNull)))
                     return 0;
 
                 bdd.Sections.Remove(toDelete);

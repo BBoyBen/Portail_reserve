@@ -1,4 +1,5 @@
 ﻿using PortailReserve.Models;
+using PortailReserve.Models.NullObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace PortailReserve.DAL.Impl
                 bdd.Cours.Add(cours);
                 bdd.SaveChanges();
 
-                bdd.Cours.ToList().Last();
+                return bdd.Cours.ToList().Last().Id;
             }catch(Exception e)
             {
                 Console.WriteLine("Erreur ajouter un cours -> " + e);
@@ -57,7 +58,12 @@ namespace PortailReserve.DAL.Impl
             {
                 Cours cours = bdd.Cours.FirstOrDefault(c => c.Id.Equals(id));
                 return cours;
-            }catch(Exception e)
+            }catch(NullReferenceException nfe)
+            {
+                Console.WriteLine("Aucun cours trouve pour l'id : " + id + " -> " + nfe);
+                return new CoursNull() { Error = "Cours introuvable." };
+            }
+            catch(Exception e)
             {
                 Console.WriteLine("Erreur récupération cours id : " + id + " -> " + e);
                 return null;
@@ -82,7 +88,7 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Cours toModify = GetCoursById(id);
-                if (toModify == null)
+                if (toModify == null || toModify.Equals(typeof(CoursNull)))
                     return 0;
 
                 toModify.Description = cours.Description;
@@ -106,7 +112,7 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Cours toDelete = GetCoursById(id);
-                if (toDelete == null)
+                if (toDelete == null || toDelete.Equals(typeof(CoursNull)))
                     return 0;
 
                 bdd.Cours.Remove(toDelete);
