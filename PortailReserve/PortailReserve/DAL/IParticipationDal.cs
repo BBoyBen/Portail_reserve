@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PortailReserve.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,10 @@ namespace PortailReserve.DAL
 {
     public interface IParticipationDal : IDisposable
     {
+        Guid AjouterParticipation(Utilisateur util, Evenement evenement, bool participe);
+        Participation GetParticipationById(Guid id);
+        Participation GetParticipationByUtilAndEvent(Guid idUtil, Guid idEvent);
+        List<Participation> GetParticipationsByEvent(Guid idEvent);
+        int ModifierParticipation(Guid id, bool modif, Guid idUtil);
     }
 }
