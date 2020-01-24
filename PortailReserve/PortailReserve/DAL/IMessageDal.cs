@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PortailReserve.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,10 @@ namespace PortailReserve.DAL
 {
     public interface IMessageDal : IDisposable
     {
+        Guid AjouterMessage(Message message);
+        Message GetMessageById(Guid id);
+        List<Message> GetAllMessage();
+        List<Message> GetMessagesByEvent(Guid idEvent);
+        int SupprimerMessage(Guid id);
     }
 }
