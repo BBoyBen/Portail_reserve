@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PortailReserve.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,9 @@ namespace PortailReserve.DAL
 {
     public interface IEffectifDal : IDisposable
     {
+        Guid AjouterEffectif(Effectif effectif);
+        Effectif GetEffectifById(Guid id);
+        int ModifierEffectif(Guid id, Effectif effectif);
+        int SupprimerEffectif(Guid id);
     }
 }
