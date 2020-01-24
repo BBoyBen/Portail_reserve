@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PortailReserve.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,10 @@ namespace PortailReserve.DAL
 {
     public interface ISectionDal : IDisposable
     {
+        Guid AjouterSection(Section section);
+        Section GetSectionById(Guid id);
+        List<Section> GetAllSection();
+        int ModifierSection(Guid id, Section section);
+        int SupprimerSection(Guid id);
     }
 }
