@@ -1,0 +1,58 @@
+﻿@model PortailReserve.Models.Utilisateur
+@{
+    ViewBag.Title = "Login";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/Content/CSS/login.css" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+
+    <div class="container body-content">
+        <div class="row text-center">
+            <div id="partGauche" class="col-6">
+                <h1 id="titreGauche"> Reserve du 92e Régiment d'infanterie </h1>
+            </div>
+
+            <div id="partDroite" class="col-6">
+                <h1 id="titreDroit"> Veuillez vous authentifier </h1>
+                <div id="formAuth">
+                    @using (Html.BeginForm())
+                    {
+                        <div class="row">
+                            @Html.LabelFor(m => m.Matricule)
+                        </div>
+                        <div class="row">
+                            @Html.TextBoxFor(m => m.Matricule)
+                        </div>
+                        <div class="row erreur">
+                            @Html.ValidationMessageFor(m => m.Matricule)
+                        </div>
+
+                        <div class="row">
+                            @Html.LabelFor(m => m.MotDePasse)
+                        </div>
+                        <div class="row">
+                            @Html.TextBoxFor(m => m.MotDePasse, new { type = "password" })
+                        </div>
+                        <div class="row erreur">
+                            @Html.ValidationMessageFor(m => m.MotDePasse)
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+</body>
+</html>
+

@@ -102,6 +102,25 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
+        public Utilisateur GetUtilisateurById(string id)
+        {
+            try
+            {
+                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id.ToString().Equals(id));
+                return utilisateur;
+            }
+            catch (NullReferenceException nfe)
+            {
+                Console.WriteLine("Aucun utilisateur trouve pour l'id : " + id + " -> " + nfe);
+                return new UtilisateurNull() { Error = "Utilisateur introuvable." };
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Erreur récupération utilisateurs par id : " + id + " -> " + e);
+                return null;
+            }
+        }
+
         public Utilisateur GetUtilisateurByMatricule(string matricule)
         {
             try

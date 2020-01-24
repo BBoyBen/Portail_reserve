@@ -10,6 +10,7 @@ namespace PortailReserve.DAL
     public interface IUtilisateurDal : IDisposable
     {
         Utilisateur GetUtilisateurById(Guid id);
+        Utilisateur GetUtilisateurById(string id);
         Utilisateur GetUtilisateurByMatricule(string matricule);
         List<Utilisateur> GetUtilisateursByGroupe(Guid idGroupe);
         Utilisateur Authentifier(string matricule, string motDePasse);

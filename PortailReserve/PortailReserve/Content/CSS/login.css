@@ -1,0 +1,17 @@
+﻿
+.erreur{
+    color: red;
+}
+
+#partDroite, #partGauche {
+    min-height: 100vh;
+   
+}
+
+#partDroite{
+    padding-right: 10px;
+}
+
+#partGauche{
+    padding-left: 10px;
+}

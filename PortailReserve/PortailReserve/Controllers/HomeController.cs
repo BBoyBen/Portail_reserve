@@ -14,24 +14,7 @@ namespace PortailReserve.Controllers
     {
         public ActionResult Index()
         {
-            IUtilisateurDal dal = new UtilisateurDal();
-            Utilisateur u = new Utilisateur() {
-                Nom = "Admin",
-                Prenom = "Admin",
-                Telephone = "0000000000",
-                Email = "admin.admin@gmail.com",
-                Matricule = "1763041044",
-                MotDePasse = "admin",
-                Role = 1,
-                Id_Adresse = 1,
-                Id_Groupe = 1,
-                PremiereCo = true
-            };
-
-            long id = dal.AjouterUtilisateur(u);
-
-            Utilisateur user = dal.GetUtilisateurById(id);
-            return View(user);
+            return View();
         }
 
     }
