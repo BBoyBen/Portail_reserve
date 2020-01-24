@@ -14,7 +14,7 @@ namespace PortailReserve.Models
         public DateTime Debut { get; set; }
         public DateTime Fin { get; set; }
         public bool Disponible { get; set; }
-        public bool Valide { get; set; }
+        public int Valide { get; set; }
         public DateTime Reponse { get; set; }
     }
 }
