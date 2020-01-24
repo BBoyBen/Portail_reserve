@@ -9,16 +9,16 @@ namespace PortailReserve.DAL
 {
     public interface IUtilisateurDal : IDisposable
     {
-        Utilisateur GetUtilisateurById(long id);
+        Utilisateur GetUtilisateurById(Guid id);
         Utilisateur GetUtilisateurByMatricule(string matricule);
-        List<Utilisateur> GetUtilisateursByGroupe(long idGroupe);
+        List<Utilisateur> GetUtilisateursByGroupe(Guid idGroupe);
         Utilisateur Authentifier(string matricule, string motDePasse);
-        int ChangerMotDePasse(long id, string oldMdp, string nouvMdp, string nouvMdpBis);
+        int ChangerMotDePasse(Guid id, string oldMdp, string nouvMdp, string nouvMdpBis);
         int MotDePassePerdu(string nom, string matricule, DateTime naissance);
-        int ModifierUtilisateur(long id, Utilisateur utilisateur);
-        int PremiereCoOk(long id);
-        int PremiereCoKO(long id);
-        long AjouterUtilisateur(Utilisateur utilisateur);
-        int SupprimerUtilisateur(long id);
+        int ModifierUtilisateur(Guid id, Utilisateur utilisateur);
+        int PremiereCoOk(Guid id);
+        int PremiereCoKO(Guid id);
+        Guid AjouterUtilisateur(Utilisateur utilisateur);
+        int SupprimerUtilisateur(Guid id);
     }
 }

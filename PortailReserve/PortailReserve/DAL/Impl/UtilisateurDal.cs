@@ -15,7 +15,7 @@ namespace PortailReserve.DAL.Impl
             bdd = new BddContext();
         }
 
-        public long AjouterUtilisateur(Utilisateur utilisateur)
+        public Guid AjouterUtilisateur(Utilisateur utilisateur)
         {
             try
             {
@@ -27,7 +27,7 @@ namespace PortailReserve.DAL.Impl
             }catch(Exception e)
             {
                 Console.WriteLine("Erreur ajout nouvel utilisateur -> " + e);
-                return -1;
+                return Guid.Empty;
             }
         }
 
@@ -46,14 +46,14 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public int ChangerMotDePasse(long id, string old_mdp, string nouvMdp, string nouvMdpBis)
+        public int ChangerMotDePasse(Guid id, string old_mdp, string nouvMdp, string nouvMdpBis)
         {
             try
             {
                 if (!nouvMdp.Equals(nouvMdpBis))
                     return 0;
 
-                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id == id);
+                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id.Equals(id));
                 if (utilisateur == null)
                     return -1;
 
@@ -78,11 +78,11 @@ namespace PortailReserve.DAL.Impl
             bdd.Dispose();
         }
 
-        public Utilisateur GetUtilisateurById(long id)
+        public Utilisateur GetUtilisateurById(Guid id)
         {
             try
             {
-                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id == id);
+                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id.Equals(id));
                 return utilisateur;
             }catch(Exception e)
             {
@@ -108,11 +108,11 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public List<Utilisateur> GetUtilisateursByGroupe(long idGroupe)
+        public List<Utilisateur> GetUtilisateursByGroupe(Guid idGroupe)
         {
             try
             {
-                List<Utilisateur> utilisateurs = bdd.Utilisateurs.Where(u => u.Groupe.Id == idGroupe).ToList();
+                List<Utilisateur> utilisateurs = bdd.Utilisateurs.Where(u => u.Groupe.Id.Equals(idGroupe)).ToList();
                 return utilisateurs;
             }catch(Exception e)
             {
@@ -121,11 +121,11 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public int ModifierUtilisateur(long id, Utilisateur utilisateur)
+        public int ModifierUtilisateur(Guid id, Utilisateur utilisateur)
         {
             try
             {
-                Utilisateur util = bdd.Utilisateurs.FirstOrDefault(u => u.Id == id);
+                Utilisateur util = bdd.Utilisateurs.FirstOrDefault(u => u.Id.Equals(id));
                 if (util == null)
                     return 0;
 
@@ -168,11 +168,11 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public int PremiereCoKO(long id)
+        public int PremiereCoKO(Guid id)
         {
             try
             {
-                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id == id);
+                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id.Equals(id));
                 if (utilisateur == null)
                     return 0;
 
@@ -187,11 +187,11 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public int PremiereCoOk(long id)
+        public int PremiereCoOk(Guid id)
         {
             try
             {
-                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id == id);
+                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id.Equals(id));
                 if (utilisateur == null)
                     return 0;
 
@@ -206,11 +206,11 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public int SupprimerUtilisateur(long id)
+        public int SupprimerUtilisateur(Guid id)
         {
             try
             {
-                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id == id);
+                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id.Equals(id));
                 if (utilisateur == null)
                     return 0;
 

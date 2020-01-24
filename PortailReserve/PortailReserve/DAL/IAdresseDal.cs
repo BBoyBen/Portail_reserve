@@ -9,10 +9,10 @@ namespace PortailReserve.DAL
 {
     public interface IAdresseDal : IDisposable
     {
-        long AjouterAdresse(Adresse adresse);
-        int ModifierAdresse(long id, Adresse adresse);
-        Adresse GetAdresseById(long id);
-        int SupprimerAdresse(long id);
+        Guid AjouterAdresse(Adresse adresse);
+        int ModifierAdresse(Guid id, Adresse adresse);
+        Adresse GetAdresseById(Guid id);
+        int SupprimerAdresse(Guid id);
 
     }
 }

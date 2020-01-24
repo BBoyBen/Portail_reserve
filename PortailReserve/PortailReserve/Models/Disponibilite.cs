@@ -7,7 +7,7 @@ namespace PortailReserve.Models
 {
     public class Disponibilite
     {
-        public long Id { get; set; }
+        public Guid Id { get; set; }
         public Evenement Evenement { get; set; }
         public Utilisateur Utilisateur { get; set; }
         public bool TouteLaPeriode { get; set; }

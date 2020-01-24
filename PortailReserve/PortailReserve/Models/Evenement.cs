@@ -7,7 +7,7 @@ namespace PortailReserve.Models
 {
     public class Evenement
     {
-        public long Id { get; set; }
+        public Guid Id { get; set; }
         public string Nom { get; set; }
         public string Description { get; set; }
         public DateTime Debut { get; set; }

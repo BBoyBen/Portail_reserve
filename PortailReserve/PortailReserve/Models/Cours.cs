@@ -7,7 +7,7 @@ namespace PortailReserve.Models
 {
     public class Cours
     {
-        public long Id { get; set; }
+        public Guid Id { get; set; }
         public string Nom { get; set; }
         public string Description { get; set; }
         public string Fichier { get; set; }

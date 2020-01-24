@@ -9,11 +9,11 @@ namespace PortailReserve.DAL
 {
     public interface IEvenementDal : IDisposable
     {
-        long CreerEvenement(Evenement evenement);
-        Evenement GetEvenementById(long id);
+        Guid CreerEvenement(Evenement evenement);
+        Evenement GetEvenementById(Guid id);
         List<Evenement> GetAll();
-        int ModifierEvenement(long id, Evenement evenement);
-        int SupprimerEvenement(long id);
+        int ModifierEvenement(Guid id, Evenement evenement);
+        int SupprimerEvenement(Guid id);
         List<Evenement> GetEvenementsByType(string type);
         List<Evenement> GetEvenementsAVenir();
         List<Evenement> GetEvenementsPasse();

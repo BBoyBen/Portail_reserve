@@ -7,7 +7,7 @@ namespace PortailReserve.Models
 {
     public class Section
     {
-        public long Id { get; set; }
+        public Guid Id { get; set; }
         public int Numero { get; set; }
         public Utilisateur CDS { get; set; }
         public Utilisateur SOA { get; set; }

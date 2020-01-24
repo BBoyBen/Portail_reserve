@@ -7,10 +7,11 @@ namespace PortailReserve.Models
 {
     public class Message
     {
-        public long Id { get; set; }
-        public Utilisateur Utilisateur { get; set; }
-        public Utilisateur Evenement { get; set; }
+        public Guid Id { get; set; }
+        public Evenement Evenement { get; set; }
         public string Texte { get; set; }
         public DateTime Date { get; set; }
+        public string Nom { get; set; }
+        public String Prenom { get; set; }
     }
 }

@@ -15,7 +15,7 @@ namespace PortailReserve.DAL.Impl
             bdd = new BddContext();
         }
 
-        public long AjouterAdresse(Adresse adresse)
+        public Guid AjouterAdresse(Adresse adresse)
         {
             try
             {
@@ -26,7 +26,7 @@ namespace PortailReserve.DAL.Impl
             }catch(Exception e)
             {
                 Console.WriteLine("Erreur ajout d'une nouvelle adresse -> " + e);
-                return -1;
+                return Guid.Empty;
             }
         }
 
@@ -35,11 +35,11 @@ namespace PortailReserve.DAL.Impl
             bdd.Dispose();
         }
 
-        public Adresse GetAdresseById(long id)
+        public Adresse GetAdresseById(Guid id)
         {
             try
             {
-                Adresse adresse = bdd.Adresses.FirstOrDefault(a => a.Id == id);
+                Adresse adresse = bdd.Adresses.FirstOrDefault(a => a.Id.Equals(id));
 
                 return adresse;
             }catch(Exception e)
@@ -49,11 +49,11 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public int ModifierAdresse(long id, Adresse adresse)
+        public int ModifierAdresse(Guid id, Adresse adresse)
         {
             try
             {
-                Adresse toMod = bdd.Adresses.FirstOrDefault(a => a.Id == id);
+                Adresse toMod = bdd.Adresses.FirstOrDefault(a => a.Id.Equals(id));
                 if (toMod == null)
                     return 0;
 
@@ -72,11 +72,11 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public int SupprimerAdresse(long id)
+        public int SupprimerAdresse(Guid id)
         {
             try
             {
-                Adresse toDelete = bdd.Adresses.FirstOrDefault(a => a.Id == id);
+                Adresse toDelete = bdd.Adresses.FirstOrDefault(a => a.Id.Equals(id));
                 if (toDelete == null)
                     return 0;
 

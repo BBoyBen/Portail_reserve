@@ -7,7 +7,7 @@ namespace PortailReserve.Models
 {
     public class Effectif
     {
-        public long Id { get; set; }
+        public Guid Id { get; set; }
         public int Officier { get; set; }
         public int SousOfficier { get; set; }
         public int Militaire { get; set; }

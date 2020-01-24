@@ -7,7 +7,7 @@ namespace PortailReserve.Models
 {
     public class Adresse
     {
-        public long Id { get; set; }
+        public Guid Id { get; set; }
         public string Voie { get; set; }
         public string CodePostal { get; set; }
         public string Ville { get; set; }

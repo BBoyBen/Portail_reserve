@@ -15,7 +15,7 @@ namespace PortailReserve.DAL.Impl
             bdd = new BddContext();
         }
 
-        public long CreerEvenement(Evenement evenement)
+        public Guid CreerEvenement(Evenement evenement)
         {
             try
             {
@@ -26,7 +26,7 @@ namespace PortailReserve.DAL.Impl
             }catch(Exception e)
             {
                 Console.WriteLine("Erreur création d'evenement -> " + e);
-                return -1;
+                return Guid.Empty;
             }
         }
 
@@ -49,11 +49,11 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public Evenement GetEvenementById(long id)
+        public Evenement GetEvenementById(Guid id)
         {
             try
             {
-                Evenement evenement = bdd.Evenements.FirstOrDefault(e => e.Id == id);
+                Evenement evenement = bdd.Evenements.FirstOrDefault(e => e.Id.Equals(id));
                 return evenement;
             }catch(Exception e)
             {
@@ -141,11 +141,11 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public int ModifierEvenement(long id, Evenement evenement)
+        public int ModifierEvenement(Guid id, Evenement evenement)
         {
             try
             {
-                Evenement toModify = bdd.Evenements.FirstOrDefault(e => e.Id == id);
+                Evenement toModify = bdd.Evenements.FirstOrDefault(e => e.Id.Equals(id));
                 if (toModify == null)
                     return 0;
 
@@ -170,11 +170,11 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public int SupprimerEvenement(long id)
+        public int SupprimerEvenement(Guid id)
         {
             try
             {
-                Evenement evenement = bdd.Evenements.FirstOrDefault(e => e.Id == id);
+                Evenement evenement = bdd.Evenements.FirstOrDefault(e => e.Id.Equals(id));
                 if (evenement == null)
                     return 0;
 
