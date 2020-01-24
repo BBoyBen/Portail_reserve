@@ -11,7 +11,6 @@ namespace PortailReserve.Models
         public Evenement Evenement { get; set; }
         public string Texte { get; set; }
         public DateTime Date { get; set; }
-        public string Nom { get; set; }
-        public String Prenom { get; set; }
+        public Utilisateur Envoyeur { get; set; }
     }
 }

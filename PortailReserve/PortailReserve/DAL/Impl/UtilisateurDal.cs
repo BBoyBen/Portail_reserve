@@ -136,10 +136,7 @@ namespace PortailReserve.DAL.Impl
                 util.Naissance = utilisateur.Naissance;
                 util.Telephone = utilisateur.Telephone;
                 util.Email = utilisateur.Email;
-                util.Adresse.CodePostal = utilisateur.Adresse.CodePostal;
-                util.Adresse.Voie = utilisateur.Adresse.Voie;
-                util.Adresse.Ville = utilisateur.Adresse.Ville;
-                util.Adresse.Pays = utilisateur.Adresse.Pays;
+                util.Adresse = utilisateur.Adresse;
 
                 bdd.SaveChanges();
 
