@@ -15,8 +15,8 @@
 </head>
 <body>
 
-    <div class="container body-content">
-        <div class="row text-center">
+    <div class="container">
+        <div class="row">
             <div id="partGauche" class="col-6">
                 <h1 id="titreGauche"> Reserve du 92e Régiment d'infanterie </h1>
             </div>
@@ -44,6 +44,10 @@
                         </div>
                         <div class="row erreur">
                             @Html.ValidationMessageFor(m => m.MotDePasse)
+                        </div>
+
+                        <div class="row">
+                            <input type="submit" value="Valider" />
                         </div>
                     }
                 </div>

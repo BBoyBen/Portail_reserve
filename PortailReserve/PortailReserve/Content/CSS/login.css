@@ -1,17 +1,21 @@
-﻿
-.erreur{
+﻿.erreur{
     color: red;
 }
 
 #partDroite, #partGauche {
     min-height: 100vh;
-   
 }
 
 #partDroite{
-    padding-right: 10px;
+    border-left: 1px solid grey;
 }
 
 #partGauche{
-    padding-left: 10px;
+}
+
+#titreDroit {
+    text-align: center;
+    width: 50%;
+    margin-left: 25%;
+    margin-right: 25%;
 }
