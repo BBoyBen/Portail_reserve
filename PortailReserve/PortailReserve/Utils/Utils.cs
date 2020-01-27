@@ -18,6 +18,9 @@ namespace PortailReserve.Utils
 
         public static bool ValideMatricule(string matricule)
         {
+            if (matricule == null)
+                return false;
+
             Regex rgx = new Regex(@"^[0-9]{10}$");
             return rgx.IsMatch(matricule);
         }

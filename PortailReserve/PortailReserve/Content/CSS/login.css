@@ -2,20 +2,66 @@
     color: red;
 }
 
+#homePage{
+    display: flex;
+    flex-wrap: nowrap;
+}
+
 #partDroite, #partGauche {
     min-height: 100vh;
 }
 
 #partDroite{
     border-left: 1px solid grey;
+    padding-left: 5%;
 }
 
 #partGauche{
+    padding-right: 5%;
+}
+
+#titreDroit, #titreGauche {
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 #titreDroit {
-    text-align: center;
-    width: 50%;
-    margin-left: 25%;
-    margin-right: 25%;
+    padding-bottom: 20%;
 }
+
+.champsText {
+    text-align: center;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btnSubmit {
+    text-align: center;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    border-radius: 5px;
+    margin: auto;
+}
+
+label {
+    text-align: center;
+}
+
+.blasonRI {
+    width:50%;
+    height: auto;
+}
+
+.blasonSix {
+    width: 35%;
+    height: auto;
+    margin-left: 50%;
+}
+
+
+

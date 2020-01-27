@@ -266,6 +266,8 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\CSS\login.css" />
+    <Content Include="Content\image\blason_ri.png" />
+    <Content Include="Content\image\blason_six.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -399,7 +401,7 @@
     <Content Include="Views\Login\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\Images\" />
+    <Folder Include="App_Data\" />
     <Folder Include="ViewModel\" />
     <Folder Include="Views\Test\" />
   </ItemGroup>
