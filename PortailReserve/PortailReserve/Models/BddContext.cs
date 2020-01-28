@@ -22,10 +22,8 @@ namespace PortailReserve.Models
         public DbSet<Album> Albums { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Compagnie> Compagnies { get; set; }
+        public DbSet<Chant> Chants { get; set; }
 
-        internal void SavesChange()
-        {
-            throw new NotImplementedException();
-        }
+     
     }
 }

@@ -58,7 +58,7 @@ namespace PortailReserve.DAL.Impl
                 return compagnie;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucune compagnie pour l'id : " + id + " -> " + e);
+                Console.WriteLine("Aucune compagnie pour l'id : " + id + " -> " + nfe);
                 return new CompagnieNull() { Error = "Compagnie introuvable." };
             }catch(Exception e)
             {
@@ -99,7 +99,7 @@ namespace PortailReserve.DAL.Impl
                     return 0;
 
                 bdd.Compagnies.Remove(toDelete);
-                bdd.SavesChange();
+                bdd.SaveChanges();
 
                 return 1;
             }catch(Exception e)
