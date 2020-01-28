@@ -82,7 +82,7 @@ namespace PortailReserve.DAL.Impl
                 return new ChantNull() { Error = "Chant introuvable pour le titre : " + titre };
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupration du chat au titre : " + titre + " -> "  e);
+                Console.WriteLine("Erreur récupration du chat au titre : " + titre + " -> " + e);
                 return null;
             }
         }

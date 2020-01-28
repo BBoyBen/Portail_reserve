@@ -201,6 +201,8 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="DAL\IAdresseDal.cs" />
     <Compile Include="DAL\IAlbumDal.cs" />
+    <Compile Include="DAL\IChantDal.cs" />
+    <Compile Include="DAL\ICompagnieDal.cs" />
     <Compile Include="DAL\ICoursDal.cs" />
     <Compile Include="DAL\IDisponibiliteDal.cs" />
     <Compile Include="DAL\IEffectifDal.cs" />
@@ -209,6 +211,8 @@
     <Compile Include="DAL\IMessageDal.cs" />
     <Compile Include="DAL\Impl\AdresseDal.cs" />
     <Compile Include="DAL\Impl\AlbumDal.cs" />
+    <Compile Include="DAL\Impl\ChantDal.cs" />
+    <Compile Include="DAL\Impl\CompagnieDal.cs" />
     <Compile Include="DAL\Impl\CoursDal.cs" />
     <Compile Include="DAL\Impl\DisponibiliteDal.cs" />
     <Compile Include="DAL\Impl\EffectifDal.cs" />
@@ -231,6 +235,8 @@
     <Compile Include="Models\Adresse.cs" />
     <Compile Include="Models\Album.cs" />
     <Compile Include="Models\BddContext.cs" />
+    <Compile Include="Models\Chant.cs" />
+    <Compile Include="Models\Compagnie.cs" />
     <Compile Include="Models\Cours.cs" />
     <Compile Include="Models\Disponibilite.cs" />
     <Compile Include="Models\Effectif.cs" />
@@ -239,6 +245,8 @@
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\NullObject\AdresseNull.cs" />
     <Compile Include="Models\NullObject\AlbumNull.cs" />
+    <Compile Include="Models\NullObject\ChantNull.cs" />
+    <Compile Include="Models\NullObject\CompagnieNull.cs" />
     <Compile Include="Models\NullObject\CoursNull.cs" />
     <Compile Include="Models\NullObject\DisponibiliteNull.cs" />
     <Compile Include="Models\NullObject\EffectifNull.cs" />
