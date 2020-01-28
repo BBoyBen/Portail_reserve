@@ -21,5 +21,11 @@ namespace PortailReserve.Models
         public DbSet<Cours> Cours { get; set; }
         public DbSet<Album> Albums { get; set; }
         public DbSet<Photo> Photos { get; set; }
+        public DbSet<Compagnie> Compagnies { get; set; }
+
+        internal void SavesChange()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

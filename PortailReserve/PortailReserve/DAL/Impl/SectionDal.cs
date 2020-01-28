@@ -67,6 +67,20 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
+        public List<Section> GetSectionsByCompagnie(Guid id)
+        {
+            try
+            {
+                List<Section> sections = bdd.Sections.Where(s => s.Compagnie.Id.Equals(id)).ToList();
+
+                return sections;
+            }catch(Exception e)
+            {
+                Console.WriteLine("Erreur récupération des sections par la compagnie : " + id + " -> " + e);
+                return new List<Section>();
+            }
+        }
+
         public int ModifierSection(Guid id, Section section)
         {
             try
@@ -78,8 +92,9 @@ namespace PortailReserve.DAL.Impl
                 toModif.CDS = section.CDS;
                 toModif.SOA = section.SOA;
                 toModif.Devise = section.Devise;
-                toModif.Chant = toModif.Chant;
-                toModif.Numero = toModif.Numero;
+                toModif.Chant = section.Chant;
+                toModif.Numero = section.Numero;
+                toModif.Compagnie = section.Compagnie;
                 bdd.SaveChanges();
 
                 return 1;
