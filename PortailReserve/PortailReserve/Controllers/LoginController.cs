@@ -42,16 +42,41 @@ namespace PortailReserve.Controllers
                 Utilisateur u = uDal.Authentifier(utilisateur.Matricule, utilisateur.MotDePasse);
                 if (!u.Equals(typeof(UtilisateurNull)))
                 {
-                    if (u == null)
+                    if (u == null || u.Equals(typeof(UtilisateurNull)))
                         return View("Error");
 
                     FormsAuthentication.SetAuthCookie(u.Id.ToString(), false);
+
+                    if (u.PremiereCo)
+                        return RedirectToAction("PremiereCo");
+
                     return Redirect("/");
                 }
                 ModelState.AddModelError("MotDePasse", "Matricule ou mot de passe incorrect.");
             }
             ModelState.AddModelError("MotDePasse", "Matricule ou mot de passe incorrect.");
             return View(utilisateur);
+        }
+
+        [Authorize]
+        public ActionResult PremiereCo ()
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if(u == null)
+            {
+                FormsAuthentication.SignOut();
+                return View("Error");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index");
+            }
+            if (!u.PremiereCo)
+                return RedirectToAction("Index", "Home");
+
+            return View(u);
         }
     }
 }
