@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -7,6 +8,7 @@ namespace PortailReserve.Models
 {
     public class Photo
     {
+        [Key]
         public Guid Id { get; set; }
         public Album Album { get; set; }
         public string Fichier { get; set; }

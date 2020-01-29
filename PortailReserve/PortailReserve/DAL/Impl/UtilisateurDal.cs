@@ -3,7 +3,8 @@ using PortailReserve.Models.NullObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using static PortailReserve.Utils.Utils;
+using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
@@ -20,14 +21,14 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                utilisateur.MotDePasse = Utils.Utils.EncodeSHA256(utilisateur.MotDePasse);
+                utilisateur.MotDePasse = EncodeSHA256(utilisateur.MotDePasse);
                 bdd.Utilisateurs.Add(utilisateur);
                 bdd.SaveChanges();
 
                 return bdd.Utilisateurs.ToList().Last().Id;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur ajout nouvel utilisateur -> " + e);
+                Log("ERROR", "Erreur ajout nouvel utilisateur -> " + e);
                 return Guid.Empty;
             }
         }
@@ -36,18 +37,18 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                String encodeMdp = Utils.Utils.EncodeSHA256(motDePasse);
+                string encodeMdp = EncodeSHA256(motDePasse);
                 Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.MotDePasse.Equals(encodeMdp) && u.Matricule.Equals(matricule));
 
                 return utilisateur;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Authentification échouer pour matricule : " + matricule + " -> " + nfe);
+                Log("ERROR", "Authentification échouer pour matricule : " + matricule + " -> " + nfe);
                 return new UtilisateurNull() { Error = "Matricule ou mot de passe incorrect." };
             }
             catch(Exception e)
             {
-                Console.WriteLine("Erreur authentification matricule : " + matricule + " -> " + e);
+                Log("ERROR", "Erreur authentification matricule : " + matricule + " -> " + e);
                 return null;
             }
         }
@@ -74,7 +75,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch (Exception e)
             {
-                Console.WriteLine("Erreur changement de mot de mot pour l'utilisateur : " + id + " -> " + e);
+                Log("ERROR", "Erreur changement de mot de mot pour l'utilisateur : " + id + " -> " + e);
                 return -10;
             }
         }
@@ -92,12 +93,12 @@ namespace PortailReserve.DAL.Impl
                 return utilisateur;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucun utilisateur trouve pour l'id : " + id + " -> " + nfe);
+                Log("ERROR", "Aucun utilisateur trouve pour l'id : " + id + " -> " + nfe);
                 return new UtilisateurNull() { Error = "Utilisateur introuvable." };
             }
             catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération utilisateurs par id : " + id + " -> " + e);
+                Log("ERROR", "Erreur récupération utilisateurs par id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -111,12 +112,12 @@ namespace PortailReserve.DAL.Impl
             }
             catch (NullReferenceException nfe)
             {
-                Console.WriteLine("Aucun utilisateur trouve pour l'id : " + id + " -> " + nfe);
+                Log("ERROR", "Aucun utilisateur trouve pour l'id : " + id + " -> " + nfe);
                 return new UtilisateurNull() { Error = "Utilisateur introuvable." };
             }
             catch (Exception e)
             {
-                Console.WriteLine("Erreur récupération utilisateurs par id : " + id + " -> " + e);
+                Log("ERROR", "Erreur récupération utilisateurs par id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -133,12 +134,12 @@ namespace PortailReserve.DAL.Impl
                 return null;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucun utilisateur trouve avec le matricule : " + matricule + " -> " + nfe);
+                Log("ERROR", "Aucun utilisateur trouve avec le matricule : " + matricule + " -> " + nfe);
                 return new UtilisateurNull() { Error = "Utilisateur introuvable." };
             }
             catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération utilisateur par matricule : " + matricule + " -> " + e);
+                Log("ERROR", "Erreur récupération utilisateur par matricule : " + matricule + " -> " + e);
                 return null;
             }
         }
@@ -151,7 +152,7 @@ namespace PortailReserve.DAL.Impl
                 return utilisateurs;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération utilisateur par id groupe : " + idGroupe + " -> " + e);
+                Log("ERROR", "Erreur récupération utilisateur par id groupe : " + idGroupe + " -> " + e);
                 return new List<Utilisateur>();
             }
         }
@@ -178,7 +179,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur modification utilisateur id : " + id + " -> " + e);
+                Log("ERROR", "Erreur modification utilisateur id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -195,12 +196,12 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucun utilisateur trouvé pour le matricule : " + matricule + " et le nom : " + nom + " et nait le " + naissance.ToString() + " -> " + nfe);
+                Log("ERROR", "Aucun utilisateur trouvé pour le matricule : " + matricule + " et le nom : " + nom + " et nait le " + naissance.ToString() + " -> " + nfe);
                 return 0;
             }
             catch(Exception e)
             {
-                Console.WriteLine("Erreur mot de passe oublié nom : " + nom + " matricule : " + matricule + " date de naissance " + naissance.ToString() + " -> " + e);
+                Log("ERROR", "Erreur mot de passe oublié nom : " + nom + " matricule : " + matricule + " date de naissance " + naissance.ToString() + " -> " + e);
                 return -1;
             }
         }
@@ -219,7 +220,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur reset de la premiere co id : " + id + " -> " + e);
+                Log("ERROR", "Erreur reset de la premiere co id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -238,7 +239,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur passage de la premier co a false pour id : " + id + " -> " + e);
+                Log("ERROR", "Erreur passage de la premier co a false pour id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -257,7 +258,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur suppression utilisateur id : " + id + " -> " + e);
+                Log("ERROR", "Erreur suppression utilisateur id : " + id + " -> " + e);
                 return -1;
             }
         }

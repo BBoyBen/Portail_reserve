@@ -65,7 +65,7 @@ namespace PortailReserve.Controllers
             if(u == null)
             {
                 FormsAuthentication.SignOut();
-                return View("Error");
+                return RedirectToAction("Index");
             }
             if (u.Equals(typeof(UtilisateurNull)))
             {
@@ -77,6 +77,13 @@ namespace PortailReserve.Controllers
                 return RedirectToAction("Index", "Home");
 
             return View(u);
+        }
+
+        public ActionResult Deconnexion ()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Index");
+
         }
     }
 }

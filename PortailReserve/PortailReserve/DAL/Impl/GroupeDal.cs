@@ -53,7 +53,7 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                Groupe byCdg = bdd.Groupes.FirstOrDefault(g => g.CDG.Id.Equals(idCdg));
+                Groupe byCdg = bdd.Groupes.FirstOrDefault(g => g.CDG.Equals(idCdg));
                 return byCdg;
             }catch(NullReferenceException nfe)
             {

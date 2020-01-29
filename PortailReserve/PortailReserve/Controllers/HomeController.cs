@@ -12,8 +12,47 @@ namespace PortailReserve.Controllers
 {
     public class HomeController : Controller
     {
+        private IUtilisateurDal uDal;
+        private IAdresseDal aDal;
+
+        public HomeController()
+        {
+            uDal = new UtilisateurDal();
+            aDal = new AdresseDal();
+        }
+
         public ActionResult Index()
         {
+            IDatabaseInitializer<BddContext> init = new DropCreateDatabaseAlways<BddContext>();
+            Database.SetInitializer(init);
+            init.InitializeDatabase(new BddContext());
+
+            Adresse a = new Adresse()
+            {
+                Ville = "Chateaugay",
+                CodePostal = "63119",
+                Voie = "15 rue des Rouchats",
+                Pays = "France"
+            };
+            Guid idAdresse = aDal.AjouterAdresse(a);
+            Adresse ad = aDal.GetAdresseById(idAdresse);
+
+            Utilisateur u = new Utilisateur()
+            {
+                Matricule = "1763041044",
+                Nom = "Maucotel",
+                Prenom = "Benoit",
+                Telephone = "0643849575",
+                Email = "benoit.maucotel@gmail.com",
+                Naissance = new DateTime(1997, 9, 4),
+                Adresse = ad,
+                Grade = "Caporal",
+                MotDePasse = "changeme",
+                Role = 1,
+                PremiereCo = true
+            };
+            uDal.AjouterUtilisateur(u);
+
             return View();
         }
 
