@@ -35,8 +35,8 @@ namespace PortailReserve.Controllers
             {
                 if (!Utils.Utils.ValideMatricule(utilisateur.Matricule))
                 {
-                    ModelState.AddModelError("Utilisateur.Matricule", "Format du matricule invalide");
-                    return View();
+                    ModelState.AddModelError("MotDePasse", "Matricule ou mot de passe incorrect.");
+                    return View(utilisateur);
                 }
 
                 Utilisateur u = uDal.Authentifier(utilisateur.Matricule, utilisateur.MotDePasse);
@@ -48,9 +48,10 @@ namespace PortailReserve.Controllers
                     FormsAuthentication.SetAuthCookie(u.Id.ToString(), false);
                     return Redirect("/");
                 }
-                ModelState.AddModelError("Utilisateur.MotDePasse", "Matricule ou mot de passe incorrect.");
+                ModelState.AddModelError("MotDePasse", "Matricule ou mot de passe incorrect.");
             }
-            return View();
+            ModelState.AddModelError("MotDePasse", "Matricule ou mot de passe incorrect.");
+            return View(utilisateur);
         }
     }
 }

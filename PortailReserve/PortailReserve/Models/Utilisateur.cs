@@ -14,9 +14,9 @@ namespace PortailReserve.Models
         public string Telephone { get; set; }
         public string Email { get; set; }
         public Adresse Adresse { get; set; }
-        [Display(Name = "Matricule : ")]
+        [Display(Name = "Matricule")]
         public string Matricule { get; set; }
-        [Display(Name = "Mot de passe : ")]
+        [Display(Name = "Mot de passe")]
         public string MotDePasse { get; set; }
         public Groupe Groupe { get; set; }
         public int Role { get; set; }

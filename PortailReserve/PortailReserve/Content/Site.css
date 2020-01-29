@@ -1,4 +1,14 @@
-﻿body {
-    padding-top: 50px;
+﻿@font-face{
+    font-family: "Roboto";
+    src: url("Police/Roboto/Roboto-Regular.ttf");
+}
+
+body {
     padding-bottom: 20px;
+    background-color: lightgray;
+    min-height: 100vh;
+}
+
+h1{
+    font-family: Roboto;
 }

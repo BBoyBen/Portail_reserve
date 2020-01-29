@@ -14,51 +14,45 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
+    <header>
+        <img src="~/Content/image/blason_ri.png" alt="blason RI" id="blasonRI" />
+        <img src="~/Content/image/blason_six.png" alt="blason six" id="blasonSix" />
+        <img src="~/Content/image/couverture_uir_short.jpg" alt="bannière UIR" id="banniere" />
+    </header>
 
-    <div id="homePage">
-        <div id="partGauche" class="col-6 partie"> 
-            <h1 id="titreGauche"> Réserve du 92e Régiment d'infanterie </h1>
-            <div class="row">
-                <div class="col-12">
-                    <img src="~/Content/image/blason_ri.png" alt="blason 92e RI" class="blasonRI"/>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <img src="~/Content/image/blason_six.png" alt="blason 6e Cie" class="blasonSix" />
-                </div>
-            </div>
-        </div>
+    <div class="container">
 
-        <div id="partDroite" class="col-6 partie">
-            <h1 id="titreDroit"> Veuillez vous authentifier </h1>
-            <div id="formAuth">
+        <div class="row">
+            <div id="form" class="col-6">
+                <h1 id="titreAuth"> Authentification </h1>
                 @using (Html.BeginForm())
                 {
                     <div class="row">
-                        @Html.LabelFor(m => m.Matricule, null, new { @class = "col-12"})
+                        @Html.LabelFor(m => m.Matricule, null, new { @class = "col-12" })
                     </div>
                     <div class="row">
-                        @Html.TextBoxFor(m => m.Matricule, null, new { @class = "col-6 champsText"})
-                    </div>
-                    <div class="row erreur">
-                        @Html.ValidationMessageFor(m => m.Matricule)
+                        @Html.TextBoxFor(m => m.Matricule, null, new { @class = "col-6 champsText" })
                     </div>
 
                     <div class="row">
-                        @Html.LabelFor(m => m.MotDePasse, null, new { @class = "col-12"})
+                        @Html.LabelFor(m => m.MotDePasse, null, new { @class = "col-12" })
                     </div>
                     <div class="row">
                         @Html.TextBoxFor(m => m.MotDePasse, new { type = "password", @class = "col-6 champsText" })
                     </div>
                     <div class="row erreur">
-                        @Html.ValidationMessageFor(m => m.MotDePasse)
+                        <div class="col-12">
+                            @Html.ValidationMessageFor(m => m.MotDePasse)
+                        </div>
                     </div>
 
                     <div class="row">
                         <input type="submit" value="Valider" class="col-4 btnSubmit" />
                     </div>
                 }
+                <div id="mdpOublie" class="col-6">
+                    Mot de passe oublié
+                </div>
             </div>
         </div>
     </div>
