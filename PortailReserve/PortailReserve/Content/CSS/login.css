@@ -124,5 +124,15 @@ label {
     padding-left: 2%;
 }
 
+.formPart {
+    margin-bottom: 35px;
+}
+
+.titreLegend {
+    padding-bottom: 10px;
+    margin-bottom: 35px;
+    border-bottom: 1px solid black;
+}
+
 
 

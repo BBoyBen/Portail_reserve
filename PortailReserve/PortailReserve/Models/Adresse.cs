@@ -10,7 +10,9 @@ namespace PortailReserve.Models
     {
         [Key]
         public Guid Id { get; set; }
+        [Display(Name = "Numéros, nom de rue")]
         public string Voie { get; set; }
+        [Display(Name = "Code postal")]
         public string CodePostal { get; set; }
         public string Ville { get; set; }
         public string Pays { get; set; }

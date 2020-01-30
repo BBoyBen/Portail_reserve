@@ -15,10 +15,12 @@ namespace PortailReserve.Controllers
     public class LoginController : Controller
     {
         private IUtilisateurDal uDal;
+        private IAdresseDal aDal;
 
         public LoginController()
         {
             uDal = new UtilisateurDal();
+            aDal = new AdresseDal();
         }
         // GET: Login
         public ActionResult Index()
@@ -78,7 +80,7 @@ namespace PortailReserve.Controllers
             PremiereCoViewModel vm = new PremiereCoViewModel()
             {
                 Util = u,
-                Adr = u.Adresse,
+                Adr = aDal.GetAdresseById(u.Adresse.Id),
                 Mdp = "",
                 MdpBis = ""
             };

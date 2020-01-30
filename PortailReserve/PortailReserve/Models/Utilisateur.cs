@@ -11,8 +11,11 @@ namespace PortailReserve.Models
         [Key]
         public Guid Id { get; set; }
         public string Nom { get; set; }
+        [Display(Name = "Prénom")]
         public string Prenom { get; set; }
+        [Display(Name = "Téléphone")]
         public string Telephone { get; set; }
+        [Display(Name = "E-mail")]
         public string Email { get; set; }
         public Adresse Adresse { get; set; }
         [Display(Name = "Matricule")]
@@ -23,6 +26,7 @@ namespace PortailReserve.Models
         public int Role { get; set; }
         public bool PremiereCo { get; set; }
         public string Grade { get; set; }
+        [Display(Name = "Date de naissance")]
         public DateTime Naissance { get; set; }
     }
 }
