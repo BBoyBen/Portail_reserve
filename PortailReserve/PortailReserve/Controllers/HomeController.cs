@@ -23,21 +23,11 @@ namespace PortailReserve.Controllers
 
         public ActionResult Index()
         {
-            IDatabaseInitializer<BddContext> init = new DropCreateDatabaseAlways<BddContext>();
+            /*IDatabaseInitializer<BddContext> init = new DropCreateDatabaseAlways<BddContext>();
             Database.SetInitializer(init);
-            init.InitializeDatabase(new BddContext());
+            init.InitializeDatabase(new BddContext());*/
 
-            Adresse a = new Adresse()
-            {
-                Ville = "Chateaugay",
-                CodePostal = "63119",
-                Voie = "15 rue des Rouchats",
-                Pays = "France"
-            };
-            Guid idAdresse = aDal.AjouterAdresse(a);
-            Adresse ad = aDal.GetAdresseById(idAdresse);
-
-            Utilisateur u = new Utilisateur()
+            /*Utilisateur u = new Utilisateur()
             {
                 Matricule = "1763041044",
                 Nom = "Maucotel",
@@ -45,13 +35,19 @@ namespace PortailReserve.Controllers
                 Telephone = "0643849575",
                 Email = "benoit.maucotel@gmail.com",
                 Naissance = new DateTime(1997, 9, 4),
-                Adresse = ad,
+                Adresse = new Adresse()
+                    {
+                        Ville = "Chateaugay",
+                        CodePostal = "63119",
+                        Voie = "15 rue des Rouchats",
+                        Pays = "France"
+                    },
                 Grade = "Caporal",
                 MotDePasse = "changeme",
                 Role = 1,
                 PremiereCo = true
             };
-            uDal.AjouterUtilisateur(u);
+            uDal.AjouterUtilisateur(u);*/
 
             return View();
         }

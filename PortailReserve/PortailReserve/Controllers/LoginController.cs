@@ -40,11 +40,9 @@ namespace PortailReserve.Controllers
                 }
 
                 Utilisateur u = uDal.Authentifier(utilisateur.Matricule, utilisateur.MotDePasse);
-                if (!u.Equals(typeof(UtilisateurNull)))
-                {
-                    if (u == null || u.Equals(typeof(UtilisateurNull)))
-                        return View("Error");
 
+                if (u != null && !u.Equals(typeof(UtilisateurNull)))
+                {
                     FormsAuthentication.SetAuthCookie(u.Id.ToString(), false);
 
                     if (u.PremiereCo)
