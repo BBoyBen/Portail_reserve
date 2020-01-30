@@ -24,7 +24,7 @@
     padding-bottom: 10px;
 }
 
-#titreAuth {
+#titreAuth, h1 {
     text-align: center;
     margin-right: auto;
     margin-left: auto;
@@ -38,13 +38,28 @@
     padding-top: 10px;
     border-radius: 5px;
     margin-bottom: 30px;
+}
+
+.champsTextCenter {
     margin-left: auto;
     margin-right: auto;
+}
+
+.champsTextGauche {
+    margin-right: auto;
+}
+
+.champsTextDroit{
+    margin-left: auto;
 }
 
 .champsText:focus {
     box-shadow: -3px -1px 20px -5px rgba(0,0,0,0.3);
     outline-color: darkgray;
+}
+
+.labelMiddle {
+    padding-top: 10px;
 }
 
 .btnSubmit {
@@ -104,6 +119,9 @@ label {
     min-height: 100vh;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 50px;
+    padding-right: 2%;
+    padding-left: 2%;
 }
 
 

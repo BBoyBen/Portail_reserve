@@ -41,14 +41,14 @@
                         @Html.LabelFor(m => m.Matricule, null, new { @class = "col-12" })
                     </div>
                     <div class="row">
-                        @Html.TextBoxFor(m => m.Matricule, null, new { @class = "col-6 champsText" })
+                        @Html.TextBoxFor(m => m.Matricule, null, new { @class = "col-6 champsText champsTextCenter", required = "required" })
                     </div>
 
                     <div class="row">
                         @Html.LabelFor(m => m.MotDePasse, null, new { @class = "col-12" })
                     </div>
                     <div class="row">
-                        @Html.TextBoxFor(m => m.MotDePasse, new { type = "password", @class = "col-6 champsText" })
+                        @Html.TextBoxFor(m => m.MotDePasse, new { type = "password", @class = "col-6 champsText champsTextCenter", required = "required" })
                     </div>
                     <div class="row erreur">
                         <div class="col-12">

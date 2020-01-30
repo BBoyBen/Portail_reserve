@@ -2,6 +2,7 @@
 using PortailReserve.DAL.Impl;
 using PortailReserve.Models;
 using PortailReserve.Models.NullObject;
+using PortailReserve.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,7 +75,21 @@ namespace PortailReserve.Controllers
             if (!u.PremiereCo)
                 return RedirectToAction("Index", "Home");
 
-            return View(u);
+            PremiereCoViewModel vm = new PremiereCoViewModel()
+            {
+                Util = u,
+                Adr = u.Adresse,
+                Mdp = "",
+                MdpBis = ""
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public ActionResult PremiereCo (PremiereCoViewModel vm)
+        {
+            return View();
         }
 
         public ActionResult Deconnexion ()

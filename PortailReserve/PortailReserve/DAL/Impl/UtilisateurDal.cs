@@ -64,11 +64,11 @@ namespace PortailReserve.DAL.Impl
                 if (utilisateur == null || utilisateur.Equals(typeof(UtilisateurNull)))
                     return -1;
 
-                string encodeOldMdp = Utils.Utils.EncodeSHA256(old_mdp);
+                string encodeOldMdp = EncodeSHA256(old_mdp);
                 if (!utilisateur.MotDePasse.Equals(encodeOldMdp))
                     return -2;
 
-                string encodeNewMdp = Utils.Utils.EncodeSHA256(nouvMdp);
+                string encodeNewMdp = EncodeSHA256(nouvMdp);
                 utilisateur.MotDePasse = encodeNewMdp;
                 bdd.SaveChanges();
 
@@ -126,7 +126,7 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                if (Utils.Utils.ValideMatricule(matricule))
+                if (ValideMatricule(matricule))
                 {
                     Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Matricule.Equals(matricule));
                     return utilisateur;
@@ -168,11 +168,10 @@ namespace PortailReserve.DAL.Impl
                 util.Nom = utilisateur.Nom;
                 util.Prenom = utilisateur.Prenom;
                 util.Grade = utilisateur.Grade;
-                util.Matricule = utilisateur.Grade;
+                util.Matricule = utilisateur.Matricule;
                 util.Naissance = utilisateur.Naissance;
                 util.Telephone = utilisateur.Telephone;
                 util.Email = utilisateur.Email;
-                util.Adresse = utilisateur.Adresse;
 
                 bdd.SaveChanges();
 
