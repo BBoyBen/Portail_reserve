@@ -280,6 +280,7 @@
     <Content Include="Content\image\blason_six.png" />
     <Content Include="Content\image\couverture_uir.jpg" />
     <Content Include="Content\image\couverture_uir_short.jpg" />
+    <Content Include="Content\JavaScript\login.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />

@@ -148,7 +148,7 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                List<Utilisateur> utilisateurs = bdd.Utilisateurs.Where(u => u.Groupe.Id.Equals(idGroupe)).ToList();
+                List<Utilisateur> utilisateurs = bdd.Utilisateurs.Where(u => u.Groupe.Equals(idGroupe)).ToList();
                 return utilisateurs;
             }catch(Exception e)
             {

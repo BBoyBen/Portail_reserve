@@ -80,7 +80,7 @@ namespace PortailReserve.Controllers
             PremiereCoViewModel vm = new PremiereCoViewModel()
             {
                 Util = u,
-                Adr = aDal.GetAdresseById(u.Adresse.Id),
+                Adr = aDal.GetAdresseById(u.Adresse),
                 Mdp = "",
                 MdpBis = ""
             };

@@ -17,12 +17,12 @@ namespace PortailReserve.Models
         public string Telephone { get; set; }
         [Display(Name = "E-mail")]
         public string Email { get; set; }
-        public Adresse Adresse { get; set; }
+        public Guid Adresse { get; set; }
         [Display(Name = "Matricule")]
         public string Matricule { get; set; }
         [Display(Name = "Mot de passe")]
         public string MotDePasse { get; set; }
-        public Groupe Groupe { get; set; }
+        public Guid Groupe { get; set; }
         public int Role { get; set; }
         public bool PremiereCo { get; set; }
         public string Grade { get; set; }

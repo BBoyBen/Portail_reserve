@@ -36,7 +36,7 @@
                         <fieldset class="col-12">
                             <legend class="col-12 titreLegend"> Changement du mot de passe </legend>
                             <div class="row">
-                                @Html.LabelFor(m => m.Mdp, "Nouveau mot de passe" , new { @class = "col-12" })
+                                @Html.LabelFor(m => m.Mdp, "Nouveau mot de passe", new { @class = "col-12" })
                             </div>
                             <div class="row">
                                 @Html.TextBoxFor(m => m.Mdp, new { type = "password", @class = "col-6 champsText champsTextCenter", required = "required" })
@@ -46,6 +46,11 @@
                             </div>
                             <div class="row">
                                 @Html.TextBoxFor(m => m.MdpBis, new { type = "password", @class = "col-6 champsText champsTextCenter", required = "required" })
+                            </div>
+                            <div class="row erreur">
+                                <div class="col-12">
+                                    <span id="erreurMdp">@Html.ValidationMessageFor(m => m.Mdp)</span>
+                                </div>
                             </div>
                         </fieldset>
                     </div>
@@ -68,7 +73,18 @@
 
                             <div class="row">
                                 @Html.LabelFor(m => m.Util.Naissance, new { @class = "col-4 text-right labelMiddle"})
-                                @Html.TextBoxFor(m => m.Util.Naissance, new { type = "date", @class = "col-4 champsText champsTextGauche", required = "required" })
+                                @Html.TextBoxFor(m => m.Util.Naissance, Model.Util.Naissance.ToString("yyyy-MM-dd"), new { type = "date", @class = "col-4 champsText champsTextGauche", required = "required" })
+                            </div>
+
+                            <div class="row erreur">
+                                <div class="col-12">
+                                    <span id="erreurMail"> @Html.ValidationMessageFor(m => m.Util.Email) </span>
+                                </div>
+                            </div>
+                            <div class="row erreur">
+                                <div class="col-12">
+                                    <span id="erreurTel"> @Html.ValidationMessageFor(m => m.Util.Telephone) </span>
+                                </div>
                             </div>
                         </fieldset>
                     </div>
@@ -92,11 +108,17 @@
                                 @Html.LabelFor(m => m.Adr.Pays, new { @class = "col-4 text-right labelMiddle"})
                                 @Html.TextBoxFor(m => m.Adr.Pays, new { @class = "col-4 champsText champsTextGauche", required = "required" })
                             </div>
+
+                            <div class="row erreur">
+                                <div class="col-12">
+                                    <span id="erreurCp"> @Html.ValidationMessageFor(m => m.Adr.CodePostal) </span>
+                                </div>
+                            </div>
                         </fieldset>
                     </div>
 
                     <div class="row formPart">
-                        <input type="submit" value="Valider" class="col-4 btnSubmit" />
+                        <input type="submit" value="Valider" class="col-4 btnSubmit" id="subPremierCo" disabled="disabled" />
                     </div>
                 }
             </div>
@@ -105,6 +127,7 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Content/JavaScript/login.js"></script>
 </body>
 </html>
 
