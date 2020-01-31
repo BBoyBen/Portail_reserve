@@ -9,6 +9,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using static PortailReserve.Utils.Utils;
 
 namespace PortailReserve.Controllers
 {
@@ -36,7 +37,7 @@ namespace PortailReserve.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (!Utils.Utils.ValideMatricule(utilisateur.Matricule))
+                if (!ValideMatricule(utilisateur.Matricule))
                 {
                     ModelState.AddModelError("MotDePasse", "Matricule ou mot de passe incorrect.");
                     return View(utilisateur);
@@ -91,7 +92,36 @@ namespace PortailReserve.Controllers
         [HttpPost]
         public ActionResult PremiereCo (PremiereCoViewModel vm)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                bool allValide = true;
+                if (!ValideMotDePasse(vm.Mdp, vm.MdpBis))
+                {
+                    ModelState.AddModelError("Mdp", "Mot de passe invalide ou pas identique.");
+                    allValide = false;
+                }
+                if(!ValideMail(vm.Util.Email))
+                {
+                    ModelState.AddModelError("Util.Email", "Adresse mail invalide.");
+                    allValide = false;
+                }
+                if (!ValideTel(vm.Util.Telephone))
+                {
+                    ModelState.AddModelError("Utils.Telephone", "Numéro de téléphone invalide.");
+                    allValide = false;
+                }
+                if (!ValideCodePostal(vm.Adr.CodePostal))
+                {
+                    ModelState.AddModelError("Adr.CodePostal", "Code postal invalide.");
+                    allValide = false;
+                }
+                if (!allValide)
+                    return View(vm);
+
+
+                return View();
+            }
+            return View(vm);
         }
 
         public ActionResult Deconnexion ()
