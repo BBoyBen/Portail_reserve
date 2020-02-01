@@ -119,7 +119,7 @@ namespace PortailReserve.Controllers
                     return View(vm);
 
 
-                return View();
+                return RedirectToAction("Index", "Home");
             }
             return View(vm);
         }
