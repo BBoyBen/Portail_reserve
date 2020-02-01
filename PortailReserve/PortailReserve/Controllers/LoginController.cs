@@ -118,6 +118,34 @@ namespace PortailReserve.Controllers
                 if (!allValide)
                     return View(vm);
 
+                int erreur = 0;
+                erreur = aDal.ModifierAdresse(vm.Adr.Id, vm.Adr);
+                if(erreur != 1)
+                {
+                    ViewBag.Erreur = "Une erreur s'est produite avec votre adresse.";
+                    return RedirectToAction("PremiereCo", "Login");
+                }
+
+                erreur = uDal.ModifierUtilisateur(vm.Util.Id, vm.Util);
+                if (erreur != 1)
+                {
+                    ViewBag.Erreur = "Une erreur s'est produite avec vos informations.";
+                    return RedirectToAction("PremiereCo", "Login");
+                }
+
+                erreur = uDal.PremierChangementMotDePasse(vm.Util.Id, vm.Mdp, vm.MdpBis);
+                if(erreur != 1)
+                {
+                    ViewBag.Erreur = "Une erreur s'est produite pour le changement de mot de passe.";
+                    return RedirectToAction("PremiereCo", "Login");
+                }
+
+                erreur = uDal.PremiereCoOk(vm.Util.Id);
+                if(erreur != 1)
+                {
+                    ViewBag.Erreur = "Une erreur s'est produite.";
+                    return RedirectToAction("PremiereCo", "Login");
+                }
 
                 return RedirectToAction("Index", "Home");
             }

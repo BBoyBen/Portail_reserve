@@ -15,6 +15,7 @@ namespace PortailReserve.DAL
         List<Utilisateur> GetUtilisateursByGroupe(Guid idGroupe);
         Utilisateur Authentifier(string matricule, string motDePasse);
         int ChangerMotDePasse(Guid id, string oldMdp, string nouvMdp, string nouvMdpBis);
+        int PremierChangementMotDePasse(Guid id, string mdp, string mdpBis);
         int MotDePassePerdu(string nom, string matricule, DateTime naissance);
         int ModifierUtilisateur(Guid id, Utilisateur utilisateur);
         int PremiereCoOk(Guid id);

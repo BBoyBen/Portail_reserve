@@ -21,13 +21,20 @@ namespace PortailReserve.Controllers
             aDal = new AdresseDal();
         }
 
+        [Authorize]
         public ActionResult Index()
         {
-            /*IDatabaseInitializer<BddContext> init = new DropCreateDatabaseAlways<BddContext>();
-            Database.SetInitializer(init);
-            init.InitializeDatabase(new BddContext());*/
 
-            /*Adresse a = new Adresse()
+            return View();
+        }
+
+        public ActionResult ResetBdd ()
+        {
+            IDatabaseInitializer<BddContext> init = new DropCreateDatabaseAlways<BddContext>();
+            Database.SetInitializer(init);
+            init.InitializeDatabase(new BddContext());
+
+            Adresse a = new Adresse()
             {
                 Ville = "Chateaugay",
                 CodePostal = "63119",
@@ -50,9 +57,9 @@ namespace PortailReserve.Controllers
                 Role = 1,
                 PremiereCo = true
             };
-            uDal.AjouterUtilisateur(u);*/
+            uDal.AjouterUtilisateur(u);
 
-            return View();
+            return RedirectToAction("Index", "Login");
         }
 
     }

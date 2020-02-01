@@ -205,6 +205,30 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
+        public int PremierChangementMotDePasse(Guid id, string mdp, string mdpBis)
+        {
+            try
+            {
+                if (!mdp.Equals(mdpBis))
+                    return 0;
+
+                Utilisateur utilisateur = GetUtilisateurById(id);
+                if (utilisateur == null || utilisateur.Equals(typeof(UtilisateurNull)))
+                    return -1;
+
+                string encodeNewMdp = EncodeSHA256(mdp);
+                utilisateur.MotDePasse = encodeNewMdp;
+                bdd.SaveChanges();
+
+                return 1;
+            }
+            catch (Exception e)
+            {
+                Log("ERROR", "Erreur premier changement de mot de mot pour l'utilisateur : " + id + " -> " + e);
+                return -10;
+            }
+        }
+
         public int PremiereCoKO(Guid id)
         {
             try
