@@ -7,8 +7,25 @@ body {
     padding-bottom: 20px;
     background-color: lightgray;
     min-height: 100vh;
+    font-family: Roboto;
 }
 
 h1{
     font-family: Roboto;
+}
+
+#banniere {
+    opacity: 0.8;
+    width: 50%;
+    margin-left: 25%;
+    margin-right: 25%;
+    margin-bottom: 20px;
+    box-shadow: 0px 10px 20px 1px rgba(0,0,0,0.3);
+}
+
+#blasonSixLayout {
+    position: absolute;
+    top: 5%;
+    left: 8%;
+    width: 8%;
 }

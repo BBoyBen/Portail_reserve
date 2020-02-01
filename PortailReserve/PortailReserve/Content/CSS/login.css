@@ -10,14 +10,6 @@
     box-shadow: 0px 5px 20px 5px rgba(0,0,0,0.3);
 }
 
-#banniere {
-    opacity: 0.8;
-    width: 80%;
-    margin-left: 10%;
-    margin-right: 10%;
-    box-shadow: 0px 10px 20px 1px rgba(0,0,0,0.3);
-}
-
 .erreur{
     color: red;
     text-align: center;
@@ -89,14 +81,14 @@ label {
 #blasonRI {
     position: absolute;
     top: 4%;
-    left: 2.5%;
+    left: 7%;
     width: 10%;
 }
 
 #blasonSix {
     position: absolute;
     top: 5%;
-    right: 2.5%;
+    right: 7%;
     width: 10%;
 }
 
