@@ -19,13 +19,70 @@ h1{
     width: 50%;
     margin-left: 25%;
     margin-right: 25%;
-    margin-bottom: 20px;
     box-shadow: 0px 10px 20px 1px rgba(0,0,0,0.3);
 }
 
 #blasonSixLayout {
     position: absolute;
-    top: 5%;
+    top: 3%;
     left: 8%;
     width: 8%;
+}
+
+#iconeIdentite{
+    position:absolute;
+    top: 3%;
+    right: 0%;
+    width: 25%;
+}
+
+#iconeSoldat {
+    width: 33%;
+    margin-left: 33%;
+    margin-right: 33%;
+}
+
+#userGrade {
+    width: 100%;
+    text-align:center;
+}
+
+#menu {
+    text-align: center;
+    background-color: gray;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0px 10px 20px 1px rgba(0,0,0,0.3);
+}
+
+.borderDroite {
+    border-right: solid 1px black;
+}
+
+.menuItem {
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.menuItem:hover {
+    cursor: pointer;
+}
+
+.lienMenu {
+    color: black;
+}
+
+.lienMenu:hover{
+    color: white;
+    text-decoration: none;
+}
+
+#corpsDePage {
+    min-height: 100vh;
+    background-color: white;
+    box-shadow: 0px 10px 20px 1px rgba(0,0,0,0.3);
+    border-radius: 5px;
+    padding: 30px 30px 30px 30px;
 }

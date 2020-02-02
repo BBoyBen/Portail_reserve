@@ -12,8 +12,22 @@
     <header>
         <img src="~/Content/image/blason_six.png" alt="blason six" id="blasonSixLayout" />
         <img src="~/Content/image/couverture_uir_short.jpg" alt="bannière UIR" id="banniere" />
+        <div id="iconeIdentite">
+            <img src="~/Content/image/icone_soldat.png" alt="icone soldat" id="iconeSoldat"/>
+            <div id="userGrade"> Caporal MAUCOTEL </div>
+        </div>
     </header>
-    <div class="container body-content">
+
+    <div id="menu">
+        <div class="row">
+            <div class="menuItem col-3 borderDroite"> @Html.ActionLink("ACCEUIL", "Index", "Home", new { @class = "lienMenu" }) </div>
+            <div class="menuItem col-3 borderDroite"> EVENEMENT </div>
+            <div class="menuItem col-3 borderDroite"> CONNAISSANCE </div>
+            <div class="menuItem col-3"> SOUVENIR </div>
+        </div>
+    </div>
+
+    <div id="corpsDePage" class="container body-content">
         @RenderBody()
     </div>
 
