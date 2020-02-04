@@ -13,8 +13,28 @@
         <img src="~/Content/image/blason_six.png" alt="blason six" id="blasonSixLayout" />
         <img src="~/Content/image/couverture_uir_short.jpg" alt="bannière UIR" id="banniere" />
         <div id="iconeIdentite">
-            <img src="~/Content/image/icone_soldat.png" alt="icone soldat" id="iconeSoldat"/>
-            <div id="userGrade"> Caporal MAUCOTEL </div>
+            <img src="~/Content/image/icone_soldat.png" alt="icone soldat" id="iconeSoldat" onclick="afficherCacherElement('menuPerso'); " />
+            <div id="userGrade"> @ViewBag.Grade @ViewBag.Nom </div>
+            <div id="menuPerso" style="display: none; ">
+                <div class="row elemMenuPerso">
+                    Mon profil
+                </div>
+                <div class="row elemMenuPerso">
+                    Ma section
+                </div>
+                <div class="row elemMenuPerso">
+                    Planning
+                </div>
+                <div class="row elemMenuPerso">
+                    Contact
+                </div>
+                <div class="row elemMenuPerso">
+                    @Html.ActionLink("Déconnexion", "Deconnexion", "Login", null, new { @class = "lienMenuPerso" })
+                </div>
+                <div class="row">
+                    <img src="~/Content/image/icone_fermeture.png" alt="Fermer" id="fermerMenu" onclick="afficherCacherElement('menuPerso'); " />
+                </div>
+            </div>
         </div>
     </header>
 
@@ -33,6 +53,7 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Content/JavaScript/autoload.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

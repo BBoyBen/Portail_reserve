@@ -34,12 +34,17 @@ h1{
     top: 3%;
     right: 0%;
     width: 25%;
+    z-index: 1000;
 }
 
 #iconeSoldat {
     width: 33%;
     margin-left: 33%;
     margin-right: 33%;
+}
+
+#iconeSoldat:hover {
+    cursor: pointer;
 }
 
 #userGrade {
@@ -54,6 +59,7 @@ h1{
     padding-bottom: 10px;
     margin-bottom: 30px;
     box-shadow: 0px 10px 20px 1px rgba(0,0,0,0.3);
+    overflow: hidden;
 }
 
 .borderDroite {
@@ -85,4 +91,44 @@ h1{
     box-shadow: 0px 10px 20px 1px rgba(0,0,0,0.3);
     border-radius: 5px;
     padding: 30px 30px 30px 30px;
+}
+
+#menuPerso {
+    background-color: lightgray;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    padding-top: 5%;
+    padding-bottom: 3%;
+    padding-left: 10%;
+    padding-right: 5%;
+    border-radius: 3px;
+    box-shadow: 0px 10px 20px 1px rgba(0,0,0,0.3);
+}
+
+.elemMenuPerso {
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 5%;
+}
+
+.lienMenuPerso {
+    color: black;
+    text-decoration: none;
+}
+
+.lienMenuPerso:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+#fermerMenu {
+    width: 25%;
+    margin-left: 32.5%;
+    margin-right: 37.5%;
+}
+
+#fermerMenu:hover {
+    cursor: pointer;
 }
