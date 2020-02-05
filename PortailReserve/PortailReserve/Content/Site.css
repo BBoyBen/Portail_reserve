@@ -10,8 +10,23 @@ body {
     font-family: Roboto;
 }
 
-h1{
+h1 {
     font-family: Roboto;
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+    padding-bottom: 5%;
+}
+
+.titreLegend {
+    padding-bottom: 10px;
+    margin-bottom: 35px;
+    border-bottom: 1px solid black;
+}
+
+.selfCenter {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #banniere {
@@ -95,7 +110,7 @@ h1{
 
 #menuPerso {
     background-color: lightgray;
-    width: 70%;
+    width: 50%;
     margin-left: auto;
     margin-right: auto;
     margin-top: 10px;

@@ -89,7 +89,7 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                List<Groupe> bySection = bdd.Groupes.Where(g => g.Section.Id.Equals(idSection)).ToList();
+                List<Groupe> bySection = bdd.Groupes.Where(g => g.Section.Equals(idSection)).ToList();
                 return bySection;
             }catch(Exception e)
             {

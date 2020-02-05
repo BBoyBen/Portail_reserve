@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using static PortailReserve.Utils.Utils;
 using static PortailReserve.Utils.Logger;
+using System.Data.Entity;
 
 namespace PortailReserve.DAL.Impl
 {
@@ -218,6 +219,7 @@ namespace PortailReserve.DAL.Impl
 
                 string encodeNewMdp = EncodeSHA256(mdp);
                 utilisateur.MotDePasse = encodeNewMdp;
+
                 bdd.SaveChanges();
 
                 return 1;
@@ -257,6 +259,7 @@ namespace PortailReserve.DAL.Impl
                     return 0;
 
                 utilisateur.PremiereCo = false;
+
                 bdd.SaveChanges();
 
                 return 1;

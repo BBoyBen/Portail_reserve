@@ -119,7 +119,7 @@ namespace PortailReserve.Controllers
                     return View(vm);
 
                 int erreur = 0;
-                erreur = aDal.ModifierAdresse(vm.Adr.Id, vm.Adr);
+                erreur = aDal.ModifierAdresse(vm.Util.Adresse, vm.Adr);
                 if(erreur != 1)
                 {
                     ViewBag.Erreur = "Une erreur s'est produite avec votre adresse.";

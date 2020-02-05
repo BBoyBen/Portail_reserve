@@ -1,12 +1,13 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @RenderSection("style", required: false)
 </head>
 <body>
     <header>
@@ -17,7 +18,7 @@
             <div id="userGrade"> @ViewBag.Grade @ViewBag.Nom </div>
             <div id="menuPerso" style="display: none; ">
                 <div class="row elemMenuPerso">
-                    Mon profil
+                    @Html.ActionLink("Mon profil", "Index", "Profil", null, new { @class = "lienMenuPerso" })
                 </div>
                 <div class="row elemMenuPerso">
                     Ma section
@@ -40,7 +41,7 @@
 
     <div id="menu">
         <div class="row">
-            <div class="menuItem col-3 borderDroite"> @Html.ActionLink("ACCEUIL", "Index", "Home", new { @class = "lienMenu" }) </div>
+            <div class="menuItem col-3 borderDroite"> @Html.ActionLink("ACCEUIL", "Index", "Home", null, new { @class = "lienMenu" }) </div>
             <div class="menuItem col-3 borderDroite"> EVENEMENT </div>
             <div class="menuItem col-3 borderDroite"> CONNAISSANCE </div>
             <div class="menuItem col-3"> SOUVENIR </div>

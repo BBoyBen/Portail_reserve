@@ -28,7 +28,7 @@
                 <div class="row">
                     <div class="col-12">
                         <h1> Première connexion </h1>
-                        @if (ViewBag.Erreur != null)
+                        @if (ViewBag.Erreur != null || ViewBag.Erreur != "")
                         {
                         <div class="row erreur">
                             <div class="col-12">
@@ -128,6 +128,8 @@
 
                     @Html.HiddenFor(m => m.Util.Grade)
                     @Html.HiddenFor(m => m.Util.Matricule)
+                    @Html.HiddenFor(m => m.Util.Id)
+                    @Html.HiddenFor(m => m.Util.Adresse)
 
                     <div class="row formPart">
                         <input type="submit" value="Valider" class="col-4 btnSubmit" id="subPremierCo" disabled="disabled" onclick="toutVert('champsText');" />

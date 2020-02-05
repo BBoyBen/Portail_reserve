@@ -71,7 +71,7 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                List<Section> sections = bdd.Sections.Where(s => s.Compagnie.Id.Equals(id)).ToList();
+                List<Section> sections = bdd.Sections.Where(s => s.Compagnie.Equals(id)).ToList();
 
                 return sections;
             }catch(Exception e)
@@ -95,6 +95,7 @@ namespace PortailReserve.DAL.Impl
                 toModif.Chant = section.Chant;
                 toModif.Numero = section.Numero;
                 toModif.Compagnie = section.Compagnie;
+
                 bdd.SaveChanges();
 
                 return 1;

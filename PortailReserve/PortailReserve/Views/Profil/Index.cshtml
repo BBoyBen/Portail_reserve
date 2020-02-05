@@ -1,0 +1,83 @@
+﻿@model PortailReserve.ViewModel.ProfilViewModel
+@{
+    ViewBag.Title = "Mon profil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style {
+    <link rel="stylesheet" href="~/Content/CSS/profil.css" />
+}
+
+<h1> Mon profil </h1>
+
+<div class="container">
+    <h2 class="titreLegend"> Identité </h2>
+    <div class="row elemProfil">
+        <div class="col-6">
+            Nom : @Model.Util.Nom
+        </div>
+        <div class="col-6">
+            Prénom : @Model.Util.Prenom
+        </div>
+    </div>
+    <div class="row elemProfil">
+        <div class="col-6">
+            Email : @Model.Util.Email
+        </div>
+        <div class="col-6">
+            Téléphone : @Model.Util.Telephone
+        </div>
+    </div>
+    <div class="row elemProfil">
+        <div class="col-12">
+            Date de naissance : @Model.Util.Naissance.ToString("dd/MM/yyyy")
+        </div>
+    </div>
+
+    <h2 class="titreLegend"> Adresse </h2>
+    <div class="row elemProfil">
+        <div class="col-12">
+            Adresse : @Model.Adr.Voie
+        </div>
+    </div>
+    <div class="row elemProfil">
+        <div class="col-6">
+            Code postal : @Model.Adr.CodePostal
+        </div>
+        <div class="col-6">
+            Ville : @Model.Adr.Ville
+        </div>
+    </div>
+    <div class="row elemProfil">
+        <div class="col-12">
+            Pays : @Model.Adr.Pays
+        </div>
+    </div>
+
+    <h2 class="titreLegend"> Situation militaire organique </h2>
+    <div class="row elemProfil">
+        <div class="col-6">
+            Compagnie : @Model.Cie.Numero
+        </div>
+        <div class="col-6">
+            Commandant d'unité : @Model.Cdu.Grade @Model.Cdu.Nom.ToUpperInvariant()
+        </div>
+    </div>
+    <div class="row elemProfil">
+        <div class="col-6">
+            Section : @Model.Section.Numero
+        </div>
+        <div class="col-6">
+            Chef de section : @Model.Cds.Grade @Model.Cds.Nom.ToUpperInvariant()
+        </div>
+    </div>
+    <div class="row elemProfil">
+        <div class="col-6">
+            Groupe : @Model.Grp.Numero
+        </div>
+        <div class="col-6">
+            Chef de groupe : @Model.Cdg.Grade @Model.Cdg.Nom.ToUpperInvariant()
+        </div>
+    </div>
+</div>
+
