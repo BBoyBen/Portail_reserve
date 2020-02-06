@@ -14,69 +14,77 @@
     <h2 class="titreLegend"> Identité </h2>
     <div class="row elemProfil">
         <div class="col-6">
-            Nom : @Model.Util.Nom
+            <strong> Nom : </strong> @Model.Util.Nom
         </div>
         <div class="col-6">
-            Prénom : @Model.Util.Prenom
+            <strong> Prénom : </strong> @Model.Util.Prenom
         </div>
     </div>
     <div class="row elemProfil">
         <div class="col-6">
-            Email : @Model.Util.Email
+            <strong> Email : </strong> @Model.Util.Email
         </div>
         <div class="col-6">
-            Téléphone : @Model.Util.Telephone
+            <strong> Téléphone : </strong> @Model.Util.Telephone
         </div>
     </div>
     <div class="row elemProfil">
         <div class="col-12">
-            Date de naissance : @Model.Util.Naissance.ToString("dd/MM/yyyy")
+            <strong> Date de naissance : </strong> @Model.Util.Naissance.ToString("dd/MM/yyyy")
         </div>
     </div>
 
     <h2 class="titreLegend"> Adresse </h2>
     <div class="row elemProfil">
         <div class="col-12">
-            Adresse : @Model.Adr.Voie
+            <strong> Adresse : </strong> @Model.Adr.Voie
         </div>
     </div>
     <div class="row elemProfil">
         <div class="col-6">
-            Code postal : @Model.Adr.CodePostal
+            <strong> Code postal : </strong> @Model.Adr.CodePostal
         </div>
         <div class="col-6">
-            Ville : @Model.Adr.Ville
+            <strong> Ville : </strong> @Model.Adr.Ville
         </div>
     </div>
     <div class="row elemProfil">
         <div class="col-12">
-            Pays : @Model.Adr.Pays
+            <strong> Pays : </strong> @Model.Adr.Pays
         </div>
     </div>
 
     <h2 class="titreLegend"> Situation militaire organique </h2>
     <div class="row elemProfil">
         <div class="col-6">
-            Compagnie : @Model.Cie.Numero
+            <strong> Compagnie : </strong> @Model.Cie.Numero
         </div>
         <div class="col-6">
-            Commandant d'unité : @Model.Cdu.Grade @Model.Cdu.Nom.ToUpperInvariant()
-        </div>
-    </div>
-    <div class="row elemProfil">
-        <div class="col-6">
-            Section : @Model.Section.Numero
-        </div>
-        <div class="col-6">
-            Chef de section : @Model.Cds.Grade @Model.Cds.Nom.ToUpperInvariant()
+            <strong> Commandant d'unité : </strong> @Model.Cdu.Grade @Model.Cdu.Nom.ToUpperInvariant()
         </div>
     </div>
     <div class="row elemProfil">
         <div class="col-6">
-            Groupe : @Model.Grp.Numero
+            <strong> Section : </strong> @Model.Section.Numero
         </div>
         <div class="col-6">
-            Chef de groupe : @Model.Cdg.Grade @Model.Cdg.Nom.ToUpperInvariant()
+            <strong> Chef de section : </strong> @Model.Cds.Grade @Model.Cds.Nom.ToUpperInvariant()
+        </div>
+    </div>
+    <div class="row elemProfil">
+        <div class="col-6">
+            <strong> Groupe : </strong> @Model.Grp.Numero
+        </div>
+        <div class="col-6">
+            <strong> Chef de groupe : </strong> @Model.Cdg.Grade @Model.Cdg.Nom.ToUpperInvariant()
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-4 selfCenter">
+            <button class="bouton" onclick="clickOn('modifProfil'); "> 
+                @Html.ActionLink("Modifier mes informations", "Modifier", "Profil", null, new { @class = "lienBouton", id = "modifProfil" })
+            </button>
         </div>
     </div>
 </div>

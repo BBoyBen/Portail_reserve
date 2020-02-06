@@ -436,6 +436,7 @@
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Login\PremiereCo.cshtml" />
     <Content Include="Views\Profil\Index.cshtml" />
+    <Content Include="Views\Profil\Modifier.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
