@@ -58,7 +58,7 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                if (!nouvMdp.Equals(nouvMdpBis))
+                if (nouvMdp.Equals(old_mdp))
                     return 0;
 
                 Utilisateur utilisateur = GetUtilisateurById(id);

@@ -211,9 +211,55 @@ namespace PortailReserve.Controllers
             {
                 Old = "",
                 New = "",
-                NewBis = ""
+                NewBis = "",
+                IdUtil = u.Id
             };
 
+            return View(vm);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult ModifMdp (ModifMdpViewModel vm)
+        {
+            if(ModelState.IsValid)
+            {
+                bool toutOk = true;
+
+                if(!ValideMotDePasse(vm.New, vm.NewBis))
+                {
+                    ModelState.AddModelError("NewBis", "Les mots de passe doivent être identique.");
+                    toutOk = false;
+                }
+
+                int retour = uDal.ChangerMotDePasse(vm.IdUtil, vm.Old, vm.New, vm.NewBis);
+                switch(retour)
+                {
+                    case 0:
+                        ModelState.AddModelError("NewBis", "Le nouveau mot de passe doit être différent de l'ancien.");
+                        toutOk = false;
+                        break;
+                    case -1:
+                        ViewBag.Erreur = "Une erreur est survenu lors du changement de mot de passe.";
+                        toutOk = false;
+                        break;
+                    case -2:
+                        ModelState.AddModelError("Old", "Mot de passe incorrect.");
+                        toutOk = false;
+                        break;
+                    case -10:
+                        ViewBag.Erreur = "Une erreur est survenue lors du changement de votre mot de passe.";
+                        toutOk = false;
+                        break;
+                }
+
+                if (toutOk)
+                    return RedirectToAction("Index", "Home");
+                else
+                    return View(vm);
+            }
+
+            ViewBag.Erreur = "Vérifiez les informations renseignées.";
             return View(vm);
         }
     }

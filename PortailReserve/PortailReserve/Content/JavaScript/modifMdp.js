@@ -60,14 +60,36 @@ function sameMdp() {
     }
 }
 
+function checkOldMdp() {
+    var oldMdp = document.getElementById("Old");
+    if (oldMdp.value.trim().length < 1)
+        oldMdpValide = false;
+    else
+        oldMdpValide = true;
+}
+
 document.getElementById("New").addEventListener("input", function (target) {
+    checkOldMdp();
     sameMdp();
 });
 
 document.getElementById("NewBis").addEventListener("input", function (target) {
+    checkOldMdp();
     sameMdp();
 });
 
 document.getElementById("Old").addEventListener("input", function (target) {
+    var champsMdp = document.getElementById("Old");
+    var erreur = document.getElementById("erreurMdpOld");
 
+    if (champsMdp.value.trim().length < 1) {
+        erreur.innerHTML = "Renseignez votre ancien mot de passe.";
+        oldMdpValide = false;
+        ableSubmit();
+    }
+    else {
+        erreur.innerHTML = "";
+        oldMdpValide = true;
+        ableSubmit();
+    }
 });

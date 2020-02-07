@@ -10,5 +10,6 @@ namespace PortailReserve.ViewModel
         public string Old { get; set; }
         public string New { get; set; }
         public string NewBis { get; set; }
+        public Guid IdUtil { get; set; }
     }
 }
