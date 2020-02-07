@@ -267,6 +267,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\Utils.cs" />
+    <Compile Include="ViewModel\ModifMdpViewModel.cs" />
     <Compile Include="ViewModel\ModifProfilViewModel.cs" />
     <Compile Include="ViewModel\PremiereCoViewModel.cs" />
     <Compile Include="ViewModel\ProfilViewModel.cs" />
@@ -287,6 +288,7 @@
     <Content Include="Content\image\icone_fermeture.png" />
     <Content Include="Content\image\icone_soldat.png" />
     <Content Include="Content\JavaScript\autoload.js" />
+    <Content Include="Content\JavaScript\modifMdp.js" />
     <Content Include="Content\JavaScript\modifProfil.js" />
     <Content Include="Content\JavaScript\premiereCo.js" />
     <Content Include="favicon.ico" />
@@ -439,6 +441,7 @@
     <Content Include="Views\Login\PremiereCo.cshtml" />
     <Content Include="Views\Profil\Index.cshtml" />
     <Content Include="Views\Profil\Modifier.cshtml" />
+    <Content Include="Views\Profil\ModifMdp.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

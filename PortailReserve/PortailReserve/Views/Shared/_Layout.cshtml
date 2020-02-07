@@ -30,7 +30,7 @@
                     Contact
                 </div>
                 <div class="row elemMenuPerso">
-                    Changer mon mot de passe
+                    @Html.ActionLink("Changer mon mot de passe", "ModifMdp", "Profil", null, new { @class = "lienMenuPerso" })
                 </div>
                 <div class="row elemMenuPerso">
                     @Html.ActionLink("Déconnexion", "Deconnexion", "Login", null, new { @class = "lienMenuPerso" })

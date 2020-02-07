@@ -1,0 +1,62 @@
+﻿@model PortailReserve.ViewModel.ModifMdpViewModel
+@{
+    ViewBag.Title = "Modifier mot de passe";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1> Modifier son mot de passe </h1>
+
+<div class="row">
+    <div class="col-12 text-center erreur">
+        @ViewBag.Erreur
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        @using (Html.BeginForm())
+        {
+            <div class="row formPart">
+                <fieldset class="col-12">
+                    <legend class="col-12 titreLegend"> Changement du mot de passe </legend>
+                    <div class="row">
+                        @Html.LabelFor(m => m.Old, "Ancien mot de passe", new { @class = "col-12" })
+                    </div>
+                    <div class="row">
+                        @Html.TextBoxFor(m => m.Old, new { type = "password", @class = "col-6 champsText champsTextCenter", required = "required" })
+                    </div>
+                    <div class="row erreur">
+                        <div class="col-12">
+                            <span id="erreurMdpOld">@Html.ValidationMessageFor(m => m.Old)</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        @Html.LabelFor(m => m.New, "Nouveau mot de passe", new { @class = "col-12" })
+                    </div>
+                    <div class="row">
+                        @Html.TextBoxFor(m => m.New, new { type = "password", @class = "col-6 champsText champsTextCenter", required = "required" })
+                    </div>
+                    <div class="row">
+                        @Html.LabelFor(m => m.NewBis, "Retaper le nouveau mot de passe", new { @class = "col-12" })
+                    </div>
+                    <div class="row">
+                        @Html.TextBoxFor(m => m.NewBis, new { type = "password", @class = "col-6 champsText champsTextCenter", required = "required" })
+                    </div>
+                    <div class="row erreur">
+                        <div class="col-12">
+                            <span id="erreurMdp">@Html.ValidationMessageFor(m => m.NewBis)</span>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="row formPart">
+                <input type="submit" value="Changer" class="col-4 btnSubmit" id="subModifMdp" disabled="disabled" onclick="toutVert('champsText');" />
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Content/JavaScript/modifMdp.js"></script>
+}

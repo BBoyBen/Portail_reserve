@@ -185,5 +185,36 @@ namespace PortailReserve.Controllers
             ViewBag.Erreur = "Une erreur s'est produite. Veuillez réessayer.";
             return RedirectToAction("Modifier", "Profil");
         }
+
+        [Authorize]
+        public ActionResult ModifMdp()
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+
+            ModifMdpViewModel vm = new ModifMdpViewModel()
+            {
+                Old = "",
+                New = "",
+                NewBis = ""
+            };
+
+            return View(vm);
+        }
     }
 }
