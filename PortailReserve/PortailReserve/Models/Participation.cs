@@ -12,8 +12,8 @@ namespace PortailReserve.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        public Evenement Evenement { get; set; }
-        public Utilisateur Utilisateur { get; set; }
+        public Guid Evenement { get; set; }
+        public Guid Utilisateur { get; set; }
         public bool Participe { get; set; }
         public DateTime Reponse { get; set; }
     }

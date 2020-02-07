@@ -16,7 +16,7 @@ namespace PortailReserve.DAL.Impl
             bdd = new BddContext();
         }
 
-        public Guid AjouterParticipation(Utilisateur util, Evenement evenement, bool participe)
+        public Guid AjouterParticipation(Guid util, Guid evenement, bool participe)
         {
             try
             {
@@ -66,7 +66,7 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                Participation participation = bdd.Participations.FirstOrDefault(p => p.Utilisateur.Id.Equals(idUtil) && p.Evenement.Id.Equals(idEvent));
+                Participation participation = bdd.Participations.FirstOrDefault(p => p.Utilisateur.Equals(idUtil) && p.Evenement.Equals(idEvent));
                 return participation;
             }catch(NullReferenceException nfe)
             {
@@ -84,7 +84,7 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                List<Participation> participations = bdd.Participations.Where(p => p.Evenement.Id.Equals(idEvent)).ToList();
+                List<Participation> participations = bdd.Participations.Where(p => p.Evenement.Equals(idEvent)).ToList();
                 return participations;
              }catch(Exception e)
             {
@@ -101,7 +101,7 @@ namespace PortailReserve.DAL.Impl
                 if (toModif == null || toModif.Equals(typeof(ParticipationNull)))
                     return 0;
 
-                if (!toModif.Utilisateur.Id.Equals(idUtil))
+                if (!toModif.Utilisateur.Equals(idUtil))
                     return -10;
 
                 toModif.Participe = modif;

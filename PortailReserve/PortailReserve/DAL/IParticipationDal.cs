@@ -9,7 +9,7 @@ namespace PortailReserve.DAL
 {
     public interface IParticipationDal : IDisposable
     {
-        Guid AjouterParticipation(Utilisateur util, Evenement evenement, bool participe);
+        Guid AjouterParticipation(Guid util, Guid evenement, bool participe);
         Participation GetParticipationById(Guid id);
         Participation GetParticipationByUtilAndEvent(Guid idUtil, Guid idEvent);
         List<Participation> GetParticipationsByEvent(Guid idEvent);

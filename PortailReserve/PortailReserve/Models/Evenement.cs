@@ -21,6 +21,6 @@ namespace PortailReserve.Models
         public int Duree { get; set; }
         public string Type { get; set; }
         public string Lieu { get; set; }
-        public Effectif Effectif { get; set; }
+        public Guid Effectif { get; set; }
     }
 }

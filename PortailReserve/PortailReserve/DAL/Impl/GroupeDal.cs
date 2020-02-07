@@ -2,8 +2,10 @@
 using PortailReserve.Models.NullObject;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
@@ -31,6 +33,29 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
+        public int ChangerCdg(Guid id, Guid idNouvCdg)
+        {
+            try
+            {
+                Utilisateur cdgActu = GetCdg(id);
+                Utilisateur nouvCdg = bdd.Utilisateurs.FirstOrDefault(u => u.Id.Equals(idNouvCdg));
+                if (nouvCdg == null)
+                    return 0;
+
+                nouvCdg.EstCDG = true;
+                nouvCdg.Groupe = id;
+                cdgActu.EstCDG = false;
+
+                bdd.SaveChanges();
+
+                return 1;
+            }catch(Exception e)
+            {
+                Log("ERROR", "Erreur changement de chef de groupe pour le groupe : " + id + " -> " + e);
+                return -1;
+            }
+        }
+
         public void Dispose()
         {
             bdd.Dispose();
@@ -49,20 +74,21 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public Groupe GetGroupeByCdg(Guid idCdg)
+        public Utilisateur GetCdg(Guid id)
         {
             try
             {
-                Groupe byCdg = bdd.Groupes.FirstOrDefault(g => g.CDG.Equals(idCdg));
-                return byCdg;
+                Utilisateur cdg = bdd.Utilisateurs.FirstOrDefault(u => u.Groupe.Equals(id) && u.EstCDG);
+
+                return cdg;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucun groupe trouve avec comme cdg : " + idCdg + " -> " + nfe);
-                return new GroupeNull() { Error = "Goupe avec ce CDG introuvable." };
+                Log("ERROR", "Aucun chef de groupe trouvé pour le groupe : " + id + " -> " + nfe);
+                return new UtilisateurNull() { Error = "Chef de groupe introuvable" };
             }
             catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération du groupe du cdg : " + idCdg + " -> " + e);
+                Log("ERROR", "Erreur récupération du chef de groupe pour le groupe : " + id + " -> " + e);
                 return null;
             }
         }
@@ -106,7 +132,6 @@ namespace PortailReserve.DAL.Impl
                 if (toModif == null || toModif.Equals(typeof(GroupeNull)))
                     return 0;
 
-                toModif.CDG = groupe.CDG;
                 toModif.Numero = groupe.Numero;
                 toModif.Section = groupe.Section;
                 bdd.SaveChanges();

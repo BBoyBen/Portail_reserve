@@ -83,7 +83,7 @@ namespace PortailReserve.DAL.Impl
                 if (toDelete == null || toDelete.Equals(typeof(AlbumNull)))
                     return 0;
 
-                List<Photo> phToDelete = bdd.Photos.Where(p => p.Album.Id.Equals(id)).ToList();
+                List<Photo> phToDelete = bdd.Photos.Where(p => p.Album.Equals(id)).ToList();
                 foreach(Photo ph in phToDelete)
                 {
                     bdd.Photos.Remove(ph);

@@ -73,7 +73,7 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                List<Reponse> byMessage = bdd.Reponses.Where(r => r.Message.Id.Equals(idMessage)).ToList();
+                List<Reponse> byMessage = bdd.Reponses.Where(r => r.Message.Equals(idMessage)).ToList();
                 return byMessage;
             }catch(Exception e)
             {

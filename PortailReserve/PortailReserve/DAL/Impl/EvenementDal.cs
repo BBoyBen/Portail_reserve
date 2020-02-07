@@ -158,7 +158,6 @@ namespace PortailReserve.DAL.Impl
                 toModify.Debut = evenement.Debut;
                 toModify.Description = evenement.Description;
                 toModify.Duree = evenement.Duree;
-                toModify.Effectif = evenement.Effectif;
                 toModify.Fin = evenement.Fin;
                 toModify.Lieu = evenement.Lieu;
                 toModify.LimiteReponse = evenement.LimiteReponse;

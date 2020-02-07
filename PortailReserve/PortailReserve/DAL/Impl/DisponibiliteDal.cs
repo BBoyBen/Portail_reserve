@@ -42,7 +42,7 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                List<Disponibilite> byEvent = bdd.Disponibilites.Where(d => d.Evenement.Id.Equals(idEvent)).ToList();
+                List<Disponibilite> byEvent = bdd.Disponibilites.Where(d => d.Evenement.Equals(idEvent)).ToList();
 
                 return byEvent;
             }catch(Exception e)
@@ -56,7 +56,7 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                List<Disponibilite> byUtil = bdd.Disponibilites.Where(d => d.Utilisateur.Id.Equals(idUtil)).ToList();
+                List<Disponibilite> byUtil = bdd.Disponibilites.Where(d => d.Utilisateur.Equals(idUtil)).ToList();
 
                 return byUtil;
             }catch(Exception e)

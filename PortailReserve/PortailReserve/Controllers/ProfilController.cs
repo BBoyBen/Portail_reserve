@@ -66,7 +66,7 @@ namespace PortailReserve.Controllers
             if (c == null || c.Equals(typeof(CompagnieNull)))
                 c = new Compagnie();
 
-            Utilisateur cdg = uDal.GetUtilisateurById(g.CDG);
+            Utilisateur cdg = gDal.GetCdg(u.Groupe);
             if (cdg == null || cdg.Equals(typeof(UtilisateurNull)))
                 cdg = new Utilisateur();
 

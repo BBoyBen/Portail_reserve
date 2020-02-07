@@ -12,9 +12,10 @@ namespace PortailReserve.DAL
         Guid AjouterGroupe(Groupe groupe);
         Groupe GetGroupeById(Guid id);
         int ModifierGroupe(Guid id, Groupe groupe);
-        Groupe GetGroupeByCdg(Guid idCdg);
         List<Groupe> GetAllGroupes();
         List<Groupe> GetGroupesBySection(Guid idSection);
         int SupprimerGroupe(Guid id);
+        Utilisateur GetCdg(Guid id);
+        int ChangerCdg(Guid id, Guid idNouvCdg);
     }
 }

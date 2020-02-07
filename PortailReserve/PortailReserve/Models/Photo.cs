@@ -12,7 +12,7 @@ namespace PortailReserve.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        public Album Album { get; set; }
+        public Guid Album { get; set; }
         public string Fichier { get; set; }
         public DateTime Ajout { get; set; }
     }

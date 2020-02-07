@@ -71,7 +71,8 @@ namespace PortailReserve.Controllers
                 Grade = "Capitaine",
                 MotDePasse = "changeme",
                 Role = 2,
-                PremiereCo = true
+                PremiereCo = true,
+                EstCDG = false
             };
             Guid idCdu = uDal.AjouterUtilisateur(cdu);
 
@@ -87,7 +88,8 @@ namespace PortailReserve.Controllers
                 Grade = "Adjudant",
                 MotDePasse = "changeme",
                 Role = 3,
-                PremiereCo = true
+                PremiereCo = true,
+                EstCDG = false
             };
             Guid idCds = uDal.AjouterUtilisateur(cds);
 
@@ -103,25 +105,10 @@ namespace PortailReserve.Controllers
                 Grade = "Sergent-chef",
                 MotDePasse = "changeme",
                 Role = 3,
-                PremiereCo = true
+                PremiereCo = true,
+                EstCDG = false
             };
             Guid idSoa = uDal.AjouterUtilisateur(soa);
-
-            Utilisateur cdg = new Utilisateur()
-            {
-                Matricule = "0000000003",
-                Nom = "Aubernon",
-                Prenom = "Matthieu",
-                Telephone = "0000000000",
-                Email = "matthieu.aubernon@gmail.com",
-                Naissance = new DateTime(1985, 9, 4),
-                Adresse = Guid.Empty,
-                Grade = "Sergent",
-                MotDePasse = "changeme",
-                Role = 4,
-                PremiereCo = true
-            };
-            Guid idCdg = uDal.AjouterUtilisateur(cdg);
 
             Compagnie cie = new Compagnie()
             {
@@ -147,10 +134,27 @@ namespace PortailReserve.Controllers
             Groupe grp = new Groupe()
             {
                 Numero = 1,
-                CDG = idCdg,
                 Section = idSection
             };
             Guid idGrp = gDal.AjouterGroupe(grp);
+
+            Utilisateur cdg = new Utilisateur()
+            {
+                Matricule = "0000000003",
+                Nom = "Aubernon",
+                Prenom = "Matthieu",
+                Telephone = "0000000000",
+                Email = "matthieu.aubernon@gmail.com",
+                Naissance = new DateTime(1985, 9, 4),
+                Adresse = Guid.Empty,
+                Grade = "Sergent",
+                MotDePasse = "changeme",
+                Role = 4,
+                PremiereCo = true,
+                EstCDG = true,
+                Groupe = idGrp
+            };
+            Guid idCdg = uDal.AjouterUtilisateur(cdg);
 
             Adresse a = new Adresse()
             {

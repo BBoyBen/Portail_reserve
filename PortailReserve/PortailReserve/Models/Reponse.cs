@@ -12,9 +12,9 @@ namespace PortailReserve.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        public Message Message { get; set; }
+        public Guid Message { get; set; }
         public string Texte { get; set; }
         public DateTime Date { get; set; }
-        public Utilisateur Envoyeur { get; set; }
+        public Guid Envoyeur { get; set; }
     }
 }

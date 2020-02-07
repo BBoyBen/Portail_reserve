@@ -2,6 +2,7 @@
 using PortailReserve.Models.NullObject;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
@@ -75,8 +76,6 @@ namespace PortailReserve.DAL.Impl
                 if (toModify == null || toModify.Equals(typeof(CompagnieNull)))
                     return 0;
 
-                toModify.CDU = compagnie.CDU;
-                toModify.ADU = compagnie.ADU;
                 toModify.Numero = compagnie.Numero;
                 toModify.Chant = compagnie.Chant;
                 toModify.Devise = compagnie.Devise;

@@ -2,6 +2,7 @@
 using PortailReserve.Models.NullObject;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
@@ -89,12 +90,9 @@ namespace PortailReserve.DAL.Impl
                 if (toModif == null || toModif.Equals(typeof(SectionNull)))
                     return 0;
 
-                toModif.CDS = section.CDS;
-                toModif.SOA = section.SOA;
                 toModif.Devise = section.Devise;
                 toModif.Chant = section.Chant;
                 toModif.Numero = section.Numero;
-                toModif.Compagnie = section.Compagnie;
 
                 bdd.SaveChanges();
 

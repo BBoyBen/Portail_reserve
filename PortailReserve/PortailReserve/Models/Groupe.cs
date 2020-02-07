@@ -14,6 +14,5 @@ namespace PortailReserve.Models
         public Guid Id { get; set; }
         public Guid Section { get; set; }
         public int Numero { get; set; }
-        public Guid  CDG { get; set; }
     }
 }

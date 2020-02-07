@@ -73,7 +73,7 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                List<Photo> byAlbum = bdd.Photos.Where(p => p.Album.Id.Equals(idAlbum)).ToList();
+                List<Photo> byAlbum = bdd.Photos.Where(p => p.Album.Equals(idAlbum)).ToList();
                 return byAlbum;
             }catch(Exception e)
             {

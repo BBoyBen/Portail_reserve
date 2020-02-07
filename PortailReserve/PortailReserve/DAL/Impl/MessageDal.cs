@@ -71,7 +71,7 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                List<Message> byEvent = bdd.Messages.Where(m => m.Evenement.Id.Equals(idEvent)).ToList();
+                List<Message> byEvent = bdd.Messages.Where(m => m.Evenement.Equals(idEvent)).ToList();
                 return byEvent;
             }catch(Exception e)
             {
