@@ -1,4 +1,4 @@
-﻿var mdpValide = false;
+﻿
 var mailValide = true;
 var telValide = true;
 var cpValide = true;
@@ -6,7 +6,7 @@ var cpValide = true;
 function ableSubmit() {
     var bouton = document.getElementById("subPremierCo");
 
-    if (mdpValide && mailValide && telValide && cpValide)
+    if (mailValide && telValide && cpValide)
         bouton.disabled = "";
     else
         bouton.disabled = "disabled";
@@ -27,48 +27,6 @@ function champsOk(id) {
     champs.style.outlineColor = "darkgrey";
     champs.style.border = "1px solid lightgrey";
 }
-
-function sameMdp() {
-    var mdp = document.getElementById("Mdp");
-    var mdpBis = document.getElementById("MdpBis");
-    var erreurMdp = document.getElementById("erreurMdp");
-
-    if ((mdp.value != "" || mdp.value.trim().length > 0) && !(mdp.value === mdpBis.value) && mdpBis.value.trim().length > 0) {
-        erreurChamps("MdpBis");
-        erreurMdp.innerHTML = "Les mots de passe doivent être identique.";
-        mdpValide = false;
-        ableSubmit();
-    }
-    else if ((mdp.value === "" || mdp.value.trim().length === 0) && mdpBis.value.trim().length > 0) {
-        erreurChamps("Mdp");
-        erreurChamps("MdpBis");
-        erreurMdp.innerHTML = "Le mot de passe ne peut pas être vide.";
-        mdpValide = false;
-        ableSubmit();
-    }
-    else if (mdp.value.trim().length === 0 || mdpBis.value.trim().length === 0) {
-        champsOk("Mdp");
-        champsOk("MdpBis");
-        erreurMdp.innerHTML = "";
-        mdpValide = false;
-        ableSubmit();
-    }
-    else {
-        champsOk("Mdp");
-        champsOk("MdpBis");
-        erreurMdp.innerHTML = "";
-        mdpValide = true;
-        ableSubmit();
-    }
-}
-
-document.getElementById("Mdp").addEventListener("input", function (target) {
-    sameMdp();
-});
-
-document.getElementById("MdpBis").addEventListener("input", function (target) {
-    sameMdp();
-});
 
 function validateEmail(email) {
     var re = /.+@.+\..+/;

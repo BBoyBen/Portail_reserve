@@ -1,4 +1,4 @@
-﻿
+﻿@model PortailReserve.ViewModel.ModifProfilViewModel
 @{
     ViewBag.Title = "Modifier profil";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,3 +6,91 @@
 
 <h1>Modifier mon profil</h1>
 
+<div class="row">
+    <div class="col-12 text-center erreur">
+        @ViewBag.Erreur
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        @using (Html.BeginForm())
+        {
+            <div class="row formPart">
+                <fieldset class="col-12">
+                    <legend class="col-12 titreLegend"> Identité </legend>
+                    <div class="row">
+                        @Html.LabelFor(m => m.Util.Nom, new { @class = "col-1 text-right labelMiddle" })
+                        @Html.TextBoxFor(m => m.Util.Nom, new { @class = "col-4 champsText champsTextGauche", required = "required" })
+                        @Html.LabelFor(m => m.Util.Prenom, new { @class = "col-1 text-right labelMiddle" })
+                        @Html.TextBoxFor(m => m.Util.Prenom, new { @class = "col-4 champsText champsTextGauche", required = "required" })
+                    </div>
+
+                    <div class="row">
+                        @Html.LabelFor(m => m.Util.Email, new { @class = "col-1 text-right labelMiddle" })
+                        @Html.TextBoxFor(m => m.Util.Email, new { @class = "col-4 champsText champsTextGauche", required = "required" })
+                        @Html.LabelFor(m => m.Util.Telephone, new { @class = "col-1 text-right labelMiddle" })
+                        @Html.TextBoxFor(m => m.Util.Telephone, new { @class = "col-4 champsText champsTextGauche", required = "required" })
+                    </div>
+
+                    <div class="row">
+                        @Html.LabelFor(m => m.Util.Naissance, new { @class = "col-4 text-right labelMiddle" })
+                        @Html.TextBoxFor(m => m.Util.Naissance, Model.Util.Naissance.ToString("yyyy-MM-dd"), new { type = "date", @class = "col-4 champsText champsTextGauche", required = "required" })
+                    </div>
+
+                    <div class="row erreur">
+                        <div class="col-12">
+                            <span id="erreurMail"> @Html.ValidationMessageFor(m => m.Util.Email) </span>
+                        </div>
+                    </div>
+                    <div class="row erreur">
+                        <div class="col-12">
+                            <span id="erreurTel"> @Html.ValidationMessageFor(m => m.Util.Telephone) </span>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="row formPart">
+                <fieldset class="col-12">
+                    <legend class="col-12 titreLegend"> Adresse </legend>
+                    <div class="row">
+                        @Html.LabelFor(m => m.Adr.Voie, new { @class = "col-4 text-right labelMiddle" })
+                        @Html.TextBoxFor(m => m.Adr.Voie, new { @class = "col-4 champsText champsTextGauche", required = "required" })
+                    </div>
+
+                    <div class="row">
+                        @Html.LabelFor(m => m.Adr.CodePostal, new { @class = "col-1 text-right" })
+                        @Html.TextBoxFor(m => m.Adr.CodePostal, new { @class = "col-4 champsText champsTextGauche", required = "required" })
+                        @Html.LabelFor(m => m.Adr.Ville, new { @class = "col-1 text-right labelMiddle" })
+                        @Html.TextBoxFor(m => m.Adr.Ville, new { @class = "col-4 champsText champsTextGauche", required = "required" })
+                    </div>
+
+                    <div class="row">
+                        @Html.LabelFor(m => m.Adr.Pays, new { @class = "col-4 text-right labelMiddle" })
+                        @Html.TextBoxFor(m => m.Adr.Pays, new { @class = "col-4 champsText champsTextGauche", required = "required" })
+                    </div>
+
+                    <div class="row erreur">
+                        <div class="col-12">
+                            <span id="erreurCp"> @Html.ValidationMessageFor(m => m.Adr.CodePostal) </span>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            @Html.HiddenFor(m => m.Util.Grade)
+            @Html.HiddenFor(m => m.Util.Matricule)
+            @Html.HiddenFor(m => m.Util.Id)
+            @Html.HiddenFor(m => m.Util.Adresse)
+
+            <div class="row formPart">
+                <input type="submit" value="Modifier" class="col-4 btnSubmit" id="subPremierCo" onclick="toutVert('champsText');" />
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Content/JavaScript/modifProfil.js"></script>
+}

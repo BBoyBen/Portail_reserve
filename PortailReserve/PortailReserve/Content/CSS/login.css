@@ -10,72 +10,12 @@
     box-shadow: 0px 5px 20px 5px rgba(0,0,0,0.3);
 }
 
-.erreur{
-    color: red;
-    text-align: center;
-    padding-bottom: 10px;
-}
-
 #titreAuth, h1 {
     text-align: center;
     margin-right: auto;
     margin-left: auto;
     padding-top: 5%;
     padding-bottom: 5%;
-}
-
-.champsText {
-    text-align: center;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    border-radius: 5px;
-    margin-bottom: 30px;
-    border: 1px solid lightgrey;
-}
-
-.champsTextCenter {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.champsTextGauche {
-    margin-right: auto;
-}
-
-.champsTextDroit{
-    margin-left: auto;
-}
-
-.champsText:focus {
-    box-shadow: 0px -1px 20px -5px rgba(0,0,0,0.3);
-    outline-color: darkgray;
-}
-
-.labelMiddle {
-    padding-top: 10px;
-}
-
-.btnSubmit {
-    text-align: center;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-radius: 5px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 20px;
-}
-
-.btnSubmit:hover {
-    box-shadow: -3px -1px 20px -5px rgba(0,0,0,0.3);
-}
-
-.btnSubmit:focus{
-    outline: none;
-}
-
-label {
-    text-align: center;
 }
 
 #blasonRI {

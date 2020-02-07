@@ -9,6 +9,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using static PortailReserve.Utils.Utils;
 
 namespace PortailReserve.Controllers
 {
@@ -119,7 +120,70 @@ namespace PortailReserve.Controllers
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
 
-            return View();
+            Adresse adr = aDal.GetAdresseById(u.Adresse);
+            if (adr == null || adr.Equals(typeof(AdresseNull)))
+                adr = new Adresse();
+
+            ModifProfilViewModel vm = new ModifProfilViewModel()
+            {
+                Util = u,
+                Adr = adr
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult Modifier(ModifProfilViewModel vm)
+        {
+            if(ModelState.IsValid)
+            {
+                bool allValide = true;
+                if (!ValideMail(vm.Util.Email))
+                {
+                    ModelState.AddModelError("Util.Email", "Adresse mail invalide.");
+                    allValide = false;
+                }
+                if (!ValideTel(vm.Util.Telephone))
+                {
+                    ModelState.AddModelError("Utils.Telephone", "Numéro de téléphone invalide.");
+                    allValide = false;
+                }
+                if (!ValideCodePostal(vm.Adr.CodePostal))
+                {
+                    ModelState.AddModelError("Adr.CodePostal", "Code postal invalide.");
+                    allValide = false;
+                }
+                if (!allValide)
+                    return View(vm);
+
+                int erreur = 0;
+                erreur = aDal.ModifierAdresse(vm.Util.Adresse, vm.Adr);
+                if (erreur != 1)
+                {
+                    ViewBag.Erreur = "Une erreur s'est produite avec votre adresse.";
+                    return RedirectToAction("Modifier", "Profil");
+                }
+
+                erreur = uDal.ModifierUtilisateur(vm.Util.Id, vm.Util);
+                if (erreur != 1)
+                {
+                    ViewBag.Erreur = "Une erreur s'est produite avec vos informations.";
+                    return RedirectToAction("Modifier", "Profil");
+                }
+
+                if (erreur != 1)
+                {
+                    ViewBag.Erreur = "Une erreur s'est produite. Veuillez réessayer.";
+                    return RedirectToAction("Modifier", "Profil");
+                }
+
+                return RedirectToAction("Index", "Profil");
+
+            }
+            ViewBag.Erreur = "Une erreur s'est produite. Veuillez réessayer.";
+            return RedirectToAction("Modifier", "Profil");
         }
     }
 }
