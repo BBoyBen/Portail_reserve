@@ -1,7 +1,57 @@
-﻿@model PortailReserve.Models.Utilisateur
+﻿@model PortailReserve.ViewModel.AcceuilViewModel
 @{
     ViewBag.Title = "Acceuil";
 }
 
+@section style{
+    <link rel="stylesheet" href="~/Content/CSS/home.css" />    
+}
+
 <h1> Bienvenue sur le portail de la 6e Compagnie de réserve du 92e R.I </h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-3 boiteAcceuil champsTextGauche" onclick="clickOn('iconeProfil'); ">
+            @Html.ActionLink("Profil", "Index", "Profil", null, new { id = "iconeProfil", style = "display: none; "})
+            <img src="~/Content/image/icone_profile.png" alt="Profile" class="imageBoiteAcceuil" />
+            <h2 class="text-center titreBoiteAcceuil"> Gestion de profil </h2>
+        </div>
+        <div class="col-3 boiteAcceuil champsTextCenter">
+            <img src="~/Content/image/icone_groupe.png" alt="Groupe" class="imageBoiteAcceuil" />
+            <h2 class="text-center titreBoiteAcceuil"> Section <br/> - <br/> Groupe </h2>
+        </div>
+        <div class="col-3 boiteAcceuil champsTextDroit">
+            <img src="~/Content/image/icone_cours.png" alt="Cours" class="imageBoiteAcceuil" />
+            <h2 class="text-center titreBoiteAcceuil"> Cours </h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 boiteAcceuil boiteEvent">
+            <div class="row">
+                <div class="col-6" id="eventProche">
+                    <h2 class="text-center titreBoiteAcceuil"> Prochain événement </h2>
+                    @if(Model.HasProchainEvent)
+                    {
+                        <div id="nextEvent">
+                            <strong> @Model.ProchainEvent.Nom </strong> <br/>
+                            @Model.ProchainEvent.Type <br/>
+                            @Model.ProchainEvent.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR")) au @Model.ProchainEvent.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="noEvent">
+                            Pas d'événement à venir
+                        </div>
+                    }
+                </div>
+                <div class="col-6" id="tousEvent">
+                    <img src="~/Content/image/icone_planning.png" alt="plaaning" class="imageEvent" />
+                    <h2 class="text-center titreBoiteAcceuil"> Voir tous les événements </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 

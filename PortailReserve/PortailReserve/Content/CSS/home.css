@@ -1,0 +1,54 @@
+﻿
+.boiteAcceuil {
+    min-height: 30vh;
+    border: 1px solid grey;
+    border-radius: 4px;
+    padding-top: 30px;
+    padding-bottom: 15px;
+}
+
+.boiteAcceuil:hover {
+    box-shadow: 0px 10px 20px 1px rgba(0,0,0,0.3);
+    cursor: pointer;
+}
+
+.titreBoiteAcceuil {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.imageBoiteAcceuil {
+    width: 50%;
+    margin-left: 25%;
+    margin-right: 25%;
+    margin-bottom: 15px;
+    opacity: 0.8;
+}
+
+.boiteEvent {
+    margin-top: 30px;
+}
+
+#eventProche {
+
+}
+
+#tousEvent {
+    border-left: 1px solid rgba(0, 126, 168, 0.8);
+}
+
+.imageEvent {
+    width: 30%;
+    margin-left: 35%;
+    margin-right: 35%;
+    margin-bottom: 15px;
+    opacity: 0.8;
+}
+
+#nextEvent {
+    margin-top: 7%;
+}
+
+#noEvent {
+    margin-top: 10%;
+}

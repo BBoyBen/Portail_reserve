@@ -20,6 +20,8 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
+                evenement.Duree = evenement.Fin.Subtract(evenement.Debut);
+
                 bdd.Evenements.Add(evenement);
                 bdd.SaveChanges();
 

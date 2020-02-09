@@ -2,6 +2,7 @@
 using PortailReserve.DAL.Impl;
 using PortailReserve.Models;
 using PortailReserve.Models.NullObject;
+using PortailReserve.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -19,6 +20,7 @@ namespace PortailReserve.Controllers
         private IGroupeDal gDal;
         private ISectionDal sDal;
         private ICompagnieDal cDal;
+        private IEvenementDal eDal;
 
         public HomeController()
         {
@@ -27,6 +29,7 @@ namespace PortailReserve.Controllers
             gDal = new GroupeDal();
             sDal = new SectionDal();
             cDal = new CompagnieDal();
+            eDal = new EvenementDal();
         }
 
         [Authorize]
@@ -50,7 +53,17 @@ namespace PortailReserve.Controllers
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
 
-            return View();
+            Evenement prochain = eDal.GetProchainEvenement();
+            AcceuilViewModel vm = new AcceuilViewModel()
+            {
+                ProchainEvent = prochain,
+                HasProchainEvent = true
+            };
+
+            if (prochain == null)
+                vm.HasProchainEvent = false;
+
+            return View(vm);
         }
 
         public ActionResult ResetBdd ()
@@ -181,6 +194,17 @@ namespace PortailReserve.Controllers
                 PremiereCo = true
             };
             uDal.AjouterUtilisateur(u);
+
+            Evenement e = new Evenement()
+            {
+                Nom = "Week-end d'instruction Février",
+                Debut = new DateTime(2020, 2, 15, 8, 0, 0),
+                Fin = new DateTime(2020, 2, 16, 17, 0, 0),
+                Type = "Instructon",
+                Lieu = "Quartier - 92e RI",
+                Description = "Week end d'instruction au quartier pour continuer la préparation sentinelle"
+            };
+            eDal.CreerEvenement(e);
 
             return RedirectToAction("Index", "Login");
         }

@@ -267,6 +267,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\Utils.cs" />
+    <Compile Include="ViewModel\AcceuilViewModel.cs" />
     <Compile Include="ViewModel\ModifMdpViewModel.cs" />
     <Compile Include="ViewModel\ModifProfilViewModel.cs" />
     <Compile Include="ViewModel\PremiereCoViewModel.cs" />
@@ -279,13 +280,18 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\CSS\home.css" />
     <Content Include="Content\CSS\login.css" />
     <Content Include="Content\CSS\profil.css" />
     <Content Include="Content\image\blason_ri.png" />
     <Content Include="Content\image\blason_six.png" />
     <Content Include="Content\image\couverture_uir.jpg" />
     <Content Include="Content\image\couverture_uir_short.jpg" />
+    <Content Include="Content\image\icone_cours.png" />
     <Content Include="Content\image\icone_fermeture.png" />
+    <Content Include="Content\image\icone_groupe.png" />
+    <Content Include="Content\image\icone_planning.png" />
+    <Content Include="Content\image\icone_profile.png" />
     <Content Include="Content\image\icone_soldat.png" />
     <Content Include="Content\JavaScript\autoload.js" />
     <Content Include="Content\JavaScript\modifMdp.js" />
