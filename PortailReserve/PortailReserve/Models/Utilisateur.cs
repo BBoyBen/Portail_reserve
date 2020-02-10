@@ -30,6 +30,5 @@ namespace PortailReserve.Models
         public string Grade { get; set; }
         [Display(Name = "Date de naissance")]
         public DateTime Naissance { get; set; }
-        public bool EstCDG { get; set; }
     }
 }

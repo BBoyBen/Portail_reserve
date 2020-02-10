@@ -84,8 +84,7 @@ namespace PortailReserve.Controllers
                 Grade = "Capitaine",
                 MotDePasse = "changeme",
                 Role = 2,
-                PremiereCo = true,
-                EstCDG = false
+                PremiereCo = true
             };
             Guid idCdu = uDal.AjouterUtilisateur(cdu);
 
@@ -101,8 +100,7 @@ namespace PortailReserve.Controllers
                 Grade = "Adjudant",
                 MotDePasse = "changeme",
                 Role = 3,
-                PremiereCo = true,
-                EstCDG = false
+                PremiereCo = true
             };
             Guid idCds = uDal.AjouterUtilisateur(cds);
 
@@ -118,8 +116,7 @@ namespace PortailReserve.Controllers
                 Grade = "Sergent-chef",
                 MotDePasse = "changeme",
                 Role = 3,
-                PremiereCo = true,
-                EstCDG = false
+                PremiereCo = true
             };
             Guid idSoa = uDal.AjouterUtilisateur(soa);
 
@@ -163,9 +160,7 @@ namespace PortailReserve.Controllers
                 Grade = "Sergent",
                 MotDePasse = "changeme",
                 Role = 4,
-                PremiereCo = true,
-                EstCDG = true,
-                Groupe = idGrp
+                PremiereCo = true
             };
             Guid idCdg = uDal.AjouterUtilisateur(cdg);
 

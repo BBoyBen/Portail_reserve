@@ -37,14 +37,9 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                Utilisateur cdgActu = GetCdg(id);
-                Utilisateur nouvCdg = bdd.Utilisateurs.FirstOrDefault(u => u.Id.Equals(idNouvCdg));
-                if (nouvCdg == null)
-                    return 0;
+                Groupe grp = bdd.Groupes.FirstOrDefault(g => g.Id.Equals(id));
 
-                nouvCdg.EstCDG = true;
-                nouvCdg.Groupe = id;
-                cdgActu.EstCDG = false;
+                grp.CDG = idNouvCdg;
 
                 bdd.SaveChanges();
 
@@ -71,25 +66,6 @@ namespace PortailReserve.DAL.Impl
             {
                 Log("ERROR", "Erreur récupration de tous les groupes -> " + e);
                 return new List<Groupe>();
-            }
-        }
-
-        public Utilisateur GetCdg(Guid id)
-        {
-            try
-            {
-                Utilisateur cdg = bdd.Utilisateurs.FirstOrDefault(u => u.Groupe.Equals(id) && u.EstCDG);
-
-                return cdg;
-            }catch(NullReferenceException nfe)
-            {
-                Log("ERROR", "Aucun chef de groupe trouvé pour le groupe : " + id + " -> " + nfe);
-                return new UtilisateurNull() { Error = "Chef de groupe introuvable" };
-            }
-            catch(Exception e)
-            {
-                Log("ERROR", "Erreur récupération du chef de groupe pour le groupe : " + id + " -> " + e);
-                return null;
             }
         }
 

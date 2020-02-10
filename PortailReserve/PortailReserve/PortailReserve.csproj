@@ -272,6 +272,7 @@
     <Compile Include="ViewModel\ModifProfilViewModel.cs" />
     <Compile Include="ViewModel\PremiereCoViewModel.cs" />
     <Compile Include="ViewModel\ProfilViewModel.cs" />
+    <Compile Include="ViewModel\SectionViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
