@@ -35,8 +35,8 @@
                     {
                         <div id="nextEvent">
                             <strong> @Model.ProchainEvent.Nom </strong> <br/>
-                            @Model.ProchainEvent.Type <br/>
-                            @Model.ProchainEvent.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR")) au @Model.ProchainEvent.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))
+                            Type : @Model.ProchainEvent.Type <br/>
+                            Du @Model.ProchainEvent.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR")) au @Model.ProchainEvent.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))
                         </div>
                     }
                     else

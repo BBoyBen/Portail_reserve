@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
@@ -28,7 +29,7 @@ namespace PortailReserve.DAL.Impl
                 return bdd.Photos.ToList().Last().Id;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur ajout de photo -> " + e);
+                Log("ERROR", "Erreur ajout de photo -> " + e);
                 return Guid.Empty;
             }
         }
@@ -46,7 +47,7 @@ namespace PortailReserve.DAL.Impl
                 return all;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération de toutes les photos -> " + e);
+                Log("ERROR", "Erreur récupération de toutes les photos -> " + e);
                 return new List<Photo>();
             }
         }
@@ -59,12 +60,12 @@ namespace PortailReserve.DAL.Impl
                 return photo;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucune photo trouvee pour l'id : " + id + " -> " + nfe);
+                Log("ERROR", "Aucune photo trouvee pour l'id : " + id + " -> " + nfe);
                 return new PhotoNull() { Error = "Photo introuvable." };
             }
             catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération photo par id : " + id + " -> " + e);
+                Log("ERROR", "Erreur récupération photo par id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -77,7 +78,7 @@ namespace PortailReserve.DAL.Impl
                 return byAlbum;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération des photos de l'album id : " + idAlbum + " -> " + e);
+                Log("ERROR", "Erreur récupération des photos de l'album id : " + idAlbum + " -> " + e);
                 return new List<Photo>();
             }
         }
@@ -96,7 +97,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur suppression photo id : " + id + " -> " + e);
+                Log("ERROR", "Erreur suppression photo id : " + id + " -> " + e);
                 return -1;
             }
         }

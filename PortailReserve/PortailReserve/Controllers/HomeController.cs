@@ -198,9 +198,9 @@ namespace PortailReserve.Controllers
             Evenement e = new Evenement()
             {
                 Nom = "Week-end d'instruction Février",
-                Debut = new DateTime(2020, 2, 15, 8, 0, 0),
-                Fin = new DateTime(2020, 2, 16, 17, 0, 0),
-                Type = "Instructon",
+                Debut = new DateTime(2020, 2, 15),
+                Fin = new DateTime(2020, 2, 16),
+                Type = "Instruction",
                 Lieu = "Quartier - 92e RI",
                 Description = "Week end d'instruction au quartier pour continuer la préparation sentinelle"
             };

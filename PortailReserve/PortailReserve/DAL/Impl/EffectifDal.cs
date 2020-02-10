@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
@@ -26,7 +27,7 @@ namespace PortailReserve.DAL.Impl
                 return bdd.Effectifs.ToList().Last().Id;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur ajout effectif -> " + e);
+                Log("ERROR", "Erreur ajout effectif -> " + e);
                 return Guid.Empty;
             }
         }
@@ -45,12 +46,12 @@ namespace PortailReserve.DAL.Impl
                 return effectif;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucun effectif trouve pour l'id : " + id + " -> " + nfe);
+                Log("ERROR", "Aucun effectif trouve pour l'id : " + id + " -> " + nfe);
                 return new EffectifNull() { Error = "Effectif introuvable." };
             }
             catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération effectif par id : " + id + " -> " + e);
+                Log("ERROR", "Erreur récupération effectif par id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -71,7 +72,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur modification effectif id : " + id + " -> " + e);
+                Log("ERROR", "Erreur modification effectif id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -90,7 +91,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur suppression effectif id : " + id + " -> " + e);
+                Log("ERROR", "Erreur suppression effectif id : " + id + " -> " + e);
                 return -1;
             }
         }

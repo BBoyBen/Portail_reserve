@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
@@ -20,7 +21,8 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                evenement.Duree = evenement.Fin.Subtract(evenement.Debut);
+                if (evenement.LimiteReponse.Year == 1)
+                    evenement.LimiteReponse = evenement.Debut;
 
                 bdd.Evenements.Add(evenement);
                 bdd.SaveChanges();
@@ -28,7 +30,7 @@ namespace PortailReserve.DAL.Impl
                 return bdd.Evenements.ToList().Last().Id;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur création d'evenement -> " + e);
+                Log("ERROR", "Erreur création d'evenement -> " + e);
                 return Guid.Empty;
             }
         }
@@ -47,7 +49,7 @@ namespace PortailReserve.DAL.Impl
                 return all;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération de tous les événements -> " + e);
+                Log("ERROR", "Erreur récupération de tous les événements -> " + e);
                 return new List<Evenement>();
             }
         }
@@ -60,12 +62,12 @@ namespace PortailReserve.DAL.Impl
                 return evenement;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucun evenement trouvable pour l'id : " + id + " -> " + nfe);
+                Log("ERROR", "Aucun evenement trouvable pour l'id : " + id + " -> " + nfe);
                 return new EvenementNull() { Error = "Evenement introuvable." };
             }
             catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération de l'evenement id : " + id + " -> " + e);
+                Log("ERROR", "Erreur récupération de l'evenement id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -87,7 +89,7 @@ namespace PortailReserve.DAL.Impl
                 return aVenir;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération des evenements à venir -> " + e);
+                Log("ERROR", "Erreur récupération des evenements à venir -> " + e);
                 return new List<Evenement>();
             }
         }
@@ -100,7 +102,7 @@ namespace PortailReserve.DAL.Impl
                 return byType;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération des evenements du type : " + type + " -> " + e);
+                Log("ERROR", "Erreur récupération des evenements du type : " + type + " -> " + e);
                 return new List<Evenement>();
             }
         }
@@ -121,7 +123,7 @@ namespace PortailReserve.DAL.Impl
                 return passe;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération des evenements passe -> " + e);
+                Log("ERROR", "Erreur récupération des evenements passe -> " + e);
                 return new List<Evenement>();
             }
         }
@@ -132,9 +134,14 @@ namespace PortailReserve.DAL.Impl
             {
                 DateTime today = DateTime.Today;
                 List<Evenement> aVenir = GetEvenementsAVenir();
-                Evenement evenement = aVenir.ElementAt(0);
+                if (aVenir.Count < 1)
+                    return null;
 
-                for(int i = 1; i<aVenir.Count; i++)
+                Evenement evenement = aVenir.ElementAt(0);
+                if (aVenir.Count == 1)
+                    return evenement;
+
+                for(int i = 0; i<aVenir.Count; i++)
                 {
                     if (DateTime.Compare(evenement.Debut, aVenir.ElementAt(i).Debut) > 0)
                         evenement = aVenir.ElementAt(i);
@@ -144,7 +151,7 @@ namespace PortailReserve.DAL.Impl
 
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération du prochain evenement -> " + e);
+                Log("ERROR", "Erreur récupération du prochain evenement -> " + e);
                 return null;
             }
         }
@@ -159,7 +166,6 @@ namespace PortailReserve.DAL.Impl
 
                 toModify.Debut = evenement.Debut;
                 toModify.Description = evenement.Description;
-                toModify.Duree = evenement.Duree;
                 toModify.Fin = evenement.Fin;
                 toModify.Lieu = evenement.Lieu;
                 toModify.LimiteReponse = evenement.LimiteReponse;
@@ -172,7 +178,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur modification evenement -> " + e);
+                Log("ERROR", "Erreur modification evenement -> " + e);
                 return -1;
             }
         }
@@ -191,7 +197,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur suppression evenement id : " + id + " -> " + e);
+                Log("ERROR", "Erreur suppression evenement id : " + id + " -> " + e);
                 return -1;
             }
         }

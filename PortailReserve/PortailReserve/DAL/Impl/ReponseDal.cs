@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
@@ -28,7 +29,7 @@ namespace PortailReserve.DAL.Impl
                 return bdd.Reponses.ToList().Last().Id;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur ajout de reponse -> " + e);
+                Log("ERROR", "Erreur ajout de reponse -> " + e);
                 return Guid.Empty;
             }
         }
@@ -46,7 +47,7 @@ namespace PortailReserve.DAL.Impl
                 return all;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération de toutes les reponses -> " + e);
+                Log("ERROR", "Erreur récupération de toutes les reponses -> " + e);
                 return new List<Reponse>();
             }
         }
@@ -59,12 +60,12 @@ namespace PortailReserve.DAL.Impl
                 return reponse;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucune reponse trouve pour l'id : " + id + " -> " + nfe);
+                Log("ERROR", "Aucune reponse trouve pour l'id : " + id + " -> " + nfe);
                 return new ReponseNull() { Error = "Reponse introuvable." };
             }
             catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération de la reponse id : " + id + " -> " + e);
+                Log("ERROR", "Erreur récupération de la reponse id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -77,7 +78,7 @@ namespace PortailReserve.DAL.Impl
                 return byMessage;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération des reponse du message id : " + idMessage + " -> " + e);
+                Log("ERROR", "Erreur récupération des reponse du message id : " + idMessage + " -> " + e);
                 return new List<Reponse>();
             }
         }
@@ -96,7 +97,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur suppression de reponse id : " + id + " -> " + e);
+                Log("ERROR", "Erreur suppression de reponse id : " + id + " -> " + e);
                 return -1;
             }
         }

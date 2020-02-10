@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
@@ -26,7 +27,7 @@ namespace PortailReserve.DAL.Impl
                 return bdd.Adresses.ToList().Last().Id;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur ajout d'une nouvelle adresse -> " + e);
+                Log("ERROR", "Erreur ajout d'une nouvelle adresse -> " + e);
                 return Guid.Empty;
             }
         }
@@ -45,12 +46,12 @@ namespace PortailReserve.DAL.Impl
                 return adresse;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucune adresse trouvee avec l'id : " + id + " -> " + nfe);
+                Log("ERROR", "Aucune adresse trouvee avec l'id : " + id + " -> " + nfe);
                 return new AdresseNull() { Error = "Aucune adresse trouvée."};
             }
             catch(Exception e)
             {
-                Console.WriteLine("Erreur récupéation de l'adresse id : " + id + " -> " + e);
+                Log("ERROR", "Erreur récupéation de l'adresse id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -73,7 +74,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Errerur modiication adresse id : " + id + " -> " + e);
+                Log("ERROR", "Errerur modiication adresse id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -91,7 +92,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur suppression adress id : " + id + " -> " + e);
+                Log("ERROR", "Erreur suppression adress id : " + id + " -> " + e);
                 return -1;
             }
         }

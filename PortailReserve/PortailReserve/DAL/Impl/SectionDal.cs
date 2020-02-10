@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
@@ -27,7 +28,7 @@ namespace PortailReserve.DAL.Impl
                 return bdd.Sections.ToList().Last().Id;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur ajout de section -> " + e);
+                Log("ERROR", "Erreur ajout de section -> " + e);
                 return Guid.Empty;
             }
         }
@@ -45,7 +46,7 @@ namespace PortailReserve.DAL.Impl
                 return all;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération de toutes les sections -> " + e);
+                Log("ERROR", "Erreur récupération de toutes les sections -> " + e);
                 return new List<Section>();
             }
         }
@@ -58,12 +59,12 @@ namespace PortailReserve.DAL.Impl
                 return section;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucune section trouvee pour l'id : " + id + " -> " + nfe);
+                Log("ERROR", "Aucune section trouvee pour l'id : " + id + " -> " + nfe);
                 return new SectionNull() { Error = "Section introuvable" };
             }
             catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération de la section id : " + id + " -> " + e);
+                Log("ERROR", "Erreur récupération de la section id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -77,7 +78,7 @@ namespace PortailReserve.DAL.Impl
                 return sections;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération des sections par la compagnie : " + id + " -> " + e);
+                Log("ERROR", "Erreur récupération des sections par la compagnie : " + id + " -> " + e);
                 return new List<Section>();
             }
         }
@@ -99,7 +100,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur modification de la section id : " + id + " -> " + e);
+                Log("ERROR", "Erreur modification de la section id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -118,7 +119,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur suppression de la section id : " + id + " -> " + e);
+                Log("ERROR", "Erreur suppression de la section id : " + id + " -> " + e);
                 return -1;
             }
         }

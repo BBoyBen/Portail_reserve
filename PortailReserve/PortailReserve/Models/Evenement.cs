@@ -18,7 +18,6 @@ namespace PortailReserve.Models
         public DateTime Fin { get; set; }
         public DateTime LimiteReponse { get; set; }
         public string Patracdr { get; set; }
-        public TimeSpan Duree { get; set; }
         /***
          * Types possible :
          * Instruction

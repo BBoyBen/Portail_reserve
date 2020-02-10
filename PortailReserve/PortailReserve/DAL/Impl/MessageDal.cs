@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
@@ -26,7 +27,7 @@ namespace PortailReserve.DAL.Impl
                 return bdd.Messages.ToList().Last().Id;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur ajout d'un message -> " + e);
+                Log("ERROR", "Erreur ajout d'un message -> " + e);
                 return Guid.Empty;
             }
         }
@@ -44,7 +45,7 @@ namespace PortailReserve.DAL.Impl
                 return all;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération de tous les messages -> " + e);
+                Log("ERROR", "Erreur récupération de tous les messages -> " + e);
                 return new List<Message>();
             }
         }
@@ -57,12 +58,12 @@ namespace PortailReserve.DAL.Impl
                 return message;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucun message trouve avec l'id : " + id + " -> " + nfe);
+                Log("ERROR", "Aucun message trouve avec l'id : " + id + " -> " + nfe);
                 return new MessageNull() { Error = "Message introuvable." };
             }
             catch(Exception e)
             {
-                Console.WriteLine("Erreur récupértion messag par id : " + id + " -> " + e);
+                Log("ERROR", "Erreur récupértion messag par id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -75,7 +76,7 @@ namespace PortailReserve.DAL.Impl
                 return byEvent;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération des messages de l'event id : " + idEvent + " -> " + e);
+                Log("ERROR", "Erreur récupération des messages de l'event id : " + idEvent + " -> " + e);
                 return new List<Message>();
             }
         }
@@ -94,7 +95,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur suppression message id : " + id + " -> " + e);
+                Log("ERROR", "Erreur suppression message id : " + id + " -> " + e);
                 return -1;
             }
         }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
@@ -26,7 +27,7 @@ namespace PortailReserve.DAL.Impl
                 return bdd.Albums.ToList().Last().Id;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur créer nouvel album -> " + e);
+                Log("ERROR", "Erreur créer nouvel album -> " + e);
                 return Guid.Empty;
             }
         }
@@ -44,12 +45,12 @@ namespace PortailReserve.DAL.Impl
                 return album;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucun album trouve pour l'id : " + id + " -> " + nfe);
+                Log("ERROR", "Aucun album trouve pour l'id : " + id + " -> " + nfe);
                 return new AlbumNull() { Error = "Album introuvable." };
             }
             catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération albums id : " + id + " -> " + e);
+                Log("ERROR", "Erreur récupération albums id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -70,7 +71,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur modiifer album id : " + id + " -> " + e);
+                Log("ERROR", "Erreur modiifer album id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -95,7 +96,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur suppression album id : " + id + " -> " + e);
+                Log("ERROR", "Erreur suppression album id : " + id + " -> " + e);
                 return -1;
             }
         }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
@@ -27,7 +28,7 @@ namespace PortailReserve.DAL.Impl
                 return bdd.Compagnies.ToList().Last().Id;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur ajout nouvelle compagnie -> " + e);
+                Log("ERROR", "Erreur ajout nouvelle compagnie -> " + e);
                 return Guid.Empty;
             }
         }
@@ -45,7 +46,7 @@ namespace PortailReserve.DAL.Impl
                 return compagnies;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération de toutes les compagnies -> " + e);
+                Log("ERROR", "Erreur récupération de toutes les compagnies -> " + e);
                 return new List<Compagnie>();
             }
         }
@@ -59,11 +60,11 @@ namespace PortailReserve.DAL.Impl
                 return compagnie;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucune compagnie pour l'id : " + id + " -> " + nfe);
+                Log("ERROR", "Aucune compagnie pour l'id : " + id + " -> " + nfe);
                 return new CompagnieNull() { Error = "Compagnie introuvable." };
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération de la compagnie id : " + id + " -> " + e);
+                Log("ERROR", "Erreur récupération de la compagnie id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -84,7 +85,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur modification de la compagnie : " + id + " -> " + e);
+                Log("ERROR", "Erreur modification de la compagnie : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -103,7 +104,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur de suppression de la compagnie id : " + id + " -> " + e);
+                Log("ERROR", "Erreur de suppression de la compagnie id : " + id + " -> " + e);
                 return -1;
             }
         }

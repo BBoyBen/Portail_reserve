@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
@@ -29,7 +30,7 @@ namespace PortailReserve.DAL.Impl
                 return bdd.Cours.ToList().Last().Id;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur ajouter un cours -> " + e);
+                Log("ERROR", "Erreur ajouter un cours -> " + e);
                 return Guid.Empty;
             }
         }
@@ -47,7 +48,7 @@ namespace PortailReserve.DAL.Impl
                 return all;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur rcupération de tous les cours -> " + e);
+                Log("ERROR", "Erreur rcupération de tous les cours -> " + e);
                 return new List<Cours>();
             }
         }
@@ -60,12 +61,12 @@ namespace PortailReserve.DAL.Impl
                 return cours;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucun cours trouve pour l'id : " + id + " -> " + nfe);
+                Log("ERROR", "Aucun cours trouve pour l'id : " + id + " -> " + nfe);
                 return new CoursNull() { Error = "Cours introuvable." };
             }
             catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération cours id : " + id + " -> " + e);
+                Log("ERROR", "Erreur récupération cours id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -78,7 +79,7 @@ namespace PortailReserve.DAL.Impl
                 return coursByTheme;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération des cours par theme : " + theme + " -> " + e);
+                Log("ERROR", "Erreur récupération des cours par theme : " + theme + " -> " + e);
                 return new List<Cours>();
             }
         }
@@ -102,7 +103,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur modification cours id : " + id + " -> " + e);
+                Log("ERROR", "Erreur modification cours id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -121,7 +122,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur suppression cours id : " + id + " -> " + e);
+                Log("ERROR", "Erreur suppression cours id : " + id + " -> " + e);
                 return -1;
             }
         }

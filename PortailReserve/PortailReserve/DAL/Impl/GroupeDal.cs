@@ -28,7 +28,7 @@ namespace PortailReserve.DAL.Impl
                 return bdd.Groupes.ToList().Last().Id;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur ajout de groupe -> " + e);
+                Log("ERROR", "Erreur ajout de groupe -> " + e);
                 return Guid.Empty;
             }
         }
@@ -69,7 +69,7 @@ namespace PortailReserve.DAL.Impl
                 return all;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupration de tous les groupes -> " + e);
+                Log("ERROR", "Erreur récupration de tous les groupes -> " + e);
                 return new List<Groupe>();
             }
         }
@@ -101,12 +101,12 @@ namespace PortailReserve.DAL.Impl
                 return groupe;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Auncun groupe trouve avec l'id : " + id + " -> " + nfe);
+                Log("ERROR", "Auncun groupe trouve avec l'id : " + id + " -> " + nfe);
                 return new GroupeNull() { Error = "Groupe introuvable." };
             }
             catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération du group id : " + id + " -> " + e);
+                Log("ERROR", "Erreur récupération du group id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -119,7 +119,7 @@ namespace PortailReserve.DAL.Impl
                 return bySection;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération des groupes de la saction : " + idSection + " -> " + e);
+                Log("ERROR", "Erreur récupération des groupes de la saction : " + idSection + " -> " + e);
                 return new List<Groupe>();
             }
         }
@@ -139,7 +139,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur modification du groupe : " + id + " -> " + e);
+                Log("ERROR", "Erreur modification du groupe : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -158,7 +158,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur suppression du groupe : " + id + " -> " + e);
+                Log("ERROR", "Erreur suppression du groupe : " + id + " -> " + e);
                 return -1;
             }
         }

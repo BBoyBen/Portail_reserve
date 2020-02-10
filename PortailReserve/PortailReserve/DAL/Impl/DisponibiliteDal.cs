@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
@@ -28,7 +29,7 @@ namespace PortailReserve.DAL.Impl
                 return bdd.Disponibilites.ToList().Last().Id;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur ajout dispo -> " + e);
+                Log("ERROR", "Erreur ajout dispo -> " + e);
                 return Guid.Empty;
             }
         }
@@ -47,7 +48,7 @@ namespace PortailReserve.DAL.Impl
                 return byEvent;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupration dispo par evenet : " + idEvent + " -> " + e);
+                Log("ERROR", "Erreur récupration dispo par evenet : " + idEvent + " -> " + e);
                 return new List<Disponibilite>();
             }
         }
@@ -61,7 +62,7 @@ namespace PortailReserve.DAL.Impl
                 return byUtil;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération des dispo de l'util : " + idUtil + " -> " + e);
+                Log("ERROR", "Erreur récupération des dispo de l'util : " + idUtil + " -> " + e);
                 return new List<Disponibilite>();
             }
         }
@@ -75,12 +76,12 @@ namespace PortailReserve.DAL.Impl
                 return dispo;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucune disponibilité trouvee pour l'id : " + id + " -> " + nfe);
+                Log("ERROR", "Aucune disponibilité trouvee pour l'id : " + id + " -> " + nfe);
                 return new DisponibiliteNull() { Error = "Disponibilité introuvable." };
             }
             catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération de la dispo par id : " + id + " -> " + e);
+                Log("ERROR", "Erreur récupération de la dispo par id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -102,7 +103,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur modificatio dispo id : " + id + " -> " + e);
+                Log("ERROR", "Erreur modificatio dispo id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -121,7 +122,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur refuser dispo id : " + id + " -> " + e);
+                Log("ERROR", "Erreur refuser dispo id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -140,7 +141,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur suppression dispo id : " + id + " -> " + e);
+                Log("ERROR", "Erreur suppression dispo id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -159,7 +160,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur validation dispo id : " + id + "-> " + e);
+                Log("ERROR", "Erreur validation dispo id : " + id + "-> " + e);
                 return -1;
             }
         }

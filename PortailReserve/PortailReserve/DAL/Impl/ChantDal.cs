@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
@@ -29,7 +30,7 @@ namespace PortailReserve.DAL.Impl
                 return bdd.Chants.ToList().Last().Id;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur ajout de nouveaux chant -> " + e);
+                Log("ERROR", "Erreur ajout de nouveaux chant -> " + e);
                 return Guid.Empty;
             }
         }
@@ -48,7 +49,7 @@ namespace PortailReserve.DAL.Impl
                 return chants;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération de tous les chants -> " + e);
+                Log("ERROR", "Erreur récupération de tous les chants -> " + e);
                 return new List<Chant>();
             }
         }
@@ -61,11 +62,11 @@ namespace PortailReserve.DAL.Impl
                 return chant;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucun chant trouve pour l'id : " + id + " -> " + nfe);
+                Log("ERROR", "Aucun chant trouve pour l'id : " + id + " -> " + nfe);
                 return new ChantNull() { Error = "Chant introuvable." };
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération du chant id : " + id + " -> " + e);
+                Log("ERROR", "Erreur récupération du chant id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -78,11 +79,11 @@ namespace PortailReserve.DAL.Impl
                 return chant;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucun chant trouve pour le titre : " + titre + " -> " + nfe);
+                Log("ERROR", "Aucun chant trouve pour le titre : " + titre + " -> " + nfe);
                 return new ChantNull() { Error = "Chant introuvable pour le titre : " + titre };
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupration du chat au titre : " + titre + " -> " + e);
+                Log("ERROR", "Erreur récupration du chat au titre : " + titre + " -> " + e);
                 return null;
             }
         }
@@ -95,7 +96,7 @@ namespace PortailReserve.DAL.Impl
                 return chants;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération des chants par type : " + type + " -> " + e);
+                Log("ERROR", "Erreur récupération des chants par type : " + type + " -> " + e);
                 return new List<Chant>();
             }
         }
@@ -117,7 +118,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur modification du chant : " + id + " -> " + e);
+                Log("ERROR", "Erreur modification du chant : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -136,7 +137,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur suppression du chant : " + id + " -> " + e);
+                Log("ERROR", "Erreur suppression du chant : " + id + " -> " + e);
                 return -1;
             }
         }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
@@ -33,7 +34,7 @@ namespace PortailReserve.DAL.Impl
                 return bdd.Participations.ToList().Last().Id;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur ajout de participation -> " + e);
+                Log("ERROR", "Erreur ajout de participation -> " + e);
                 return Guid.Empty;
             }
 
@@ -52,12 +53,12 @@ namespace PortailReserve.DAL.Impl
                 return participation;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucune participation trouvee pour l'id : " + id + " -> " + nfe);
+                Log("ERROR", "Aucune participation trouvee pour l'id : " + id + " -> " + nfe);
                 return new ParticipationNull() { Error = "Partiticpation introuvable." };
             }
             catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération de la participation id : " + id + " -> " + e);
+                Log("ERROR", "Erreur récupération de la participation id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -70,12 +71,12 @@ namespace PortailReserve.DAL.Impl
                 return participation;
             }catch(NullReferenceException nfe)
             {
-                Console.WriteLine("Aucune particiation de l'utiliateur " + idUtil + " à l'event " + idEvent + " -> " + nfe);
+                Log("ERROR", "Aucune particiation de l'utiliateur " + idUtil + " à l'event " + idEvent + " -> " + nfe);
                 return new ParticipationNull() { Error = "Participation introuvalbe." };
             }
             catch(Exception e)
             {
-                Console.WriteLine("Erreur récupération participation de l'util : " + idUtil + " pour l'event : " + idEvent + " -> " + e);
+                Log("ERROR", "Erreur récupération participation de l'util : " + idUtil + " pour l'event : " + idEvent + " -> " + e);
                 return null;
             }
         }
@@ -88,7 +89,7 @@ namespace PortailReserve.DAL.Impl
                 return participations;
              }catch(Exception e)
             {
-                Console.WriteLine("Erreur récuperation des participation pour l'event : " + idEvent + " -> " + e);
+                Log("ERROR", "Erreur récuperation des participation pour l'event : " + idEvent + " -> " + e);
                 return new List<Participation>();
             }
         }
@@ -112,7 +113,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Console.WriteLine("Erreur modification participation : " + id + " -> " + e);
+                Log("ERROR", "Erreur modification participation : " + id + " -> " + e);
                 return -1;
             }
         }
