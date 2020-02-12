@@ -1,4 +1,5 @@
 ﻿using Microsoft.Ajax.Utilities;
+using PortailReserve.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,6 +63,30 @@ namespace PortailReserve.Utils
 
             Regex rgx = new Regex(@"^(([0-8][0-9])|(9[0-5]))[0-9]{3}$");
             return rgx.IsMatch(cp);
+        }
+
+        public static List<Groupe> TrierGroupes(List<Groupe> pasTrie)
+        {
+            List<Groupe> trie = new List<Groupe>();
+
+            int numGroupe = 1;
+            while(pasTrie.Count > 0)
+            {
+                Groupe aTrie = null;
+                foreach (Groupe g in pasTrie)
+                {
+                    if (g.Numero == numGroupe)
+                        aTrie = g;
+                }
+                if(aTrie != null)
+                {
+                    trie.Add(aTrie);
+                    pasTrie.Remove(aTrie);
+                }
+                numGroupe++;
+            }
+
+            return trie;
         }
     }
 }

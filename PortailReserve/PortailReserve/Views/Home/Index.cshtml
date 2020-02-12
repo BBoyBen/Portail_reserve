@@ -12,11 +12,12 @@
 <div class="container">
     <div class="row">
         <div class="col-3 boiteAcceuil champsTextGauche" onclick="clickOn('iconeProfil'); ">
-            @Html.ActionLink("Profil", "Index", "Profil", null, new { id = "iconeProfil", style = "display: none; "})
+            @Html.ActionLink("Profil", "Index", "Profil", null, new { id = "iconeProfil", style = "display: none; " })
             <img src="~/Content/image/icone_profile.png" alt="Profile" class="imageBoiteAcceuil" />
             <h2 class="text-center titreBoiteAcceuil"> Gestion de profil </h2>
         </div>
-        <div class="col-3 boiteAcceuil champsTextCenter">
+        <div class="col-3 boiteAcceuil champsTextCenter" onclick="clickOn('iconeSection'); ">
+            @Html.ActionLink("Section - Groupe", "Section", "Profil", null, new { id = "iconeSection", style = "display: none;" })
             <img src="~/Content/image/icone_groupe.png" alt="Groupe" class="imageBoiteAcceuil" />
             <h2 class="text-center titreBoiteAcceuil"> Section <br/> - <br/> Groupe </h2>
         </div>

@@ -141,13 +141,6 @@ namespace PortailReserve.Controllers
             };
             Guid idSection = sDal.AjouterSection(section);
 
-            Groupe grp = new Groupe()
-            {
-                Numero = 1,
-                Section = idSection
-            };
-            Guid idGrp = gDal.AjouterGroupe(grp);
-
             Utilisateur cdg = new Utilisateur()
             {
                 Matricule = "0000000003",
@@ -163,6 +156,16 @@ namespace PortailReserve.Controllers
                 PremiereCo = true
             };
             Guid idCdg = uDal.AjouterUtilisateur(cdg);
+
+            Groupe grp = new Groupe()
+            {
+                Numero = 1,
+                Section = idSection,
+                CDG = idCdg
+            };
+            Guid idGrp = gDal.AjouterGroupe(grp);
+
+            
 
             Adresse a = new Adresse()
             {

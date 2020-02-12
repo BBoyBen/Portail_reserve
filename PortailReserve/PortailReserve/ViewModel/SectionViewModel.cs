@@ -15,5 +15,6 @@ namespace PortailReserve.ViewModel
         public List<Groupe> Groupes { get; set; }
         public List<Utilisateur> CDGs { get; set; }
         public List<Utilisateur> Soldats { get; set; }
+        public Utilisateur Util { get; set; }
     }
 }

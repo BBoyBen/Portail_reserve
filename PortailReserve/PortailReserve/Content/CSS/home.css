@@ -5,6 +5,7 @@
     border-radius: 4px;
     padding-top: 30px;
     padding-bottom: 15px;
+    box-shadow: 0px 10px 20px -10px rgba(0,0,0,0.3);
 }
 
 .boiteAcceuil:hover {

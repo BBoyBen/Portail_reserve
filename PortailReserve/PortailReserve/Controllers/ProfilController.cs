@@ -287,6 +287,7 @@ namespace PortailReserve.Controllers
             Section userSection = sDal.GetSectionById(userGrp.Section);
 
             List<Groupe> grpSection = gDal.GetGroupesBySection(userSection.Id);
+            grpSection = TrierGroupes(grpSection);
 
             List<Utilisateur> listCdg = new List<Utilisateur>();
             List<Utilisateur> listSdt = new List<Utilisateur>();
@@ -306,7 +307,8 @@ namespace PortailReserve.Controllers
                 SOA = uDal.GetUtilisateurById(userSection.SOA),
                 Groupes = grpSection,
                 CDGs = listCdg,
-                Soldats = listSdt
+                Soldats = listSdt,
+                Util = u
             };
 
             return View(vm);

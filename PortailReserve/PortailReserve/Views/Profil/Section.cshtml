@@ -1,0 +1,99 @@
+﻿@model PortailReserve.ViewModel.SectionViewModel
+@{
+    ViewBag.Title = "Section - Groupe";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style {
+    <link rel="stylesheet" href="~/Content/CSS/section.css" />
+}
+
+<h1> Section - Groupe </h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            @if(Model.Section.Numero == 1)
+            {
+                <h2 class="titreLegend"> 1ère section de la 6e Compagnie </h2>
+            }
+            else
+            {
+                <h2 class="titreLegend"> <span>@Model.Section.Numero</span>e section de la 6e Compagnie</h2>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <strong>Chef de section : </strong> @Model.CDS.Grade @Model.CDS.Nom.ToUpperInvariant()
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <strong>Sous-officier adjoint : </strong> @Model.SOA.Grade @Model.SOA.Nom.ToUpperInvariant()
+        </div>
+    </div>
+
+    @foreach(PortailReserve.Models.Groupe g in Model.Groupes)
+    {
+        <div class="row">
+            <div class="col-6">
+                <h2 class="titreLegend titreGroupe"> Groupe @g.Numero </h2>
+            </div>
+        </div>
+
+        foreach(PortailReserve.Models.Utilisateur cdg in Model.CDGs)
+        {
+            if(cdg.Id.Equals(g.CDG))
+            {
+                <div class="row">
+                    <div class="col-6 chefDeGroupe">
+                        <strong> Chef de groupe : </strong> @cdg.Grade @cdg.Nom.ToUpperInvariant()
+                    </div>
+                </div>
+            }
+        }
+
+        foreach(PortailReserve.Models.Utilisateur sdt in Model.Soldats)
+        {
+            if(sdt.Groupe.Equals(g.Id))
+            {
+                <div class="row">
+                    <div class="col-6">
+                        @if (sdt.Id.Equals(Model.Util.Id))
+                        {
+                            <span class="user"> @sdt.Grade @sdt.Nom.ToUpperInvariant() @sdt.Prenom </span>
+                        }
+                        else
+                        {
+                            @sdt.Grade @sdt.Nom.ToUpperInvariant() @sdt.Prenom
+                        }
+                    </div>
+                </div>
+            }
+        }
+    }
+
+    <div class="row">
+        <div class="col-6">
+            <h2 class="titreLegend titreGroupe"> Informations complémentaires </h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <strong> Chant compagnie : </strong> @Model.Cie.Chant
+        </div>
+        <div class="col-6">
+            <strong> Chant section : </strong> @Model.Section.Chant
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <strong> Devise compagnie : </strong> @Model.Cie.Devise
+        </div>
+        <div class="col-6">
+            <strong> Devise section : </strong> @Model.Section.Devise
+        </div>
+    </div>
+</div>
+

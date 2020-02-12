@@ -284,6 +284,7 @@
     <Content Include="Content\CSS\home.css" />
     <Content Include="Content\CSS\login.css" />
     <Content Include="Content\CSS\profil.css" />
+    <Content Include="Content\CSS\section.css" />
     <Content Include="Content\image\blason_ri.png" />
     <Content Include="Content\image\blason_six.png" />
     <Content Include="Content\image\couverture_uir.jpg" />
@@ -449,6 +450,7 @@
     <Content Include="Views\Profil\Index.cshtml" />
     <Content Include="Views\Profil\Modifier.cshtml" />
     <Content Include="Views\Profil\ModifMdp.cshtml" />
+    <Content Include="Views\Profil\Section.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
