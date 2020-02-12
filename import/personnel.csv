@@ -1,0 +1,25 @@
+﻿Nom;Prenom;Telephone;Email;Matricule;Motdepasse;Groupe;Role;Grade;Naissance;Voie;Ville;CodePostal;Pays;Section
+Maucotel;Benoit;0643849575;benoit.maucotel@gmail.com;1763041044;changeme;1;1;Caporal;04/09/1997;15 rue des Rouchats;Chateaugay;63119;France;1
+Arbel;Lou-Cassandra;0000000000;loucassandra.arbel@gmail.com;4000000000;changeme;1;4;Caporal;01/01/2000;NaN;NaN;00000;France;1
+Ducros;Pierre;0000000000;pierre.ducros@gmail.com;5000000000;changeme;1;4;Soldat;01/01/2000;NaN;NaN;00000;France;1
+Vermande;Pierre;0000000000;pierre.vermande@gmail.com;6000000000;changeme;1;4;Soldat;01/01/2000;NaN;NaN;00000;France;1
+Sallaud;Pierre;0000000000;pierre.sallaud@gmail.com;7000000000;changeme;1;4;Soldat;01/01/2000;NaN;NaN;00000;France;1
+Lamartine;Pierre;0000000000;pierre.lamartine@gmail.com;8000000000;changeme;1;4;Soldat;01/01/2000;NaN;NaN;00000;France;1
+Labrousse;Pierre;0000000000;pierre.labrousse@gmail.com;9000000000;changeme;1;4;Soldat;01/01/2000;NaN;NaN;00000;France;1
+Duprez;Arthur;0000000000;arthur.duprez@gmail.com;1100000000;changeme;2;4;Caporal;01/01/2000;NaN;NaN;00000;France;1
+Bruchet;Lou-Ann;0000000000;louann.bruchet@gmail.com;1200000000;changeme;2;4;Caporal;01/01/2000;NaN;NaN;00000;France;1
+Soares;Pierre;0000000000;pierre.soares@gmail.com;1300000000;changeme;2;4;Caporal;01/01/2000;NaN;NaN;00000;France;1
+Manquat;Pierre;0000000000;pierre.manquant@gmail.com;1400000000;changeme;2;4;1ère Classe;01/01/2000;NaN;NaN;00000;France;1
+Joanin;Pierre;0000000000;pierre.joanin@gmail.com;1500000000;changeme;2;4;1ère Classe;01/01/2000;NaN;NaN;00000;France;1
+Sixto Lobato;Pierre;0000000000;pierre.sixtolobato@gmail.com;1600000000;changeme;2;4;Soldat;01/01/2000;NaN;NaN;00000;France;1
+Cazanave;Pierre;0000000000;pierre.cazanave@gmail.com;1700000000;changeme;2;4;Soldat;01/01/2000;NaN;NaN;00000;France;1
+Faligot;Pierre;0000000000;pierre.faligot@gmail.com;1800000000;changeme;2;4;Soldat;01/01/2000;NaN;NaN;00000;France;1
+Angot;Pierre;0000000000;pierre.angot@gmail.com;1900000000;changeme;2;4;Soldat;01/01/2000;NaN;NaN;00000;France;1
+Terrisse;Simon;0000000000;simon.terrisse@gmail.com;2100000000;changeme;3;4;Caporal;01/01/2000;NaN;NaN;00000;France;1
+Barouri;Donia;0000000000;donia.barouri@gmail.com;2200000000;changeme;3;4;1ère Classe;01/01/2000;NaN;NaN;00000;France;1
+Janin;Pierre;0000000000;pierre.janin@gmail.com;2300000000;changeme;3;4;1ère Classe;01/01/2000;NaN;NaN;00000;France;1
+Perrier;Pierre;0000000000;pierre.perrier@gmail.com;2400000000;changeme;3;4;Soldat;01/01/2000;NaN;NaN;00000;France;1
+Ournet Faya;Pierre;0000000000;pierre.ournerfaya@gmail.com;2500000000;changeme;3;4;Soldat;01/01/2000;NaN;NaN;00000;France;1
+Bordes;Pierre;0000000000;pierre.bordes@gmail.com;2600000000;changeme;3;4;Soldat;01/01/2000;NaN;NaN;00000;France;1
+Amhed;Kadhafi;0000000000;kadhafi.amhed@gmail.com;2700000000;changeme;3;4;Soldat;01/01/2000;NaN;NaN;00000;France;1
+Miollan;Pierre;0000000000;pierre.miollan@gmail.com;2800000000;changeme;3;4;Soldat;01/01/2000;NaN;NaN;00000;France;1

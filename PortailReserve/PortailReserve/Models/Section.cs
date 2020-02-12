@@ -18,6 +18,5 @@ namespace PortailReserve.Models
         public string Chant { get; set; }
         public string Devise { get; set; }
         public Guid Compagnie { get; set; }
-        public Guid IdCompagnie { get; set; }
     }
 }

@@ -87,6 +87,30 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
+        public Groupe GetGroupeByNumeroAndBySection(int numGrp, int numSection)
+        {
+            try
+            {
+                Section section = bdd.Sections.FirstOrDefault(s => s.Numero.Equals(numSection));
+                if (section == null)
+                    return new GroupeNull() { Error = "Section introuvable." };
+
+                List<Groupe> groupes = GetGroupesBySection(section.Id);
+                Groupe toReturn = new Groupe();
+                foreach(Groupe g in groupes)
+                {
+                    if (g.Numero.Equals(numGrp))
+                        toReturn = g;
+                }
+
+                return toReturn;
+            }catch(Exception e)
+            {
+                Log("ERROR", "Erreur récupération du groupe " + numGrp + "de la section " + numSection + " -> " + e);
+                return null;
+            }
+        }
+
         public List<Groupe> GetGroupesBySection(Guid idSection)
         {
             try

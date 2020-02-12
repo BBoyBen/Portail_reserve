@@ -15,5 +15,6 @@ namespace PortailReserve.DAL
         int ModifierSection(Guid id, Section section);
         int SupprimerSection(Guid id);
         List<Section> GetSectionsByCompagnie(Guid id);
+        Section GetSectionByNumero(int numero);
     }
 }

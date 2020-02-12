@@ -69,6 +69,25 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
+        public Section GetSectionByNumero(int numero)
+        {
+            try
+            {
+                Section section = bdd.Sections.FirstOrDefault(s => s.Numero.Equals(numero));
+                return section;
+            }
+            catch (NullReferenceException nfe)
+            {
+                Log("ERROR", "Aucune section trouvee pour le numéro : " + numero + " -> " + nfe);
+                return new SectionNull() { Error = "Section introuvable" };
+            }
+            catch (Exception e)
+            {
+                Log("ERROR", "Erreur récupération de la section numéro : " + numero + " -> " + e);
+                return null;
+            }
+        }
+
         public List<Section> GetSectionsByCompagnie(Guid id)
         {
             try

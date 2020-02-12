@@ -1,0 +1,8 @@
+﻿Nom,Prenom,Telephone,Email,Matricule,Motdepasse,Groupe,Role,Grade,Naissance,Voie,Ville,CodePostal,Pays,Section
+Lys,Frédéric,0000000000,frederic.lys@gmail.com,1000000000,changeme,0,3,Adjudant-chef,01/01/2000,NaN,NaN,00000,France,1
+Tanlet,Emilie,0000000000,emilie.tanlet@gmail.com,1000000001,changeme,0,3,Sergent-chef,01/01/2000,NaN,NaN,00000,France,1
+Aubernon,Matthieu,0000000000,matthieu.aubernon@gmail.com,1000000002,changeme,0,3,Sergent,01/01/2000,NaN,NaN,00000,France,1
+Cardineau,Pierre,0000000000,pierre.cardineau@gmail.com,1000000003,changeme,0,3,Sergent,01/01/2000,NaN,NaN,00000,France,1
+Guerrier,Corentin,0000000000,corentin.guerrier@gmail.com,1000000004,changeme,0,3,Sergent,01/01/2000,NaN,NaN,00000,France,1
+Rodier,Sébastien,0000000000,sebastien.rodier@gmail.com,3000000000,changeme,0,2,Capitaine,01/01/2000,NaN,NaN,00000,France,0
+Ruzalsky,Pierre,0000000000,pierre.ruzalsky@gmail.com,3000000001,changeme,0,2,Adjudant,01/01/2000,NaN,NaN,00000,France,0

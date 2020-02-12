@@ -14,5 +14,6 @@ namespace PortailReserve.DAL
         int SupprimerCompagnie(Guid id);
         Compagnie GetCompagnieById(Guid id);
         List<Compagnie> GetAllCompagnie();
+        Compagnie GetCompagnieByNumero(int numero);
     }
 }

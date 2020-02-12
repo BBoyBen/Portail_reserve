@@ -69,6 +69,24 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
+        public Compagnie GetCompagnieByNumero(int numero)
+        {
+            try
+            {
+                Compagnie compagnie = bdd.Compagnies.FirstOrDefault(c => c.Numero.Equals(numero));
+
+                return compagnie;
+            }catch(NullReferenceException nfe)
+            {
+                Log("ERROR", "Aucune compagnie trouvée pour le numéro : " + numero + " -> " + nfe);
+                return new CompagnieNull() { Error = "Compagnie introuvable." };
+            }catch(Exception e)
+            {
+                Log("ERROR", "Erreur récupération de compagnie par numéro : " + numero + " -> " + e);
+                return null;
+            }
+        }
+
         public int ModifierCompagnie(Guid id, Compagnie compagnie)
         {
             try

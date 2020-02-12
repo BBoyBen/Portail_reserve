@@ -48,6 +48,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CsvHelper, Version=15.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.15.0.0\lib\net47\CsvHelper.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -239,6 +242,10 @@
     <Compile Include="Models\Chant.cs" />
     <Compile Include="Models\Compagnie.cs" />
     <Compile Include="Models\Cours.cs" />
+    <Compile Include="Models\CSV\CompagnieCsv.cs" />
+    <Compile Include="Models\CSV\GroupeCsv.cs" />
+    <Compile Include="Models\CSV\SectionCsv.cs" />
+    <Compile Include="Models\CSV\UtilisateurCsv.cs" />
     <Compile Include="Models\Disponibilite.cs" />
     <Compile Include="Models\Effectif.cs" />
     <Compile Include="Models\Evenement.cs" />
@@ -265,6 +272,7 @@
     <Compile Include="Models\Section.cs" />
     <Compile Include="Models\Utilisateur.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\ImportCsv.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\Utils.cs" />
     <Compile Include="ViewModel\AcceuilViewModel.cs" />
@@ -341,6 +349,11 @@
     <Content Include="Content\Police\Roboto\Roboto-Regular.ttf" />
     <Content Include="Content\Police\Roboto\Roboto-Thin.ttf" />
     <Content Include="Content\Police\Roboto\Roboto-ThinItalic.ttf" />
+    <Content Include="Content\import\compagnie.csv" />
+    <Content Include="Content\import\encadrement.csv" />
+    <Content Include="Content\import\groupe.csv" />
+    <Content Include="Content\import\personnel.csv" />
+    <Content Include="Content\import\section.csv" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />

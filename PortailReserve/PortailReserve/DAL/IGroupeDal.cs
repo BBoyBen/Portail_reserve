@@ -16,5 +16,6 @@ namespace PortailReserve.DAL
         List<Groupe> GetGroupesBySection(Guid idSection);
         int SupprimerGroupe(Guid id);
         int ChangerCdg(Guid id, Guid idNouvCdg);
+        Groupe GetGroupeByNumeroAndBySection(int numGrp, int numSection);
     }
 }

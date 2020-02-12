@@ -25,7 +25,13 @@ namespace PortailReserve.Models
         [Display(Name = "Mot de passe")]
         public string MotDePasse { get; set; }
         public Guid Groupe { get; set; }
-        public int Role { get; set; }
+        /***
+         * 1 : super admin
+         * 2 : section de commendement
+         * 3 : gestion de section
+         * 4 : personnel classique
+         ***/
+        public int Role { get; set; } 
         public bool PremiereCo { get; set; }
         public string Grade { get; set; }
         [Display(Name = "Date de naissance")]
