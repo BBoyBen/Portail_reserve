@@ -72,7 +72,7 @@ namespace PortailReserve.Controllers
             Database.SetInitializer(init);
             init.InitializeDatabase(new BddContext());
 
-            /*
+            
 
             Evenement e = new Evenement()
             {
@@ -83,7 +83,7 @@ namespace PortailReserve.Controllers
                 Lieu = "Quartier - 92e RI",
                 Description = "Week end d'instruction au quartier pour continuer la préparation sentinelle"
             };
-            eDal.CreerEvenement(e);*/
+            eDal.CreerEvenement(e);
 
             Utils.ImportCsv.InitBddByCsv();
 

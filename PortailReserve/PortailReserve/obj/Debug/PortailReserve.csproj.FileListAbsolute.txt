@@ -268,3 +268,5 @@ C:\Users\ben63\Documents\Projet\Portail_reserve\PortailReserve\PortailReserve\ob
 C:\Users\ben63\Documents\Projet\Portail_reserve\PortailReserve\PortailReserve\obj\Debug\PortailReserve.pdb
 C:\Users\ben63\Documents\Projet\Portail_reserve\PortailReserve\PortailReserve\bin\CsvHelper.dll
 C:\Users\ben63\Documents\Projet\Portail_reserve\PortailReserve\PortailReserve\bin\CsvHelper.xml
+D:\Developpement\Portail_reserve\PortailReserve\PortailReserve\bin\CsvHelper.dll
+D:\Developpement\Portail_reserve\PortailReserve\PortailReserve\bin\CsvHelper.xml

@@ -20,10 +20,10 @@ namespace PortailReserve.Models
         public string Patracdr { get; set; }
         /***
          * Types possible :
-         * Instruction
-         * Stage
-         * Mission
-         * Exercice
+         * Instruction : vert
+         * Stage : bleu
+         * Mission : rouge
+         * Exercice : jaune
          ***/
         public string Type { get; set; }
         public string Lieu { get; set; }

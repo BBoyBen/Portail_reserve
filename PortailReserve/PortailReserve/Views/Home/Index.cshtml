@@ -35,9 +35,39 @@
                     @if(Model.HasProchainEvent)
                     {
                         <div id="nextEvent">
-                            <strong> @Model.ProchainEvent.Nom </strong> <br/>
-                            Type : @Model.ProchainEvent.Type <br/>
-                            Du @Model.ProchainEvent.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR")) au @Model.ProchainEvent.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))
+                            <div class="row">
+                                <div class="col-12">
+                                    <strong> @Model.ProchainEvent.Nom </strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-1">
+                                    @if(Model.ProchainEvent.Type.Equals("Instruction"))
+                                    {
+                                        <img src="~/Content/image/point_vert.png" alt="point vert" id="pastilleType" />
+                                    }
+                                    else if(Model.ProchainEvent.Type.Equals("Stage"))
+                                    {
+                                        <img src="~/Content/image/point_bleu.png" alt="point bleu" id="pastilleType" />
+                                    }
+                                    else if(Model.ProchainEvent.Type.Equals("Mission"))
+                                    {
+                                        <img src="~/Content/image/point_rouge.png" alt="point rouge" id="pastilleType" />
+                                    }
+                                    else if(Model.ProchainEvent.Type.Equals("Excercie"))
+                                    {
+                                        <img src="~/Content/image/point_jaune.png" alt="point jaune" id="pastilleType" />
+                                    }
+                                </div>
+                                <div class="col-11">
+                                    @Model.ProchainEvent.Type
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    Du @Model.ProchainEvent.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR")) au @Model.ProchainEvent.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))
+                                </div>
+                            </div>
                         </div>
                     }
                     else
