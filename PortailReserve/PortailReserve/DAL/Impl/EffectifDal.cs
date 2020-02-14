@@ -47,7 +47,7 @@ namespace PortailReserve.DAL.Impl
             }catch(NullReferenceException nfe)
             {
                 Log("ERROR", "Aucun effectif trouve pour l'id : " + id + " -> " + nfe);
-                return new EffectifNull() { Error = "Effectif introuvable." };
+                return null;
             }
             catch(Exception e)
             {

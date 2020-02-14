@@ -4,6 +4,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section style {
+    <link rel="stylesheet" href="~/Content/CSS/event.css" />    
+}
+
 <div class="container">
     <div class="row">
         <div class="col-3">
@@ -18,7 +22,83 @@
     <h1> @Model.Event.Nom  </h1>
 
     <div class="container">
+        <div class="row" id="eventType">
+            <div class="col-1">
+                @if (Model.Event.Type.Equals("Instruction"))
+                {
+                    <img src="~/Content/image/point_vert.png" alt="point vert" id="pastilleType" />
+                }
+                else if (Model.Event.Type.Equals("Stage"))
+                {
+                    <img src="~/Content/image/point_bleu.png" alt="point bleu" id="pastilleType" />
+                }
+                else if (Model.Event.Type.Equals("Mission"))
+                {
+                    <img src="~/Content/image/point_rouge.png" alt="point rouge" id="pastilleType" />
+                }
+                else if (Model.Event.Type.Equals("Excercie"))
+                {
+                    <img src="~/Content/image/point_jaune.png" alt="point jaune" id="pastilleType" />
+                }
+            </div>
+            <div class="col-5" id="textType" >
+                @Model.Event.Type
+            </div>
+            <div class="col-6">
+                <button id="patracdr">
+                    PATRACDR
+                </button>
+            </div>
+        </div>
 
+        <div class="row" id="eventDate">
+            <div class="col-12">
+                Du <strong>@Model.Event.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong> au <strong>@Model.Event.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong>
+            </div>
+        </div>
+
+        <div class="row" id="lieuEvent">
+            <div class="col-12">
+                <strong> Lieu : </strong> @Model.Event.Lieu
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-10">
+                <h2 class="titreLegend"> Informations </h2>
+            </div>
+        </div>
+        <div class="row" id="desEvent">
+            <div class="col-12">
+                @Model.Event.Description
+            </div>
+        </div>
+
+        @if(Model.Event.Type.Equals("Stage") || Model.Event.Type.Equals("Mission"))
+        {
+            <div class="row">
+                <div class="col-10">
+                    <h2 class="titreLegend"> Complément </h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    @if(Model.Effectif != null)
+                    {
+                        <strong> Effectif : </strong> <span> @Model.Effectif.Officier / @Model.Effectif.SousOfficier / @Model.Effectif.Militaire </span>
+                    }
+                    else
+                    {
+                        <strong> Effectif : </strong> <span> X / X / X </span>
+                    }
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <strong> Date limite de réponse : </strong> @Model.Event.LimiteReponse.ToString("D", new System.Globalization.CultureInfo("fr-FR"))
+                </div>
+            </div>
+        }
     </div>
 }
 else

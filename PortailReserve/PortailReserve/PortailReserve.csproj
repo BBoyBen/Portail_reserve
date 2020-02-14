@@ -291,6 +291,7 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\CSS\event.css" />
     <Content Include="Content\CSS\home.css" />
     <Content Include="Content\CSS\login.css" />
     <Content Include="Content\CSS\profil.css" />

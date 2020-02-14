@@ -10,5 +10,6 @@ namespace PortailReserve.ViewModel
     {
         public Evenement Event { get; set; }
         public Utilisateur Util { get; set; }
+        public Effectif Effectif { get; set; }
     }
 }

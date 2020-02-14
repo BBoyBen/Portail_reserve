@@ -16,11 +16,13 @@ namespace PortailReserve.Controllers
     {
         private IUtilisateurDal uDal;
         private IEvenementDal eDal;
+        private IEffectifDal effDal;
 
         public PlanningController()
         {
             uDal = new UtilisateurDal();
             eDal = new EvenementDal();
+            effDal = new EffectifDal();
         }
 
         public ActionResult Index()
@@ -71,10 +73,13 @@ namespace PortailReserve.Controllers
             if (e == null || e.Equals(typeof(EvenementNull)))
                 ViewBag.Erreur = "Une erreur s'est produite lors de la récupération de l'événement.";
 
+            Effectif eff = effDal.GetEffectifById(e.Effectif);
+
             EventViewModel vm = new EventViewModel()
             {
                 Event = e,
-                Util = u
+                Util = u,
+                Effectif = eff
             };  
 
             return View(vm);
