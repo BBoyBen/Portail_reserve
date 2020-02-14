@@ -208,6 +208,55 @@ namespace PortailReserve.Utils
             }
         }
 
+        public static void InitEvent()
+        {
+            IEvenementDal eDal = new EvenementDal();
+            IEffectifDal effDal = new EffectifDal();
+
+            using (var reader = new StreamReader(System.Web.HttpContext.Current.Server.MapPath("~/Content/import/event.csv")))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                var records = csv.GetRecords<EvenementCsv>();
+                foreach(EvenementCsv e in records)
+                {
+                    Guid idEff = Guid.Empty;
+                    if (!e.Officier.Equals("-1") && !e.SousOfficier.Equals("-1") && !e.Militaire.Equals("-1"))
+                    {
+                        idEff = effDal.AjouterEffectif(new Effectif()
+                        {
+                            Officier = Int32.Parse(e.Officier),
+                            SousOfficier = Int32.Parse(e.SousOfficier),
+                            Militaire = Int32.Parse(e.Militaire)
+                        });
+                    }
+
+                    CultureInfo myCulture = new CultureInfo("fr-FR");
+
+                    DateTime debut = DateTime.Parse(e.Debut, myCulture);
+                    DateTime fin = DateTime.Parse(e.Fin, myCulture);
+
+                    DateTime limite = debut;
+                    if(!e.LimiteReponse.Equals("-1"))
+                    {
+                        limite = DateTime.Parse(e.LimiteReponse, myCulture);
+                    }
+
+                    eDal.CreerEvenement(new Evenement()
+                    {
+                        Debut = debut,
+                        Fin = fin,
+                        LimiteReponse = limite,
+                        Nom = e.Nom,
+                        Description = e.Description,
+                        Lieu = e.Lieu,
+                        Effectif = idEff,
+                        Patracdr = e.Patracdr,
+                        Type = e.Type
+                    });
+                }
+            }
+        }
+
         public static void InitBddByCsv()
         {
             InitEncadrement();
@@ -215,6 +264,7 @@ namespace PortailReserve.Utils
             InitSection();
             InitGroupe();
             InitPersonnel();
+            InitEvent();
         }
     }
 }

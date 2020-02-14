@@ -74,26 +74,6 @@ namespace PortailReserve.Controllers
             Database.SetInitializer(init);
             init.InitializeDatabase(new BddContext());
 
-            Effectif eff = new Effectif()
-            {
-                Officier = 5,
-                SousOfficier = 15,
-                Militaire = 30
-            };
-            Guid idEff = effDal.AjouterEffectif(eff);
-
-            Evenement e = new Evenement()
-            {
-                Nom = "Week-end d'instruction Février",
-                Debut = new DateTime(2020, 2, 15),
-                Fin = new DateTime(2020, 2, 16),
-                Type = "Mission",
-                Lieu = "Quartier - 92e RI",
-                Description = "Week end d'instruction au quartier pour continuer la préparation sentinelle",
-                Effectif = idEff
-            };
-            eDal.CreerEvenement(e);
-
             Utils.ImportCsv.InitBddByCsv();
 
             return RedirectToAction("Index", "Login");

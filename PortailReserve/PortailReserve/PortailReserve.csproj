@@ -244,6 +244,7 @@
     <Compile Include="Models\Compagnie.cs" />
     <Compile Include="Models\Cours.cs" />
     <Compile Include="Models\CSV\CompagnieCsv.cs" />
+    <Compile Include="Models\CSV\EvenementCsv.cs" />
     <Compile Include="Models\CSV\GroupeCsv.cs" />
     <Compile Include="Models\CSV\SectionCsv.cs" />
     <Compile Include="Models\CSV\UtilisateurCsv.cs" />
@@ -361,6 +362,7 @@
     <Content Include="Content\import\groupe.csv" />
     <Content Include="Content\import\personnel.csv" />
     <Content Include="Content\import\section.csv" />
+    <Content Include="Content\import\event.csv" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
