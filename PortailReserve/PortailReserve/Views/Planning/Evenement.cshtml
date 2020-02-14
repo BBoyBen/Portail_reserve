@@ -1,0 +1,28 @@
+﻿@model PortailReserve.ViewModel.EventViewModel
+@{
+    ViewBag.Title = "Evenement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <button class="bouton" onclick="clickOn('retourPlanning'); "> 
+                @Html.ActionLink("Retour au planning", "Index", "Planning", null, new { @class = "lienBouton", id = "retourPlanning" }) 
+            </button>
+        </div>
+    </div>
+</div>
+@if (ViewBag.Erreur == "")
+{
+    <h1> @Model.Event.Nom  </h1>
+
+    <div class="container">
+
+    </div>
+}
+else
+{
+    <h1> @ViewBag.Erreur </h1>
+}
+

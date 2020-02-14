@@ -11,7 +11,8 @@ namespace PortailReserve.Utils
         private static string GetFilePath(string type)
         {
             //C:/Users/ben63/Documents/Projet/Logs/LogPortailReserve/
-            string filePath = "D:/Developpement/Logs/PortailReserve/";
+            //D:/Developpement/Logs/PortailReserve/
+            string filePath = "C:/Users/ben63/Documents/Projet/Logs/LogPortailReserve/";
 
             switch (type)
             {

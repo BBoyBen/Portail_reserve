@@ -202,6 +202,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\PlanningController.cs" />
     <Compile Include="Controllers\ProfilController.cs" />
     <Compile Include="DAL\IAdresseDal.cs" />
     <Compile Include="DAL\IAlbumDal.cs" />
@@ -276,6 +277,7 @@
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\Utils.cs" />
     <Compile Include="ViewModel\AcceuilViewModel.cs" />
+    <Compile Include="ViewModel\EventViewModel.cs" />
     <Compile Include="ViewModel\ModifMdpViewModel.cs" />
     <Compile Include="ViewModel\ModifProfilViewModel.cs" />
     <Compile Include="ViewModel\PremiereCoViewModel.cs" />
@@ -468,6 +470,8 @@
     <Content Include="Views\Profil\Modifier.cshtml" />
     <Content Include="Views\Profil\ModifMdp.cshtml" />
     <Content Include="Views\Profil\Section.cshtml" />
+    <Content Include="Views\Planning\Index.cshtml" />
+    <Content Include="Views\Planning\Evenement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

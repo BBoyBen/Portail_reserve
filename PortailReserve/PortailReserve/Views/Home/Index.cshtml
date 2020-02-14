@@ -30,10 +30,12 @@
     <div class="row">
         <div class="col-12 boiteAcceuil boiteEvent">
             <div class="row">
-                <div class="col-6" id="eventProche">
+                <div class="col-6" id="eventProche" onclick="clickOn('prochainEvent'); ">
+                    
                     <h2 class="text-center titreBoiteAcceuil"> Prochain événement </h2>
                     @if(Model.HasProchainEvent)
                     {
+                        @Html.ActionLink("Event", "Evenement", "Planning", new { id = Model.ProchainEvent.Id}, new { id = "prochainEvent", style = "display: none; "})
                         <div id="nextEvent">
                             <div class="row">
                                 <div class="col-12">
@@ -72,12 +74,14 @@
                     }
                     else
                     {
+                        @Html.ActionLink("Nothing", "", "", null, null);
                         <div id="noEvent">
                             Pas d'événement à venir
                         </div>
                     }
                 </div>
-                <div class="col-6" id="tousEvent">
+                <div class="col-6" id="tousEvent" onclick="clickOn('allEvent'); ">
+                    @Html.ActionLink("Planning", "Index", "Planning", null, new { id = "allEvent", style = "display: none; "})
                     <img src="~/Content/image/icone_planning.png" alt="plaaning" class="imageEvent" />
                     <h2 class="text-center titreBoiteAcceuil"> Voir tous les événements </h2>
                 </div>

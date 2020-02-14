@@ -72,8 +72,6 @@ namespace PortailReserve.Controllers
             Database.SetInitializer(init);
             init.InitializeDatabase(new BddContext());
 
-            
-
             Evenement e = new Evenement()
             {
                 Nom = "Week-end d'instruction Février",
