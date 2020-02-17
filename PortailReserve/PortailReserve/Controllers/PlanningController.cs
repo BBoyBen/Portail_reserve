@@ -9,6 +9,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using static PortailReserve.Utils.Utils;
 
 namespace PortailReserve.Controllers
 {
@@ -25,6 +26,7 @@ namespace PortailReserve.Controllers
             effDal = new EffectifDal();
         }
 
+        [Authorize]
         public ActionResult Index()
         {
             Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
@@ -48,6 +50,7 @@ namespace PortailReserve.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult Evenement (Guid id)
         {
             Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
@@ -81,6 +84,42 @@ namespace PortailReserve.Controllers
                 Util = u,
                 Effectif = eff
             };  
+
+            return View(vm);
+        }
+
+        [Authorize]
+        public ActionResult Liste ()
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+
+            List<Evenement> aVenir = eDal.GetEvenementsAVenir();
+            aVenir = TrieEventAVenir(aVenir);
+
+            List<Evenement> passe = eDal.GetEvenementsPasse();
+            passe = TrieEventPasse(passe);
+
+            ListeEventViewModel vm = new ListeEventViewModel()
+            {
+                AVenir =aVenir,
+                Passe = passe
+            };
 
             return View(vm);
         }

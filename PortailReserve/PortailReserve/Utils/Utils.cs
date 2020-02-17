@@ -88,5 +88,43 @@ namespace PortailReserve.Utils
 
             return trie;
         }
+
+        public static List<Evenement> TrieEventAVenir(List<Evenement> aVenir)
+        {
+            List<Evenement> trie = new List<Evenement>();
+
+            while(aVenir.Count > 0)
+            {
+                Evenement aTrie = aVenir.ElementAt(0);
+                foreach(Evenement e in aVenir)
+                {
+                    if (e.Debut <= aTrie.Debut)
+                        aTrie = e;
+                }
+                trie.Add(aTrie);
+                aVenir.Remove(aTrie);
+            }
+
+            return trie;
+        }
+
+        public static List<Evenement> TrieEventPasse(List<Evenement> passe)
+        {
+            List<Evenement> trie = new List<Evenement>();
+
+            while(passe.Count > 0)
+            {
+                Evenement aTrie = passe.ElementAt(0);
+                foreach(Evenement e in passe)
+                {
+                    if (e.Debut >= aTrie.Debut)
+                        aTrie = e;
+                }
+                trie.Add(aTrie);
+                passe.Remove(aTrie);
+            }
+
+            return trie;
+        }
     }
 }

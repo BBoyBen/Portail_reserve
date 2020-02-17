@@ -7,6 +7,16 @@ function afficherCacherElement(id) {
         elem.style.display = "block";
 }
 
+function afficherElem(id) {
+    var elem = document.getElementById(id);
+    elem.style.display = "block";
+}
+
+function cacherElem(id) {
+    var elem = document.getElementById(id);
+    elem.style.display = "none";
+}
+
 function clickOn(id) {
     var lien = document.getElementById(id);
     lien.click();

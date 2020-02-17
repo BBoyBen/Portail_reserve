@@ -1,0 +1,37 @@
+﻿
+.sousTitreEvent {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.pastilleType {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.caseEvent {
+    margin-bottom: 25px;
+    margin-top: 25px;
+    padding-left: 5%;
+    padding-right: 5%;
+    border: 1px solid grey;
+    border-radius: 4px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    box-shadow: 0px 10px 20px -10px rgba(0,0,0,0.3);
+}
+
+.caseEvent:hover {
+    box-shadow: 0px 10px 20px 1px rgba(0,0,0,0.3);
+    cursor: pointer;
+}
+
+.titreEvent {
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.dateEvent {
+    padding-top: 10px;
+}

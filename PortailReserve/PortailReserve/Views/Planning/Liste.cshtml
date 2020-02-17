@@ -1,0 +1,71 @@
+﻿@model PortailReserve.ViewModel.ListeEventViewModel
+@{
+    ViewBag.Title = "Liste événements";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style {
+    <link rel="stylesheet" href="~/Content/CSS/listeEvent.css" />    
+}
+
+<h1>Liste des événements </h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-6 text-center sousTitreEvent">
+            À venir
+        </div>
+        <div class="col-6 text-center sousTitreEvent">
+            Passé
+        </div>
+    </div>
+</div>
+
+<div class="container" id="aVenir">
+    @foreach(PortailReserve.Models.Evenement e in Model.AVenir)
+    {
+        <div class="row caseEvent" onclick="clickOn('@e.Id'); ">
+            <div class="col-12">
+                @Html.ActionLink("Event", "Evenement", "Planning", new { id = e.Id }, new { id = e.Id, style = "display: none; " })
+                <div class="row">
+                    <div class="col-12 titreEvent">
+                        <strong> @e.Nom </strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-1">
+                        @if (e.Type.Equals("Instruction"))
+                        {
+                            <img src="~/Content/image/point_vert.png" alt="point vert" class="pastilleType" />
+                        }
+                        else if (e.Type.Equals("Stage"))
+                        {
+                            <img src="~/Content/image/point_bleu.png" alt="point bleu" class="pastilleType" />
+                        }
+                        else if (e.Type.Equals("Mission"))
+                        {
+                            <img src="~/Content/image/point_rouge.png" alt="point rouge" class="pastilleType" />
+                        }
+                        else if (e.Type.Equals("Exercice"))
+                        {
+                            <img src="~/Content/image/point_jaune.png" alt="point jaune" class="pastilleType" />
+                        }
+                    </div>
+                    <div class="col-11">
+                        @e.Type
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 dateEvent">
+                        Du @e.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR")) au @e.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="container" id="passe">
+
+</div>
+

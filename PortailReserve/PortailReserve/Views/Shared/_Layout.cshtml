@@ -45,17 +45,30 @@
     <div id="menu">
         <div class="row">
             <div class="menuItem col-3 borderDroite"> @Html.ActionLink("ACCEUIL", "Index", "Home", null, new { @class = "lienMenu" }) </div>
-            <div class="menuItem col-3 borderDroite"> EVENEMENT </div>
+            <div class="menuItem col-3 borderDroite" onclick="afficherCacherElement('sousMenuEvent'); " >
+                <div class="lienMenu"> EVENEMENT </div>
+                <div class="sousMenu" id="sousMenuEvent" style="display: none;">
+                    <div class="sousMenuItem borderBas">
+                        @Html.ActionLink("Planning", "Index", "Planning", null, new { @class = "lienMenu" })
+                    </div>
+                    <div class="sousMenuItem">
+                        @Html.ActionLink("Tous les événements", "Liste", "Planning", null, new { @class = "lienMenu" })
+                    </div>
+                </div>
+            </div>
             <div class="menuItem col-3 borderDroite"> CONNAISSANCE </div>
             <div class="menuItem col-3"> SOUVENIR </div>
         </div>
     </div>
+
+    
 
     <div id="corpsDePage" class="container body-content">
         @RenderBody()
     </div>
 
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/popper")
     @Scripts.Render("~/bundles/bootstrap")
     <script src="~/Content/JavaScript/autoload.js"></script>
     @RenderSection("scripts", required: false)

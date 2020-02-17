@@ -1,2 +1,6 @@
 ﻿Nom,Description,Debut,Fin,LimiteReponse,Patracdr,Type,Lieu,Officier,SousOfficier,Militaire
 Week-end instruction Février,Week end d'instruction au quartier pour continuer la préparation sentinelle,15/02/2020,16/02/2020,-1,Path to file,Instruction,Quartier 92e RI,-1,-1,-1
+Extel Mars,Extel du mois de Mars. Départ le vendredi soir.,27/03/2020,29/03/2020,-1,Path to Patrac,Exercice,Dans la Loire,-1,-1,-1
+Stage TIOR,Stage TIOR pour la préparation Sentinelle (20 places),24/02/2020,25/02/2020,10/02/2020,Path to patrac,Stage,92e RI,0,5,15
+Stage TIOR,Stage TIOR pour la préparation Sentinelle(20 places),26/02/2020,27/02/2020,11/02/2020,Path to patrac,Stage,92e RI,0,5,15
+Renfort garde CCL,La CCL a besoin de renfort pour leur semaine de garde.,27/02/2020,05/03/2020,25/02/2020,Path to Patracdr,Mission,92e RI,0,2,8
