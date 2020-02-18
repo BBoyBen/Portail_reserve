@@ -16,3 +16,12 @@
 
 <h1> Ajouter un événement </h1>
 
+<div class="container">
+    <div class="row">
+        @Html.LabelFor(m => m.Event.Nom, "Titre", new { @class = "col-12 labelMiddle" })
+    </div>
+    <div class="row">
+        @Html.TextBoxFor(m => m.Event.Nom, new { @class = "col-6 champsText champsTextCenter" })
+    </div>
+</div>
+
