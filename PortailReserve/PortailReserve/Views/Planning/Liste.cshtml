@@ -12,16 +12,24 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-6 text-center sousTitreEvent">
-            À venir
-        </div>
-        <div class="col-6 text-center sousTitreEvent">
-            Passé
+        <div class="col-2 champsTextDroit">
+            <button class="bouton boutonVert"> @Html.ActionLink("Ajouter un événement", "Ajouter", "Planning", null, new { @class = "lienBoutonVert" } ) </button>
         </div>
     </div>
 </div>
 
-<div class="container" id="aVenir">
+<div class="container">
+    <div class="row ligneSousTitre">
+        <div class="col-6 text-center">
+            <span id="titreAVenir" class="sousTitreEvent" style="opacity: 1;"> À venir </span>
+        </div>
+        <div class="col-6 text-center">
+            <span id="titrePasse" class="sousTitreEvent" style="opacity: 0.5;"> Passé </span>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="aVenir" style="display: block;">
     @foreach(PortailReserve.Models.Evenement e in Model.AVenir)
     {
         <div class="row caseEvent" onclick="clickOn('@e.Id'); ">
@@ -51,7 +59,7 @@
                             <img src="~/Content/image/point_jaune.png" alt="point jaune" class="pastilleType" />
                         }
                     </div>
-                    <div class="col-11">
+                    <div class="col-11 typeEvent">
                         @e.Type
                     </div>
                 </div>
@@ -65,7 +73,51 @@
     }
 </div>
 
-<div class="container" id="passe">
-
+<div class="container" id="passe" style="display: none;">
+    @foreach (PortailReserve.Models.Evenement e in Model.Passe)
+    {
+        <div class="row caseEvent" onclick="clickOn('@e.Id'); ">
+            <div class="col-12">
+                @Html.ActionLink("Event", "Evenement", "Planning", new { id = e.Id }, new { id = e.Id, style = "display: none; " })
+                <div class="row">
+                    <div class="col-12 titreEvent">
+                        <strong> @e.Nom </strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-1">
+                        @if (e.Type.Equals("Instruction"))
+                        {
+                            <img src="~/Content/image/point_vert.png" alt="point vert" class="pastilleType" />
+                        }
+                        else if (e.Type.Equals("Stage"))
+                        {
+                            <img src="~/Content/image/point_bleu.png" alt="point bleu" class="pastilleType" />
+                        }
+                        else if (e.Type.Equals("Mission"))
+                        {
+                            <img src="~/Content/image/point_rouge.png" alt="point rouge" class="pastilleType" />
+                        }
+                        else if (e.Type.Equals("Exercice"))
+                        {
+                            <img src="~/Content/image/point_jaune.png" alt="point jaune" class="pastilleType" />
+                        }
+                    </div>
+                    <div class="col-11 typeEvent">
+                        @e.Type
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 dateEvent">
+                        Du @e.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR")) au @e.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+
+@section scripts {
+    <script src="~/Content/JavaScript/listeEvent.js"></script>    
+}
 

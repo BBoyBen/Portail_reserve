@@ -278,6 +278,7 @@
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\Utils.cs" />
     <Compile Include="ViewModel\AcceuilViewModel.cs" />
+    <Compile Include="ViewModel\AjouterEventViewModel.cs" />
     <Compile Include="ViewModel\EventViewModel.cs" />
     <Compile Include="ViewModel\ListeEventViewModel.cs" />
     <Compile Include="ViewModel\ModifMdpViewModel.cs" />
@@ -314,6 +315,7 @@
     <Content Include="Content\image\point_rouge.png" />
     <Content Include="Content\image\point_vert.png" />
     <Content Include="Content\JavaScript\autoload.js" />
+    <Content Include="Content\JavaScript\listeEvent.js" />
     <Content Include="Content\JavaScript\modifMdp.js" />
     <Content Include="Content\JavaScript\modifProfil.js" />
     <Content Include="Content\JavaScript\premiereCo.js" />
@@ -478,6 +480,7 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Planning\Liste.cshtml" />
+    <Content Include="Views\Planning\Ajouter.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

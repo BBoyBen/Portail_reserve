@@ -120,6 +120,7 @@ h1 {
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
     box-shadow: 0px 10px 20px 1px rgba(0,0,0,0.3);
+    z-index: 1000;
 }
 
 .sousMenuItem {
@@ -187,12 +188,27 @@ h1 {
     font-style: italic;
 }
 
+.boutonVert {
+    background-color: forestgreen;
+    margin-top: 0;
+    border: none;
+}
+
 .lienBouton {
     color: black;
 }
 
 .lienBouton:hover {
     color:black;
+    text-decoration: none;
+}
+
+.lienBoutonVert {
+    color: white;
+}
+
+.lienBoutonVert:hover {
+    color: white;
     text-decoration: none;
 }
 

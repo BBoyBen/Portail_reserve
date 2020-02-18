@@ -123,5 +123,34 @@ namespace PortailReserve.Controllers
 
             return View(vm);
         }
+
+        [Authorize]
+        public ActionResult Ajouter()
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+
+            AjouterEventViewModel vm = new AjouterEventViewModel()
+            {
+                Event = new Evenement()
+            };
+
+            return View(vm);
+        }
     }
 }

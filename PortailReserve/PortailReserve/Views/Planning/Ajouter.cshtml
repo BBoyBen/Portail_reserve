@@ -1,0 +1,18 @@
+﻿@model PortailReserve.ViewModel.AjouterEventViewModel
+@{
+    ViewBag.Title = "Ajouter un événement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <button class="bouton" onclick="clickOn('retourPlanning'); ">
+                @Html.ActionLink("Retour au planning", "Index", "Planning", null, new { @class = "lienBouton", id = "retourPlanning" })
+            </button>
+        </div>
+    </div>
+</div>
+
+<h1> Ajouter un événement </h1>
+
