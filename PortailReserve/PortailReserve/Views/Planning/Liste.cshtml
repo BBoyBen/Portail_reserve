@@ -13,7 +13,9 @@
 <div class="container">
     <div class="row">
         <div class="col-2 champsTextDroit">
-            <button class="bouton boutonVert"> @Html.ActionLink("Ajouter un événement", "Ajouter", "Planning", null, new { @class = "lienBoutonVert" } ) </button>
+            <button class="bouton boutonVert" onclick="clickOn('ajoutEventListe'); "> 
+                @Html.ActionLink("Ajouter un événement", "Ajouter", "Planning", null, new { @class = "lienBoutonVert", id = "ajoutEventListe" } ) 
+            </button>
         </div>
     </div>
 </div>

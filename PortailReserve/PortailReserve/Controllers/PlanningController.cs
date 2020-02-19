@@ -145,9 +145,24 @@ namespace PortailReserve.Controllers
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
 
+            List<SelectListItem> types = new List<SelectListItem>();
+            types.Add(new SelectListItem { Text = "Instruction", Value = "Intruction", Selected = true });
+            types.Add(new SelectListItem { Text = "Exercice", Value = "Exercice" });
+            types.Add(new SelectListItem { Text = "Stage", Value = "Stage" });
+            types.Add(new SelectListItem { Text = "Mission", Value = "Mission" });
+
+            Effectif eff = new Effectif
+            {
+                Officier = 0,
+                SousOfficier = 0,
+                Militaire = 0
+            };
+
             AjouterEventViewModel vm = new AjouterEventViewModel()
             {
-                Event = new Evenement()
+                Event = new Evenement(),
+                Types = types,
+                Effectif = eff
             };
 
             return View(vm);

@@ -273,3 +273,16 @@ label {
     text-align: center;
 }
 
+.champsTextArea{
+    text-align: left;
+    min-height: 10rem;
+}
+
+.paddingRight {
+    padding-right: 10px;
+}
+
+option {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
