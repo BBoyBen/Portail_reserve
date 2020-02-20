@@ -1,4 +1,5 @@
-﻿using PortailReserve.DAL;
+﻿using Microsoft.Ajax.Utilities;
+using PortailReserve.DAL;
 using PortailReserve.DAL.Impl;
 using PortailReserve.Models;
 using PortailReserve.Models.NullObject;
@@ -172,7 +173,68 @@ namespace PortailReserve.Controllers
         [HttpPost]
         public ActionResult Ajouter (AjouterEventViewModel vm)
         {
-            return View();
+            bool isAllValid = true;
+            if(vm.Event.Nom.IsNullOrWhiteSpace())
+            {
+                ModelState.AddModelError("Event.Nom", "Le titre est obligatoire.");
+                isAllValid = false;
+            }
+
+            if(vm.Event.Description.IsNullOrWhiteSpace())
+            {
+                ModelState.AddModelError("Event.Description", "Les informations complémentaires sont obligatoires.");
+                isAllValid = false;
+            }
+
+            if (vm.Event.Lieu.IsNullOrWhiteSpace())
+            {
+                ModelState.AddModelError("Event.Lieu", "Le lieu est obligatoire.");
+                isAllValid = false;
+            }
+
+            if(vm.Event.Debut.Year == 1 && vm.Event.Fin.Year == 1)
+            {
+                ModelState.AddModelError("Event.Debut", "Les dates de d&ébut et de fin sont obligatoire.");
+                isAllValid = false;
+            }
+            else if(vm.Event.Debut.Year == 1)
+            {
+                ModelState.AddModelError("Event.Debut", "La date de début est obligatoire.");
+                isAllValid = false;
+            }
+            else if(vm.Event.Fin.Year == 1)
+            {
+                ModelState.AddModelError("Event.Debut", "La date de fin est obligatoire.");
+                isAllValid = false;
+            }
+            else if(vm.Event.Debut > vm.Event.Fin)
+            {
+                ModelState.AddModelError("Event.Debut", "La date de début doit être antérieure à la date de fin.");
+                isAllValid = false;
+            }
+
+            if (!isAllValid)
+                return View(vm);
+
+            string type = Request.Form["Event.Type"];
+
+            Guid idEffectif = Guid.Empty;
+            if(type.Equals("Mission") || type.Equals("Stage"))
+                idEffectif = effDal.AjouterEffectif(vm.Effectif);
+
+            var patracdrFile = Request.Files["patracdrFile"];
+            string path = HttpContext.Server.MapPath("~/Content/PATRACDR/") + patracdrFile.FileName;
+            patracdrFile.SaveAs(path);
+            string url = "/Content/PATRACDR/" + patracdrFile.FileName;
+
+            Evenement toCreate = vm.Event;
+            toCreate.Effectif = idEffectif;
+            toCreate.Type = type;
+            toCreate.Patracdr = url;
+
+            Guid idEvent = eDal.CreerEvenement(toCreate);
+
+            return RedirectToAction("Evenement", "Planning", new { id = idEvent });
         }
     }
 }

@@ -486,6 +486,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\PATRACDR\" />
     <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>
