@@ -29,6 +29,11 @@
         <div class="row">
             @Html.TextBoxFor(m => m.Event.Nom, new { @class = "col-6 champsText champsTextCenter", required = "required" })
         </div>
+        <div class="row">
+            <div class="col-12 erreur">
+                <span id="erreurTitre"> @Html.ValidationMessageFor(m => m.Event.Nom) </span>
+            </div>
+        </div>
 
         <div class="row">
             @Html.LabelFor(m => m.Event.Type, "Type d'événement", new { @class = "col-12 labelMiddle" })
@@ -43,12 +48,22 @@
         <div class="row">
             @Html.TextAreaFor(m => m.Event.Description, new { @class = "col-6 champsText champsTextCenter champsTextArea", required = "required" })
         </div>
+        <div class="row">
+            <div class="col-12 erreur">
+                <span id="erreurDes"> @Html.ValidationMessageFor(m => m.Event.Description) </span>
+            </div>
+        </div>
 
         <div class="row">
             @Html.LabelFor(m => m.Event.Debut, "Date de début", new { @class = "col-2 text-right labelMiddle" })
             @Html.TextBoxFor(m => m.Event.Debut, new { type = "date", @class = "col-4 champsText champsTextGauche", required = "required" })
             @Html.LabelFor(m => m.Event.Fin, "Date de fin", new { @class = "col-2, text-right labelMiddle paddingRight" })
             @Html.TextBoxFor(m => m.Event.Fin, new { type = "date", @class = "col-4 champsText champsTextGauche", required = "required" })
+        </div>
+        <div class="row">
+            <div class="col-12 erreur">
+                <span id="erreurDate"> @Html.ValidationMessageFor(m => m.Event.Debut) </span>
+            </div>
         </div>
 
         <div class="row">
@@ -57,10 +72,16 @@
         <div class="row">
             @Html.TextBoxFor(m => m.Event.Lieu, new { @class = "col-6 champsText champsTextCenter" })
         </div>
+        <div class="row">
+            <div class="col-12 erreur">
+                <span id="erreurLieu"> @Html.ValidationMessageFor(m => m.Event.Lieu) </span>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-6 champsTextCenter text-center">
                 <label for="patracdrFile" id="patracdrLabel"> Ajouter un PATRACDR </label>
+                <span id="chosenFile"></span>
             </div>
             <input type="file"
                    name="patracdrFile"
@@ -68,6 +89,11 @@
                    style="display: none; "
                    accept="..csv, .docx, .doc, .pdf, .xslx"
                    required />
+        </div>
+        <div class="row">
+            <div class="col-12 erreur">
+                <span id="erreurPatrac"></span>
+            </div>
         </div>
 
         <div id="missionOuStage" style="display: none;">
@@ -87,15 +113,16 @@
                 @Html.LabelFor(m => m.Effectif.Militaire, "Militaire du rang", new { @class = "col-4 text-center" })
             </div>
             <div class="row">
-                @Html.TextBoxFor(m => m.Effectif.Officier, new { type = "number", @class = "col-3 champsText champsTextCenter" })
-                @Html.TextBoxFor(m => m.Effectif.SousOfficier, new { type = "number", @class = "col-3 champsText champsTextCenter" })
-                @Html.TextBoxFor(m => m.Effectif.Militaire, new { type = "number", @class = "col-3 champsText champsTextCenter" })
+                @Html.TextBoxFor(m => m.Effectif.Officier, new { type = "number", @class = "col-3 champsText champsTextCenter", min = "0" })
+                @Html.TextBoxFor(m => m.Effectif.SousOfficier, new { type = "number", @class = "col-3 champsText champsTextCenter", min = "0" })
+                @Html.TextBoxFor(m => m.Effectif.Militaire, new { type = "number", @class = "col-3 champsText champsTextCenter", min = "0" })
             </div>
         </div>
 
         <div class="row formPart">
-            <input type="submit" value="Valider" class="col-4 btnSubmit" id="subAjoutEvent" />
+            <button class="col-4 btnSubmit" id="valideAjoutEvent" onclick="checkAllFields(); "> Valider </button>
         </div>
+        <input type="submit" value="Valider" id="subAjoutEvent" style="display: none;" />
     }
 
 </div>

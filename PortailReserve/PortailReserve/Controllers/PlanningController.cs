@@ -167,5 +167,12 @@ namespace PortailReserve.Controllers
 
             return View(vm);
         }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult Ajouter (AjouterEventViewModel vm)
+        {
+            return View();
+        }
     }
 }
