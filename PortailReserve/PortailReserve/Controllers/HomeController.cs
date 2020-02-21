@@ -54,6 +54,7 @@ namespace PortailReserve.Controllers
 
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
 
             Evenement prochain = eDal.GetProchainEvenement();
             AcceuilViewModel vm = new AcceuilViewModel()

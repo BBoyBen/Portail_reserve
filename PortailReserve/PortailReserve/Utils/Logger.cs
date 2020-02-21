@@ -12,7 +12,7 @@ namespace PortailReserve.Utils
         {
             //C:/Users/ben63/Documents/Projet/Logs/LogPortailReserve/
             //D:/Developpement/Logs/PortailReserve/
-            string filePath = "D:/Developpement/Logs/PortailReserve/";
+            string filePath = "C:/Users/ben63/Documents/Projet/Logs/LogPortailReserve/";
 
             switch (type)
             {

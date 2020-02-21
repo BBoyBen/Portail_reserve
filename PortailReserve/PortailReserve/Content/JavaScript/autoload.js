@@ -22,6 +22,12 @@ function clickOn(id) {
     lien.click();
 }
 
+function clickOnSupp(id) {
+    var idSupp = "supp_" + id;
+    var lien = document.getElementById(idSupp);
+    lien.click();
+}
+
 function toutVert(classe) {
     var champs = document.getElementsByClassName(classe);
     champs.forEach(function (item) {

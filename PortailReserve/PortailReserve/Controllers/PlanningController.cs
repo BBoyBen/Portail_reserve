@@ -47,6 +47,7 @@ namespace PortailReserve.Controllers
 
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
 
             return View();
         }
@@ -71,6 +72,7 @@ namespace PortailReserve.Controllers
 
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
 
             Evenement e = eDal.GetEvenementById(id);
             ViewBag.Erreur = "";
@@ -109,6 +111,7 @@ namespace PortailReserve.Controllers
 
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
 
             List<Evenement> aVenir = eDal.GetEvenementsAVenir();
             aVenir = TrieEventAVenir(aVenir);
@@ -145,6 +148,7 @@ namespace PortailReserve.Controllers
 
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
 
             List<SelectListItem> types = new List<SelectListItem>();
             types.Add(new SelectListItem { Text = "Instruction", Value = "Intruction", Selected = true });
@@ -235,6 +239,38 @@ namespace PortailReserve.Controllers
             Guid idEvent = eDal.CreerEvenement(toCreate);
 
             return RedirectToAction("Evenement", "Planning", new { id = idEvent });
+        }
+
+        [Authorize]
+        public ActionResult Supprimer (Guid id)
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
+
+            if (u.Role > 3)
+                return RedirectToAction("Liste", "Planning");
+
+            int retour = eDal.SupprimerEvenement(id);
+            if (retour != 1)
+                ViewBag.Erreur = "Un problème est surbenu lors de la suppression.";
+
+            return RedirectToAction("Liste", "Planning");
         }
     }
 }

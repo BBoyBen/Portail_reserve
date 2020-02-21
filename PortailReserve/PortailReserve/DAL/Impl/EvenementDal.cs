@@ -191,6 +191,25 @@ namespace PortailReserve.DAL.Impl
                 if (evenement == null || evenement.Equals(typeof(EvenementNull)))
                     return 0;
 
+                Effectif effectif = bdd.Effectifs.FirstOrDefault(e => e.Id.Equals(evenement.Effectif));
+                List<Disponibilite> dispos = bdd.Disponibilites.Where(d => d.Evenement.Equals(evenement.Id)).ToList();
+                List<Participation> participations = bdd.Participations.Where(p => p.Evenement.Equals(evenement.Id)).ToList();
+
+                bdd.Effectifs.Remove(effectif);
+                bdd.SaveChanges();
+
+                foreach(Disponibilite d in dispos)
+                {
+                    bdd.Disponibilites.Remove(d);
+                    bdd.SaveChanges();
+                }
+
+                foreach(Participation p in participations)
+                {
+                    bdd.Participations.Remove(p);
+                    bdd.SaveChanges();
+                }
+
                 bdd.Evenements.Remove(evenement);
                 bdd.SaveChanges();
 

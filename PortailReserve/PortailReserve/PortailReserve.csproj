@@ -311,6 +311,7 @@
     <Content Include="Content\image\icone_planning.png" />
     <Content Include="Content\image\icone_profile.png" />
     <Content Include="Content\image\icone_soldat.png" />
+    <Content Include="Content\image\icone_supprimer.png" />
     <Content Include="Content\image\point_bleu.png" />
     <Content Include="Content\image\point_jaune.png" />
     <Content Include="Content\image\point_rouge.png" />

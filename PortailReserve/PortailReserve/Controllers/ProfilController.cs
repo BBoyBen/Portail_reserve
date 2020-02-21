@@ -50,6 +50,7 @@ namespace PortailReserve.Controllers
 
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
 
             Adresse a = aDal.GetAdresseById(u.Adresse);
             if (a == null || a.Equals(typeof(AdresseNull)))
@@ -119,6 +120,7 @@ namespace PortailReserve.Controllers
 
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
 
             Adresse adr = aDal.GetAdresseById(u.Adresse);
             if (adr == null || adr.Equals(typeof(AdresseNull)))
@@ -206,6 +208,7 @@ namespace PortailReserve.Controllers
 
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
 
             ModifMdpViewModel vm = new ModifMdpViewModel()
             {
@@ -282,6 +285,7 @@ namespace PortailReserve.Controllers
 
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
 
             Groupe userGrp = gDal.GetGroupeById(u.Groupe);
             Section userSection = sDal.GetSectionById(userGrp.Section);
