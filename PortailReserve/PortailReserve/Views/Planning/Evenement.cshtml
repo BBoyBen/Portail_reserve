@@ -99,6 +99,50 @@
                 </div>
             </div>
         }
+
+        @if(Model.Event.Type.Equals("Instruction") || Model.Event.Type.Equals("Exercice"))
+        {
+            <div class="row">
+                <div class="col-6">
+                    @using (Html.BeginForm("Participe", "Planning", FormMethod.Post))
+                    {
+                        @Html.HiddenFor(m => m.Participation.Evenement);
+                        @Html.HiddenFor(m => m.Participation.Utilisateur)
+                        <input type="hidden" value="Oui" name="participation" id="participation" />
+
+                        <div class="row">
+                            <input type="submit" value="Participe" class="bouton boutonVert col-6 champsTextDroit" />
+                        </div>
+                    }
+                </div>
+                <div class="col-6">
+                    @using (Html.BeginForm("Participe", "Planning", FormMethod.Post))
+                    {
+                        @Html.HiddenFor(m => m.Participation.Evenement);
+                        @Html.HiddenFor(m => m.Participation.Utilisateur)
+                        <input type="hidden" value="Non" name="participation" id="participation" />
+                         
+                        <div class="row">
+                            <input type="submit" value="Ne participe pas" class="bouton boutonRouge col-6" />
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-6">
+
+                </div>
+                <div class="col-6">
+                    @using(Html.BeginForm("Participe", "Planning", FormMethod.Post))
+                    {
+
+                    }
+                </div>
+            </div>
+        }
     </div>
 }
 else

@@ -11,5 +11,7 @@ namespace PortailReserve.ViewModel
         public Evenement Event { get; set; }
         public Utilisateur Util { get; set; }
         public Effectif Effectif { get; set; }
+        public Disponibilite Dispo { get; set; }
+        public Participation Participation { get; set; }
     }
 }

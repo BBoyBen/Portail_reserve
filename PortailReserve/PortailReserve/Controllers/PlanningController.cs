@@ -85,7 +85,9 @@ namespace PortailReserve.Controllers
             {
                 Event = e,
                 Util = u,
-                Effectif = eff
+                Effectif = eff,
+                Dispo = new Disponibilite { Evenement = e.Id, Utilisateur = u.Id },
+                Participation = new Participation { Evenement = e.Id, Utilisateur = u.Id }
             };  
 
             return View(vm);
