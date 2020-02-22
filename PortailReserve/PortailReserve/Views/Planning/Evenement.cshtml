@@ -100,48 +100,62 @@
             </div>
         }
 
-        @if(Model.Event.Type.Equals("Instruction") || Model.Event.Type.Equals("Exercice"))
+        @if(Model.Event.Type.Equals("Instruction") || Model.Event.Type.Equals("Exercice")) //Cas des intructions et exercice avec juste patticpation
         {
-            <div class="row">
-                <div class="col-6">
-                    @using (Html.BeginForm("Participe", "Planning", FormMethod.Post))
-                    {
-                        @Html.HiddenFor(m => m.Participation.Evenement);
-                        @Html.HiddenFor(m => m.Participation.Utilisateur)
-                        <input type="hidden" value="Oui" name="participation" id="participation" />
+            if (Model.Participation == null) // le user n'a pas encore répondu
+            {
+                <div class="row">
+                    <div class="col-6">
+                        @using (Html.BeginForm("Participe", "Planning", FormMethod.Post))
+                        {
+                            @Html.HiddenFor(m => m.Event.Id);
+                            @Html.HiddenFor(m => m.Util.Id)
+                            <input type="hidden" value="Oui" name="participation" id="participation" />
 
-                        <div class="row">
-                            <input type="submit" value="Participe" class="bouton boutonVert col-6 champsTextDroit" />
-                        </div>
-                    }
+                            <div class="row">
+                                <input type="submit" value="Participe" class="bouton boutonVert col-6 champsTextDroit" />
+                            </div>
+                        }
+                    </div>
+                    <div class="col-6">
+                        @using (Html.BeginForm("Participe", "Planning", FormMethod.Post))
+                        {
+                            @Html.HiddenFor(m => m.Event.Id);
+                            @Html.HiddenFor(m => m.Util.Id)
+                            <input type="hidden" value="Non" name="participation" id="participation" />
+
+                            <div class="row">
+                                <input type="submit" value="Ne participe pas" class="bouton boutonRouge col-6" />
+                            </div>
+                        }
+                    </div>
                 </div>
-                <div class="col-6">
-                    @using (Html.BeginForm("Participe", "Planning", FormMethod.Post))
-                    {
-                        @Html.HiddenFor(m => m.Participation.Evenement);
-                        @Html.HiddenFor(m => m.Participation.Utilisateur)
-                        <input type="hidden" value="Non" name="participation" id="participation" />
-                         
-                        <div class="row">
-                            <input type="submit" value="Ne participe pas" class="bouton boutonRouge col-6" />
-                        </div>
-                    }
-                </div>
-            </div>
+            }
+            else //Le usre a déjà donné une réponse, il peut tout de fois la midifier
+            {
+
+            }
         }
-        else
+        else // cas de stage et de missio donc donner des dispos
         {
-            <div class="row">
-                <div class="col-6">
+            if (Model.Dispo == null) // Le user n'a pas de dispos alors qu'elle était attendu
+            {
+                <div class="row">
+                    <div class="col-6">
 
-                </div>
-                <div class="col-6">
-                    @using(Html.BeginForm("Participe", "Planning", FormMethod.Post))
-                    {
+                    </div>
+                    <div class="col-6">
+                        @using (Html.BeginForm("Participe", "Planning", FormMethod.Post))
+                        {
 
-                    }
+                        }
+                    </div>
                 </div>
-            </div>
+            }
+            else // le user n'a pas encore fair de mani^ou n'a pas de dispo
+            {
+
+            }
         }
     </div>
 }

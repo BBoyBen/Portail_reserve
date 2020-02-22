@@ -86,6 +86,25 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
+        public Disponibilite GetDispoByIdUtilAndByIdEvent(Guid idUtil, Guid idEvent)
+        {
+            try
+            {
+                Disponibilite disponibilite = bdd.Disponibilites.FirstOrDefault(d => d.Utilisateur.Equals(idUtil) && d.Evenement.Equals(idEvent));
+                return disponibilite;
+            }
+            catch (NullReferenceException nfe)
+            {
+                Log("ERROR", "Aucune disponibilite de l'utiliateur " + idUtil + " à l'event " + idEvent + " -> " + nfe);
+                return null;
+            }
+            catch (Exception e)
+            {
+                Log("ERROR", "Erreur récupération disponibilite de l'util : " + idUtil + " pour l'event : " + idEvent + " -> " + e);
+                return null;
+            }
+        }
+
         public int ModifierDispo(Guid id, Disponibilite dispo)
         {
             try

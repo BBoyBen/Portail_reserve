@@ -10,6 +10,7 @@ namespace PortailReserve.DAL
     {
         Guid AjouterDispo(Disponibilite dispo);
         Disponibilite GetDispoById(Guid id);
+        Disponibilite GetDispoByIdUtilAndByIdEvent(Guid idUtil, Guid idEvent);
         List<Disponibilite> GetAllDispoByEvent(Guid idEvent);
         List<Disponibilite> GetAllDispoByUser(Guid idUtil);
         int ModifierDispo(Guid id, Disponibilite dispo);

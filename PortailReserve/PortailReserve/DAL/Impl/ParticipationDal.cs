@@ -72,7 +72,7 @@ namespace PortailReserve.DAL.Impl
             }catch(NullReferenceException nfe)
             {
                 Log("ERROR", "Aucune particiation de l'utiliateur " + idUtil + " à l'event " + idEvent + " -> " + nfe);
-                return new ParticipationNull() { Error = "Participation introuvalbe." };
+                return null;
             }
             catch(Exception e)
             {

@@ -22,6 +22,10 @@ namespace PortailReserve.DAL
         int PremiereCoKO(Guid id);
         Guid AjouterUtilisateur(Utilisateur utilisateur);
         int SupprimerUtilisateur(Guid id);
+        List<Utilisateur> GetUtilisateursByDispo(Guid idEVent);
+        List<Utilisateur> GetUtilisateursByParticipation(Guid idEvent);
+        List<Utilisateur> GetUtilisateursSansReponseDispo(Guid idEVent);
+        List<Utilisateur> GetUtilisateursSansReponseParticipation(Guid idEvent);
 
     }
 }

@@ -19,12 +19,16 @@ namespace PortailReserve.Controllers
         private IUtilisateurDal uDal;
         private IEvenementDal eDal;
         private IEffectifDal effDal;
+        private IParticipationDal pDal;
+        private IDisponibiliteDal dDal;
 
         public PlanningController()
         {
             uDal = new UtilisateurDal();
             eDal = new EvenementDal();
             effDal = new EffectifDal();
+            pDal = new ParticipationDal();
+            dDal = new DisponibiliteDal();
         }
 
         [Authorize]
@@ -86,8 +90,12 @@ namespace PortailReserve.Controllers
                 Event = e,
                 Util = u,
                 Effectif = eff,
-                Dispo = new Disponibilite { Evenement = e.Id, Utilisateur = u.Id },
-                Participation = new Participation { Evenement = e.Id, Utilisateur = u.Id }
+                Dispo = dDal.GetDispoByIdUtilAndByIdEvent(u.Id, e.Id),
+                Participation = pDal.GetParticipationByUtilAndEvent(u.Id, e.Id),
+                UtilParticipation = uDal.GetUtilisateursByParticipation(e.Id),
+                UtilDispo = uDal.GetUtilisateursByDispo(e.Id),
+                NoReponseD = uDal.GetUtilisateursSansReponseDispo(e.Id),
+                NoReponseP = uDal.GetUtilisateursSansReponseParticipation(e.Id)
             };  
 
             return View(vm);
