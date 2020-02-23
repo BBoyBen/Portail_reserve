@@ -201,7 +201,9 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IParticpationDal.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\ParticipationController.cs" />
     <Compile Include="Controllers\PlanningController.cs" />
     <Compile Include="Controllers\ProfilController.cs" />
     <Compile Include="DAL\IAdresseDal.cs" />
@@ -488,6 +490,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\PATRACDR\" />
+    <Folder Include="Views\Participation\" />
     <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>

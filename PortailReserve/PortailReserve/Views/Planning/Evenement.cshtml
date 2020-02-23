@@ -41,7 +41,7 @@
                     <img src="~/Content/image/point_jaune.png" alt="point jaune" id="pastilleType" />
                 }
             </div>
-            <div class="col-5" id="textType" >
+            <div class="col-5" id="textType">
                 @Model.Event.Type
             </div>
             <div class="col-6">
@@ -74,7 +74,7 @@
             </div>
         </div>
 
-        @if(Model.Event.Type.Equals("Stage") || Model.Event.Type.Equals("Mission"))
+        @if (Model.Event.Type.Equals("Stage") || Model.Event.Type.Equals("Mission"))
         {
             <div class="row">
                 <div class="col-10">
@@ -83,7 +83,7 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    @if(Model.Effectif != null)
+                    @if (Model.Effectif != null)
                     {
                         <strong> Effectif : </strong> <span> @Model.Effectif.Officier / @Model.Effectif.SousOfficier / @Model.Effectif.Militaire </span>
                     }
@@ -100,13 +100,14 @@
             </div>
         }
 
-        @if(Model.Event.Type.Equals("Instruction") || Model.Event.Type.Equals("Exercice")) //Cas des intructions et exercice avec juste patticpation
+        <div id="boutonPart">
+        @if (Model.Event.Type.Equals("Instruction") || Model.Event.Type.Equals("Exercice")) //Cas des intructions et exercice avec juste patticpation
         {
             if (Model.Participation == null) // le user n'a pas encore répondu
             {
                 <div class="row">
                     <div class="col-6">
-                        @using (Html.BeginForm("Participe", "Planning", FormMethod.Post))
+                        @using (Html.BeginForm("Ajouter", "Participation", FormMethod.Post))
                         {
                             @Html.HiddenFor(m => m.Event.Id);
                             @Html.HiddenFor(m => m.Util.Id)
@@ -118,7 +119,7 @@
                         }
                     </div>
                     <div class="col-6">
-                        @using (Html.BeginForm("Participe", "Planning", FormMethod.Post))
+                        @using (Html.BeginForm("Ajouter", "Participation", FormMethod.Post))
                         {
                             @Html.HiddenFor(m => m.Event.Id);
                             @Html.HiddenFor(m => m.Util.Id)
@@ -131,12 +132,56 @@
                     </div>
                 </div>
             }
-            else //Le usre a déjà donné une réponse, il peut tout de fois la midifier
+            else //Le user a déjà donné une réponse, il peut tout de fois la midifier
             {
+                if (Model.Participation.Participe)
+                {
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            Vous avez répondu que vous participez à cet événement.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            @using (Html.BeginForm("Modifier", "Participation", FormMethod.Post))
+                            {
+                                @Html.HiddenFor(m => m.Event.Id);
+                                @Html.HiddenFor(m => m.Util.Id)
+                                <input type="hidden" value="Non" name="modifParticipation" id="modifParticipation" />
+
+                                <div class="row">
+                                    <input type="submit" value="Ne plus participer" class="bouton boutonRouge col-6 champsTextCenter" />
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            Vous avez répondu que vous ne participez pas à cet événement.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            @using (Html.BeginForm("Modifier", "Participation", FormMethod.Post))
+                            {
+                                @Html.HiddenFor(m => m.Event.Id);
+                                @Html.HiddenFor(m => m.Util.Id)
+                                <input type="hidden" value="Oui" name="modifParticipation" id="modifParticipation" />
+
+                                <div class="row">
+                                    <input type="submit" value="Participer" class="bouton boutonVert col-6 champsTextCenter" />
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
 
             }
         }
-        else // cas de stage et de missio donc donner des dispos
+        else // cas de stage et de mission donc donner des dispos
         {
             if (Model.Dispo == null) // Le user n'a pas de dispos alors qu'elle était attendu
             {
@@ -157,6 +202,7 @@
 
             }
         }
+        </div>
     </div>
 }
 else

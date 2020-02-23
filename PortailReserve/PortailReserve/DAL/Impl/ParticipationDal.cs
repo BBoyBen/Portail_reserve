@@ -98,7 +98,7 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
-                Participation toModif = GetParticipationById(id);
+                Participation toModif = GetParticipationByUtilAndEvent(idUtil, id);
                 if (toModif == null || toModif.Equals(typeof(ParticipationNull)))
                     return 0;
 
