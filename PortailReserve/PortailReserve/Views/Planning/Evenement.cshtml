@@ -187,12 +187,21 @@
             {
                 <div class="row">
                     <div class="col-6">
-
+                        <div class="row">
+                            <button class="bouton boutonVert col-6 champsTextDroit"> Disponible </button>
+                        </div>
                     </div>
                     <div class="col-6">
-                        @using (Html.BeginForm("Participe", "Planning", FormMethod.Post))
+                        @using (Html.BeginForm("Ajouter", "Disponibilite", FormMethod.Post))
                         {
+                            @Html.HiddenFor(m => m.Event.Id);
+                            @Html.HiddenFor(m => m.Util.Id);
 
+                            <input type="hidden" value="Non" name="disponibilite" id="disponibilite" />
+
+                            <div class="row">
+                                <input type="submit" value="Non disponible" class="bouton boutonRouge col-6" />
+                            </div>
                         }
                     </div>
                 </div>
