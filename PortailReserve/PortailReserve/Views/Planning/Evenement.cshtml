@@ -188,7 +188,7 @@
                 <div class="row">
                     <div class="col-6">
                         <div class="row">
-                            <button class="bouton boutonVert col-6 champsTextDroit"> Disponible </button>
+                            <button class="bouton boutonVert col-6 champsTextDroit" onclick="afficherCacherElement('popupDispo'); "> Disponible </button>
                         </div>
                     </div>
                     <div class="col-6">
@@ -206,7 +206,7 @@
                     </div>
                 </div>
             }
-            else // le user n'a pas encore fair de mani^ou n'a pas de dispo
+            else // le user a déjà donner (ou pas) une dispo
             {
 
             }
@@ -218,4 +218,40 @@ else
 {
     <h1> @ViewBag.Erreur </h1>
 }
+
+<div class="container" id="popupDispo" style="display: none;">
+    <div class="row">
+        <div class="col-12 text-center titrePopUp"> Je suis disponible : </div>
+    </div>
+    @using (Html.BeginForm("Ajouter", "Disponibilité", FormMethod.Post))
+    {
+        <div class="row toutePeriode">
+            @Html.CheckBoxFor(m => m.Dispo.TouteLaPeriode, new { @class = "col-6 champsTextDroit checkBox" })
+            @Html.LabelFor(m => m.Dispo.TouteLaPeriode, "Toute la période", new { @class = "col-6 labelCheckBox" })
+        </div>
+
+        <div id="partieDate" class="row">
+            <div class="col-6">
+                Du @Html.TextBoxFor(m => m.Dispo.Debut, new { type = "date", @class = "champsText" })
+            </div>
+            <div class="col-6">
+                Au @Html.TextBoxFor(m => m.Dispo.Fin, new { type = "date", @class = "champsText" })
+            </div>
+        </div>
+
+        <input type="submit" value="Valier" id="popUpSubmit" style="display: none;" />
+    }
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <button class="col-4 bouton boutonRouge champsTextDroit" onclick="afficherCacherElement('popupDispo'); "> Annuler </button>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <button class="col-4 bouton boutonVert" onclick="clickOn('popUpSubmit'); "> Ajouter </button>
+            </div>
+        </div>
+    </div>
+</div>
 

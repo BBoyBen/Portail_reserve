@@ -296,3 +296,14 @@ option {
     margin-bottom: 10px;
     margin-top: 10px;
 }
+
+.checkBox {
+    width: 2rem;
+    height: 2rem;
+    text-align: right;
+}
+
+.labelCheckBox{
+    text-align: left;
+    padding-top: 0.25rem;
+}
