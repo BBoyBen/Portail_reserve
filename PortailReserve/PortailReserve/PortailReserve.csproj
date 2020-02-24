@@ -200,8 +200,8 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\DisponibiliteController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\IParticpationDal.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ParticipationController.cs" />
     <Compile Include="Controllers\PlanningController.cs" />
@@ -320,6 +320,7 @@
     <Content Include="Content\image\point_vert.png" />
     <Content Include="Content\JavaScript\ajoutEvent.js" />
     <Content Include="Content\JavaScript\autoload.js" />
+    <Content Include="Content\JavaScript\event.js" />
     <Content Include="Content\JavaScript\listeEvent.js" />
     <Content Include="Content\JavaScript\modifMdp.js" />
     <Content Include="Content\JavaScript\modifProfil.js" />
@@ -490,6 +491,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\PATRACDR\" />
+    <Folder Include="Views\Disponibilite\" />
     <Folder Include="Views\Participation\" />
     <Folder Include="Views\Test\" />
   </ItemGroup>

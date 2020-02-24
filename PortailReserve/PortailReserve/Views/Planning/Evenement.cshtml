@@ -195,6 +195,8 @@
                         @using (Html.BeginForm("Ajouter", "Disponibilite", FormMethod.Post))
                         {
                             @Html.HiddenFor(m => m.Event.Id);
+                            @Html.HiddenFor(m => m.Event.Debut);
+                            @Html.HiddenFor(m => m.Event.Fin);
                             @Html.HiddenFor(m => m.Util.Id);
 
                             <input type="hidden" value="Non" name="disponibilite" id="disponibilite" />
@@ -223,19 +225,30 @@ else
     <div class="row">
         <div class="col-12 text-center titrePopUp"> Je suis disponible : </div>
     </div>
-    @using (Html.BeginForm("Ajouter", "Disponibilité", FormMethod.Post))
+    @using (Html.BeginForm("Ajouter", "Disponibilite", FormMethod.Post))
     {
+        @Html.HiddenFor(m => m.Event.Id);
+        @Html.HiddenFor(m => m.Event.Debut);
+        @Html.HiddenFor(m => m.Event.Fin);
+        @Html.HiddenFor(m => m.Util.Id);
+
+        <input type="hidden" value="Oui" name="disponibilite" id="disponibilite" />
+
         <div class="row toutePeriode">
-            @Html.CheckBoxFor(m => m.Dispo.TouteLaPeriode, new { @class = "col-6 champsTextDroit checkBox" })
+            <div class="col-6 text-right">
+                @Html.CheckBoxFor(m => m.Dispo.TouteLaPeriode, new { @class = "checkBox" })
+            </div>
             @Html.LabelFor(m => m.Dispo.TouteLaPeriode, "Toute la période", new { @class = "col-6 labelCheckBox" })
         </div>
 
-        <div id="partieDate" class="row">
-            <div class="col-6">
-                Du @Html.TextBoxFor(m => m.Dispo.Debut, new { type = "date", @class = "champsText" })
-            </div>
-            <div class="col-6">
-                Au @Html.TextBoxFor(m => m.Dispo.Fin, new { type = "date", @class = "champsText" })
+        <div id="partieDate" style="display: block; ">
+            <div class="row">
+                <div class="col-6 text-right">
+                    Du @Html.TextBoxFor(m => m.Dispo.Debut, new { type = "date", @class = "champsText" })
+                </div>
+                <div class="col-6">
+                    Au @Html.TextBoxFor(m => m.Dispo.Fin, new { type = "date", @class = "champsText" })
+                </div>
             </div>
         </div>
 
@@ -244,14 +257,17 @@ else
     <div class="row">
         <div class="col-6">
             <div class="row">
-                <button class="col-4 bouton boutonRouge champsTextDroit" onclick="afficherCacherElement('popupDispo'); "> Annuler </button>
+                <button class="col-4 bouton boutonVert champsTextDroit" onclick="clickOn('popUpSubmit'); "> Ajouter </button>
             </div>
         </div>
         <div class="col-6">
             <div class="row">
-                <button class="col-4 bouton boutonVert" onclick="clickOn('popUpSubmit'); "> Ajouter </button>
+                <button class="col-4 bouton boutonRouge" onclick="afficherCacherElement('popupDispo'); "> Annuler </button>
             </div>
         </div>
     </div>
 </div>
 
+@section scripts{
+    <script src="~/Content/JavaScript/event.js"></script>    
+}
