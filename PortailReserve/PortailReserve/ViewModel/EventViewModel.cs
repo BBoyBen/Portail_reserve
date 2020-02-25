@@ -12,10 +12,12 @@ namespace PortailReserve.ViewModel
         public Utilisateur Util { get; set; }
         public Effectif Effectif { get; set; }
         public Disponibilite Dispo { get; set; }
+        public List<Disponibilite> AllDispo { get; set; }
         public Participation Participation { get; set; }
         public List<Utilisateur> UtilParticipation { get; set; }
         public List<Utilisateur> UtilDispo { get; set; }
         public List<Utilisateur> NoReponseP { get; set; }
         public List<Utilisateur> NoReponseD { get; set; }
+        public bool ADispo { get; set; }
     }
 }

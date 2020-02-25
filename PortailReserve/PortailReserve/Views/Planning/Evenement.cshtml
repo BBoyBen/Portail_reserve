@@ -183,7 +183,7 @@
         }
         else // cas de stage et de mission donc donner des dispos
         {
-            if (Model.Dispo == null) // Le user n'a pas de dispos alors qu'elle était attendu
+            if (Model.AllDispo.Count < 1) // Le user n'a pas de dispos alors qu'elle était attendu
             {
                 <div class="row">
                     <div class="col-6">
@@ -210,7 +210,69 @@
             }
             else // le user a déjà donner (ou pas) une dispo
             {
+                if(Model.ADispo) // le user a déjà une dispo
+                {
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            Disponibilité(s) actuelle(s) :
+                        </div>
+                    </div>
+                    foreach(PortailReserve.Models.Disponibilite d in Model.AllDispo)
+                    {
+                        <div class="row">
+                            <div class="col-8 text-center">
+                                Du <strong>@d.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong> au <strong>@d.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong>
+                            </div>
+                            <div class="col-2 text-center">
+                                @switch (d.Valide)
+                                {
+                                    case 0:
+                                        <span> En attente </span>
+                                        break;
+                                    case 1:
+                                        <span style="color: forestgreen; "> Validé </span>
+                                        break;
+                                    case 2:
+                                        <span style="color: red; "> Refusé </span>
+                                        break;
+                                }
+                            </div>
+                            <div class="col-2">
+                                @using (Html.BeginForm("Supprimer", "Disponibilite", FormMethod.Post))
+                                {
+                                    @Html.HiddenFor(m => m.Event.Id);
+                                    @Html.HiddenFor(m => m.Util.Id);
+                                    <input type="hidden" name="toSupp" id="toSuppp" value="@d.Id" />
 
+                                    <button class="bouton boutonRouge"> Supprimer </button>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                <button class="col-6 bouton boutonVert champsTextCenter" onclick="afficherCacherElement('popupDispo'); "> Ajouter une disponibilité</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else // le user n'a pas de dispo
+                {
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            Vous avez indiqué que vous n'êtes pas disponible.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                <button class="col-6 bouton boutonVert champsTextCenter" onclick="afficherCacherElement('popupDispoModif'); "> Se rendre disponible </button>
+                            </div>
+                        </div>
+                    </div>
+                }
             }
         }
         </div>
@@ -263,6 +325,52 @@ else
         <div class="col-6">
             <div class="row">
                 <button class="col-4 bouton boutonRouge" onclick="afficherCacherElement('popupDispo'); "> Annuler </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="popupDispoModif" style="display: none;">
+    <div class="row">
+        <div class="col-12 text-center titrePopUp"> Je suis disponible : </div>
+    </div>
+    @using (Html.BeginForm("Modifier", "Disponibilite", FormMethod.Post))
+    {
+        @Html.HiddenFor(m => m.Event.Id);
+        @Html.HiddenFor(m => m.Event.Debut);
+        @Html.HiddenFor(m => m.Event.Fin);
+        @Html.HiddenFor(m => m.Util.Id);
+        @Html.HiddenFor(m => m.Dispo.Id)
+
+        <div class="row toutePeriode">
+            <div class="col-6 text-right">
+                @Html.CheckBoxFor(m => m.Dispo.TouteLaPeriode, new { id = "touteLaPeriodeModif", @class = "checkBox" })
+            </div>
+            @Html.LabelFor(m => m.Dispo.TouteLaPeriode, "Toute la période", new { @class = "col-6 labelCheckBox" })
+        </div>
+
+        <div id="partieDateModif" style="display: block; ">
+            <div class="row">
+                <div class="col-6 text-right">
+                    Du @Html.TextBoxFor(m => m.Dispo.Debut, new { type = "date", @class = "champsText" })
+                </div>
+                <div class="col-6">
+                    Au @Html.TextBoxFor(m => m.Dispo.Fin, new { type = "date", @class = "champsText" })
+                </div>
+            </div>
+        </div>
+
+        <input type="submit" value="Valier" id="popUpSubmitModif" style="display: none;" />
+    }
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <button class="col-4 bouton boutonVert champsTextDroit" onclick="clickOn('popUpSubmitModif'); "> Ajouter </button>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <button class="col-4 bouton boutonRouge" onclick="afficherCacherElement('popupDispoModif'); "> Annuler </button>
             </div>
         </div>
     </div>

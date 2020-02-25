@@ -18,6 +18,11 @@ namespace PortailReserve.Models
         public DateTime Debut { get; set; }
         public DateTime Fin { get; set; }
         public bool Disponible { get; set; }
+        /*
+         * 0 -> En attente
+         * 1 -> Validé
+         * 2 -> Refusé
+         */
         public int Valide { get; set; }
         public DateTime Reponse { get; set; }
     }

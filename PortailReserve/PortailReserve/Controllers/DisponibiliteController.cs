@@ -59,5 +59,40 @@ namespace PortailReserve.Controllers
 
             return RedirectToAction("Evenement", "Planning", new { id = vm.Event.Id });
         }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult Supprimer (EventViewModel vm)
+        {
+            Guid idDispo = new Guid(Request.Form["toSupp"]);
+
+            dDal.SupprimerDispo(idDispo);
+
+            return RedirectToAction("Evenement", "Planning", new { id = vm.Event.Id });
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult Modifier (EventViewModel vm)
+        {
+            Disponibilite newDispo = new Disponibilite();
+            newDispo.TouteLaPeriode = vm.Dispo.TouteLaPeriode;
+            newDispo.Disponible = true;
+
+            if (newDispo.TouteLaPeriode)
+            {
+                newDispo.Debut = vm.Event.Debut;
+                newDispo.Fin = vm.Event.Fin;
+            }
+            else
+            {
+                newDispo.Debut = vm.Dispo.Debut;
+                newDispo.Fin = vm.Dispo.Fin;
+            }
+
+            dDal.ModifierDispo(vm.Dispo.Id, newDispo);
+
+            return RedirectToAction("Evenement", "Planning", new { id = vm.Event.Id });
+        }
     }
 }

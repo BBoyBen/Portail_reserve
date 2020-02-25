@@ -41,7 +41,7 @@
     margin-top: 50px;
 }
 
-#popupDispo {
+#popupDispo, #popupDispoModif {
     position: fixed;
     top: 25vh;
     left: 25%;

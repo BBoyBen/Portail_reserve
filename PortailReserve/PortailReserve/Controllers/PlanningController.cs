@@ -83,12 +83,26 @@ namespace PortailReserve.Controllers
 
             Effectif eff = effDal.GetEffectifById(e.Effectif);
 
+            List<Disponibilite> allDispo = dDal.GetDispoByIdUtilAndByIdEvent(u.Id, e.Id);
+            bool aUneDispo = false;
+            foreach(Disponibilite d in allDispo)
+            {
+                if (d.Disponible)
+                    aUneDispo = true;
+            }
+
+            Disponibilite dispo = new Disponibilite();
+            if (allDispo.Count > 0)
+                dispo = (Disponibilite)allDispo.ToArray().GetValue(0);
+
             EventViewModel vm = new EventViewModel()
             {
                 Event = e,
                 Util = u,
                 Effectif = eff,
-                Dispo = dDal.GetDispoByIdUtilAndByIdEvent(u.Id, e.Id),
+                Dispo = dispo,
+                AllDispo = allDispo,
+                ADispo = aUneDispo,
                 Participation = pDal.GetParticipationByUtilAndEvent(u.Id, e.Id),
                 UtilParticipation = uDal.GetUtilisateursByParticipation(e.Id),
                 UtilDispo = uDal.GetUtilisateursByDispo(e.Id),

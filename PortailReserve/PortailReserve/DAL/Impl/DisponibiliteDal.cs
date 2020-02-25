@@ -86,22 +86,22 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public Disponibilite GetDispoByIdUtilAndByIdEvent(Guid idUtil, Guid idEvent)
+        public List<Disponibilite> GetDispoByIdUtilAndByIdEvent(Guid idUtil, Guid idEvent)
         {
             try
             {
-                Disponibilite disponibilite = bdd.Disponibilites.FirstOrDefault(d => d.Utilisateur.Equals(idUtil) && d.Evenement.Equals(idEvent));
+                List<Disponibilite> disponibilite = bdd.Disponibilites.Where(d => d.Utilisateur.Equals(idUtil) && d.Evenement.Equals(idEvent)).ToList();
                 return disponibilite;
             }
             catch (NullReferenceException nfe)
             {
                 Log("ERROR", "Aucune disponibilite de l'utiliateur " + idUtil + " à l'event " + idEvent + " -> " + nfe);
-                return null;
+                return new List<Disponibilite>();
             }
             catch (Exception e)
             {
                 Log("ERROR", "Erreur récupération disponibilite de l'util : " + idUtil + " pour l'event : " + idEvent + " -> " + e);
-                return null;
+                return new List<Disponibilite>();
             }
         }
 
@@ -117,6 +117,7 @@ namespace PortailReserve.DAL.Impl
                 toModif.Debut = dispo.Debut;
                 toModif.Fin = dispo.Fin;
                 toModif.Disponible = dispo.Disponible;
+                toModif.Valide = 0;
                 bdd.SaveChanges();
 
                 return 1;
