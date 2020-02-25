@@ -5,14 +5,14 @@
 }
 
 @section style {
-    <link rel="stylesheet" href="~/Content/CSS/event.css" />    
+    <link rel="stylesheet" href="~/Content/CSS/event.css" />
 }
 
 <div class="container">
     <div class="row">
         <div class="col-3">
-            <button class="bouton" onclick="clickOn('retourPlanning'); "> 
-                @Html.ActionLink("Retour au planning", "Index", "Planning", null, new { @class = "lienBouton", id = "retourPlanning" }) 
+            <button class="bouton" onclick="clickOn('retourPlanning'); ">
+                @Html.ActionLink("Retour au planning", "Index", "Planning", null, new { @class = "lienBouton", id = "retourPlanning" })
             </button>
         </div>
     </div>
@@ -100,182 +100,228 @@
             </div>
         }
 
-        <div id="boutonPart">
-        @if (Model.Event.Type.Equals("Instruction") || Model.Event.Type.Equals("Exercice")) //Cas des intructions et exercice avec juste patticpation
+        @if (Model.Event.Debut > DateTime.Now)
         {
-            if (Model.Participation == null) // le user n'a pas encore répondu
-            {
-                <div class="row">
-                    <div class="col-6">
-                        @using (Html.BeginForm("Ajouter", "Participation", FormMethod.Post))
-                        {
-                            @Html.HiddenFor(m => m.Event.Id);
-                            @Html.HiddenFor(m => m.Util.Id)
-                            <input type="hidden" value="Oui" name="participation" id="participation" />
-
-                            <div class="row">
-                                <input type="submit" value="Participe" class="bouton boutonVert col-6 champsTextDroit" />
-                            </div>
-                        }
-                    </div>
-                    <div class="col-6">
-                        @using (Html.BeginForm("Ajouter", "Participation", FormMethod.Post))
-                        {
-                            @Html.HiddenFor(m => m.Event.Id);
-                            @Html.HiddenFor(m => m.Util.Id)
-                            <input type="hidden" value="Non" name="participation" id="participation" />
-
-                            <div class="row">
-                                <input type="submit" value="Ne participe pas" class="bouton boutonRouge col-6" />
-                            </div>
-                        }
-                    </div>
-                </div>
-            }
-            else //Le user a déjà donné une réponse, il peut tout de fois la midifier
-            {
-                if (Model.Participation.Participe)
+            <div id="boutonPart">
+                @if (Model.Event.Type.Equals("Instruction") || Model.Event.Type.Equals("Exercice")) //Cas des intructions et exercice avec juste patticpation
                 {
-                    <div class="row">
-                        <div class="col-12 text-center">
-                            Vous avez répondu que vous participez à cet événement.
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            @using (Html.BeginForm("Modifier", "Participation", FormMethod.Post))
-                            {
-                                @Html.HiddenFor(m => m.Event.Id);
-                                @Html.HiddenFor(m => m.Util.Id)
-                                <input type="hidden" value="Non" name="modifParticipation" id="modifParticipation" />
-
-                                <div class="row">
-                                    <input type="submit" value="Ne plus participer" class="bouton boutonRouge col-6 champsTextCenter" />
-                                </div>
-                            }
-                        </div>
-                    </div>
-                }
-                else
-                {
-                    <div class="row">
-                        <div class="col-12 text-center">
-                            Vous avez répondu que vous ne participez pas à cet événement.
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            @using (Html.BeginForm("Modifier", "Participation", FormMethod.Post))
-                            {
-                                @Html.HiddenFor(m => m.Event.Id);
-                                @Html.HiddenFor(m => m.Util.Id)
-                                <input type="hidden" value="Oui" name="modifParticipation" id="modifParticipation" />
-
-                                <div class="row">
-                                    <input type="submit" value="Participer" class="bouton boutonVert col-6 champsTextCenter" />
-                                </div>
-                            }
-                        </div>
-                    </div>
-                }
-
-            }
-        }
-        else // cas de stage et de mission donc donner des dispos
-        {
-            if (Model.AllDispo.Count < 1) // Le user n'a pas de dispos alors qu'elle était attendu
-            {
-                <div class="row">
-                    <div class="col-6">
-                        <div class="row">
-                            <button class="bouton boutonVert col-6 champsTextDroit" onclick="afficherCacherElement('popupDispo'); "> Disponible </button>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        @using (Html.BeginForm("Ajouter", "Disponibilite", FormMethod.Post))
-                        {
-                            @Html.HiddenFor(m => m.Event.Id);
-                            @Html.HiddenFor(m => m.Event.Debut);
-                            @Html.HiddenFor(m => m.Event.Fin);
-                            @Html.HiddenFor(m => m.Util.Id);
-
-                            <input type="hidden" value="Non" name="disponibilite" id="disponibilite" />
-
-                            <div class="row">
-                                <input type="submit" value="Non disponible" class="bouton boutonRouge col-6" />
-                            </div>
-                        }
-                    </div>
-                </div>
-            }
-            else // le user a déjà donner (ou pas) une dispo
-            {
-                if(Model.ADispo) // le user a déjà une dispo
-                {
-                    <div class="row">
-                        <div class="col-12 text-center">
-                            Disponibilité(s) actuelle(s) :
-                        </div>
-                    </div>
-                    foreach(PortailReserve.Models.Disponibilite d in Model.AllDispo)
+                    if (Model.Participation == null) // le user n'a pas encore répondu
                     {
                         <div class="row">
-                            <div class="col-8 text-center">
-                                Du <strong>@d.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong> au <strong>@d.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong>
-                            </div>
-                            <div class="col-2 text-center">
-                                @switch (d.Valide)
-                                {
-                                    case 0:
-                                        <span> En attente </span>
-                                        break;
-                                    case 1:
-                                        <span style="color: forestgreen; "> Validé </span>
-                                        break;
-                                    case 2:
-                                        <span style="color: red; "> Refusé </span>
-                                        break;
-                                }
-                            </div>
-                            <div class="col-2">
-                                @using (Html.BeginForm("Supprimer", "Disponibilite", FormMethod.Post))
+                            <div class="col-6">
+                                @using (Html.BeginForm("Ajouter", "Participation", FormMethod.Post))
                                 {
                                     @Html.HiddenFor(m => m.Event.Id);
-                                    @Html.HiddenFor(m => m.Util.Id);
-                                    <input type="hidden" name="toSupp" id="toSuppp" value="@d.Id" />
+                                    @Html.HiddenFor(m => m.Util.Id)
+                                    <input type="hidden" value="Oui" name="participation" id="participation" />
 
-                                    <button class="bouton boutonRouge"> Supprimer </button>
+                                    <div class="row">
+                                        <input type="submit" value="Participe" class="bouton boutonVert col-6 champsTextDroit" />
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-6">
+                                @using (Html.BeginForm("Ajouter", "Participation", FormMethod.Post))
+                                {
+                                    @Html.HiddenFor(m => m.Event.Id);
+                                    @Html.HiddenFor(m => m.Util.Id)
+                                    <input type="hidden" value="Non" name="participation" id="participation" />
+
+                                    <div class="row">
+                                        <input type="submit" value="Ne participe pas" class="bouton boutonRouge col-6" />
+                                    </div>
                                 }
                             </div>
                         </div>
                     }
+                    else //Le user a déjà donné une réponse, il peut tout de fois la midifier
+                    {
+                        if (Model.Participation.Participe)
+                        {
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    Vous avez répondu que vous participez à cet événement.
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    @using (Html.BeginForm("Modifier", "Participation", FormMethod.Post))
+                                    {
+                                        @Html.HiddenFor(m => m.Event.Id);
+                                        @Html.HiddenFor(m => m.Util.Id)
+                                        <input type="hidden" value="Non" name="modifParticipation" id="modifParticipation" />
 
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="row">
-                                <button class="col-6 bouton boutonVert champsTextCenter" onclick="afficherCacherElement('popupDispo'); "> Ajouter une disponibilité</button>
+                                        <div class="row">
+                                            <input type="submit" value="Ne plus participer" class="bouton boutonRouge col-6 champsTextCenter" />
+                                        </div>
+                                    }
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        }
+                        else
+                        {
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    Vous avez répondu que vous ne participez pas à cet événement.
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    @using (Html.BeginForm("Modifier", "Participation", FormMethod.Post))
+                                    {
+                                        @Html.HiddenFor(m => m.Event.Id);
+                                        @Html.HiddenFor(m => m.Util.Id)
+                                        <input type="hidden" value="Oui" name="modifParticipation" id="modifParticipation" />
+
+                                        <div class="row">
+                                            <input type="submit" value="Participer" class="bouton boutonVert col-6 champsTextCenter" />
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                    }
                 }
-                else // le user n'a pas de dispo
+                else // cas de stage et de mission donc donner des dispos
                 {
-                    <div class="row">
-                        <div class="col-12 text-center">
-                            Vous avez indiqué que vous n'êtes pas disponible.
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
+                    if (Model.AllDispo.Count < 1) // Le user n'a pas de dispos alors qu'elle était attendu
+                    {
+                        if (Model.Event.LimiteReponse >= DateTime.Now)
+                        {
                             <div class="row">
-                                <button class="col-6 bouton boutonVert champsTextCenter" onclick="afficherCacherElement('popupDispoModif'); "> Se rendre disponible </button>
+                                <div class="col-6">
+                                    <div class="row">
+                                        <button class="bouton boutonVert col-6 champsTextDroit" onclick="afficherCacherElement('popupDispo'); "> Disponible </button>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    @using (Html.BeginForm("Ajouter", "Disponibilite", FormMethod.Post))
+                                    {
+                                        @Html.HiddenFor(m => m.Event.Id);
+                                        @Html.HiddenFor(m => m.Event.Debut);
+                                        @Html.HiddenFor(m => m.Event.Fin);
+                                        @Html.HiddenFor(m => m.Util.Id);
+
+                                        <input type="hidden" value="Non" name="disponibilite" id="disponibilite" />
+
+                                        <div class="row">
+                                            <input type="submit" value="Non disponible" class="bouton boutonRouge col-6" />
+                                        </div>
+                                    }
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        }
+                        else
+                        {
+                            <div class="row">
+                                <div class="col-12 text-center marginTop">
+                                    <strong> La date de limite de réponse est passée. </strong>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else // le user a déjà donner (ou pas) une dispo
+                    {
+                        if (Model.ADispo) // le user a déjà une dispo
+                        {
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    Disponibilité(s) actuelle(s) :
+                                </div>
+                            </div>
+                            foreach (PortailReserve.Models.Disponibilite d in Model.AllDispo)
+                            {
+                                <div class="row ligneDispo">
+                                    <div class="col-8 text-center boutonLike">
+                                        Du <strong>@d.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong> au <strong>@d.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong>
+                                    </div>
+                                    <div class="col-2 text-center boutonLike">
+                                        @switch (d.Valide)
+                                        {
+                                            case 0:
+                                                <span> En attente </span>
+                                                break;
+                                            case 1:
+                                                <span style="color: forestgreen; "> Validé </span>
+                                                break;
+                                            case 2:
+                                                <span style="color: red; "> Refusé </span>
+                                                break;
+                                        }
+                                    </div>
+                                    @if (d.Valide == 0)
+                                    {
+                                        <div class="col-2">
+                                            @using (Html.BeginForm("Supprimer", "Disponibilite", FormMethod.Post))
+                                            {
+                                                @Html.HiddenFor(m => m.Event.Id);
+                                                @Html.HiddenFor(m => m.Util.Id);
+                                                <input type="hidden" name="toSupp" id="toSuppp" value="@d.Id" />
+
+                                                <button class="bouton boutonRouge"> Supprimer </button>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+
+                            if(Model.Event.LimiteReponse >= DateTime.Now) {
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <button class="col-6 bouton boutonVert champsTextCenter" onclick="afficherCacherElement('popupDispo'); "> Ajouter une disponibilité</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="row">
+                                    <div class="col-12 text-center marginTop">
+                                        <strong> La date limite de réponse est passée.</strong>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else // le user n'a pas de dispo
+                        {
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    Vous avez indiqué que vous n'êtes pas disponible.
+                                </div>
+                            </div>
+
+                            if(Model.Event.LimiteReponse >= DateTime.Now) {
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <button class="col-6 bouton boutonVert champsTextCenter" onclick="afficherCacherElement('popupDispoModif'); "> Se rendre disponible </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="row">
+                                    <div class="col-12 text-center marginTop">
+                                        <strong> La date limite de réponse est passée. </strong>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
                 }
-            }
+            </div>
         }
-        </div>
+        else
+        {
+            <div class="row">
+                <div class="col-12 text-center marginTop">
+                    <strong> Cet événement a déjà commencé ou est déjà passé. </strong>
+                </div>
+            </div>
+        }
     </div>
 }
 else
@@ -283,6 +329,11 @@ else
     <h1> @ViewBag.Erreur </h1>
 }
 
+<!--
+################################################################################
+#############################  Pop-Up Ajout de dispo  ##########################
+################################################################################
+-->
 <div class="container" id="popupDispo" style="display: none;">
     <div class="row">
         <div class="col-12 text-center titrePopUp"> Je suis disponible : </div>
@@ -330,6 +381,12 @@ else
     </div>
 </div>
 
+
+<!--
+################################################################################
+#############################  Pop-Up modif de dispo  ##########################
+################################################################################
+-->
 <div class="container" id="popupDispoModif" style="display: none;">
     <div class="row">
         <div class="col-12 text-center titrePopUp"> Je suis disponible : </div>
@@ -377,5 +434,5 @@ else
 </div>
 
 @section scripts{
-    <script src="~/Content/JavaScript/event.js"></script>    
+    <script src="~/Content/JavaScript/event.js"></script>
 }
