@@ -28,6 +28,18 @@ function clickOnSupp(id) {
     lien.click();
 }
 
+function clickOnValid(id) {
+    var idSupp = "valid_" + id;
+    var lien = document.getElementById(idSupp);
+    lien.click();
+}
+
+function clickOnRefus(id) {
+    var idSupp = "refus_" + id;
+    var lien = document.getElementById(idSupp);
+    lien.click();
+}
+
 function toutVert(classe) {
     var champs = document.getElementsByClassName(classe);
     champs.forEach(function (item) {

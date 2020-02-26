@@ -1,22 +1,26 @@
 ﻿using PortailReserve.DAL;
 using PortailReserve.DAL.Impl;
 using PortailReserve.Models;
+using PortailReserve.Models.NullObject;
 using PortailReserve.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace PortailReserve.Controllers
 {
     public class DisponibiliteController : Controller
     {
         private IDisponibiliteDal dDal;
+        private IUtilisateurDal uDal;
 
         public DisponibiliteController()
         {
             dDal = new DisponibiliteDal();
+            uDal = new UtilisateurDal();
         }
 
         [Authorize]
@@ -93,6 +97,70 @@ namespace PortailReserve.Controllers
             dDal.ModifierDispo(vm.Dispo.Id, newDispo);
 
             return RedirectToAction("Evenement", "Planning", new { id = vm.Event.Id });
+        }
+
+        [Authorize]
+        public ActionResult Valider(Guid id, Guid ev)
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
+
+            if (u.Role > 3)
+                return RedirectToAction("Evenement", "Planning", new { id = ev });
+
+            int retour = dDal.ValiderDispo(id);
+            if (retour != 1)
+                ViewBag.Erreur = "Une erreur est survenue. Veuillez réessayer plus tard.";
+
+            return RedirectToAction("Evenement", "Planning", new { id = ev });
+        }
+
+        [Authorize]
+        public ActionResult Refuser(Guid id, Guid ev)
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
+
+            if (u.Role > 3)
+                return RedirectToAction("Evenement", "Planning", new { id = ev });
+
+            int retour = dDal.RefuserDispo(id);
+            if (retour != 1)
+                ViewBag.Erreur = "Une erreur est survenue. Veuillez réessayer plus tard.";
+
+            return RedirectToAction("Evenement", "Planning", new { id = ev });
         }
     }
 }

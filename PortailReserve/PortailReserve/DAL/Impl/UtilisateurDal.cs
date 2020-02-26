@@ -145,26 +145,53 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public List<Utilisateur> GetUtilisateursByDispo(Guid idEVent)
+        public List<UtilisateurDispo> GetUtilisateursByDispoOK(Guid idEVent)
         {
             try
             {
-                List<Utilisateur> toReturn = new List<Utilisateur>();
+                IDisponibiliteDal dDal = new DisponibiliteDal();
+
+                List<UtilisateurDispo> toReturn = new List<UtilisateurDispo>();
 
                 List<Utilisateur> all = bdd.Utilisateurs.ToList();
-                List<Guid> byEVent = bdd.Disponibilites.Where(d => d.Evenement.Equals(idEVent)).Select(d => d.Utilisateur).ToList(); ;
                 foreach(Utilisateur u in all)
                 {
-                    if (byEVent.Contains(u.Id))
-                        toReturn.Add(u);
-
+                    List<Disponibilite> uDispo = dDal.GetDispoByIdUtilAndByIdEvent(u.Id, idEVent);
+                    if (uDispo.Count > 0)
+                        if (uDispo.ElementAt(0).Disponible)
+                            toReturn.Add(new UtilisateurDispo { Util = u, Dispos = uDispo });
                 }
                 return toReturn;
             }
             catch(Exception e)
             {
                 Log("ERROR", "Erreur récupération des users pour la dispo de l'event : " + idEVent + " -> " + e);
-                return new List<Utilisateur>();
+                return new List<UtilisateurDispo>();
+            }
+        }
+
+        public List<UtilisateurDispo> GetUtilisateursByDispoKO(Guid idEVent)
+        {
+            try
+            {
+                IDisponibiliteDal dDal = new DisponibiliteDal();
+
+                List<UtilisateurDispo> toReturn = new List<UtilisateurDispo>();
+
+                List<Utilisateur> all = bdd.Utilisateurs.ToList();
+                foreach (Utilisateur u in all)
+                {
+                    List<Disponibilite> uDispo = dDal.GetDispoByIdUtilAndByIdEvent(u.Id, idEVent);
+                    if (uDispo.Count > 0)
+                        if (!uDispo.ElementAt(0).Disponible)
+                            toReturn.Add(new UtilisateurDispo { Util = u, Dispos = uDispo });
+                }
+                return toReturn;
+            }
+            catch (Exception e)
+            {
+                Log("ERROR", "Erreur récupération des users pour la dispo de l'event : " + idEVent + " -> " + e);
+                return new List<UtilisateurDispo>();
             }
         }
 
@@ -181,26 +208,47 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public List<Utilisateur> GetUtilisateursByParticipation(Guid idEvent)
+        public List<UtilisateurParticipation> GetUtilisateursByParticipationOK(Guid idEvent)
         {
             try
             {
-                List<Utilisateur> toReturn = new List<Utilisateur>();
+                List<UtilisateurParticipation> toReturn = new List<UtilisateurParticipation>();
 
                 List<Utilisateur> all = bdd.Utilisateurs.ToList();
-                List<Guid> byEVent = bdd.Participations.Where(p => p.Evenement.Equals(idEvent)).Select(p => p.Utilisateur).ToList(); ;
                 foreach (Utilisateur u in all)
                 {
-                    if (byEVent.Contains(u.Id))
-                        toReturn.Add(u);
-
+                    Participation part = bdd.Participations.FirstOrDefault(p => p.Evenement.Equals(idEvent) && p.Utilisateur.Equals(u.Id) && p.Participe);
+                    if (part != null)
+                        toReturn.Add(new UtilisateurParticipation { Util = u, Participation = part });
                 }
                 return toReturn;
             }
             catch (Exception e)
             {
                 Log("ERROR", "Erreur récupération des users pour la participation de l'event : " + idEvent + " -> " + e);
-                return new List<Utilisateur>();
+                return new List<UtilisateurParticipation>();
+            }
+        }
+
+        public List<UtilisateurParticipation> GetUtilisateursByParticipationKO(Guid idEvent)
+        {
+            try
+            {
+                List<UtilisateurParticipation> toReturn = new List<UtilisateurParticipation>();
+
+                List<Utilisateur> all = bdd.Utilisateurs.ToList();
+                foreach (Utilisateur u in all)
+                {
+                    Participation part = bdd.Participations.FirstOrDefault(p => p.Evenement.Equals(idEvent) && p.Utilisateur.Equals(u.Id) && !p.Participe);
+                    if (part != null)
+                        toReturn.Add(new UtilisateurParticipation { Util = u, Participation = part });
+                }
+                return toReturn;
+            }
+            catch (Exception e)
+            {
+                Log("ERROR", "Erreur récupération des users pour la participation de l'event : " + idEvent + " -> " + e);
+                return new List<UtilisateurParticipation>();
             }
         }
 
@@ -237,7 +285,7 @@ namespace PortailReserve.DAL.Impl
                 List<Guid> byEVent = bdd.Participations.Where(p => p.Evenement.Equals(idEvent)).Select(p => p.Utilisateur).ToList(); ;
                 foreach (Utilisateur u in all)
                 {
-                    if (byEVent.Contains(u.Id))
+                    if (!byEVent.Contains(u.Id))
                         toReturn.Add(u);
 
                 }

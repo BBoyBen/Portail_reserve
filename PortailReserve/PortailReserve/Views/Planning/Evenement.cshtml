@@ -266,7 +266,8 @@
                                 </div>
                             }
 
-                            if(Model.Event.LimiteReponse >= DateTime.Now) {
+                            if (Model.Event.LimiteReponse >= DateTime.Now)
+                            {
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="row">
@@ -292,7 +293,8 @@
                                 </div>
                             </div>
 
-                            if(Model.Event.LimiteReponse >= DateTime.Now) {
+                            if (Model.Event.LimiteReponse >= DateTime.Now)
+                            {
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="row">
@@ -323,10 +325,173 @@
             </div>
         }
     </div>
+
+    <!--
+    ################################################################################
+    ###########################  Afficahge des participants  #######################
+    ################################################################################
+    -->
+    if(Model.Util.Role < 4)
+    {
+        <h1 class="titrePresence"> Liste des participants </h1>
+
+        if (Model.Event.Type.Equals("Exercice") || Model.Event.Type.Equals("Instruction"))
+        {
+            <div class="container">
+                <div class="partPresence">
+                    <div class="row">
+                        <div class="col-10">
+                            <h2 class="titreLegend"> Participe </h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <strong> Grade NOM </strong>
+                        </div>
+                        <div class="col-4">
+                            <strong> Date de réponse </strong>
+                        </div>
+                        <div class="col-4"></div>
+                    </div>
+                    @foreach(PortailReserve.Models.UtilisateurParticipation u in Model.UtilParticipation)
+                    {
+                        <div class="row">
+                            <div class="col-4">
+                                @u.Util.Grade @u.Util.Nom.ToUpperInvariant()
+                            </div>
+                            <div class="col-4">
+                                @u.Participation.Reponse.ToString()
+                            </div>
+                            <div class="col-4"></div>
+                        </div>
+                    }
+                </div>
+
+                <div class="partPresence">
+                    <div class="row">
+                        <div class="col-10">
+                            <h2 class="titreLegend"> Ne participe pas </h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <strong> Grade NOM </strong>
+                        </div>
+                        <div class="col-4">
+                            <strong> Date de réponse </strong>
+                        </div>
+                        <div class="col-4"></div>
+                    </div>
+                    @foreach(PortailReserve.Models.UtilisateurParticipation u in Model.UtilNonParticipation)
+                    {
+                        <div class="row">
+                            <div class="col-4">
+                                @u.Util.Grade @u.Util.Nom.ToUpperInvariant()
+                            </div>
+                            <div class="col-4">
+                                @u.Participation.Reponse.ToString()
+                            </div>
+                            <div class="col-4"></div>
+                        </div>
+                    }
+                </div>
+
+                <div class="partPresence">
+                    <div class="row">
+                        <div class="col-10">
+                            <h2 class="titreLegend"> Sans réponse </h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <strong> Grade NOM </strong>
+                        </div>
+                    </div>
+                    @foreach(PortailReserve.Models.Utilisateur u in Model.NoReponseP)
+                    {
+                        <div class="row">
+                            <div class="col-12">
+                                @u.Grade @u.Nom.ToUpperInvariant()
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="container">
+                <div class="partPresence">
+                    <div class="row">
+                        <div class="col-10">
+                            <h2 class="titreLegend"> Disponible </h2>
+                        </div>
+                    </div>
+                    @foreach(PortailReserve.Models.UtilisateurDispo u in Model.UtilDispo)
+                    {
+                        <div class="row">
+                            <div class="col-12">
+                                <strong> @u.Util.Grade @u.Util.Nom.ToUpperInvariant() </strong>
+                            </div>
+                        </div>
+                        <div class="partDispo">
+                            @foreach(PortailReserve.Models.Disponibilite d in u.Dispos)
+                            {
+                                <div class="row marginTop">
+                                    <div class="col-6 boutonLike text-center">
+                                        Du @d.Debut.ToString("dd/MM/yyyy") au @d.Fin.ToString("dd/MM/yyyy")
+                                    </div>
+                                    <div class="col-3">
+                                       @if(d.Valide == 1)
+                                       {
+                                           <div class="col-10 text-center" style="color: forestgreen; "> Validé </div>
+                                       }
+                                       else
+                                       {
+                                           @Html.ActionLink("Valider", "Valider", "Disponibilite", new { id = d.Id, ev = Model.Event.Id }, new { style = "display: none; ", id = "valid_" + d.Id})
+                                           <button class="bouton boutonVert col-10 champsTextCenter" onclick="clickOnValid('@d.Id'); "> Valider </button>
+                                       }
+                                    </div>
+                                    <div class="col-3">
+                                        @if(d.Valide == 2)
+                                        {
+                                            <div class=" col-10 text-center" style="color: red; "> Refusé </div>
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink("Refuser", "Refuser", "Disponibilite", new { id = d.Id, ev = Model.Event.Id}, new { style = "display: none; ", id = "refus_" + d.Id})
+                                            <button class="bouton boutonRouge col-10 champsTextCenter" onclick="clickOnRefus('@d.Id'); "> Refuser </button>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <div class="partPresence">
+                    <div class="row">
+                        <div class="col-10">
+                            <h2 class="titreLegend"> Non disponible </h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="partPresence">
+                    <div class="row">
+                        <div class="col-10">
+                            <h2 class="titreLegend"> Sans réponse </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
 }
 else
 {
     <h1> @ViewBag.Erreur </h1>
+
 }
 
 <!--
@@ -357,10 +522,15 @@ else
         <div id="partieDate" style="display: block; ">
             <div class="row">
                 <div class="col-6 text-right">
-                    Du @Html.TextBoxFor(m => m.Dispo.Debut, new { type = "date", @class = "champsText" })
+                    Du @Html.TextBoxFor(m => m.Dispo.Debut, new { type = "date", @class = "champsText", min = Model.Event.Debut.ToString("yyyy-MM-dd"), max = Model.Event.Fin.ToString("yyyy-MM--dd") })
                 </div>
                 <div class="col-6">
-                    Au @Html.TextBoxFor(m => m.Dispo.Fin, new { type = "date", @class = "champsText" })
+                    Au @Html.TextBoxFor(m => m.Dispo.Fin, new { type = "date", @class = "champsText", min = Model.Event.Debut.ToString("yyyy-MM-dd"), max = Model.Event.Fin.ToString("yyyy-MM--dd")  })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <span id="erreurDateDispo" class="erreur"></span>
                 </div>
             </div>
         </div>
@@ -370,7 +540,7 @@ else
     <div class="row">
         <div class="col-6">
             <div class="row">
-                <button class="col-4 bouton boutonVert champsTextDroit" onclick="clickOn('popUpSubmit'); "> Ajouter </button>
+                <button class="col-4 bouton boutonVert champsTextDroit" onclick="checkDateAjout(); "> Ajouter </button>
             </div>
         </div>
         <div class="col-6">
@@ -409,10 +579,15 @@ else
         <div id="partieDateModif" style="display: block; ">
             <div class="row">
                 <div class="col-6 text-right">
-                    Du @Html.TextBoxFor(m => m.Dispo.Debut, new { type = "date", @class = "champsText" })
+                    Du @Html.TextBoxFor(m => m.Dispo.Debut, new { id = "debutModif", type = "date", @class = "champsText", min = Model.Event.Debut.ToString("yyyy-MM-dd"), max = Model.Event.Fin.ToString("yyyy-MM--dd") })
                 </div>
                 <div class="col-6">
-                    Au @Html.TextBoxFor(m => m.Dispo.Fin, new { type = "date", @class = "champsText" })
+                    Au @Html.TextBoxFor(m => m.Dispo.Fin, new { id = "finModif", type = "date", @class = "champsText", min = Model.Event.Debut.ToString("yyyy-MM-dd"), max = Model.Event.Fin.ToString("yyyy-MM--dd") })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <span id="erreurDateDispoModif" class="erreur"></span>
                 </div>
             </div>
         </div>
@@ -422,7 +597,7 @@ else
     <div class="row">
         <div class="col-6">
             <div class="row">
-                <button class="col-4 bouton boutonVert champsTextDroit" onclick="clickOn('popUpSubmitModif'); "> Ajouter </button>
+                <button class="col-4 bouton boutonVert champsTextDroit" onclick="checkDateModif(); "> Ajouter </button>
             </div>
         </div>
         <div class="col-6">

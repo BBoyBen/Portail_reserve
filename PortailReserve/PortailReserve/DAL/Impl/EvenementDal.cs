@@ -116,7 +116,7 @@ namespace PortailReserve.DAL.Impl
 
                 foreach(Evenement e in bdd.Evenements)
                 {
-                    int ecart = DateTime.Compare(today, e.Fin);
+                    int ecart = DateTime.Compare(today, e.Debut);
                     if (ecart >= 0)
                         passe.Add(e);
                 }

@@ -136,7 +136,7 @@ namespace PortailReserve.DAL.Impl
                 if (dispo == null || dispo.Equals(typeof(DisponibiliteNull)))
                     return 0;
 
-                dispo.Valide = -1;
+                dispo.Valide = 2;
                 bdd.SaveChanges();
 
                 return 1;
