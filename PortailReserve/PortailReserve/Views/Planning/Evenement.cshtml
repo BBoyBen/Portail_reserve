@@ -341,7 +341,7 @@
                 <div class="partPresence">
                     <div class="row">
                         <div class="col-10">
-                            <h2 class="titreLegend"> Participe </h2>
+                            <h2 class="titreLegend"> Participe <span class="@(Model.UtilParticipation.Count<10?"pastilleNum":"pastilleNumDouble")">@Model.UtilParticipation.Count</span> </h2>
                         </div>
                         <div class="col-2">
                             <img src="~/Content/image/chevron_bas.png" class="imgChevron" id="chevronParti" onclick="afficherCacherPartPres('chevronParti', 'partParti'); " />
@@ -386,7 +386,7 @@
                 <div class="partPresence">
                     <div class="row">
                         <div class="col-10">
-                            <h2 class="titreLegend"> Ne participe pas </h2>
+                            <h2 class="titreLegend"> Ne participe pas <span class="@(Model.UtilNonParticipation.Count<10?"pastilleNum":"pastilleNumDouble")">@Model.UtilNonParticipation.Count</span> </h2>
                         </div>
                         <div class="col-2">
                             <img src="~/Content/image/chevron_bas.png" class="imgChevron" id="chevronNonParti" onclick="afficherCacherPartPres('chevronNonParti', 'partNonParti'); " />
@@ -431,7 +431,7 @@
                 <div class="partPresence">
                     <div class="row">
                         <div class="col-10">
-                            <h2 class="titreLegend"> Sans réponse </h2>
+                            <h2 class="titreLegend"> Sans réponse <span class="@(Model.NoReponseP.Count<10?"pastilleNum":"pastilleNumDouble")">@Model.NoReponseP.Count</span> </h2>
                         </div>
                         <div class="col-2">
                             <img src="~/Content/image/chevron_bas.png" class="imgChevron" id="chevronNoRepParti" onclick="afficherCacherPartPres('chevronNoRepParti', 'partNoRepParti'); " />
@@ -472,7 +472,7 @@
                 <div class="partPresence">
                     <div class="row">
                         <div class="col-10">
-                            <h2 class="titreLegend"> Disponible </h2>
+                            <h2 class="titreLegend"> Disponible <span class="@(Model.UtilDispo.Count<10?"pastilleNum":"pastilleNumDouble")">@Model.UtilDispo.Count</span> </h2>
                         </div>
                         <div class="col-2">
                             <img src="~/Content/image/chevron_bas.png" id="chevronDispo" class="imgChevron" onclick="afficherCacherPartPres('chevronDispo', 'partDispo'); " />
@@ -536,7 +536,7 @@
                 <div class="partPresence">
                     <div class="row">
                         <div class="col-10">
-                            <h2 class="titreLegend"> Non disponible </h2>
+                            <h2 class="titreLegend"> Non disponible <span class="@(Model.UtilNonDispo.Count<10?"pastilleNum":"pastilleNumDouble")">@Model.UtilNonDispo.Count</span> </h2>
                         </div>
                         <div class="col-2">
                             <img src="~/Content/image/chevron_bas.png" id="chevronNonDispo" class="imgChevron" onclick="afficherCacherPartPres('chevronNonDispo', 'partNoDispo'); " />
@@ -568,7 +568,7 @@
                 <div class="partPresence">
                     <div class="row">
                         <div class="col-10">
-                            <h2 class="titreLegend"> Sans réponse </h2>
+                            <h2 class="titreLegend"> Sans réponse <span class="@(Model.NoReponseD.Count<10?"pastilleNum":"pastilleNumDouble")">@Model.NoReponseD.Count</span> </h2>
                         </div>
                         <div class="col-2">
                             <img src="~/Content/image/chevron_bas.png" id="chevronNoRep" class="imgChevron" onclick="afficherCacherPartPres('chevronNoRep', 'partNoRep'); " />

@@ -316,3 +316,26 @@ option {
 .marginTop{
     margin-top: 30px;
 }
+
+.pastilleNum{
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    font-size: 1.25rem;
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+    padding-top: 0.15rem;
+    padding-bottom: 0.15rem;
+
+}
+
+.pastilleNumDouble {
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    font-size: 1.25rem;
+    padding-right: 0.25rem;
+    padding-left: 0.25rem;
+    padding-top: 0.15rem;
+    padding-bottom: 0.15rem;
+}
