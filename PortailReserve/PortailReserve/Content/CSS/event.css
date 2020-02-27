@@ -75,3 +75,15 @@
     margin-top: 15px;
     margin-bottom: 20px;
 }
+
+.imgChevron{
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    transform:rotate(-90deg);
+}
+
+.imgChevron:hover {
+    cursor: pointer;
+    transform:rotate(0deg);
+}

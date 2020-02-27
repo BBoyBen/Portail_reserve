@@ -101,3 +101,18 @@ function checkDateModif() {
         submitButon.click();
     }
 }
+
+
+function afficherCacherPartPres(idChevron, idPart) {
+    var part = document.getElementById(idPart);
+    var chevron = document.getElementById(idChevron);
+
+    if (part.style.display === "block") {
+        part.style.display = "none";
+        chevron.style.transform = "rotate(-90deg)"
+    }
+    else {
+        part.style.display = "block";
+        chevron.style.transform = "rotate(0deg)"
+    }
+}

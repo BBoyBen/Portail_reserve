@@ -307,6 +307,7 @@
     <Content Include="Content\CSS\section.css" />
     <Content Include="Content\image\blason_ri.png" />
     <Content Include="Content\image\blason_six.png" />
+    <Content Include="Content\image\chevron_bas.png" />
     <Content Include="Content\image\couverture_uir.jpg" />
     <Content Include="Content\image\couverture_uir_short.jpg" />
     <Content Include="Content\image\icone_cours.png" />

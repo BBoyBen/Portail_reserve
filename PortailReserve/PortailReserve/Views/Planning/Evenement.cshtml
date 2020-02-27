@@ -343,28 +343,44 @@
                         <div class="col-10">
                             <h2 class="titreLegend"> Participe </h2>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4">
-                            <strong> Grade NOM </strong>
+                        <div class="col-2">
+                            <img src="~/Content/image/chevron_bas.png" class="imgChevron" id="chevronParti" onclick="afficherCacherPartPres('chevronParti', 'partParti'); " />
                         </div>
-                        <div class="col-4">
-                            <strong> Date de réponse </strong>
-                        </div>
-                        <div class="col-4"></div>
                     </div>
-                    @foreach(PortailReserve.Models.UtilisateurParticipation u in Model.UtilParticipation)
-                    {
+                    <div id="partParti" style="display: none;">
                         <div class="row">
                             <div class="col-4">
-                                @u.Util.Grade @u.Util.Nom.ToUpperInvariant()
+                                <strong> Grade NOM </strong>
                             </div>
                             <div class="col-4">
-                                @u.Participation.Reponse.ToString()
+                                <strong> Date de réponse </strong>
                             </div>
                             <div class="col-4"></div>
                         </div>
-                    }
+                        @if (Model.UtilParticipation.Count == 0)
+                        {
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    Aucune personne à afficher.
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            foreach (PortailReserve.Models.UtilisateurParticipation u in Model.UtilParticipation)
+                            {
+                                <div class="row">
+                                    <div class="col-4">
+                                        @u.Util.Grade @u.Util.Nom.ToUpperInvariant()
+                                    </div>
+                                    <div class="col-4">
+                                        @u.Participation.Reponse.ToString()
+                                    </div>
+                                    <div class="col-4"></div>
+                                </div>
+                            }
+                        }
+                    </div>
                 </div>
 
                 <div class="partPresence">
@@ -372,28 +388,44 @@
                         <div class="col-10">
                             <h2 class="titreLegend"> Ne participe pas </h2>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4">
-                            <strong> Grade NOM </strong>
+                        <div class="col-2">
+                            <img src="~/Content/image/chevron_bas.png" class="imgChevron" id="chevronNonParti" onclick="afficherCacherPartPres('chevronNonParti', 'partNonParti'); " />
                         </div>
-                        <div class="col-4">
-                            <strong> Date de réponse </strong>
-                        </div>
-                        <div class="col-4"></div>
                     </div>
-                    @foreach(PortailReserve.Models.UtilisateurParticipation u in Model.UtilNonParticipation)
-                    {
+                    <div id="partNonParti" style="display: none;">
                         <div class="row">
                             <div class="col-4">
-                                @u.Util.Grade @u.Util.Nom.ToUpperInvariant()
+                                <strong> Grade NOM </strong>
                             </div>
                             <div class="col-4">
-                                @u.Participation.Reponse.ToString()
+                                <strong> Date de réponse </strong>
                             </div>
                             <div class="col-4"></div>
                         </div>
-                    }
+                        @if (Model.UtilNonParticipation.Count == 0)
+                        {
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    Aucune personne à afficher.
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            foreach (PortailReserve.Models.UtilisateurParticipation u in Model.UtilNonParticipation)
+                            {
+                                <div class="row">
+                                    <div class="col-4">
+                                        @u.Util.Grade @u.Util.Nom.ToUpperInvariant()
+                                    </div>
+                                    <div class="col-4">
+                                        @u.Participation.Reponse.ToString()
+                                    </div>
+                                    <div class="col-4"></div>
+                                </div>
+                            }
+                        }
+                    </div>
                 </div>
 
                 <div class="partPresence">
@@ -401,20 +433,36 @@
                         <div class="col-10">
                             <h2 class="titreLegend"> Sans réponse </h2>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <strong> Grade NOM </strong>
+                        <div class="col-2">
+                            <img src="~/Content/image/chevron_bas.png" class="imgChevron" id="chevronNoRepParti" onclick="afficherCacherPartPres('chevronNoRepParti', 'partNoRepParti'); " />
                         </div>
                     </div>
-                    @foreach(PortailReserve.Models.Utilisateur u in Model.NoReponseP)
-                    {
+                    <div id="partNoRepParti" style="display: none;">
                         <div class="row">
                             <div class="col-12">
-                                @u.Grade @u.Nom.ToUpperInvariant()
+                                <strong> Grade NOM </strong>
                             </div>
                         </div>
-                    }
+                        @if (Model.NoReponseP.Count == 0)
+                        {
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    Aucune personne à afficher.
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            foreach (PortailReserve.Models.Utilisateur u in Model.NoReponseP)
+                            {
+                                <div class="row">
+                                    <div class="col-12">
+                                        @u.Grade @u.Nom.ToUpperInvariant()
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
                 </div>
             </div>
         }
@@ -426,47 +474,63 @@
                         <div class="col-10">
                             <h2 class="titreLegend"> Disponible </h2>
                         </div>
-                    </div>
-                    @foreach(PortailReserve.Models.UtilisateurDispo u in Model.UtilDispo)
-                    {
-                        <div class="row">
-                            <div class="col-12">
-                                <strong> @u.Util.Grade @u.Util.Nom.ToUpperInvariant() </strong>
-                            </div>
+                        <div class="col-2">
+                            <img src="~/Content/image/chevron_bas.png" id="chevronDispo" class="imgChevron" onclick="afficherCacherPartPres('chevronDispo', 'partDispo'); " />
                         </div>
-                        <div class="partDispo">
-                            @foreach(PortailReserve.Models.Disponibilite d in u.Dispos)
+                    </div>
+                    <div id="partDispo" style="display: none;">
+                        @if (Model.UtilDispo.Count == 0)
+                        {
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    Aucune personne à affciher.
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            foreach (PortailReserve.Models.UtilisateurDispo u in Model.UtilDispo)
                             {
-                                <div class="row marginTop">
-                                    <div class="col-6 boutonLike text-center">
-                                        Du @d.Debut.ToString("dd/MM/yyyy") au @d.Fin.ToString("dd/MM/yyyy")
-                                    </div>
-                                    <div class="col-3">
-                                       @if(d.Valide == 1)
-                                       {
-                                           <div class="col-10 text-center" style="color: forestgreen; "> Validé </div>
-                                       }
-                                       else
-                                       {
-                                           @Html.ActionLink("Valider", "Valider", "Disponibilite", new { id = d.Id, ev = Model.Event.Id }, new { style = "display: none; ", id = "valid_" + d.Id})
-                                           <button class="bouton boutonVert col-10 champsTextCenter" onclick="clickOnValid('@d.Id'); "> Valider </button>
-                                       }
-                                    </div>
-                                    <div class="col-3">
-                                        @if(d.Valide == 2)
-                                        {
-                                            <div class=" col-10 text-center" style="color: red; "> Refusé </div>
-                                        }
-                                        else
-                                        {
-                                            @Html.ActionLink("Refuser", "Refuser", "Disponibilite", new { id = d.Id, ev = Model.Event.Id}, new { style = "display: none; ", id = "refus_" + d.Id})
-                                            <button class="bouton boutonRouge col-10 champsTextCenter" onclick="clickOnRefus('@d.Id'); "> Refuser </button>
-                                        }
+                                <div class="row">
+                                    <div class="col-12">
+                                        <strong> @u.Util.Grade @u.Util.Nom.ToUpperInvariant() </strong>
                                     </div>
                                 </div>
+                                <div class="partDispo">
+                                    @foreach (PortailReserve.Models.Disponibilite d in u.Dispos)
+                                    {
+                                        <div class="row marginTop">
+                                            <div class="col-6 boutonLike text-center">
+                                                Du @d.Debut.ToString("dd/MM/yyyy") au @d.Fin.ToString("dd/MM/yyyy")
+                                            </div>
+                                            <div class="col-3">
+                                               @if (d.Valide == 1)
+                                               {
+                                                   <div class="col-10 text-center" style="color: forestgreen; "> Validé </div>
+                                               }
+                                               else
+                                               {
+                                                   @Html.ActionLink("Valider", "Valider", "Disponibilite", new { id = d.Id, ev = Model.Event.Id }, new { style = "display: none; ", id = "valid_" + d.Id })
+                                                   <button class="bouton boutonVert col-10 champsTextCenter" onclick="clickOnValid('@d.Id'); "> Valider </button>
+                                               }
+                                            </div>
+                                            <div class="col-3">
+                                                @if (d.Valide == 2)
+                                                {
+                                                    <div class=" col-10 text-center" style="color: red; "> Refusé </div>
+                                                }
+                                                else
+                                                {
+                                                    @Html.ActionLink("Refuser", "Refuser", "Disponibilite", new { id = d.Id, ev = Model.Event.Id }, new { style = "display: none; ", id = "refus_" + d.Id })
+                                                    <button class="bouton boutonRouge col-10 champsTextCenter" onclick="clickOnRefus('@d.Id'); "> Refuser </button>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
                             }
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
 
                 <div class="partPresence">
@@ -474,6 +538,30 @@
                         <div class="col-10">
                             <h2 class="titreLegend"> Non disponible </h2>
                         </div>
+                        <div class="col-2">
+                            <img src="~/Content/image/chevron_bas.png" id="chevronNonDispo" class="imgChevron" onclick="afficherCacherPartPres('chevronNonDispo', 'partNoDispo'); " />
+                        </div>
+                    </div>
+                    <div id="partNoDispo" style="display: none;">
+                        @if (Model.UtilNonDispo.Count == 0)
+                        {
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    Aucune personne à afficher.
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            foreach (PortailReserve.Models.UtilisateurDispo u in Model.UtilNonDispo)
+                            {
+                                <div class="row">
+                                    <div class="col-12">
+                                        @u.Util.Grade @u.Util.Nom.ToUpperInvariant()
+                                    </div>
+                                </div>
+                            }
+                        }
                     </div>
                 </div>
 
@@ -482,6 +570,30 @@
                         <div class="col-10">
                             <h2 class="titreLegend"> Sans réponse </h2>
                         </div>
+                        <div class="col-2">
+                            <img src="~/Content/image/chevron_bas.png" id="chevronNoRep" class="imgChevron" onclick="afficherCacherPartPres('chevronNoRep', 'partNoRep'); " />
+                        </div>
+                    </div>
+                    <div id="partNoRep" style="display: none;">
+                        @if (Model.NoReponseD.Count == 0)
+                        {
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    Aucune personne à afficher.
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            foreach (PortailReserve.Models.Utilisateur u in Model.NoReponseD)
+                            {
+                                <div class="row">
+                                    <div class="col-12">
+                                        @u.Grade @u.Nom.ToUpperInvariant()
+                                    </div>
+                                </div>
+                            }
+                        }
                     </div>
                 </div>
             </div>
