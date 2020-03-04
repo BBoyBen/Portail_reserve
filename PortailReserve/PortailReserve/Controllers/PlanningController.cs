@@ -175,7 +175,7 @@ namespace PortailReserve.Controllers
             ViewBag.Role = u.Role;
 
             List<SelectListItem> types = new List<SelectListItem>();
-            types.Add(new SelectListItem { Text = "Instruction", Value = "Intruction", Selected = true });
+            types.Add(new SelectListItem { Text = "Instruction", Value = "Instruction", Selected = true });
             types.Add(new SelectListItem { Text = "Exercice", Value = "Exercice" });
             types.Add(new SelectListItem { Text = "Stage", Value = "Stage" });
             types.Add(new SelectListItem { Text = "Mission", Value = "Mission" });
@@ -241,10 +241,21 @@ namespace PortailReserve.Controllers
                 isAllValid = false;
             }
 
+            string type = Request.Form["Event.Type"];
+            if (type.IsNullOrWhiteSpace())
+                type = "Instruction";
+
+            if(type.Equals("Mission") || type.Equals("Stage"))
+            {
+                if(vm.Event.LimiteReponse < DateTime.Now)
+                {
+                    ModelState.AddModelError("Event.LimiteReponse", "La date limite de réponse est déjà passée.");
+                    isAllValid = false;
+                }
+            }
+
             if (!isAllValid)
                 return View(vm);
-
-            string type = Request.Form["Event.Type"];
 
             Guid idEffectif = Guid.Empty;
             if(type.Equals("Mission") || type.Equals("Stage"))

@@ -103,6 +103,9 @@
                 <div class="col-4 labelMiddle"> (Si pas de date, on prendra la date de début) </div>
             </div>
             <div class="row">
+                <div class="col-12 erreur"><span id="erreurDateLimite">@Html.ValidationMessageFor(m => m.Event.LimiteReponse)</span></div>
+            </div>
+            <div class="row">
                 <div class="col-12 text-center" id="titreEffectif">
                     Effectif
                 </div>

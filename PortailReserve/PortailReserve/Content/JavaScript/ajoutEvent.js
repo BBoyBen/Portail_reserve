@@ -136,6 +136,26 @@ function checkAllFields() {
         labelPatrac.style.boxShadow = "none";
     }
 
+    var select = document.getElementById("typeSelect").options[document.getElementById("typeSelect").selectedIndex].text;
+    if (select === "Mission" || select === "Stage") {
+        var limite = document.getElementById("Event_LimiteReponse");
+        if (!limite.value === null || !limite.value.trim().length < 10) {
+            var dateLimite = new Date(limite.value);
+            var ajd = new Date();
+            var erreurLimite = document.getElementById("erreurDateLimite");
+            if (dateLimite < ajd) {
+                limite.style.marginBottom = "10px";
+                erreurLimite.innerText = "La date de limite est déjà passée.";
+                erreurChamps("Event_LimiteReponse");
+                allIsOk = false;
+            }
+            else {
+                erreurLimite.innerText = "";
+                champsOk("Event_LimiteReponse");
+            }
+        }
+    }
+
     if (allIsOk)
         document.getElementById("subAjoutEvent").click();
 }

@@ -44,21 +44,25 @@
                             </div>
                             <div class="row">
                                 <div class="col-1">
-                                    @if(Model.ProchainEvent.Type.Equals("Instruction"))
+                                    @if (Model.ProchainEvent.Type.Equals("Instruction"))
                                     {
                                         <img src="~/Content/image/point_vert.png" alt="point vert" id="pastilleType" />
                                     }
-                                    else if(Model.ProchainEvent.Type.Equals("Stage"))
+                                    else if (Model.ProchainEvent.Type.Equals("Stage"))
                                     {
                                         <img src="~/Content/image/point_bleu.png" alt="point bleu" id="pastilleType" />
                                     }
-                                    else if(Model.ProchainEvent.Type.Equals("Mission"))
+                                    else if (Model.ProchainEvent.Type.Equals("Mission"))
                                     {
                                         <img src="~/Content/image/point_rouge.png" alt="point rouge" id="pastilleType" />
                                     }
-                                    else if(Model.ProchainEvent.Type.Equals("Exercice"))
+                                    else if (Model.ProchainEvent.Type.Equals("Exercice"))
                                     {
                                         <img src="~/Content/image/point_jaune.png" alt="point jaune" id="pastilleType" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/Content/image/point_vert.png" alt="point vert" id="pastilleType" />
                                     }
                                 </div>
                                 <div class="col-11">

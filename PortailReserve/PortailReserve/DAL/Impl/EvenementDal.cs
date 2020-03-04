@@ -27,7 +27,7 @@ namespace PortailReserve.DAL.Impl
                 bdd.Evenements.Add(evenement);
                 bdd.SaveChanges();
 
-                return bdd.Evenements.ToList().Last().Id;
+                return evenement.Id;
             }catch(Exception e)
             {
                 Log("ERROR", "Erreur création d'evenement -> " + e);
