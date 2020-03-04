@@ -12,7 +12,8 @@
 <body>
     <header>
         <img src="~/Content/image/blason_six.png" alt="blason six" id="blasonSixLayout" />
-        <img src="~/Content/image/couverture_uir_short.jpg" alt="bannière UIR" id="banniere" />
+        @Html.ActionLink("Acceuil", "Index", "Home", null, new { id="lienBanniere", style="display:none;"})
+        <img src="~/Content/image/couverture_uir_short.jpg" alt="bannière UIR" id="banniere" onclick="clickOn('lienBanniere')" />
         <div id="iconeIdentite">
             <img src="~/Content/image/icone_soldat.png" alt="icone soldat" id="iconeSoldat" onclick="afficherCacherElement('menuPerso'); " />
             <div id="userGrade"> @ViewBag.Grade @ViewBag.Nom </div>
