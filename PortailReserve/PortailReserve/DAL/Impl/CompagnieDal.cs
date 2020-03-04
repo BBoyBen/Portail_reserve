@@ -25,7 +25,7 @@ namespace PortailReserve.DAL.Impl
                 bdd.Compagnies.Add(compagnie);
                 bdd.SaveChanges();
 
-                return bdd.Compagnies.ToList().Last().Id;
+                return compagnie.Id;
             }catch(Exception e)
             {
                 Log("ERROR", "Erreur ajout nouvelle compagnie -> " + e);

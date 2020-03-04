@@ -24,7 +24,7 @@ namespace PortailReserve.DAL.Impl
                 bdd.Effectifs.Add(effectif);
                 bdd.SaveChanges();
 
-                return bdd.Effectifs.ToList().Last().Id;
+                return effectif.Id;
             }catch(Exception e)
             {
                 Log("ERROR", "Erreur ajout effectif -> " + e);

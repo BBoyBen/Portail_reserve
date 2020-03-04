@@ -24,7 +24,7 @@ namespace PortailReserve.DAL.Impl
                 bdd.Albums.Add(album);
                 bdd.SaveChanges();
 
-                return bdd.Albums.ToList().Last().Id;
+                return album.Id;
             }catch(Exception e)
             {
                 Log("ERROR", "Erreur créer nouvel album -> " + e);

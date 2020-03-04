@@ -26,7 +26,7 @@ namespace PortailReserve.DAL.Impl
                 bdd.Photos.Add(photo);
                 bdd.SaveChanges();
 
-                return bdd.Photos.ToList().Last().Id;
+                return photo.Id;
             }catch(Exception e)
             {
                 Log("ERROR", "Erreur ajout de photo -> " + e);

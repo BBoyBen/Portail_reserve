@@ -25,7 +25,7 @@ namespace PortailReserve.DAL.Impl
                 bdd.Sections.Add(section);
                 bdd.SaveChanges();
 
-                return bdd.Sections.ToList().Last().Id;
+                return section.Id;
             }catch(Exception e)
             {
                 Log("ERROR", "Erreur ajout de section -> " + e);

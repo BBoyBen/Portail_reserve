@@ -26,7 +26,7 @@ namespace PortailReserve.DAL.Impl
                 bdd.Utilisateurs.Add(utilisateur);
                 bdd.SaveChanges();
 
-                return bdd.Utilisateurs.ToList().Last().Id;
+                return utilisateur.Id;
             }catch(Exception e)
             {
                 Log("ERROR", "Erreur ajout nouvel utilisateur -> " + e);

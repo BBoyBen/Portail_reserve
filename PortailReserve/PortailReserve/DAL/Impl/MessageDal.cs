@@ -24,7 +24,7 @@ namespace PortailReserve.DAL.Impl
                 bdd.Messages.Add(message);
                 bdd.SaveChanges();
 
-                return bdd.Messages.ToList().Last().Id;
+                return message.Id;
             }catch(Exception e)
             {
                 Log("ERROR", "Erreur ajout d'un message -> " + e);

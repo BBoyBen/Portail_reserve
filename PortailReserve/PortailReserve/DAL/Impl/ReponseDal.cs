@@ -26,7 +26,7 @@ namespace PortailReserve.DAL.Impl
                 bdd.Reponses.Add(reponse);
                 bdd.SaveChanges();
 
-                return bdd.Reponses.ToList().Last().Id;
+                return reponse.Id;
             }catch(Exception e)
             {
                 Log("ERROR", "Erreur ajout de reponse -> " + e);

@@ -24,7 +24,7 @@ namespace PortailReserve.DAL.Impl
                 bdd.Adresses.Add(adresse);
                 bdd.SaveChanges();
 
-                return bdd.Adresses.ToList().Last().Id;
+                return adresse.Id;
             }catch(Exception e)
             {
                 Log("ERROR", "Erreur ajout d'une nouvelle adresse -> " + e);

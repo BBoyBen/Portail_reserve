@@ -27,7 +27,7 @@ namespace PortailReserve.DAL.Impl
                 bdd.Cours.Add(cours);
                 bdd.SaveChanges();
 
-                return bdd.Cours.ToList().Last().Id;
+                return cours.Id;
             }catch(Exception e)
             {
                 Log("ERROR", "Erreur ajouter un cours -> " + e);

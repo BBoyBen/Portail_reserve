@@ -27,7 +27,7 @@ namespace PortailReserve.DAL.Impl
                 bdd.Chants.Add(chant);
                 bdd.SaveChanges();
 
-                return bdd.Chants.ToList().Last().Id;
+                return chant.Id;
             }catch(Exception e)
             {
                 Log("ERROR", "Erreur ajout de nouveaux chant -> " + e);

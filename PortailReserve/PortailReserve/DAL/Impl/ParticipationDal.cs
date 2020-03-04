@@ -31,7 +31,7 @@ namespace PortailReserve.DAL.Impl
                 bdd.Participations.Add(participation);
                 bdd.SaveChanges();
 
-                return bdd.Participations.ToList().Last().Id;
+                return participation.Id;
             }catch(Exception e)
             {
                 Log("ERROR", "Erreur ajout de participation -> " + e);

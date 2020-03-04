@@ -25,7 +25,7 @@ namespace PortailReserve.DAL.Impl
                 bdd.Groupes.Add(groupe);
                 bdd.SaveChanges();
 
-                return bdd.Groupes.ToList().Last().Id;
+                return groupe.Id;
             }catch(Exception e)
             {
                 Log("ERROR", "Erreur ajout de groupe -> " + e);

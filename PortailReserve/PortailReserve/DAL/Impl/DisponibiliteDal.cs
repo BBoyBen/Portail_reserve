@@ -26,7 +26,7 @@ namespace PortailReserve.DAL.Impl
                 bdd.Disponibilites.Add(dispo);
                 bdd.SaveChanges();
 
-                return bdd.Disponibilites.ToList().Last().Id;
+                return dispo.Id;
             }catch(Exception e)
             {
                 Log("ERROR", "Erreur ajout dispo -> " + e);
