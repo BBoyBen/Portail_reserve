@@ -16,7 +16,7 @@
         <img src="~/Content/image/couverture_uir_short.jpg" alt="bannière UIR" id="banniere" onclick="clickOn('lienBanniere')" />
         <div id="iconeIdentite">
             <img src="~/Content/image/icone_soldat.png" alt="icone soldat" id="iconeSoldat" onclick="afficherCacherElement('menuPerso'); " />
-            <div id="userGrade"> @ViewBag.Grade @ViewBag.Nom </div>
+            <div id="userGrade" onclick="afficherCacherElement('menuPerso'); "> @ViewBag.Grade @ViewBag.Nom </div>
             <div id="menuPerso" style="display: none; ">
                 <div class="row elemMenuPerso">
                     @Html.ActionLink("Mon profil", "Index", "Profil", null, new { @class = "lienMenuPerso" })
