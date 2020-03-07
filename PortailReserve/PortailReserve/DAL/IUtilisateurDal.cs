@@ -13,6 +13,7 @@ namespace PortailReserve.DAL
         Utilisateur GetUtilisateurById(string id);
         Utilisateur GetUtilisateurByMatricule(string matricule);
         List<Utilisateur> GetUtilisateursByGroupe(Guid idGroupe);
+        List<Utilisateur> GetUtilisateursBySectionByGroupe(int section, int cie);
         Utilisateur Authentifier(string matricule, string motDePasse);
         int ChangerMotDePasse(Guid id, string oldMdp, string nouvMdp, string nouvMdpBis);
         int PremierChangementMotDePasse(Guid id, string mdp, string mdpBis);
@@ -22,12 +23,12 @@ namespace PortailReserve.DAL
         int PremiereCoKO(Guid id);
         Guid AjouterUtilisateur(Utilisateur utilisateur);
         int SupprimerUtilisateur(Guid id);
-        List<UtilisateurDispo> GetUtilisateursByDispoOK(Guid idEVent);
-        List<UtilisateurDispo> GetUtilisateursByDispoKO(Guid idEVent);
-        List<UtilisateurParticipation> GetUtilisateursByParticipationOK(Guid idEvent);
-        List<UtilisateurParticipation> GetUtilisateursByParticipationKO(Guid idEvent);
-        List<Utilisateur> GetUtilisateursSansReponseDispo(Guid idEVent);
-        List<Utilisateur> GetUtilisateursSansReponseParticipation(Guid idEvent);
+        List<UtilisateurDispo> GetUtilisateursByDispoOK(Guid idEVent, int section, int cie);
+        List<UtilisateurDispo> GetUtilisateursByDispoKO(Guid idEVent, int section, int cie);
+        List<UtilisateurParticipation> GetUtilisateursByParticipationOK(Guid idEvent, int section, int cie);
+        List<UtilisateurParticipation> GetUtilisateursByParticipationKO(Guid idEvent, int section, int cie);
+        List<Utilisateur> GetUtilisateursSansReponseDispo(Guid idEVent, int section, int cie);
+        List<Utilisateur> GetUtilisateursSansReponseParticipation(Guid idEvent, int section, int cie);
 
     }
 }

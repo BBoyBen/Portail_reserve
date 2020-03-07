@@ -104,12 +104,12 @@ namespace PortailReserve.Controllers
                 AllDispo = allDispo,
                 ADispo = aUneDispo,
                 Participation = pDal.GetParticipationByUtilAndEvent(u.Id, e.Id),
-                UtilParticipation = uDal.GetUtilisateursByParticipationOK(e.Id),
-                UtilDispo = uDal.GetUtilisateursByDispoOK(e.Id),
-                UtilNonParticipation = uDal.GetUtilisateursByParticipationKO(e.Id),
-                UtilNonDispo = uDal.GetUtilisateursByDispoKO(e.Id),
-                NoReponseD = uDal.GetUtilisateursSansReponseDispo(e.Id),
-                NoReponseP = uDal.GetUtilisateursSansReponseParticipation(e.Id)
+                UtilParticipation = uDal.GetUtilisateursByParticipationOK(e.Id, u.Section, u.Compagnie),
+                UtilDispo = uDal.GetUtilisateursByDispoOK(e.Id, u.Section, u.Compagnie),
+                UtilNonParticipation = uDal.GetUtilisateursByParticipationKO(e.Id, u.Section, u.Compagnie),
+                UtilNonDispo = uDal.GetUtilisateursByDispoKO(e.Id, u.Section, u.Compagnie),
+                NoReponseD = uDal.GetUtilisateursSansReponseDispo(e.Id, u.Section, u.Compagnie),
+                NoReponseP = uDal.GetUtilisateursSansReponseParticipation(e.Id, u.Section, u.Compagnie)
             };  
 
             return View(vm);

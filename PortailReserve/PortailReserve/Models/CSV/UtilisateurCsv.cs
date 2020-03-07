@@ -38,5 +38,7 @@ namespace PortailReserve.Models.CSV
         public string Pays { get; set; }
         [Name("Section")]
         public string Section { get; set; }
+        [Name("Compagnie")]
+        public string Compagnie { get; set; }
     }
 }

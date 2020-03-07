@@ -46,7 +46,9 @@ namespace PortailReserve.Utils
                         Role = Int32.Parse(u.Role),
                         Adresse = idAdresse,
                         Naissance = date,
-                        PremiereCo = true
+                        PremiereCo = true,
+                        Section = Int32.Parse(u.Section),
+                        Compagnie = Int32.Parse(u.Compagnie)
                     });
                 }
             }
@@ -202,7 +204,9 @@ namespace PortailReserve.Utils
                         Role = Int32.Parse(u.Role),
                         Adresse = idAdresse,
                         Naissance = date,
-                        PremiereCo = true
+                        PremiereCo = true,
+                        Section = Int32.Parse(u.Section),
+                        Compagnie = Int32.Parse(u.Compagnie)
                     });
                 }
             }

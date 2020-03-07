@@ -145,7 +145,7 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public List<UtilisateurDispo> GetUtilisateursByDispoOK(Guid idEVent)
+        public List<UtilisateurDispo> GetUtilisateursByDispoOK(Guid idEVent, int section, int cie)
         {
             try
             {
@@ -153,8 +153,8 @@ namespace PortailReserve.DAL.Impl
 
                 List<UtilisateurDispo> toReturn = new List<UtilisateurDispo>();
 
-                List<Utilisateur> all = bdd.Utilisateurs.ToList();
-                foreach(Utilisateur u in all)
+                List<Utilisateur> all = GetUtilisateursBySectionByGroupe(section, cie);
+                foreach (Utilisateur u in all)
                 {
                     List<Disponibilite> uDispo = dDal.GetDispoByIdUtilAndByIdEvent(u.Id, idEVent);
                     if (uDispo.Count > 0)
@@ -170,7 +170,7 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public List<UtilisateurDispo> GetUtilisateursByDispoKO(Guid idEVent)
+        public List<UtilisateurDispo> GetUtilisateursByDispoKO(Guid idEVent, int section, int cie)
         {
             try
             {
@@ -178,7 +178,7 @@ namespace PortailReserve.DAL.Impl
 
                 List<UtilisateurDispo> toReturn = new List<UtilisateurDispo>();
 
-                List<Utilisateur> all = bdd.Utilisateurs.ToList();
+                List<Utilisateur> all = GetUtilisateursBySectionByGroupe(section, cie);
                 foreach (Utilisateur u in all)
                 {
                     List<Disponibilite> uDispo = dDal.GetDispoByIdUtilAndByIdEvent(u.Id, idEVent);
@@ -208,13 +208,13 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public List<UtilisateurParticipation> GetUtilisateursByParticipationOK(Guid idEvent)
+        public List<UtilisateurParticipation> GetUtilisateursByParticipationOK(Guid idEvent, int section, int cie)
         {
             try
             {
                 List<UtilisateurParticipation> toReturn = new List<UtilisateurParticipation>();
 
-                List<Utilisateur> all = bdd.Utilisateurs.ToList();
+                List<Utilisateur> all = GetUtilisateursBySectionByGroupe(section, cie);
                 foreach (Utilisateur u in all)
                 {
                     Participation part = bdd.Participations.FirstOrDefault(p => p.Evenement.Equals(idEvent) && p.Utilisateur.Equals(u.Id) && p.Participe);
@@ -230,13 +230,13 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public List<UtilisateurParticipation> GetUtilisateursByParticipationKO(Guid idEvent)
+        public List<UtilisateurParticipation> GetUtilisateursByParticipationKO(Guid idEvent, int section, int cie)
         {
             try
             {
                 List<UtilisateurParticipation> toReturn = new List<UtilisateurParticipation>();
 
-                List<Utilisateur> all = bdd.Utilisateurs.ToList();
+                List<Utilisateur> all = GetUtilisateursBySectionByGroupe(section, cie);
                 foreach (Utilisateur u in all)
                 {
                     Participation part = bdd.Participations.FirstOrDefault(p => p.Evenement.Equals(idEvent) && p.Utilisateur.Equals(u.Id) && !p.Participe);
@@ -252,13 +252,13 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public List<Utilisateur> GetUtilisateursSansReponseDispo(Guid idEVent)
+        public List<Utilisateur> GetUtilisateursSansReponseDispo(Guid idEVent, int section, int cie)
         {
             try
             {
                 List<Utilisateur> toReturn = new List<Utilisateur>();
 
-                List<Utilisateur> all = bdd.Utilisateurs.ToList();
+                List<Utilisateur> all = GetUtilisateursBySectionByGroupe(section, cie);
                 List<Guid> byEVent = bdd.Disponibilites.Where(d => d.Evenement.Equals(idEVent)).Select(d => d.Utilisateur).ToList(); ;
                 foreach (Utilisateur u in all)
                 {
@@ -275,13 +275,13 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public List<Utilisateur> GetUtilisateursSansReponseParticipation(Guid idEvent)
+        public List<Utilisateur> GetUtilisateursSansReponseParticipation(Guid idEvent, int section, int cie)
         {
             try
             {
                 List<Utilisateur> toReturn = new List<Utilisateur>();
 
-                List<Utilisateur> all = bdd.Utilisateurs.ToList();
+                List<Utilisateur> all = GetUtilisateursBySectionByGroupe(section, cie);
                 List<Guid> byEVent = bdd.Participations.Where(p => p.Evenement.Equals(idEvent)).Select(p => p.Utilisateur).ToList(); ;
                 foreach (Utilisateur u in all)
                 {
@@ -426,6 +426,21 @@ namespace PortailReserve.DAL.Impl
             {
                 Log("ERROR", "Erreur suppression utilisateur id : " + id + " -> " + e);
                 return -1;
+            }
+        }
+
+        public List<Utilisateur> GetUtilisateursBySectionByGroupe(int section, int cie)
+        {
+            try
+            {
+                List<Utilisateur> all = bdd.Utilisateurs.Where(u => u.Section.Equals(section) && u.Compagnie.Equals(cie)).ToList();
+
+                return all;
+            }
+            catch(Exception e)
+            {
+                Log("ERROR", "Erreur récupération de tous les utilisateur de la cie : " + cie + " section : " + section + " -> " + e);
+                return new List<Utilisateur>();
             }
         }
     }
