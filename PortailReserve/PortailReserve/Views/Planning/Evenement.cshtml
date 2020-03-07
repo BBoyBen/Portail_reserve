@@ -11,10 +11,19 @@
 <div class="container">
     <div class="row">
         <div class="col-3">
-            <button class="bouton" onclick="clickOn('retourPlanning'); ">
+            <button class="bouton allWidth" onclick="clickOn('retourPlanning'); ">
                 @Html.ActionLink("Retour au planning", "Index", "Planning", null, new { @class = "lienBouton", id = "retourPlanning" })
             </button>
         </div>
+        @if(Model.Util.Role < 4)
+        {
+            <div class="col-6"></div>
+            <div class="col-3">
+                <button id="boutonModifier" class="boutonOrange bouton" onclick="clickOn('modifierEvent'); ">
+                    @Html.ActionLink("Modifier", "Modifier", "Planning", new { id = Model.Event.Id}, new { @class = "lienBoutonVert", id = "modifierEvent" })
+                </button>
+            </div>
+        }
     </div>
 </div>
 @if (ViewBag.Erreur == "")

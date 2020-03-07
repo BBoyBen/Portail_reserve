@@ -490,6 +490,7 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Planning\Liste.cshtml" />
     <Content Include="Views\Planning\Ajouter.cshtml" />
+    <Content Include="Views\Planning\Modifier.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

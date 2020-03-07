@@ -1,0 +1,138 @@
+﻿@model PortailReserve.ViewModel.AjouterEventViewModel
+@{
+    ViewBag.Title = "Modifier un événement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style {
+    <link rel="stylesheet" href="~/Content/CSS/ajouterEvent.css" />
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <button class="bouton allWidth" onclick="clickOn('retourEvent'); ">
+                @Html.ActionLink("Retour", "Evenement", "Planning", new { id = Model.Event.Id }, new { @class = "lienBouton", id = "retourEvent" })
+            </button>
+        </div>
+    </div>
+</div>
+
+<h1> Modifier un l'événement </h1>
+
+<div class="container">
+    @using (Html.BeginForm("Modifier", "Planning", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.HiddenFor(m => m.Event.Id)
+        <div class="row">
+            @Html.LabelFor(m => m.Event.Nom, "Titre", new { @class = "col-12 labelMiddle" })
+        </div>
+        <div class="row">
+            @Html.TextBoxFor(m => m.Event.Nom, new { @class = "col-6 champsText champsTextCenter", required = "required" })
+        </div>
+        <div class="row">
+            <div class="col-12 erreur">
+                <span id="erreurTitre"> @Html.ValidationMessageFor(m => m.Event.Nom) </span>
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => m.Event.Type, "Type d'événement", new { @class = "col-12 labelMiddle" })
+        </div>
+        <div class="row">
+            @Html.DropDownListFor(m => m.Event.Type, Model.Types, new { @class = "col-6 champsText champsTextCenter", id = "typeSelect" })
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => m.Event.Description, "Informations complémentaires", new { @class = "col-12 labelMiddle" })
+        </div>
+        <div class="row">
+            @Html.TextAreaFor(m => m.Event.Description, new { @class = "col-6 champsText champsTextCenter champsTextArea", required = "required" })
+        </div>
+        <div class="row">
+            <div class="col-12 erreur">
+                <span id="erreurDes"> @Html.ValidationMessageFor(m => m.Event.Description) </span>
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => m.Event.Debut, "Date de début", new { @class = "col-2 text-right labelMiddle" })
+            @Html.TextBoxFor(m => m.Event.Debut, Model.Event.Debut.ToString("yyyy-MM-dd"), new { type = "date", @class = "col-4 champsText champsTextGauche", required = "required" })
+            @Html.LabelFor(m => m.Event.Fin, "Date de fin", new { @class = "col-2, text-right labelMiddle paddingRight" })
+            @Html.TextBoxFor(m => m.Event.Fin, Model.Event.Fin.ToString("yyyy-MM-dd"), new { type = "date", @class = "col-4 champsText champsTextGauche", required = "required" })
+        </div>
+        <div class="row">
+            <div class="col-12 erreur">
+                <span id="erreurDate"> @Html.ValidationMessageFor(m => m.Event.Debut) </span>
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => m.Event.Lieu, "Lieu", new { @class = "col-12 labelMiddle" })
+        </div>
+        <div class="row">
+            @Html.TextBoxFor(m => m.Event.Lieu, new { @class = "col-6 champsText champsTextCenter" })
+        </div>
+        <div class="row">
+            <div class="col-12 erreur">
+                <span id="erreurLieu"> @Html.ValidationMessageFor(m => m.Event.Lieu) </span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6 champsTextCenter text-center">
+                <label for="patracdrFile" id="patracdrLabel"> Ajouter un PATRACDR </label>
+                <span id="chosenFile"></span>
+            </div>
+            <input type="file"
+                   name="patracdrFile"
+                   id="patracdrFile"
+                   style="display: none; "
+                   accept="..csv, .docx, .doc, .pdf, .xslx"
+                   required />
+        </div>
+        <div class="row">
+            <div class="col-12 erreur">
+                <span id="erreurPatrac"></span>
+            </div>
+        </div>
+
+        <div id="missionOuStage" style="display: @ViewBag.Display">
+            <div class="row">
+                @Html.LabelFor(m => m.Event.LimiteReponse, "Date limite de réponse", new { @class = "col-3 labelMiddle" })
+                @Html.TextBoxFor(m => m.Event.LimiteReponse, Model.Event.LimiteReponse.ToString("yyyy-MM-dd"), new { type = "date", @class = "col-4 champsText" })
+                <div class="col-4 labelMiddle"> (Si pas de date, on prendra la date de début) </div>
+            </div>
+            <div class="row">
+                <div class="col-12 erreur"><span id="erreurDateLimite">@Html.ValidationMessageFor(m => m.Event.LimiteReponse)</span></div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-center" id="titreEffectif">
+                    Effectif
+                </div>
+            </div>
+            @Html.HiddenFor(m => m.Effectif.Id)
+            <div class="row">
+                @Html.LabelFor(m => m.Effectif.Officier, "Officier", new { @class = "col-4 text-center" })
+                @Html.LabelFor(m => m.Effectif.SousOfficier, "Sous-officier", new { @class = "col-4 text-center" })
+                @Html.LabelFor(m => m.Effectif.Militaire, "Militaire du rang", new { @class = "col-4 text-center" })
+            </div>
+            <div class="row">
+                @Html.TextBoxFor(m => m.Effectif.Officier, new { type = "number", @class = "col-3 champsText champsTextCenter", min = "0" })
+                @Html.TextBoxFor(m => m.Effectif.SousOfficier, new { type = "number", @class = "col-3 champsText champsTextCenter", min = "0" })
+                @Html.TextBoxFor(m => m.Effectif.Militaire, new { type = "number", @class = "col-3 champsText champsTextCenter", min = "0" })
+            </div>
+        </div>
+
+        <div class="row formPart">
+            <button class="col-4 btnSubmit boutonVert" id="valideAjoutEvent" onclick="checkAllFields(); "> Modifier </button>
+        </div>
+        <input type="submit" value="Valider" id="subAjoutEvent" style="display: none;" />
+    }
+
+</div>
+
+@section scripts {
+    <script src="~/Content/JavaScript/ajoutEvent.js"></script>
+}
+

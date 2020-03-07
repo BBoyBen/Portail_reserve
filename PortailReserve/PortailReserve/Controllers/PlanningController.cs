@@ -307,5 +307,140 @@ namespace PortailReserve.Controllers
 
             return RedirectToAction("Liste", "Planning");
         }
+
+        [Authorize]
+        public ActionResult Modifier (Guid id)
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
+
+            if (u.Role > 3)
+                return RedirectToAction("Evenement", "Planning", new { id });
+
+            Evenement ev = eDal.GetEvenementById(id);
+            if (ev == null || ev.Equals(typeof(EvenementNull)))
+                ev = new Evenement();
+
+            Effectif eff = new Effectif();
+            ViewBag.Display = "none;";
+            if (ev.Effectif != null && !ev.Effectif.Equals(Guid.Empty))
+            {
+                eff = effDal.GetEffectifById(ev.Effectif);
+                ViewBag.Display = "block;";
+            }
+
+            List<SelectListItem> types = new List<SelectListItem>();
+            types.Add(new SelectListItem { Text = "Instruction", Value = "Instruction" });
+            types.Add(new SelectListItem { Text = "Exercice", Value = "Exercice" });
+            types.Add(new SelectListItem { Text = "Stage", Value = "Stage" });
+            types.Add(new SelectListItem { Text = "Mission", Value = "Mission" });
+
+            AjouterEventViewModel vm = new AjouterEventViewModel()
+            {
+                Event = ev,
+                Effectif = eff,
+                Types = types
+            };
+
+            return View(vm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult Modifier(AjouterEventViewModel vm)
+        {
+            bool isAllValid = true;
+            if (vm.Event.Nom.IsNullOrWhiteSpace())
+            {
+                ModelState.AddModelError("Event.Nom", "Le titre est obligatoire.");
+                isAllValid = false;
+            }
+
+            if (vm.Event.Description.IsNullOrWhiteSpace())
+            {
+                ModelState.AddModelError("Event.Description", "Les informations complémentaires sont obligatoires.");
+                isAllValid = false;
+            }
+
+            if (vm.Event.Lieu.IsNullOrWhiteSpace())
+            {
+                ModelState.AddModelError("Event.Lieu", "Le lieu est obligatoire.");
+                isAllValid = false;
+            }
+
+            if (vm.Event.Debut.Year == 1 && vm.Event.Fin.Year == 1)
+            {
+                ModelState.AddModelError("Event.Debut", "Les dates de d&ébut et de fin sont obligatoire.");
+                isAllValid = false;
+            }
+            else if (vm.Event.Debut.Year == 1)
+            {
+                ModelState.AddModelError("Event.Debut", "La date de début est obligatoire.");
+                isAllValid = false;
+            }
+            else if (vm.Event.Fin.Year == 1)
+            {
+                ModelState.AddModelError("Event.Debut", "La date de fin est obligatoire.");
+                isAllValid = false;
+            }
+            else if (vm.Event.Debut > vm.Event.Fin)
+            {
+                ModelState.AddModelError("Event.Debut", "La date de début doit être antérieure à la date de fin.");
+                isAllValid = false;
+            }
+
+            string type = Request.Form["Event.Type"];
+            if (type.IsNullOrWhiteSpace())
+                type = "Instruction";
+
+            if (type.Equals("Mission") || type.Equals("Stage"))
+            {
+                if (vm.Event.LimiteReponse < DateTime.Now)
+                {
+                    ModelState.AddModelError("Event.LimiteReponse", "La date limite de réponse est déjà passée.");
+                    isAllValid = false;
+                }
+            }
+
+            if (!isAllValid)
+                return View(vm);
+
+            Guid idEffectif = vm.Effectif.Id;
+            if (type.Equals("Mission") || type.Equals("Stage"))
+                 effDal.ModifierEffectif(vm.Effectif.Id, vm.Effectif);
+
+            var patracdrFile = Request.Files["patracdrFile"];
+            string path = HttpContext.Server.MapPath("~/Content/PATRACDR/") + patracdrFile.FileName;
+            patracdrFile.SaveAs(path);
+            string url = "/Content/PATRACDR/" + patracdrFile.FileName;
+
+            Evenement toModif = vm.Event;
+            toModif.Effectif = idEffectif;
+            toModif.Type = type;
+            toModif.Patracdr = url;
+
+            int retour = eDal.ModifierEvenement(vm.Event.Id, toModif);
+
+            if (retour != 1)
+                ViewBag.Erreur = "Une erreure est survenue lors de la modification de lévénement.";
+
+            return RedirectToAction("Evenement", "Planning", new { id = vm.Event.Id });
+        }
     }
 }

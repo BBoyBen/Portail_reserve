@@ -168,10 +168,12 @@ namespace PortailReserve.DAL.Impl
                 toModify.Description = evenement.Description;
                 toModify.Fin = evenement.Fin;
                 toModify.Lieu = evenement.Lieu;
-                toModify.LimiteReponse = evenement.LimiteReponse;
                 toModify.Nom = evenement.Nom;
                 toModify.Patracdr = evenement.Patracdr;
                 toModify.Type = evenement.Type;
+
+                if(evenement.Type.Equals("Mission") || evenement.Type.Equals("Stage"))
+                    toModify.LimiteReponse = evenement.LimiteReponse;
 
                 bdd.SaveChanges();
 

@@ -45,12 +45,12 @@ h1 {
     cursor:pointer;
 }
 
-    #blasonSixLayout {
-        position: absolute;
-        top: 3%;
-        left: 8%;
-        width: 8%;
-    }
+#blasonSixLayout {
+    position: absolute;
+    top: 3%;
+    left: 8%;
+    width: 8%;
+}
 
 #iconeIdentite{
     position:absolute;
@@ -212,6 +212,14 @@ h1 {
     text-align: center;
 }
 
+.boutonOrange {
+    background-color: darkorange;
+    border: none;
+    color: white;
+    text-align: center;
+    width: 100%;
+}
+
 .lienBouton {
     color: black;
 }
@@ -346,4 +354,8 @@ option {
     padding-left: 0.25rem;
     padding-top: 0.15rem;
     padding-bottom: 0.15rem;
+}
+
+.allWidth{
+    width: 100%;
 }
