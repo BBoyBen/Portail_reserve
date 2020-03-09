@@ -254,17 +254,24 @@ namespace PortailReserve.Controllers
                 }
             }
 
+            var patracdrFile = Request.Files["patracdrFile"];
+            int taille = patracdrFile.ContentLength;
+            if(taille >= 4096000)
+            {
+                ModelState.AddModelError("Event.Patracdr", "La taille du PATRACDR ne doit pas dépasser 4096ko.");
+                isAllValid = false;
+            }
+
             if (!isAllValid)
                 return View(vm);
+
+            string path = HttpContext.Server.MapPath("~/Content/PATRACDR/") + patracdrFile.FileName;
+            patracdrFile.SaveAs(path);
+            string url = "/Content/PATRACDR/" + patracdrFile.FileName;
 
             Guid idEffectif = Guid.Empty;
             if(type.Equals("Mission") || type.Equals("Stage"))
                 idEffectif = effDal.AjouterEffectif(vm.Effectif);
-
-            var patracdrFile = Request.Files["patracdrFile"];
-            string path = HttpContext.Server.MapPath("~/Content/PATRACDR/") + patracdrFile.FileName;
-            patracdrFile.SaveAs(path);
-            string url = "/Content/PATRACDR/" + patracdrFile.FileName;
 
             Evenement toCreate = vm.Event;
             toCreate.Effectif = idEffectif;
@@ -336,6 +343,11 @@ namespace PortailReserve.Controllers
             Evenement ev = eDal.GetEvenementById(id);
             if (ev == null || ev.Equals(typeof(EvenementNull)))
                 ev = new Evenement();
+
+            string[] urlSplit = ev.Patracdr.Split('/');
+            ViewBag.FileName = "";
+            if (urlSplit.Length > 0)
+                ViewBag.FileName = urlSplit[urlSplit.Length - 1];
 
             Effectif eff = new Effectif();
             ViewBag.Display = "none;";
@@ -418,17 +430,30 @@ namespace PortailReserve.Controllers
                 }
             }
 
+            var patracdrFile = Request.Files["patracdrFile"];
+            string url = vm.Event.Patracdr;
+            if(patracdrFile != null)
+            {
+                int taille = patracdrFile.ContentLength;
+                if(taille >= 4096000)
+                {
+                    ModelState.AddModelError("Event.Patracdr", "La taille du PATRACDR ne doit pas dépasser 4096ko.");
+                    isAllValid = false;
+                }
+                else
+                {
+                    string path = HttpContext.Server.MapPath("~/Content/PATRACDR/") + patracdrFile.FileName;
+                    patracdrFile.SaveAs(path);
+                    url = "/Content/PATRACDR/" + patracdrFile.FileName;
+                }
+            }
+
             if (!isAllValid)
                 return View(vm);
 
             Guid idEffectif = vm.Effectif.Id;
             if (type.Equals("Mission") || type.Equals("Stage"))
                  effDal.ModifierEffectif(vm.Effectif.Id, vm.Effectif);
-
-            var patracdrFile = Request.Files["patracdrFile"];
-            string path = HttpContext.Server.MapPath("~/Content/PATRACDR/") + patracdrFile.FileName;
-            patracdrFile.SaveAs(path);
-            string url = "/Content/PATRACDR/" + patracdrFile.FileName;
 
             Evenement toModif = vm.Event;
             toModif.Effectif = idEffectif;

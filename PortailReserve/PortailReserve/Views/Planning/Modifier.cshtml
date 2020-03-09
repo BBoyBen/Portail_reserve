@@ -82,18 +82,17 @@
         <div class="row">
             <div class="col-6 champsTextCenter text-center">
                 <label for="patracdrFile" id="patracdrLabel"> Ajouter un PATRACDR </label>
-                <span id="chosenFile"></span>
+                <span id="chosenFile"> @ViewBag.FileName </span>
             </div>
             <input type="file"
                    name="patracdrFile"
                    id="patracdrFile"
                    style="display: none; "
-                   accept="..csv, .docx, .doc, .pdf, .xslx"
-                   required />
+                   accept="..csv, .docx, .doc, .pdf, .xslx" />
         </div>
         <div class="row">
             <div class="col-12 erreur">
-                <span id="erreurPatrac"></span>
+                <span id="erreurPatrac">@Html.ValidationMessageFor(m => m.Event.Patracdr)</span>
             </div>
         </div>
 

@@ -12,9 +12,20 @@
 });
 
 document.getElementById("patracdrFile").addEventListener("change", function (target) {
-    var fileName = document.getElementById("patracdrFile").files[0].name;
+    var file = document.getElementById("patracdrFile").files[0];
+    var fileName = file.name;
+    var size = file.size;
 
-    document.getElementById("chosenFile").innerText = fileName;
+    if (size < 4096000) {
+        document.getElementById("chosenFile").innerText = fileName;
+        document.getElementById("erreurPatrac").innerText = "";
+    }
+    else {
+        document.getElementById("chosenFile").innerText = "";
+        document.getElementById("erreurPatrac").innerText = "La taille du PATRACDR ne doit pas depasser 4096ko.";
+        document.getElementById("patracdrLabel").style.marginBottom = "10px";
+    }
+
 });
 
 function erreurChamps(id) {
@@ -132,8 +143,17 @@ function checkAllFields() {
         allIsOk = false;
     }
     else {
-        labelPatrac.style.border = "3px solid black";
-        labelPatrac.style.boxShadow = "none";
+        var size = patracdr.files[0].size;
+        if (size < 4096000) {
+            labelPatrac.style.border = "3px solid black";
+            labelPatrac.style.boxShadow = "none";
+        }
+        else {
+            labelPatrac.style.marginBottom = "10px";
+            erreurPatrac.innerText = "La taille du PATRACDR ne doit pas depasser 4096ko.";
+            erreurChamps("patracdrLabel");
+            allIsOk = false;
+        }
     }
 
     var select = document.getElementById("typeSelect").options[document.getElementById("typeSelect").selectedIndex].text;
