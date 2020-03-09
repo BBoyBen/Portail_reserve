@@ -344,7 +344,10 @@ namespace PortailReserve.Controllers
             if (ev == null || ev.Equals(typeof(EvenementNull)))
                 ev = new Evenement();
 
-            string[] urlSplit = ev.Patracdr.Split('/');
+            string[] urlSplit = new string[] { };
+            if(!ev.Patracdr.IsNullOrWhiteSpace())
+                urlSplit = ev.Patracdr.Split('/');
+
             ViewBag.FileName = "";
             if (urlSplit.Length > 0)
                 ViewBag.FileName = urlSplit[urlSplit.Length - 1];
@@ -432,7 +435,7 @@ namespace PortailReserve.Controllers
 
             var patracdrFile = Request.Files["patracdrFile"];
             string url = vm.Event.Patracdr;
-            if(patracdrFile != null)
+            if(!patracdrFile.FileName.Equals(""))
             {
                 int taille = patracdrFile.ContentLength;
                 if(taille >= 4096000)

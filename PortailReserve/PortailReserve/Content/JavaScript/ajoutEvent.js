@@ -134,9 +134,10 @@ function checkAllFields() {
     var patracdr = document.getElementById("patracdrFile");
     var erreurPatrac = document.getElementById("erreurPatrac");
     var labelPatrac = document.getElementById("patracdrLabel");
+    var chosenFile = document.getElementById("chosenFile");
     erreurPatrac.innerText = "";
-    console.log(patracdr.files[0]);
-    if (patracdr.files[0] === null || patracdr.files[0] === undefined) {
+
+    if ((patracdr.files[0] === null || patracdr.files[0] === undefined) && chosenFile.innerText.trim().length === 0) {
         labelPatrac.style.marginBottom = "10px";
         erreurPatrac.innerText = "Veuillez ajouter un PATRACDR";
         erreurChamps("patracdrLabel");

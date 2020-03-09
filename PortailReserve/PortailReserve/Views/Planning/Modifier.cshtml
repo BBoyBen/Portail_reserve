@@ -80,9 +80,10 @@
         </div>
 
         <div class="row">
+            @Html.HiddenFor(m => m.Event.Patracdr)
             <div class="col-6 champsTextCenter text-center">
                 <label for="patracdrFile" id="patracdrLabel"> Ajouter un PATRACDR </label>
-                <span id="chosenFile"> @ViewBag.FileName </span>
+                <span id="chosenFile">@ViewBag.FileName</span>
             </div>
             <input type="file"
                    name="patracdrFile"
