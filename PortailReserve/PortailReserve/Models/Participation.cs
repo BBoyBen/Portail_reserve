@@ -16,5 +16,6 @@ namespace PortailReserve.Models
         public Guid Utilisateur { get; set; }
         public bool Participe { get; set; }
         public DateTime Reponse { get; set; }
+        public DateTime Modification { get; set; }
     }
 }

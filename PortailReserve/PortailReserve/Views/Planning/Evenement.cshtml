@@ -160,7 +160,7 @@
                                 <div class="col-12">
                                     @using (Html.BeginForm("Modifier", "Participation", FormMethod.Post))
                                     {
-                                        @Html.HiddenFor(m => m.Event.Id);
+                                        @Html.HiddenFor(m => m.Event.Id)
                                         @Html.HiddenFor(m => m.Util.Id)
                                         <input type="hidden" value="Non" name="modifParticipation" id="modifParticipation" />
 
@@ -182,7 +182,7 @@
                                 <div class="col-12">
                                     @using (Html.BeginForm("Modifier", "Participation", FormMethod.Post))
                                     {
-                                        @Html.HiddenFor(m => m.Event.Id);
+                                        @Html.HiddenFor(m => m.Event.Id)
                                         @Html.HiddenFor(m => m.Util.Id)
                                         <input type="hidden" value="Oui" name="modifParticipation" id="modifParticipation" />
 
@@ -368,7 +368,9 @@
                             <div class="col-4">
                                 <strong> Date de réponse </strong>
                             </div>
-                            <div class="col-4"></div>
+                            <div class="col-4">
+                                <strong> Dernière modification </strong>
+                            </div>
                         </div>
                         @if (Model.UtilParticipation.Count == 0)
                         {
@@ -389,7 +391,9 @@
                                     <div class="col-4">
                                         @u.Participation.Reponse.ToString()
                                     </div>
-                                    <div class="col-4"></div>
+                                    <div class="col-4">
+                                        @u.Participation.Modification.ToString()
+                                    </div>
                                 </div>
                             }
                         }
@@ -413,7 +417,9 @@
                             <div class="col-4">
                                 <strong> Date de réponse </strong>
                             </div>
-                            <div class="col-4"></div>
+                            <div class="col-4">
+                                <strong> Dernière modification </strong>
+                            </div>
                         </div>
                         @if (Model.UtilNonParticipation.Count == 0)
                         {
@@ -434,7 +440,9 @@
                                     <div class="col-4">
                                         @u.Participation.Reponse.ToString()
                                     </div>
-                                    <div class="col-4"></div>
+                                    <div class="col-4">
+                                        @u.Participation.Modification.ToString()
+                                    </div>
                                 </div>
                             }
                         }

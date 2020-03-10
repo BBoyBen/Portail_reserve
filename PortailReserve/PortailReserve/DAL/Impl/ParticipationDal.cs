@@ -25,7 +25,8 @@ namespace PortailReserve.DAL.Impl
                     Utilisateur = util,
                     Evenement = evenement,
                     Participe = participe,
-                    Reponse = DateTime.Now
+                    Reponse = DateTime.Now,
+                    Modification = DateTime.Now
                 };
 
                 bdd.Participations.Add(participation);
@@ -106,7 +107,7 @@ namespace PortailReserve.DAL.Impl
                     return -10;
 
                 toModif.Participe = modif;
-                toModif.Reponse = DateTime.Now;
+                toModif.Modification = DateTime.Now;
 
                 bdd.SaveChanges();
 
