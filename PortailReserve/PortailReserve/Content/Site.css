@@ -220,6 +220,13 @@ h1 {
     width: 100%;
 }
 
+.boutonBleu {
+    background-color: dodgerblue;
+    border: none;
+    color: white;
+    text-align: center;
+}
+
 .lienBouton {
     color: black;
 }
@@ -236,6 +243,16 @@ h1 {
 .lienBoutonVert:hover {
     color: white;
     text-decoration: none;
+}
+
+.lienBoutonBleu {
+    color: white;
+}
+
+.lienBoutonBleu:hover{
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .erreur {

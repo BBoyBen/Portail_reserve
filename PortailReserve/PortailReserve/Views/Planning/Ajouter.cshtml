@@ -11,8 +11,8 @@
 <div class="container">
     <div class="row">
         <div class="col-3">
-            <button class="bouton" onclick="clickOn('retourPlanning'); ">
-                @Html.ActionLink("Retour au planning", "Index", "Planning", null, new { @class = "lienBouton", id = "retourPlanning" })
+            <button class="bouton boutonBleu allWidth" onclick="clickOn('retourPlanning'); ">
+                @Html.ActionLink("Retour au planning", "Index", "Planning", null, new { @class = "lienBoutonBleu", id = "retourPlanning" })
             </button>
         </div>
     </div>
@@ -123,7 +123,7 @@
         </div>
 
         <div class="row formPart">
-            <button class="col-4 btnSubmit" id="valideAjoutEvent" onclick="checkAllFields(); "> Valider </button>
+            <button class="col-4 btnSubmit boutonVert" id="valideAjoutEvent" onclick="checkAllFields(); "> Valider </button>
         </div>
         <input type="submit" value="Valider" id="subAjoutEvent" style="display: none;" />
     }

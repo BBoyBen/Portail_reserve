@@ -11,8 +11,8 @@
 <div class="container">
     <div class="row">
         <div class="col-3">
-            <button class="bouton allWidth" onclick="clickOn('retourPlanning'); ">
-                @Html.ActionLink("Retour au planning", "Index", "Planning", null, new { @class = "lienBouton", id = "retourPlanning" })
+            <button class="bouton boutonBleu allWidth" onclick="clickOn('retourPlanning'); ">
+                @Html.ActionLink("Retour au planning", "Index", "Planning", null, new { @class = "lienBoutonBleu", id = "retourPlanning" })
             </button>
         </div>
         @if(Model.Util.Role < 4)
