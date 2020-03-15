@@ -265,57 +265,5 @@ namespace PortailReserve.Controllers
             ViewBag.Erreur = "Vérifiez les informations renseignées.";
             return View(vm);
         }
-
-        public ActionResult Section ()
-        {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
-            {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
-            }
-            if (u.Equals(typeof(UtilisateurNull)))
-            {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
-            }
-            if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
-
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
-
-            Groupe userGrp = gDal.GetGroupeById(u.Groupe);
-            Section userSection = sDal.GetSectionById(userGrp.Section);
-
-            List<Groupe> grpSection = gDal.GetGroupesBySection(userSection.Id);
-            grpSection = TrierGroupes(grpSection);
-
-            List<Utilisateur> listCdg = new List<Utilisateur>();
-            List<Utilisateur> listSdt = new List<Utilisateur>();
-            foreach(Groupe g in grpSection)
-            {
-                listCdg.Add(uDal.GetUtilisateurById(g.CDG));
-                listSdt.AddRange(uDal.GetUtilisateursByGroupe(g.Id));
-            }
-
-            Compagnie cie = cDal.GetCompagnieById(userSection.Compagnie);
-
-            SectionViewModel vm = new SectionViewModel()
-            {
-                Cie = cie,
-                Section = userSection,
-                CDS = uDal.GetUtilisateurById(userSection.CDS),
-                SOA = uDal.GetUtilisateurById(userSection.SOA),
-                Groupes = grpSection,
-                CDGs = listCdg,
-                Soldats = listSdt,
-                Util = u
-            };
-
-            return View(vm);
-        }
     }
 }

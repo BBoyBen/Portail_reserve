@@ -206,6 +206,7 @@
     <Compile Include="Controllers\ParticipationController.cs" />
     <Compile Include="Controllers\PlanningController.cs" />
     <Compile Include="Controllers\ProfilController.cs" />
+    <Compile Include="Controllers\SectionController.cs" />
     <Compile Include="DAL\IAdresseDal.cs" />
     <Compile Include="DAL\IAlbumDal.cs" />
     <Compile Include="DAL\IChantDal.cs" />
@@ -491,6 +492,7 @@
     <Content Include="Views\Planning\Liste.cshtml" />
     <Content Include="Views\Planning\Ajouter.cshtml" />
     <Content Include="Views\Planning\Modifier.cshtml" />
+    <Content Include="Views\Section\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

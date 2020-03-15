@@ -13,7 +13,7 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            @if(Model.Section.Numero == 1)
+            @if (Model.Section.Numero == 1)
             {
                 <h2 class="titreLegend"> 1ère section de la 6e Compagnie </h2>
             }
@@ -34,7 +34,7 @@
         </div>
     </div>
 
-    @foreach(PortailReserve.Models.Groupe g in Model.Groupes)
+    @foreach (PortailReserve.Models.Groupe g in Model.Groupes)
     {
         <div class="row">
             <div class="col-6">
@@ -42,9 +42,9 @@
             </div>
         </div>
 
-        foreach(PortailReserve.Models.Utilisateur cdg in Model.CDGs)
+        foreach (PortailReserve.Models.Utilisateur cdg in Model.CDGs)
         {
-            if(cdg.Id.Equals(g.CDG))
+            if (cdg.Id.Equals(g.CDG))
             {
                 <div class="row">
                     <div class="col-6 chefDeGroupe">
@@ -54,9 +54,9 @@
             }
         }
 
-        foreach(PortailReserve.Models.Utilisateur sdt in Model.Soldats)
+        foreach (PortailReserve.Models.Utilisateur sdt in Model.Soldats)
         {
-            if(sdt.Groupe.Equals(g.Id))
+            if (sdt.Groupe.Equals(g.Id))
             {
                 <div class="row">
                     <div class="col-6">
