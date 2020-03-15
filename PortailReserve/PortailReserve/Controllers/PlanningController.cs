@@ -241,7 +241,7 @@ namespace PortailReserve.Controllers
                 isAllValid = false;
             }
 
-            string type = Request.Form["Event.Type"];
+            var type = Request.Form["Event.Type"];
             if (type.IsNullOrWhiteSpace())
                 type = "Instruction";
 

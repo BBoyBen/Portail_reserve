@@ -10,7 +10,6 @@ namespace PortailReserve.ViewModel
     public class AjouterEventViewModel
     {
         public Evenement Event { get; set; }
-
         public List<SelectListItem> Types { get; set; }
         public Effectif Effectif { get; set; }
     }

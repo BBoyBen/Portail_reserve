@@ -25,7 +25,13 @@ document.getElementById("patracdrFile").addEventListener("change", function (tar
         document.getElementById("erreurPatrac").innerText = "La taille du PATRACDR ne doit pas depasser 4096ko.";
         document.getElementById("patracdrLabel").style.marginBottom = "10px";
     }
+});
 
+document.getElementById("Event_Debut").addEventListener("change", function (target) {
+    var debut = document.getElementById("Event_Debut");
+    var limite = document.getElementById("Event_LimiteReponse");
+
+    limite.value = debut.value;
 });
 
 function erreurChamps(id) {
