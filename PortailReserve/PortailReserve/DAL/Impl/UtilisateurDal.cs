@@ -443,5 +443,26 @@ namespace PortailReserve.DAL.Impl
                 return new List<Utilisateur>();
             }
         }
+
+        public int ModifierGrade(Guid id, string grade)
+        {
+            try
+            {
+                Utilisateur util = GetUtilisateurById(id);
+                if (util == null || util.Equals(typeof(UtilisateurNull)))
+                    return 0;
+
+                util.Grade = grade;
+
+                bdd.SaveChanges();
+
+                return 1;
+            }
+            catch(Exception e)
+            {
+                Log("ERROR", "Erreur lors du changement de grade sur l'utilisateur : " + id + " -> " + e);
+                return 0;
+            }
+        }
     }
 }

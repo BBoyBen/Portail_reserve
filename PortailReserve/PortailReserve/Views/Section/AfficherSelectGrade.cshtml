@@ -1,0 +1,3 @@
+﻿@model PortailReserve.ViewModel.SelectGradeViewModel
+
+<span> @Html.DropDownListFor(m => m.Util.Grade, Model.Grades, new { id = "utilGrade_" + Model.Util.Id }) </span>

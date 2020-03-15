@@ -62,11 +62,23 @@
                     <div class="col-6">
                         @if (sdt.Id.Equals(Model.Util.Id))
                         {
-                            <span class="user"> @sdt.Grade  @sdt.Nom.ToUpperInvariant()  @sdt.Prenom </span>
+                            <span class="user"> 
+                                <span class="grade" style="display:none;"> @{ Html.RenderAction("AfficherGrade", new { id = sdt.Id }); } </span>
+                                <span class="modifGrade" style="display: inline;">
+                                   @{ Html.RenderAction("AfficherSelectGrade", new { id = sdt.Id }); }
+                                </span>
+                                @sdt.Nom.ToUpperInvariant()  @sdt.Prenom 
+                            </span>
                         }
                         else
                         {
-                            <span> @sdt.Grade  @sdt.Nom.ToUpperInvariant()  @sdt.Prenom </span>
+                            <span> 
+                                <span class="grade" style="display: inline;"> @{ Html.RenderAction("AfficherGrade", new { id = sdt.Id }); } </span>
+                                <span class="modifGrade" style="display: none;">
+                                    @{ Html.RenderAction("AfficherSelectGrade", new { id = sdt.Id }); }
+                                </span>
+                                @sdt.Nom.ToUpperInvariant()  @sdt.Prenom 
+                            </span>
                         }
                     </div>
                 </div>
