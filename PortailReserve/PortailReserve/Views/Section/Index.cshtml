@@ -62,22 +62,30 @@
                     <div class="col-6">
                         @if (sdt.Id.Equals(Model.Util.Id))
                         {
-                            <span class="user"> 
-                                <span class="grade" style="display:none;"> @{ Html.RenderAction("AfficherGrade", new { id = sdt.Id }); } </span>
+                            <span class="user">
+                                <span id="grade_@sdt.Id.ToString().Substring(0, 5)" class="grade" style="display:none;"> @{ Html.RenderAction("AfficherGrade", new { id = sdt.Id }); } </span>
                                 <span class="modifGrade" style="display: inline;">
-                                   @{ Html.RenderAction("AfficherSelectGrade", new { id = sdt.Id }); }
+                                    @{ Html.RenderAction("AfficherSelectGrade", new { id = sdt.Id }); }
                                 </span>
-                                @sdt.Nom.ToUpperInvariant()  @sdt.Prenom 
+                                @sdt.Nom.ToUpperInvariant()  @sdt.Prenom
                             </span>
+                            <div style="display: none;">
+                                @Ajax.ActionLink("Changer", "ModifierGrade", new { idModif = sdt.Id }, new AjaxOptions
+                                   {
+                                       InsertionMode = InsertionMode.Replace,
+                                       UpdateTargetId = "grade_" + sdt.Id.ToString().Substring(0, 8),
+                                       HttpMethod = "GET"
+                                   }, new { id = "ajax_" + sdt.Id.ToString().Substring(0, 8) })
+                            </div>
                         }
                         else
                         {
-                            <span> 
-                                <span class="grade" style="display: inline;"> @{ Html.RenderAction("AfficherGrade", new { id = sdt.Id }); } </span>
+                            <span>
+                                <span id="grade_@sdt.Id.ToString().Substring(0, 5)" class="grade" style="display: inline;"> @{ Html.RenderAction("AfficherGrade", new { id = sdt.Id }); } </span>
                                 <span class="modifGrade" style="display: none;">
                                     @{ Html.RenderAction("AfficherSelectGrade", new { id = sdt.Id }); }
                                 </span>
-                                @sdt.Nom.ToUpperInvariant()  @sdt.Prenom 
+                                @sdt.Nom.ToUpperInvariant()  @sdt.Prenom
                             </span>
                         }
                     </div>
@@ -108,4 +116,8 @@
         </div>
     </div>
 </div>
+
+@section scripts {
+    <script src="~/Content/JavaScript/section.js"></script>
+}
 

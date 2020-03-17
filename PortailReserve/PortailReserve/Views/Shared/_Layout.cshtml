@@ -12,7 +12,7 @@
 <body>
     <header>
         <img src="~/Content/image/blason_six.png" alt="blason six" id="blasonSixLayout" />
-        @Html.ActionLink("Acceuil", "Index", "Home", null, new { id="lienBanniere", style="display:none;"})
+        @Html.ActionLink("Acceuil", "Index", "Home", null, new { id = "lienBanniere", style = "display:none;" })
         <img src="~/Content/image/couverture_uir_short.jpg" alt="bannière UIR" id="banniere" onclick="clickOn('lienBanniere')" />
         <div id="iconeIdentite">
             <img src="~/Content/image/icone_soldat.png" alt="icone soldat" id="iconeSoldat" onclick="afficherCacherElement('menuPerso'); " />
@@ -46,7 +46,7 @@
     <div id="menu">
         <div class="row">
             <div class="menuItem col-3 borderDroite"> @Html.ActionLink("ACCEUIL", "Index", "Home", null, new { @class = "lienMenu" }) </div>
-            <div class="menuItem col-3 borderDroite" onclick="afficherCacherElement('sousMenuEvent'); " >
+            <div class="menuItem col-3 borderDroite" onclick="afficherCacherElement('sousMenuEvent'); ">
                 <div class="lienMenu"> EVENEMENT </div>
                 <div class="sousMenu" id="sousMenuEvent" style="display: none;">
                     <div class="sousMenuItem borderBas">
@@ -68,7 +68,7 @@
         </div>
     </div>
 
-    
+
 
     <div id="corpsDePage" class="container body-content">
         @RenderBody()
@@ -78,6 +78,7 @@
     @Scripts.Render("~/bundles/popper")
     @Scripts.Render("~/bundles/bootstrap")
     <script src="~/Content/JavaScript/autoload.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

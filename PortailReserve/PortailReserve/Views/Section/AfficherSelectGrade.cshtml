@@ -1,3 +1,7 @@
 ﻿@model PortailReserve.ViewModel.SelectGradeViewModel
 
-<span> @Html.DropDownListFor(m => m.Util.Grade, Model.Grades, new { id = "utilGrade_" + Model.Util.Id }) </span>
+<span> @Html.DropDownListFor(m => m.Util.Grade, Model.Grades, new { 
+            id = "utilGrade_" + Model.Util.Id.ToString().Substring(0, 8),
+            onchange = "changerGrade(" + Model.Util.Id.ToString().Substring(0, 8) + ");"
+        }) 
+</span>
