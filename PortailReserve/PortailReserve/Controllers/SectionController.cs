@@ -128,7 +128,7 @@ namespace PortailReserve.Controllers
             return PartialView("AfficherSelectGrade", vm);
         }
 
-        public ActionResult ModifierGrade(Guid idModif)
+        public ActionResult ModifierGrade(Guid idModif, string grade)
         {
             Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
             if (u == null)
@@ -145,8 +145,6 @@ namespace PortailReserve.Controllers
 
             if (u.Role > 3)
                 return RedirectToAction("AfficherGrade", "Section");
-
-            var grade = Request.Form["utilGrade_" + u.Id.ToString().Substring(0, 8)];
 
             int retour = uDal.ModifierGrade(idModif, grade);
             if (!retour.Equals(1))

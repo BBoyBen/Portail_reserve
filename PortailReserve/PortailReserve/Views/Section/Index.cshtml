@@ -12,6 +12,25 @@
 
 <div class="container">
     <div class="row">
+        @if (Model.Util.Role < 4)
+        {
+            <div id="modifSection" class="col-3 champsTextDroit" style="display: block; ">
+                <button id="boutonModifier" class="boutonOrange bouton" onclick="modifierSection(); ">
+                    <span class="lienBouton lienBoutonBleu"> Modifier </span>
+                </button>
+            </div>
+
+            <div id="valideModif" class="col-3 champsTextDroit" style="display: none; ">
+                <button id="boutonModifier" class="boutonVert bouton allWidth" onclick="validerModifSection(); clickOn('vmsection'); ">
+                    @Html.ActionLink("Valider", "Index", "Section", null, new { id = "vmsection", @class = "lienBouton lienBoutonVert"})
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
         <div class="col-12">
             @if (Model.Section.Numero == 1)
             {
@@ -25,13 +44,55 @@
     </div>
     <div class="row">
         <div class="col-6">
-            <strong>Chef de section : </strong> @Model.CDS.Grade @Model.CDS.Nom.ToUpperInvariant()
+            <strong>Chef de section : </strong>
+            <span id="grade_@Model.CDS.Id.ToString().Substring(0, 5)" class="grade" style="display: inline;">
+                @{ Html.RenderAction("AfficherGrade", new { id = Model.CDS.Id }); }
+            </span>
+            @if (Model.Util.Role < 4)
+            {
+                <span class="modifGrade" style="display: none;">
+                    @{ Html.RenderAction("AfficherSelectGrade", new { id = Model.CDS.Id }); }
+                </span>
+            }
+            @Model.CDS.Nom.ToUpperInvariant()
         </div>
+        @if (Model.Util.Role < 4)
+        {
+            <div style="display: none;">
+                @Ajax.ActionLink("Changer", "ModifierGrade", new { idModif = Model.CDS.Id }, new AjaxOptions
+                {
+                   InsertionMode = InsertionMode.Replace,
+                   UpdateTargetId = "grade_" + Model.CDS.Id.ToString().Substring(0, 8),
+                   HttpMethod = "GET"
+                }, new { id = "ajax_" + Model.CDS.Id.ToString().Substring(0, 8) })
+            </div>
+        }
     </div>
     <div class="row">
         <div class="col-6">
-            <strong>Sous-officier adjoint : </strong> @Model.SOA.Grade @Model.SOA.Nom.ToUpperInvariant()
+            <strong>Sous-officier adjoint : </strong>
+            <span id="grade_@Model.SOA.Id.ToString().Substring(0, 5)" class="grade" style="display: inline;">
+                @{ Html.RenderAction("AfficherGrade", new { id = Model.SOA.Id }); }
+            </span>
+            @if (Model.Util.Role < 4)
+            {
+                <span class="modifGrade" style="display: none;">
+                    @{ Html.RenderAction("AfficherSelectGrade", new { id = Model.SOA.Id }); }
+                </span>
+            }
+            @Model.SOA.Nom.ToUpperInvariant()
         </div>
+        @if (Model.Util.Role < 4)
+        {
+            <div style="display: none;">
+                @Ajax.ActionLink("Changer", "ModifierGrade", new { idModif = Model.SOA.Id }, new AjaxOptions
+                {
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "grade_" + Model.SOA.Id.ToString().Substring(0, 8),
+                    HttpMethod = "GET"
+                }, new { id = "ajax_" + Model.SOA.Id.ToString().Substring(0, 8) })
+            </div>
+        }
     </div>
 
     @foreach (PortailReserve.Models.Groupe g in Model.Groupes)
@@ -47,9 +108,30 @@
             if (cdg.Id.Equals(g.CDG))
             {
                 <div class="row">
-                    <div class="col-6 chefDeGroupe">
-                        <strong> Chef de groupe : </strong> @cdg.Grade @cdg.Nom.ToUpperInvariant()
+                    <div class="col-8 chefDeGroupe">
+                        <strong> Chef de groupe : </strong>
+                        <span id="grade_@cdg.Id.ToString().Substring(0, 5)" class="grade" style="display: inline;">
+                            @{ Html.RenderAction("AfficherGrade", new { id = cdg.Id }); }
+                        </span>
+                        @if (Model.Util.Role < 4)
+                        {
+                            <span class="modifGrade" style="display: none;">
+                                @{ Html.RenderAction("AfficherSelectGrade", new { id = cdg.Id }); }
+                            </span>
+                        }
+                        @cdg.Nom.ToUpperInvariant()
                     </div>
+                    @if (Model.Util.Role < 4)
+                    {
+                        <div style="display: none;">
+                            @Ajax.ActionLink("Changer", "ModifierGrade", new { idModif = cdg.Id }, new AjaxOptions
+                            {
+                                InsertionMode = InsertionMode.Replace,
+                                UpdateTargetId = "grade_" + cdg.Id.ToString().Substring(0, 8),
+                                HttpMethod = "GET"
+                            }, new { id = "ajax_" + cdg.Id.ToString().Substring(0, 8) })
+                        </div>
+                    }
                 </div>
             }
         }
@@ -59,34 +141,58 @@
             if (sdt.Groupe.Equals(g.Id))
             {
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-8 soldat">
                         @if (sdt.Id.Equals(Model.Util.Id))
                         {
                             <span class="user">
-                                <span id="grade_@sdt.Id.ToString().Substring(0, 5)" class="grade" style="display:none;"> @{ Html.RenderAction("AfficherGrade", new { id = sdt.Id }); } </span>
-                                <span class="modifGrade" style="display: inline;">
-                                    @{ Html.RenderAction("AfficherSelectGrade", new { id = sdt.Id }); }
+                                <span id="grade_@sdt.Id.ToString().Substring(0, 5)" class="grade" style="display:inline;">
+                                    @{ Html.RenderAction("AfficherGrade", new { id = sdt.Id }); }
                                 </span>
+                                @if (Model.Util.Role < 4)
+                                {
+                                    <span class="modifGrade" style="display: none;">
+                                        @{ Html.RenderAction("AfficherSelectGrade", new { id = sdt.Id }); }
+                                    </span>
+                                }
                                 @sdt.Nom.ToUpperInvariant()  @sdt.Prenom
                             </span>
-                            <div style="display: none;">
-                                @Ajax.ActionLink("Changer", "ModifierGrade", new { idModif = sdt.Id }, new AjaxOptions
-                                   {
-                                       InsertionMode = InsertionMode.Replace,
-                                       UpdateTargetId = "grade_" + sdt.Id.ToString().Substring(0, 8),
-                                       HttpMethod = "GET"
-                                   }, new { id = "ajax_" + sdt.Id.ToString().Substring(0, 8) })
-                            </div>
+                            if (Model.Util.Role < 4)
+                            {
+                                <div style="display: none;">
+                                    @Ajax.ActionLink("Changer", "ModifierGrade", new { idModif = sdt.Id }, new AjaxOptions
+                                    {
+                                        InsertionMode = InsertionMode.Replace,
+                                        UpdateTargetId = "grade_" + sdt.Id.ToString().Substring(0, 8),
+                                        HttpMethod = "GET"
+                                    }, new { id = "ajax_" + sdt.Id.ToString().Substring(0, 8) })
+                                </div>
+                            }
                         }
                         else
                         {
                             <span>
-                                <span id="grade_@sdt.Id.ToString().Substring(0, 5)" class="grade" style="display: inline;"> @{ Html.RenderAction("AfficherGrade", new { id = sdt.Id }); } </span>
-                                <span class="modifGrade" style="display: none;">
-                                    @{ Html.RenderAction("AfficherSelectGrade", new { id = sdt.Id }); }
+                                <span id="grade_@sdt.Id.ToString().Substring(0, 5)" class="grade" style="display: inline;">
+                                    @{ Html.RenderAction("AfficherGrade", new { id = sdt.Id }); }
                                 </span>
+                                @if (Model.Util.Role < 4)
+                                {
+                                    <span class="modifGrade" style="display: none;">
+                                        @{ Html.RenderAction("AfficherSelectGrade", new { id = sdt.Id }); }
+                                    </span>
+                                }
                                 @sdt.Nom.ToUpperInvariant()  @sdt.Prenom
                             </span>
+                            if (Model.Util.Role < 4)
+                            {
+                                <div style="display: none;">
+                                    @Ajax.ActionLink("Changer", "ModifierGrade", new { idModif = sdt.Id }, new AjaxOptions
+                                    {
+                                        InsertionMode = InsertionMode.Replace,
+                                        UpdateTargetId = "grade_" + sdt.Id.ToString().Substring(0, 8),
+                                        HttpMethod = "GET"
+                                    }, new { id = "ajax_" + sdt.Id.ToString().Substring(0, 8) })
+                                </div>
+                            }
                         }
                     </div>
                 </div>
