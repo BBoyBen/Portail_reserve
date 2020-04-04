@@ -48,6 +48,31 @@ namespace PortailReserve.Controllers
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
             ViewBag.Role = u.Role;
+            
+            return View(u);
+        }
+
+        [Authorize]
+        public ActionResult AfficherPersonnelSection()
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
 
             Groupe userGrp = gDal.GetGroupeById(u.Groupe);
             Section userSection = sDal.GetSectionById(userGrp.Section);
@@ -77,7 +102,7 @@ namespace PortailReserve.Controllers
                 Util = u
             };
 
-            return View(vm);
+            return PartialView("AfficherPersonnelSection", vm);
         }
 
         [Authorize]
@@ -151,6 +176,58 @@ namespace PortailReserve.Controllers
                 ViewBag.Erreur = "Une erreur est survenu lors du changement de grade.";
 
             return RedirectToAction("AfficherGrade", new { id = idModif });
+        }
+
+        /***
+         * Affichage de la pop-up de suppression d'un soldat d'une section
+        ***/
+        [Authorize]
+        public ActionResult AfficherPopUpSuppSoldat(Guid id)
+        {
+            Utilisateur util = uDal.GetUtilisateurById(id);
+            if (util == null)
+            {
+                util = new Utilisateur();
+                util.Id = Guid.Empty;
+                util.Grade = "Soldat";
+                util.Nom = "Empty";
+                util.Prenom = "Emprty";
+            }
+
+            return PartialView("AfficherPopUpSuppSoldat", util);
+        }
+
+        [Authorize]
+        public ActionResult SupprimerUtilisateurSection(Guid id)
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            if (u.Role > 3)
+                return RedirectToAction("AfficherGrade", "Section");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
+
+            int retour = uDal.SupprimerUtilisateurSection(id);
+
+            if (retour != 0)
+                ViewBag.Erreur = "Une erreur s'est produite lors de la suppression.";
+
+            return RedirectToAction("AfficherPersonnelSection");
         }
     }
 }

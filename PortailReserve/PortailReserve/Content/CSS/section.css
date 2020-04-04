@@ -14,3 +14,15 @@
     margin-bottom: 5px;
     margin-top: 5px;
 }
+
+.iconeModif {
+    height: 1.5rem;
+    width:auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.iconeModif:hover {
+    cursor: pointer;
+    zoom: 1.3;
+}

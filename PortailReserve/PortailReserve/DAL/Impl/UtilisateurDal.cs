@@ -464,5 +464,67 @@ namespace PortailReserve.DAL.Impl
                 return 0;
             }
         }
+
+        public int SupprimerUtilisateurSection(Guid id)
+        {
+            try
+            {
+                Utilisateur trouve = GetUtilisateurById(id);
+                if (trouve == null || trouve.Equals(typeof(UtilisateurNull)))
+                    return 0;
+
+                trouve.Groupe = Guid.Empty;
+                trouve.Section = -1;
+                trouve.Compagnie = -1;
+
+                bdd.SaveChanges();
+
+                return 1;
+            }
+            catch(Exception e)
+            {
+                Log("ERROR", "Erreur lors de la suppression de l'util " + id + " de sa section -> " + e);
+                return -1;
+            }
+        }
+
+        public List<Utilisateur> GetUtilisateursSansSection()
+        {
+            try
+            {
+                List<Utilisateur> utils = bdd.Utilisateurs.Where(u => u.Section == -1 && u.Compagnie == -1 && u.Groupe.Equals(Guid.Empty)).ToList();
+
+                return utils;
+            }
+            catch(Exception e)
+            {
+                Log("ERROR", "Erreur lors de la récupération des utilisateurs sans section -> " + e);
+                return new List<Utilisateur>();
+            }
+        }
+
+        public int ModifierGroupe(Guid id, Guid grp)
+        {
+            try
+            {
+                Utilisateur util = GetUtilisateurById(id);
+                if (util == null || util.Equals(typeof(UtilisateurNull)))
+                    return 0;
+
+                if (util.Groupe.Equals(Guid.Empty))
+                    return -2;
+
+                util.Groupe = grp;
+
+                bdd.SaveChanges();
+
+                return 1;
+            }
+            catch(Exception e)
+            {
+                Log("ERROR", "Erreur changement de groupe de l'utilisateur : " + id + " -> " + e);
+                return -1;
+            }
+        }
     }
 }

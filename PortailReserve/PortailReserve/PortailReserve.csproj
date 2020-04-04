@@ -319,6 +319,7 @@
     <Content Include="Content\image\icone_profile.png" />
     <Content Include="Content\image\icone_soldat.png" />
     <Content Include="Content\image\icone_supprimer.png" />
+    <Content Include="Content\image\icon_modif.png" />
     <Content Include="Content\image\point_bleu.png" />
     <Content Include="Content\image\point_jaune.png" />
     <Content Include="Content\image\point_rouge.png" />
@@ -498,6 +499,8 @@
     <Content Include="Views\Section\Index.cshtml" />
     <Content Include="Views\Section\AfficherGrade.cshtml" />
     <Content Include="Views\Section\AfficherSelectGrade.cshtml" />
+    <Content Include="Views\Section\AfficherPopUpSuppSoldat.cshtml" />
+    <Content Include="Views\Section\AfficherPersonnelSection.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

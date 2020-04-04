@@ -20,16 +20,19 @@ namespace PortailReserve.DAL
         int MotDePassePerdu(string nom, string matricule, DateTime naissance);
         int ModifierUtilisateur(Guid id, Utilisateur utilisateur);
         int ModifierGrade(Guid id, String grade);
+        int ModifierGroupe(Guid id, Guid grp);
         int PremiereCoOk(Guid id);
         int PremiereCoKO(Guid id);
         Guid AjouterUtilisateur(Utilisateur utilisateur);
         int SupprimerUtilisateur(Guid id);
+        int SupprimerUtilisateurSection(Guid id);
         List<UtilisateurDispo> GetUtilisateursByDispoOK(Guid idEVent, int section, int cie);
         List<UtilisateurDispo> GetUtilisateursByDispoKO(Guid idEVent, int section, int cie);
         List<UtilisateurParticipation> GetUtilisateursByParticipationOK(Guid idEvent, int section, int cie);
         List<UtilisateurParticipation> GetUtilisateursByParticipationKO(Guid idEvent, int section, int cie);
         List<Utilisateur> GetUtilisateursSansReponseDispo(Guid idEVent, int section, int cie);
         List<Utilisateur> GetUtilisateursSansReponseParticipation(Guid idEvent, int section, int cie);
+        List<Utilisateur> GetUtilisateursSansSection();
 
     }
 }
