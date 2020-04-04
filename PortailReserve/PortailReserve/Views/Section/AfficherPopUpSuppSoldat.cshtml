@@ -12,13 +12,21 @@
 <div class="row">
     <div class="col-6">
         <div class="row">
-            <button class="col-8 bouton boutonVert champsTextDroit text-center" onclick="afficherCacherElement('popUpSuppression'); clickOn('lienSupp'); ">
-                @Ajax.ActionLink("Supprimer", "SupprimerUtilisateurSection", "Section", new { id = Model.Id}, new AjaxOptions { 
-                        InsertionMode = InsertionMode.Replace,
-                        UpdateTargetId = "partieSection",
-                        HttpMethod = "GET"
-                    }, new { id = "lienSupp", @class = "lienBoutonVert"})
+            <button id="boutonSuppression" class="col-8 bouton boutonVert champsTextDroit text-center" 
+                    onclick="afficherCacherElement('popUpSuppression'); clickOn('lienSupp'); ">
+                Supprimer
             </button>
+            <div id="lienSuppression" style="display: none; ">
+            @Ajax.ActionLink("Supprimer", "SupprimerUtilisateurSection", "Section", new { id = Model.Id }, new AjaxOptions
+                {
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "partieSection",
+                    HttpMethod = "GET",
+                    OnComplete = "modifierSection()",
+                    OnSuccess = "messageSuccess()",
+                    OnFailure = "messageError()"
+                }, new { id = "lienSupp", @class = "lienBoutonVert" });
+            </div>
         </div>
     </div>
     <div class="col-6">

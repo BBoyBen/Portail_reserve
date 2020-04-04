@@ -397,3 +397,60 @@ option {
 .corpsPopUp{
     margin-bottom: 20px;
 }
+
+.popUpSuccess {
+    position: fixed;
+    right: 0;
+    bottom: -4.5rem;
+    width: 20%;
+    padding: 20px;
+    background-color: rgba(34,139,34,0.3);
+    border: 1px solid rgb(34, 139, 34);
+}
+
+.popUpError {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 20%;
+    padding: 20px;
+    background-color: rgba(255,0,0,0.3);
+    border: 1px solid rgb(255, 0, 0);
+}
+
+.messageSuccess {
+    font-weight: bold;
+    color: forestgreen;
+}
+
+.messageError {
+    font-weight: bold;
+    color: rgb(255, 0, 0);
+}
+
+.imagePopUpSE {
+    height: 1.5rem;
+}
+
+.messageOkKo {
+    animation-name: messageOkKo;
+    animation-duration: 5s;
+}
+
+@keyframes messageOkKo {
+    0% {
+        bottom: -4.5rem;
+    }
+
+    35% {
+        bottom: 0;
+    }
+
+    65% {
+        bottom: 0;
+    }
+
+    100% {
+        bottom: -4.5rem;
+    }
+}

@@ -43,6 +43,28 @@
     @{ Html.RenderAction("AfficherPopUpSuppSoldat", new { id = Guid.Empty }); }
 </div>
 
+<div class="container popUpSuccess" id="suppressionOk" style="display: none;">
+    <div class="row">
+        <div class="col-2">
+            <img src="~/Content/image/icone_confirmation.png" alt="OK" class="imagePopUpSE" />
+        </div>
+        <div class="col-10 text-center messageSuccess">
+            Suppression OK !
+        </div>
+    </div>
+</div>
+
+<div class="container popUpError" id="suppressionKo" style="display: none; ">
+    <div class="row">
+        <div class="col-2">
+            <img src="~/Content/image/icone_erreur.png" alt="KO" class="imagePopUpSE" />
+        </div>
+        <div class="col-10 text-center messageError">
+            Erreur suppression !
+        </div>
+    </div>
+</div>
+
 @section scripts {
     <script src="~/Content/JavaScript/section.js"></script>
 }

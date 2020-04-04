@@ -25,6 +25,12 @@ function modifierSection() {
         listeGrade[i].style.display = "none";
         listeSelectGrade[i].style.display = "inline";
     }
+
+    var listIconeModif = document.getElementsByClassName("iconeCol");
+
+    for (var j = 0; j < listIconeModif.length; j++) {
+        listIconeModif[j].style.display = "inline";
+    }
 }
 
 function validerModifSection() {
@@ -41,4 +47,38 @@ function validerModifSection() {
         listeGrade[i].style.display = "inline";
         listeSelectGrade[i].style.display = "none";
     }
+
+    var listIconeModif = document.getElementsByClassName("iconeCol");
+
+    for (var j = 0; j < listIconeModif.length; j++) {
+        listIconeModif[j].style.display = "none";
+    }
+}
+
+function messageSuccess() {
+    var popUp = document.getElementById("suppressionOk");
+
+    popUp.style.display = "block";
+    popUp.classList.add("messageOkKo");
+
+    setTimeout(function () {
+        var popUp = document.getElementById("suppressionOk");
+
+        popUp.style.display = "none";
+        popUp.classList.remove("messageOkKo");
+    }, 5000);
+}
+
+function messageError() {
+    var popUp = document.getElementById("suppressionKo");
+
+    popUp.style.display = "block";
+    popUp.classList.add("messageOkKo");
+
+    setTimeout(function () {
+        var popUp = document.getElementById("suppressionKo");
+
+        popUp.style.display = "none";
+        popUp.classList.remove("messageOkKo");
+    }, 5000);
 }

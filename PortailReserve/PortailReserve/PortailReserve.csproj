@@ -312,7 +312,9 @@
     <Content Include="Content\image\chevron_bas.png" />
     <Content Include="Content\image\couverture_uir.jpg" />
     <Content Include="Content\image\couverture_uir_short.jpg" />
+    <Content Include="Content\image\icone_confirmation.png" />
     <Content Include="Content\image\icone_cours.png" />
+    <Content Include="Content\image\icone_erreur.png" />
     <Content Include="Content\image\icone_fermeture.png" />
     <Content Include="Content\image\icone_groupe.png" />
     <Content Include="Content\image\icone_planning.png" />

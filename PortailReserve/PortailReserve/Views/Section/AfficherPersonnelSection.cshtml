@@ -167,12 +167,12 @@
                 </div>
                 @if (Model.Util.Role < 4)
                 {
-                    <div class="col-2 iconeCol">
+                    <div class="col-2 iconeCol" style="display: none; ">
                         <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif" />
                         <div style="display: none;">
                         </div>
                     </div>
-                    <div class="col-2 iconeCol">
+                    <div class="col-2 iconeCol" style="display: none; ">
                         <img src="~/Content/image/icone_supprimer.png" alt="supprimer" class="iconeModif" 
                              onclick="clickOn('supp_@sdt.Id.ToString().Substring(0, 8)'); afficherCacherElement('popUpSuppression'); " />
                         <div style="display: none; ">
