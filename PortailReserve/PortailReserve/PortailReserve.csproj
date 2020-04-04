@@ -284,6 +284,7 @@
     <Compile Include="Utils\Utils.cs" />
     <Compile Include="ViewModel\AcceuilViewModel.cs" />
     <Compile Include="ViewModel\AjouterEventViewModel.cs" />
+    <Compile Include="ViewModel\ChangementGroupeViewModel.cs" />
     <Compile Include="ViewModel\EventViewModel.cs" />
     <Compile Include="ViewModel\ListeEventViewModel.cs" />
     <Compile Include="ViewModel\ModifMdpViewModel.cs" />
@@ -503,6 +504,7 @@
     <Content Include="Views\Section\AfficherSelectGrade.cshtml" />
     <Content Include="Views\Section\AfficherPopUpSuppSoldat.cshtml" />
     <Content Include="Views\Section\AfficherPersonnelSection.cshtml" />
+    <Content Include="Views\Section\AfficherPopUpChgmtGroupe.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

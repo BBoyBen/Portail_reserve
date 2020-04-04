@@ -55,8 +55,11 @@ function validerModifSection() {
     }
 }
 
-function messageSuccess() {
+function messageSuccess(texte) {
     var popUp = document.getElementById("suppressionOk");
+    var message = document.getElementById("texteSuccess");
+
+    message.innerHTML = texte;
 
     popUp.style.display = "block";
     popUp.classList.add("messageOkKo");
@@ -69,8 +72,11 @@ function messageSuccess() {
     }, 5000);
 }
 
-function messageError() {
+function messageError(texte) {
     var popUp = document.getElementById("suppressionKo");
+    var message = document.getElementById("texteError");
+
+    message.innerHTML = texte;
 
     popUp.style.display = "block";
     popUp.classList.add("messageOkKo");

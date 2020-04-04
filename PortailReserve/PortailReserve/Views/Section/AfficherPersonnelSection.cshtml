@@ -168,8 +168,15 @@
                 @if (Model.Util.Role < 4)
                 {
                     <div class="col-2 iconeCol" style="display: none; ">
-                        <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif" />
+                        <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
+                             onclick="clickOn('chgmnt_@sdt.Id.ToString().Substring(0, 8)'); afficherCacherElement('popUpChgmtGroupe'); " />
                         <div style="display: none;">
+                            @Ajax.ActionLink("Changer", "AfficherPopUpChgmtGroupe", new { id = sdt.Id }, new AjaxOptions
+                               {
+                                   InsertionMode = InsertionMode.Replace,
+                                   UpdateTargetId = "popUpChgmtGroupe",
+                                   HttpMethod = "GET"
+                               }, new { id = "chgmnt_" + sdt.Id.ToString().Substring(0, 8) })
                         </div>
                     </div>
                     <div class="col-2 iconeCol" style="display: none; ">

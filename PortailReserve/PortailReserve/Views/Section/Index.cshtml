@@ -48,8 +48,8 @@
         <div class="col-2">
             <img src="~/Content/image/icone_confirmation.png" alt="OK" class="imagePopUpSE" />
         </div>
-        <div class="col-10 text-center messageSuccess">
-            Suppression OK !
+        <div id="texteSuccess" class="col-10 text-center messageSuccess">
+            
         </div>
     </div>
 </div>
@@ -59,10 +59,20 @@
         <div class="col-2">
             <img src="~/Content/image/icone_erreur.png" alt="KO" class="imagePopUpSE" />
         </div>
-        <div class="col-10 text-center messageError">
-            Erreur suppression !
+        <div id="texteError" class="col-10 text-center messageError">
+            
         </div>
     </div>
+</div>
+
+<!--
+#############################################################################################
+############################# Pop Up de changement de groupe ################################
+#############################################################################################
+-->
+
+<div class="container popUp" id="popUpChgmtGroupe" style="display: none;">
+    @{ Html.RenderAction("AfficherPopUpChgmtGroupe", new { id = Guid.Empty }); }
 </div>
 
 @section scripts {

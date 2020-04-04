@@ -186,13 +186,13 @@ namespace PortailReserve.Controllers
         {
             Utilisateur util = uDal.GetUtilisateurById(id);
             if (util == null)
-            {
-                util = new Utilisateur();
-                util.Id = Guid.Empty;
-                util.Grade = "Soldat";
-                util.Nom = "Empty";
-                util.Prenom = "Emprty";
-            }
+                util = new Utilisateur
+                {
+                    Id = Guid.Empty,
+                    Prenom = "Empty",
+                    Nom = "Empry",
+                    Grade = "Soldat"
+                };
 
             return PartialView("AfficherPopUpSuppSoldat", util);
         }
@@ -216,7 +216,7 @@ namespace PortailReserve.Controllers
                 return RedirectToAction("PremiereCo", "Login");
 
             if (u.Role > 3)
-                return RedirectToAction("AfficherGrade", "Section");
+                return RedirectToAction("Index", "Section");
 
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
@@ -228,6 +228,66 @@ namespace PortailReserve.Controllers
                 ViewBag.Erreur = "Une erreur s'est produite lors de la suppression.";
 
             return RedirectToAction("AfficherPersonnelSection");
+        }
+
+        /***
+         * Affichage de la pop-up de suppression d'un soldat d'une section
+        ***/
+
+        [Authorize]
+        public ActionResult AfficherPopUpChgmtGroupe(Guid id)
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            if (u.Role > 3)
+                return RedirectToAction("Index", "Section");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
+
+            Utilisateur pourChange = uDal.GetUtilisateurById(id);
+            if (pourChange == null)
+                pourChange = new Utilisateur
+                {
+                    Id = Guid.Empty,
+                    Prenom = "Empty",
+                    Nom = "Empry",
+                    Grade = "Soldat"
+                };
+
+            Section section = sDal.GetSectionById(gDal.GetGroupeById(u.Groupe).Section);
+            List<Groupe> groupes = gDal.GetGroupesBySection(section.Id);
+
+            List<SelectListItem> selectGroupe = new List<SelectListItem>();
+            foreach(Groupe g in groupes)
+            {
+                if(g.Id.Equals(pourChange.Groupe))
+                    selectGroupe.Add(new SelectListItem { Text = "Groupe " + g.Numero, Value = g.Id.ToString(), Selected = true });
+                else
+                    selectGroupe.Add(new SelectListItem { Text = "Groupe " + g.Numero, Value = g.Id.ToString() });
+            }
+
+            ChangementGroupeViewModel vm = new ChangementGroupeViewModel
+            {
+                Util = pourChange,
+                Groupe = selectGroupe
+            };
+
+            return PartialView("AfficherPopUpChgmtGroupe", vm);
         }
     }
 }

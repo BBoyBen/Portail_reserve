@@ -23,8 +23,8 @@
                     UpdateTargetId = "partieSection",
                     HttpMethod = "GET",
                     OnComplete = "modifierSection()",
-                    OnSuccess = "messageSuccess()",
-                    OnFailure = "messageError()"
+                    OnSuccess = "messageSuccess('Suppression OK !')",
+                    OnFailure = "messageError('ErreurSuppression !')"
                 }, new { id = "lienSupp", @class = "lienBoutonVert" });
             </div>
         </div>

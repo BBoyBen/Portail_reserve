@@ -1,0 +1,36 @@
+﻿@model PortailReserve.ViewModel.ChangementGroupeViewModel
+
+<div class="row">
+    <div class="col-12 text-center titrePopUp">
+        Changement de groupe de @Model.Util.Nom @Model.Util.Prenom
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 corpsPopUp">
+        Choississez le groupe du @Model.Util.Grade @Model.Util.Nom :
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 corpsPopUp">
+        <div class="row">
+            @Html.DropDownList("nouveauGroupe", Model.Groupe, new { id = "selectGroupe", @class = "col-6 champsText champsTextCenter text-center" , required = "required" })
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <div class="row">
+            <button id="boutonChangement" class="col-8 bouton boutonVert champsTextDroit text-center"
+                    onclick="afficherCacherElement('popUpChgmtGroupe'); clickOn('lienChgmnt'); ">
+                Changer
+            </button>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpChgmtGroupe'); ">
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>
