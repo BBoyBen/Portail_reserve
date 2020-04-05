@@ -27,6 +27,16 @@
             </div>
         }
     </div>
+    @if (Model.Role < 4)
+    {
+        <div id="boutonAjouter" class="row" style="display: none;">
+            <div class="col-3 champsTextDroit">
+                <button class="bouton boutonBleu allWidth text-center" onclick="afficherCacherElement('popUpAjoutPersonnel'); ">
+                    <span class="lienBouton lienBoutonBleu"> Ajouter une personne </span>
+                </button>
+            </div>
+        </div>
+    }
 </div>
 
 <div class="container" id="partieSection">
@@ -49,7 +59,7 @@
             <img src="~/Content/image/icone_confirmation.png" alt="OK" class="imagePopUpSE" />
         </div>
         <div id="texteSuccess" class="col-10 text-center messageSuccess">
-            
+
         </div>
     </div>
 </div>
@@ -60,7 +70,7 @@
             <img src="~/Content/image/icone_erreur.png" alt="KO" class="imagePopUpSE" />
         </div>
         <div id="texteError" class="col-10 text-center messageError">
-            
+
         </div>
     </div>
 </div>
@@ -73,6 +83,16 @@
 
 <div class="container popUp" id="popUpChgmtGroupe" style="display: none;">
     @{ Html.RenderAction("AfficherPopUpChgmtGroupe", new { id = Guid.Empty }); }
+</div>
+
+<!--
+#############################################################################################
+############################# Pop Up de ajout de personnel ##################################
+#############################################################################################
+-->
+
+<div class="container popUp" id="popUpAjoutPersonnel" style="display: none; ">
+    @{ Html.RenderAction("AfficherPopUpAjouterPerso"); }
 </div>
 
 @section scripts {

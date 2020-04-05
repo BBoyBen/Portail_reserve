@@ -1,0 +1,137 @@
+﻿@model PortailReserve.ViewModel.AjouterPersonnelViewModel
+
+<div class="row">
+    <div class="col-12 text-center titrePopUp">
+        Ajouter un nouveau personnel
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 text-center">
+        <label for="selectGroupe"> Groupe : </label>
+    </div>
+</div>
+<div class="row">
+    <div class="col-6 champsTextCenter">
+        @Html.DropDownList("selectGroupe", Model.Groupes, new { @class = "champsText allWidth" })
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 text-center">
+        <label for="personnelExistant"> Personnels existant sans section : </label>
+    </div>
+</div>
+<div class="row">
+    <div class="col-6 champsTextCenter">
+        @Html.DropDownList("personnelExistant", Model.SansSection, new { @class = "champsText allWidth" })
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 text-center corpsPopUp">
+        <strong> OU </strong>
+    </div>
+</div>
+
+<div class="row corpsPopUp">
+    <div class="col-4">
+        <div class="row">
+            <div class="col-2 champsTextDroit">
+                <input type="checkbox" name="creerPersonnel" class="checkBox" id="creerPersonnel" />
+            </div>
+        </div>
+    </div>
+    <div class="col-8 champsTextCenter">
+        <label for="creerPersonnel" class="labelCheckBox"> Créer un nouveau personnel </label>
+    </div>
+</div>
+
+<div id="creation">
+    <div class="row">
+        <div class="col-12 text-center">
+            <label for="gradePersonne"> Grade </label>
+        </div>
+    </div>
+    <div class="row corpsPopUp">
+        <div class="col-6 champsTextCenter">
+            @Html.DropDownList("gradePersonne", Model.Grades, new { @class = "champsText allWidth" })
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-center">
+            <label for="nomPersonne"> Nom </label>
+        </div>
+    </div>
+    <div class="row corpsPopUp">
+        <div class="col-6 champsTextCenter">
+            @Html.TextBox("nomPersonne", null, new { @class = "champsText allWidth", id = "nomPersonne" })
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-center">
+            <label for="prenomPersonne"> Prénom </label>
+        </div>
+    </div>
+    <div class="row corpsPopUp">
+        <div class="col-6 champsTextCenter">
+            @Html.TextBox("prenomPersonne", null, new { @class = "champsText allWidth", id = "prenomPersonne" })
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-center">
+            <label for="matriculePersonne"> Matricule </label>
+        </div>
+    </div>
+    <div class="row corpsPopUp">
+        <div class="col-6 champsTextCenter">
+            @Html.TextBox("prenomPersonne", null, new { @class = "champsText allWidth", id = "matriculePersonne" })
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-center">
+            <label for="naissancePersonne"> Date de naissance </label>
+        </div>
+    </div>
+    <div class="row corpsPopUp">
+        <div class="col-6 champsTextCenter">
+            @Html.TextBox("naissancePersonne", null, new { @class = "champsText allWidth", id = "naissancePersonne", type = "date" })
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-center">
+            <label for="mailPersonne"> Adresse mail </label>
+        </div>
+    </div>
+    <div class="row corpsPopUp">
+        <div class="col-6 champsTextCenter">
+            @Html.TextBox("mailPersonne", null, new { @class = "champsText allWidth", id = "mailPersonne" })
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+        <div class="row">
+            <button id="boutonChangement" class="col-8 bouton boutonVert champsTextDroit text-center"
+                    onclick="afficherCacherElement('popUpAjoutPersonnel'); clickOn('lienAjout'); ">
+                Ajouter
+            </button>
+            <div id="partLienAjout" style="display: none; ">
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpAjoutPersonnel'); ">
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>
+

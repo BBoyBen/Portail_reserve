@@ -322,5 +322,85 @@ namespace PortailReserve.Controllers
 
             return RedirectToAction("AfficherPersonnelSection");
         }
+
+        /***
+         * Affichage de la pop-up de ajout d'un personel
+        ***/
+
+        [Authorize]
+        public ActionResult AfficherPopUpAjouterPerso()
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            if (u.Role > 3)
+                return RedirectToAction("Index", "Section");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
+
+            Groupe groupe = gDal.GetGroupeById(u.Groupe);
+            Section section = sDal.GetSectionById(groupe.Section);
+
+            List<Groupe> groupes = gDal.GetGroupesBySection(section.Id);
+            List<SelectListItem> selectGroupe = new List<SelectListItem>();
+            foreach(Groupe g in groupes)
+            {
+                selectGroupe.Add(new SelectListItem { Text = "Groupe " + g.Numero, Value = g.Id.ToString() });
+            }
+
+            List<Utilisateur> sansSection = uDal.GetUtilisateursSansSection();
+            List<SelectListItem> selectSansSection = new List<SelectListItem>();
+            selectSansSection.Add(new SelectListItem { Text = "--- Choix ---", Value = Guid.Empty.ToString() });
+            foreach(Utilisateur util in sansSection)
+            {
+                selectSansSection.Add(new SelectListItem { Text = util.Grade + " " + util.Nom + " " + util.Prenom, Value = util.Id.ToString() });
+            }
+
+            List<SelectListItem> grades = new List<SelectListItem>();
+            grades.Add(new SelectListItem { Text = "Soldat", Value = "Soldat" });
+            grades.Add(new SelectListItem { Text = "1ère classe", Value = "1ère classe" });
+            grades.Add(new SelectListItem { Text = "Caporal", Value = "Caporal" });
+            grades.Add(new SelectListItem { Text = "Caporal-chef", Value = "Caporal-chef" });
+            grades.Add(new SelectListItem { Text = "Caporal-chef de 1ère classe", Value = "Caporal-chef de 1ère classe" });
+
+            grades.Add(new SelectListItem { Text = "Sergent", Value = "Sergent" });
+            grades.Add(new SelectListItem { Text = "Sergent-chef", Value = "Sergent-chef" });
+            grades.Add(new SelectListItem { Text = "Adjudant", Value = "Adjudant" });
+            grades.Add(new SelectListItem { Text = "Adjudant-chef", Value = "Adjudant-chef" });
+            grades.Add(new SelectListItem { Text = "Major", Value = "Major" });
+
+            grades.Add(new SelectListItem { Text = "Sous-lieutenant", Value = "Sous-lieutenant" });
+            grades.Add(new SelectListItem { Text = "Lieutenant", Value = "Lieutenant" });
+            grades.Add(new SelectListItem { Text = "Capitaine", Value = "Capitaine" });
+            grades.Add(new SelectListItem { Text = "Commandant", Value = "Commandant" });
+            grades.Add(new SelectListItem { Text = "Lieutenant-colonel", Value = "Lieutenant-colonel" });
+            grades.Add(new SelectListItem { Text = "Colonel", Value = "Colonel" });
+
+            string nouveauMdp = "changeme";
+
+            AjouterPersonnelViewModel vm = new AjouterPersonnelViewModel
+            {
+                Groupes = selectGroupe,
+                SansSection = selectSansSection,
+                Grades = grades,
+                MotDePasse = nouveauMdp
+            };
+
+            return PartialView("AfficherPopUpAjouterPerso", vm);
+        }
     }
 }
