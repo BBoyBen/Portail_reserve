@@ -289,5 +289,38 @@ namespace PortailReserve.Controllers
 
             return PartialView("AfficherPopUpChgmtGroupe", vm);
         }
+
+        [Authorize]
+        public ActionResult ChangerUtilisateurGroupe(Guid id, Guid grp)
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            if (u.Role > 3)
+                return RedirectToAction("Index", "Section");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
+
+            int retour = uDal.ModifierGroupe(id, grp);
+
+            if (retour != 1)
+                ViewBag.Erreur = "Une erreur est survenue lors du changement de groupe.";
+
+            return RedirectToAction("AfficherPersonnelSection");
+        }
     }
 }

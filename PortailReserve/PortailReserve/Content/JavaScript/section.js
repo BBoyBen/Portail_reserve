@@ -1,5 +1,4 @@
 ﻿
-
 function changerGrade(id) {
 
     var lien = document.getElementById("ajax_" + id);
@@ -87,4 +86,13 @@ function messageError(texte) {
         popUp.style.display = "none";
         popUp.classList.remove("messageOkKo");
     }, 5000);
+}
+
+function changerGroupe() {
+
+    var select = document.getElementById("selectGroupe");
+
+    var lien = document.getElementById("lienChgmnt");
+
+    lien.href = lien.href.split('?')[0] + "?grp=" + select.options[select.selectedIndex].value;
 }

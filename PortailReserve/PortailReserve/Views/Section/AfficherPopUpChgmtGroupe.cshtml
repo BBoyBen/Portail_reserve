@@ -13,7 +13,12 @@
 <div class="row">
     <div class="col-12 corpsPopUp">
         <div class="row">
-            @Html.DropDownList("nouveauGroupe", Model.Groupe, new { id = "selectGroupe", @class = "col-6 champsText champsTextCenter text-center" , required = "required" })
+            @Html.DropDownList("nouveauGroupe", Model.Groupe, new { 
+                id = "selectGroupe", 
+                @class = "col-6 champsText champsTextCenter text-center" , 
+                required = "required",
+                onchange = "changerGroupe(); "
+            })
         </div>
     </div>
 </div>
@@ -24,6 +29,17 @@
                     onclick="afficherCacherElement('popUpChgmtGroupe'); clickOn('lienChgmnt'); ">
                 Changer
             </button>
+            <div id="partLienChgmnt" style="display: none; ">
+                @Ajax.ActionLink("Supprimer", "ChangerUtilisateurGroupe", "Section", new { id = Model.Util.Id, grp = Model.Util.Groupe }, new AjaxOptions
+                    {
+                        InsertionMode = InsertionMode.Replace,
+                        UpdateTargetId = "partieSection",
+                        HttpMethod = "GET",
+                        OnComplete = "modifierSection()",
+                        OnSuccess = "messageSuccess('Changement OK !')",
+                        OnFailure = "messageError('Erreur changement !')"
+                    }, new { id = "lienChgmnt", @class = "lienBoutonVert" });
+            </div>
         </div>
     </div>
     <div class="col-6">
