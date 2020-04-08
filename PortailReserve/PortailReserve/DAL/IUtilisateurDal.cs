@@ -19,6 +19,7 @@ namespace PortailReserve.DAL
         int PremierChangementMotDePasse(Guid id, string mdp, string mdpBis);
         int MotDePassePerdu(string nom, string matricule, DateTime naissance);
         int ModifierUtilisateur(Guid id, Utilisateur utilisateur);
+        int AjouterUtilisateurSection(Guid id, Utilisateur utiisateur);
         int ModifierGrade(Guid id, String grade);
         int ModifierGroupe(Guid id, Guid grp);
         int PremiereCoOk(Guid id);

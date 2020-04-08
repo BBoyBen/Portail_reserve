@@ -10,36 +10,41 @@
         Choississez le groupe du @Model.Util.Grade @Model.Util.Nom :
     </div>
 </div>
-<div class="row">
-    <div class="col-12 corpsPopUp">
-        <div class="row">
-            @Html.DropDownList("nouveauGroupe", Model.Groupe, new { 
-                id = "selectGroupe", 
-                @class = "col-6 champsText champsTextCenter text-center" , 
-                required = "required",
-                onchange = "changerGroupe(); "
-            })
+
+@using (Ajax.BeginForm("ChangerUtilisateurGroupe", "Section", new AjaxOptions
+        {
+            InsertionMode = InsertionMode.Replace,
+            UpdateTargetId = "partieSection",
+            HttpMethod = "POST",
+            OnBegin = "afficherCacherElement('popUpChgmtGroupe')",
+            OnComplete = "modifierSection()",
+            OnSuccess = "messageSuccess('Changement OK !')",
+            OnFailure = "messageError('Erreur changement !')"
+        } ))
+{
+    <div class="row">
+        <div class="col-12 corpsPopUp">
+            <div class="row">
+                @Html.DropDownList("nouveauGroupe", Model.Groupe, new
+                   {
+                       id = "selectGroupe",
+                       @class = "col-6 champsText champsTextCenter text-center",
+                       required = "required"
+                   })
+            </div>
         </div>
     </div>
-</div>
+
+    @Html.Hidden("idUtilChgmnt", Model.Util.Id)
+    <input type="submit" value="Changer" id="lienChgmnt" style="display: none;" />
+}
+
 <div class="row">
     <div class="col-6">
         <div class="row">
-            <button id="boutonChangement" class="col-8 bouton boutonVert champsTextDroit text-center"
-                    onclick="afficherCacherElement('popUpChgmtGroupe'); clickOn('lienChgmnt'); ">
+            <button id="boutonChangement" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="clickOn('lienChgmnt'); ">
                 Changer
             </button>
-            <div id="partLienChgmnt" style="display: none; ">
-                @Ajax.ActionLink("Supprimer", "ChangerUtilisateurGroupe", "Section", new { id = Model.Util.Id, grp = Model.Util.Groupe }, new AjaxOptions
-                    {
-                        InsertionMode = InsertionMode.Replace,
-                        UpdateTargetId = "partieSection",
-                        HttpMethod = "GET",
-                        OnComplete = "modifierSection()",
-                        OnSuccess = "messageSuccess('Changement OK !')",
-                        OnFailure = "messageError('Erreur changement !')"
-                    }, new { id = "lienChgmnt", @class = "lienBoutonVert" });
-            </div>
         </div>
     </div>
     <div class="col-6">

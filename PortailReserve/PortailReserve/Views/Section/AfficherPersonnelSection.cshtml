@@ -26,17 +26,6 @@
         }
         @Model.CDS.Nom.ToUpperInvariant()
     </div>
-    @if (Model.Util.Role < 4)
-    {
-        <div style="display: none;">
-            @Ajax.ActionLink("Changer", "ModifierGrade", new { idModif = Model.CDS.Id }, new AjaxOptions
-            {
-               InsertionMode = InsertionMode.Replace,
-               UpdateTargetId = "grade_" + Model.CDS.Id.ToString().Substring(0, 8),
-               HttpMethod = "GET"
-            }, new { id = "ajax_" + Model.CDS.Id.ToString().Substring(0, 8) })
-        </div>
-    }
 </div>
 <div class="row">
     <div class="col-6">
@@ -52,17 +41,6 @@
         }
         @Model.SOA.Nom.ToUpperInvariant()
     </div>
-    @if (Model.Util.Role < 4)
-    {
-        <div style="display: none;">
-            @Ajax.ActionLink("Changer", "ModifierGrade", new { idModif = Model.SOA.Id }, new AjaxOptions
-            {
-                InsertionMode = InsertionMode.Replace,
-                UpdateTargetId = "grade_" + Model.SOA.Id.ToString().Substring(0, 8),
-                HttpMethod = "GET"
-            }, new { id = "ajax_" + Model.SOA.Id.ToString().Substring(0, 8) })
-        </div>
-    }
 </div>
 
 @foreach (PortailReserve.Models.Groupe g in Model.Groupes)
@@ -91,17 +69,6 @@
                     }
                     @cdg.Nom.ToUpperInvariant()
                 </div>
-                @if (Model.Util.Role < 4)
-                {
-                    <div style="display: none;">
-                        @Ajax.ActionLink("Changer", "ModifierGrade", new { idModif = cdg.Id }, new AjaxOptions
-                        {
-                            InsertionMode = InsertionMode.Replace,
-                            UpdateTargetId = "grade_" + cdg.Id.ToString().Substring(0, 8),
-                            HttpMethod = "GET"
-                        }, new { id = "ajax_" + cdg.Id.ToString().Substring(0, 8) })
-                    </div>
-                }
             </div>
         }
     }
@@ -126,17 +93,6 @@
                             }
                             @sdt.Nom.ToUpperInvariant()  @sdt.Prenom
                         </span>
-                        if (Model.Util.Role < 4)
-                        {
-                            <div style="display: none;">
-                                @Ajax.ActionLink("Changer", "ModifierGrade", new { idModif = sdt.Id }, new AjaxOptions
-                                {
-                                    InsertionMode = InsertionMode.Replace,
-                                    UpdateTargetId = "grade_" + sdt.Id.ToString().Substring(0, 8),
-                                    HttpMethod = "GET"
-                                }, new { id = "ajax_" + sdt.Id.ToString().Substring(0, 8) })
-                            </div>
-                        }
                     }
                     else
                     {
@@ -152,17 +108,6 @@
                             }
                             @sdt.Nom.ToUpperInvariant()  @sdt.Prenom
                         </span>
-                        if (Model.Util.Role < 4)
-                        {
-                            <div style="display: none;">
-                                @Ajax.ActionLink("Changer", "ModifierGrade", new { idModif = sdt.Id }, new AjaxOptions
-                                {
-                                    InsertionMode = InsertionMode.Replace,
-                                    UpdateTargetId = "grade_" + sdt.Id.ToString().Substring(0, 8),
-                                    HttpMethod = "GET"
-                                }, new { id = "ajax_" + sdt.Id.ToString().Substring(0, 8) })
-                            </div>
-                        }
                     }
                 </div>
                 @if (Model.Util.Role < 4)

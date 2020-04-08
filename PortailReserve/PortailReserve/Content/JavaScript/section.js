@@ -1,15 +1,4 @@
 ﻿
-function changerGrade(id) {
-
-    var lien = document.getElementById("ajax_" + id);
-
-    var select = document.getElementById("utilGrade_" + id);
-
-    lien.href = lien.href + "&grade=" + select.options[select.selectedIndex].value;
-
-    lien.click();
-}
-
 function modifierSection() {
     var boutonModif = document.getElementById("modifSection");
     var boutonValider = document.getElementById("valideModif");
@@ -92,11 +81,115 @@ function messageError(texte) {
     }, 5000);
 }
 
-function changerGroupe() {
+function clickSurCreer() {
 
-    var select = document.getElementById("selectGroupe");
+    var check = document.getElementById("creerPersonnel");
+    var partieCreation = document.getElementById("creation");
 
-    var lien = document.getElementById("lienChgmnt");
+    if (check.checked)
+        partieCreation.style.display = "block";
+    else
+        partieCreation.style.display = "none";
+}
 
-    lien.href = lien.href.split('?')[0] + "?grp=" + select.options[select.selectedIndex].value;
+function erreurChamps(id) {
+    var champs = document.getElementById(id);
+
+    champs.style.boxShadow = "0px -1px 20px -5px red";
+    champs.style.outlineColor = "red";
+    champs.style.border = "1px solid red";
+}
+
+function champsOk(id) {
+    var champs = document.getElementById(id);
+
+    champs.style.boxShadow = "none";
+    champs.style.outlineColor = "darkgrey";
+    champs.style.border = "1px solid lightgrey";
+}
+
+function validerAjoutPersonnel(confirmation) {
+
+    var allOk = true;
+    var erreurAjout = document.getElementById("erreurAjout");
+
+    var checkBox = document.getElementById("creerPersonnel");
+    if (!checkBox.checked) {
+        var selectGroupe = document.getElementById("personnelExistant");
+        if (selectGroupe.options[selectGroupe.selectedIndex].value === "00000000-0000-0000-0000-000000000000") {
+            allOk = false;
+            erreurChamps("personnelExistant");
+        }
+        else {
+            champsOk("personnelExistant");
+        }
+    }
+    else {
+        champsOk("personnelExistant");
+
+        var nom = document.getElementById("nomPersonne");
+        if (nom.value.trim().length === 0) {
+            allOk = false;
+            erreurChamps("nomPersonne");
+        }
+        else {
+            champsOk("nomPersonne");
+        }
+
+        var prenom = document.getElementById("prenomPersonne");
+        if (prenom.value.trim().length === 0) {
+            allOk = false;
+            erreurChamps("prenomPersonne");
+        }
+        else {
+            champsOk("prenomPersonne");
+        }
+
+        var matricule = document.getElementById("matriculePersonne");
+        var validMatricule = /[0-9]{10}/;
+        if (validMatricule.test(matricule.value) && matricule.value.trim().length === 10) {
+            champsOk("matriculePersonne");
+        }
+        else {
+            allOk = false;
+            erreurChamps("matriculePersonne");
+        }
+
+        var dateNaissance = document.getElementById("naissancePersonne");
+        if (dateNaissance.value.trim().length != 10) {
+            allOk = false;
+            erreurChamps("naissancePersonne");
+        }
+        else {
+            champsOk("naissancePersonne");
+        }
+
+        var mail = document.getElementById("mailPersonne");
+        var validMail = /.+@.+\..+/;
+        if (validMail.test(mail.value)) {
+            champsOk("mailPersonne")
+        }
+        else {
+            allOk = false;
+            erreurChamps("mailPersonne")
+        }
+    }
+    if (allOk) {
+        erreurAjout.style.display = "none";
+        if (checkBox.checked) {
+            if (confirmation) {
+                document.getElementById("lienAjoutPersonnel").click();
+            }
+            else {
+                document.getElementById("partiePreConfirme").style.display = "none";
+                document.getElementById("confirmationAjout").style.display = "block";
+            }
+        }
+        else {
+            document.getElementById("lienAjoutPersonnel").click();
+        }
+    }
+    else {
+        erreurAjout.style.display = "block";
+    }
 }

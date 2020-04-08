@@ -261,6 +261,24 @@ h1 {
     padding-bottom: 10px;
 }
 
+.alertBack {
+    padding-top: 10px;
+    margin-left: 8px;
+    background-color: rgba(255, 0, 0, 0.3);
+    border-radius: 5px;
+}
+
+.infoValide {
+    color: forestgreen;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    margin-left: 8px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    background-color: rgba(34,139,34,0.3);
+}
+
 .champsText {
     text-align: center;
     padding-bottom: 10px;

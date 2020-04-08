@@ -1,10 +1,24 @@
 ﻿@model PortailReserve.ViewModel.SelectGradeViewModel
 
 <span>
-    @Html.DropDownListFor(m => m.Util.Grade, Model.Grades, new
+    @using (Ajax.BeginForm("ModifierGrade", "Section", new AjaxOptions
     {
-         id = "utilGrade_" + Model.Util.Id.ToString().Substring(0, 8),
-         @class = "champsText",
-         onchange = "changerGrade('" + Model.Util.Id.ToString().Substring(0, 8) + "');"
-     })
+        InsertionMode = InsertionMode.Replace,
+        UpdateTargetId = "partieSection",
+        HttpMethod = "POST",
+        OnComplete = "modifierSection()",
+        OnSuccess = "messageSuccess('Changement grade OK !')",
+        OnFailure = "messageError('Erreur changement grade !')"
+    }, new { style="display:inline;" }))
+    {
+        @Html.DropDownListFor(m => m.Util.Grade, Model.Grades, new
+        {
+            id = "utilGrade_" + Model.Util.Id.ToString().Substring(0, 8),
+            @class = "champsText",
+            onchange = "clickOn('ajax_" + Model.Util.Id.ToString().Substring(0, 8) + "')"
+        })
+
+        @Html.Hidden("idUtilChGrade", Model.Util.Id)
+        <input type="submit" value="changer" id="ajax_@Model.Util.Id.ToString().Substring(0, 8)" style="display: none;" />
+    }
 </span>

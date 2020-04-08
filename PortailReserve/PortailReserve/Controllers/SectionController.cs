@@ -18,6 +18,7 @@ namespace PortailReserve.Controllers
         private IGroupeDal gDal;
         private ISectionDal sDal;
         private ICompagnieDal cDal;
+        private IAdresseDal aDal;
 
         public SectionController()
         {
@@ -25,6 +26,7 @@ namespace PortailReserve.Controllers
             gDal = new GroupeDal();
             sDal = new SectionDal();
             cDal = new CompagnieDal();
+            aDal = new AdresseDal();
         }
 
         [Authorize]
@@ -59,20 +61,16 @@ namespace PortailReserve.Controllers
             if (u == null)
             {
                 FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
+                return new HttpUnauthorizedResult();
             }
             if (u.Equals(typeof(UtilisateurNull)))
             {
                 FormsAuthentication.SignOut();
                 ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
+                return new HttpUnauthorizedResult();
             }
             if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
-
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
+                return new HttpUnauthorizedResult();
 
             Groupe userGrp = gDal.GetGroupeById(u.Groupe);
             Section userSection = sDal.GetSectionById(userGrp.Section);
@@ -122,7 +120,9 @@ namespace PortailReserve.Controllers
         {
             Utilisateur util = uDal.GetUtilisateurById(id);
             if (util == null)
-                util = new Utilisateur();
+                util = new Utilisateur { 
+                    Id = Guid.Empty
+                };
 
             List<SelectListItem> grades = new List<SelectListItem>();
             grades.Add(new SelectListItem { Text = "Soldat", Value = "Soldat" });
@@ -153,29 +153,43 @@ namespace PortailReserve.Controllers
             return PartialView("AfficherSelectGrade", vm);
         }
 
-        public ActionResult ModifierGrade(Guid idModif, string grade)
+        [HttpPost]
+        public ActionResult ModifierGrade()
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("AfficherGrade", "Section");
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("AfficherGrade", "Section");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("AfficherGrade", "Section");
+                }
+
+                if (u.Role > 3)
+                    return RedirectToAction("AfficherGrade", "Section");
+
+                Guid idModif = Guid.Parse(Request.Form["idUtilChGrade"]);
+                if (idModif.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Id utilisateur changement de grade");
+
+                string grade = Request.Form["Util.Grade"];
+
+                int retour = uDal.ModifierGrade(idModif, grade);
+                if (!retour.Equals(1))
+                    return new HttpStatusCodeResult(400, "Une erreur est survenu lors du changement de grade.");
+
+                return RedirectToAction("AfficherPersonnelSection");
             }
-            if (u.Equals(typeof(UtilisateurNull)))
+            catch(Exception e)
             {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("AfficherGrade", "Section");
+                return new HttpStatusCodeResult(400, "Une erreur est survenu lors du changement de grade.");
             }
-
-            if (u.Role > 3)
-                return RedirectToAction("AfficherGrade", "Section");
-
-            int retour = uDal.ModifierGrade(idModif, grade);
-            if (!retour.Equals(1))
-                ViewBag.Erreur = "Une erreur est survenu lors du changement de grade.";
-
-            return RedirectToAction("AfficherGrade", new { id = idModif });
         }
 
         /***
@@ -198,36 +212,44 @@ namespace PortailReserve.Controllers
         }
 
         [Authorize]
-        public ActionResult SupprimerUtilisateurSection(Guid id)
+        [HttpPost]
+        public ActionResult SupprimerUtilisateurSection()
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
+                Guid id = Guid.Parse(Request.Form["idUtil"]);
+                if (id.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Id pour suppresion vide");
+
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                if (u.Role > 3)
+                    return new HttpUnauthorizedResult();
+
+                int retour = uDal.SupprimerUtilisateurSection(id);
+
+                if (retour != 1)
+                    return new HttpStatusCodeResult(400, "Erreur de suppression du personnel.");
+
+                return RedirectToAction("AfficherPersonnelSection");
             }
-            if (u.Equals(typeof(UtilisateurNull)))
+            catch(Exception e)
             {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
+                return new HttpStatusCodeResult(400, "Id utilisateur incorrect pour suppression");
             }
-            if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
-
-            if (u.Role > 3)
-                return RedirectToAction("Index", "Section");
-
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
-
-            int retour = uDal.SupprimerUtilisateurSection(id);
-
-            if (retour != 0)
-                ViewBag.Erreur = "Une erreur s'est produite lors de la suppression.";
-
-            return RedirectToAction("AfficherPersonnelSection");
         }
 
         /***
@@ -238,26 +260,6 @@ namespace PortailReserve.Controllers
         public ActionResult AfficherPopUpChgmtGroupe(Guid id)
         {
             Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
-            {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
-            }
-            if (u.Equals(typeof(UtilisateurNull)))
-            {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
-            }
-            if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
-
-            if (u.Role > 3)
-                return RedirectToAction("Index", "Section");
-
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
 
             Utilisateur pourChange = uDal.GetUtilisateurById(id);
             if (pourChange == null)
@@ -291,36 +293,48 @@ namespace PortailReserve.Controllers
         }
 
         [Authorize]
-        public ActionResult ChangerUtilisateurGroupe(Guid id, Guid grp)
+        [HttpPost]
+        public ActionResult ChangerUtilisateurGroupe()
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                if (u.Role > 3)
+                    return new HttpUnauthorizedResult();
+
+                Guid id = Guid.Parse(Request.Form["idUtilChgmnt"]);
+                if (id.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Id Utilisateur incorrect pour changement groupe.");
+
+                Guid grp = Guid.Parse(Request.Form["nouveauGroupe"]);
+                if (grp.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Id groupe incorrect pour changement groupe.");
+
+                int retour = uDal.ModifierGroupe(id, grp);
+
+                if (retour != 1)
+                    return new HttpNotFoundResult("Erreur changement de groupe.");
+
+                return RedirectToAction("AfficherPersonnelSection");
             }
-            if (u.Equals(typeof(UtilisateurNull)))
+            catch(Exception e)
             {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
+                return new HttpStatusCodeResult(400, "Erreur de parsing des ids changement utilisateur.");
             }
-            if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
-
-            if (u.Role > 3)
-                return RedirectToAction("Index", "Section");
-
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
-
-            int retour = uDal.ModifierGroupe(id, grp);
-
-            if (retour != 1)
-                ViewBag.Erreur = "Une erreur est survenue lors du changement de groupe.";
-
-            return RedirectToAction("AfficherPersonnelSection");
         }
 
         /***
@@ -334,44 +348,46 @@ namespace PortailReserve.Controllers
             if (u == null)
             {
                 FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
+                return new HttpUnauthorizedResult();
             }
             if (u.Equals(typeof(UtilisateurNull)))
             {
                 FormsAuthentication.SignOut();
                 ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
+                return new HttpUnauthorizedResult();
             }
             if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
-
-            if (u.Role > 3)
-                return RedirectToAction("Index", "Section");
-
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
+                return new HttpUnauthorizedResult();
 
             Groupe groupe = gDal.GetGroupeById(u.Groupe);
             Section section = sDal.GetSectionById(groupe.Section);
 
             List<Groupe> groupes = gDal.GetGroupesBySection(section.Id);
             List<SelectListItem> selectGroupe = new List<SelectListItem>();
-            foreach(Groupe g in groupes)
+            bool premier = true;
+            foreach (Groupe g in groupes)
             {
-                selectGroupe.Add(new SelectListItem { Text = "Groupe " + g.Numero, Value = g.Id.ToString() });
+                if (premier)
+                {
+                    selectGroupe.Add(new SelectListItem { Text = "Groupe " + g.Numero, Value = g.Id.ToString(), Selected = true });
+                    premier = false;
+                }
+                else
+                {
+                    selectGroupe.Add(new SelectListItem { Text = "Groupe " + g.Numero, Value = g.Id.ToString() });
+                }
             }
 
             List<Utilisateur> sansSection = uDal.GetUtilisateursSansSection();
             List<SelectListItem> selectSansSection = new List<SelectListItem>();
-            selectSansSection.Add(new SelectListItem { Text = "--- Choix ---", Value = Guid.Empty.ToString() });
+            selectSansSection.Add(new SelectListItem { Text = "--- Choix ---", Value = Guid.Empty.ToString(), Selected = true });
             foreach(Utilisateur util in sansSection)
             {
                 selectSansSection.Add(new SelectListItem { Text = util.Grade + " " + util.Nom + " " + util.Prenom, Value = util.Id.ToString() });
             }
 
             List<SelectListItem> grades = new List<SelectListItem>();
-            grades.Add(new SelectListItem { Text = "Soldat", Value = "Soldat" });
+            grades.Add(new SelectListItem { Text = "Soldat", Value = "Soldat", Selected = true });
             grades.Add(new SelectListItem { Text = "1ère classe", Value = "1ère classe" });
             grades.Add(new SelectListItem { Text = "Caporal", Value = "Caporal" });
             grades.Add(new SelectListItem { Text = "Caporal-chef", Value = "Caporal-chef" });
@@ -401,6 +417,121 @@ namespace PortailReserve.Controllers
             };
 
             return PartialView("AfficherPopUpAjouterPerso", vm);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult AjouterPersonnel()
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                if (u.Role > 3)
+                    return new HttpUnauthorizedResult();
+
+                int numSection = u.Section;
+                int numCie = u.Compagnie;
+
+                var groupe = Request.Form["selectGroupe"];
+                Guid idGroupe = Guid.Parse(groupe);
+                if (idGroupe.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Erreur id groupe ajout utilisateur.");
+
+                var creerNouveau = Request.Form["creerPersonnel"];
+                if (creerNouveau != null && creerNouveau.Equals("on"))
+                {
+                    // Récupération des champs du formulaire
+                    var grade = Request.Form["gradePersonne"];
+                    var nom = Request.Form["nomPersonne"];
+                    var prenom = Request.Form["prenomPersonne"];
+                    var matricule = Request.Form["matriculePersonne"];
+                    var mail = Request.Form["mailPersonne"];
+                    var naissanceForm = Request.Form["naissancePersonne"];
+                    var motDePasse = Request.Form["MotDePasse"];
+
+                    DateTime naissance = DateTime.Parse(naissanceForm);
+
+                    //Validation des valeurs
+                    //TO-DO
+
+                    // Création d'une adresse vide
+                    Adresse adresse = new Adresse
+                    {
+                        CodePostal = "",
+                        Pays = "France",
+                        Ville = "",
+                        Voie = ""
+                    };
+                    Guid idAdresse = aDal.AjouterAdresse(adresse);
+                    if (idAdresse.Equals(Guid.Empty))
+                        return new HttpNotFoundResult("Erreur ajout adresse pour nouvel utilisateur.");
+
+                    //Création de l'utilisateur
+                    Utilisateur pourAjout = new Utilisateur
+                    {
+                        Grade = grade,
+                        Nom = nom,
+                        Prenom = prenom,
+                        Matricule = matricule,
+                        Naissance = naissance,
+                        Groupe = idGroupe,
+                        Section = numSection,
+                        Compagnie = numCie,
+                        Email = mail,
+                        Adresse = idAdresse,
+                        Telephone = "",
+                        MotDePasse = motDePasse,
+                        PremiereCo = true,
+                        Role = 4
+                    };
+                    Guid idAjout = uDal.AjouterUtilisateur(pourAjout);
+                    if (idAjout.Equals(Guid.Empty))
+                        return new HttpNotFoundResult("Erreur ajout nouvel utilisateur. ");
+                }
+                else
+                {
+                    var utilisateur = Request.Form["personnelExistant"];
+                    Guid idUtil = Guid.Parse(utilisateur);
+                    if (idUtil.Equals(Guid.Empty))
+                    {
+                        return new HttpStatusCodeResult(400, "Id utilisateur vide.");
+                    }
+                    else
+                    {
+                        Utilisateur pourModif = uDal.GetUtilisateurById(idUtil);
+                        if (pourModif == null)
+                            return new HttpNotFoundResult("Erreur récupération utilisateur à ajouter. ");
+
+                        pourModif.Compagnie = numCie;
+                        pourModif.Section = numSection;
+                        pourModif.Groupe = idGroupe;
+
+                        int retour = uDal.AjouterUtilisateurSection(idUtil, pourModif);
+                        if (retour != 1)
+                            return new HttpNotFoundResult("Erreur ajout utilisateur existant.");
+                    }
+                }
+
+                return RedirectToAction("AfficherPersonnelSection");
+            }
+            catch(Exception e)
+            {
+                return new HttpStatusCodeResult(400, "Erreur de l'ajout d'un utilisateur.");
+            }
         }
     }
 }

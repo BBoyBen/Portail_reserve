@@ -526,5 +526,35 @@ namespace PortailReserve.DAL.Impl
                 return -1;
             }
         }
+
+        public int AjouterUtilisateurSection(Guid id, Utilisateur utilisateur)
+        {
+            try
+            {
+                Utilisateur util = GetUtilisateurById(id);
+                if (util == null || util.Equals(typeof(UtilisateurNull)))
+                    return 0;
+
+                util.Nom = utilisateur.Nom;
+                util.Prenom = utilisateur.Prenom;
+                util.Grade = utilisateur.Grade;
+                util.Matricule = utilisateur.Matricule;
+                util.Naissance = utilisateur.Naissance;
+                util.Telephone = utilisateur.Telephone;
+                util.Email = utilisateur.Email;
+                util.Groupe = utilisateur.Groupe;
+                util.Section = utilisateur.Section;
+                util.Compagnie = utilisateur.Compagnie;
+
+                bdd.SaveChanges();
+
+                return 1;
+            }
+            catch (Exception e)
+            {
+                Log("ERROR", "Erreur ajout utilisateur à une section id  : " + id + " -> " + e);
+                return -1;
+            }
+        }
     }
 }

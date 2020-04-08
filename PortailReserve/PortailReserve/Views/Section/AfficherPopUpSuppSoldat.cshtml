@@ -12,20 +12,24 @@
 <div class="row">
     <div class="col-6">
         <div class="row">
-            <button id="boutonSuppression" class="col-8 bouton boutonVert champsTextDroit text-center" 
-                    onclick="afficherCacherElement('popUpSuppression'); clickOn('lienSupp'); ">
+            <button id="boutonSuppression" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="clickOn('lienSupp'); ">
                 Supprimer
             </button>
             <div id="lienSuppression" style="display: none; ">
-            @Ajax.ActionLink("Supprimer", "SupprimerUtilisateurSection", "Section", new { id = Model.Id }, new AjaxOptions
+                @using (Ajax.BeginForm("SupprimerUtilisateurSection", "Section", new AjaxOptions {
+                        InsertionMode = InsertionMode.Replace,
+                        UpdateTargetId = "partieSection",
+                        HttpMethod = "POST",
+                        OnBegin = "afficherCacherElement('popUpSuppression')",
+                        OnComplete = "modifierSection()",
+                        OnSuccess = "messageSuccess('Suppression OK !')",
+                        OnFailure = "messageError('Erreur suppression !')"
+                    }))
                 {
-                    InsertionMode = InsertionMode.Replace,
-                    UpdateTargetId = "partieSection",
-                    HttpMethod = "GET",
-                    OnComplete = "modifierSection()",
-                    OnSuccess = "messageSuccess('Suppression OK !')",
-                    OnFailure = "messageError('Erreur suppression !')"
-                }, new { id = "lienSupp", @class = "lienBoutonVert" });
+                    @Html.Hidden("idUtil", Model.Id)
+
+                    <input type="submit" value="Supprimer" id = "lienSupp" />
+                }
             </div>
         </div>
     </div>

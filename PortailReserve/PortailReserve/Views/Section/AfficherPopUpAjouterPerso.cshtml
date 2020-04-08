@@ -6,131 +6,177 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-12 text-center">
-        <label for="selectGroupe"> Groupe : </label>
+@using (Ajax.BeginForm("AjouterPersonnel", "Section", new AjaxOptions
+                {
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "partieSection",
+                    HttpMethod = "POST",
+                    OnBegin = "afficherCacherElement('popUpAjoutPersonnel')",
+                    OnComplete = "modifierSection()",
+                    OnSuccess = "messageSuccess('Ajout OK !')",
+                    OnFailure = "messageError('Erreur ajout !')"
+                }))
+{
+    <div class="row">
+        <div class="col-12 text-center">
+            <label for="selectGroupe"> Groupe : </label>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-6 champsTextCenter">
-        @Html.DropDownList("selectGroupe", Model.Groupes, new { @class = "champsText allWidth" })
+    <div class="row">
+        <div class="col-6 champsTextCenter">
+            @Html.DropDownList("selectGroupe", Model.Groupes, new { @class = "champsText allWidth" })
+        </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-12 text-center">
-        <label for="personnelExistant"> Personnels existant sans section : </label>
+    <div class="row">
+        <div class="col-12 text-center">
+            <label for="personnelExistant"> Personnels existant sans section : </label>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-6 champsTextCenter">
-        @Html.DropDownList("personnelExistant", Model.SansSection, new { @class = "champsText allWidth" })
+    <div class="row">
+        <div class="col-6 champsTextCenter">
+            @Html.DropDownList("personnelExistant", Model.SansSection, new { @class = "champsText allWidth", id = "personnelExistant" })
+        </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-12 text-center corpsPopUp">
-        <strong> OU </strong>
+    <div class="row">
+        <div class="col-12 text-center corpsPopUp">
+            <strong> OU </strong>
+        </div>
     </div>
-</div>
 
-<div class="row corpsPopUp">
-    <div class="col-4">
+    <div class="row corpsPopUp">
+        <div class="col-4">
+            <div class="row">
+                <div class="col-2 champsTextDroit">
+                    <input type="checkbox" name="creerPersonnel" class="checkBox" id="creerPersonnel" onchange="clickSurCreer();" />
+                </div>
+            </div>
+        </div>
+        <div class="col-8 champsTextCenter">
+            <label for="creerPersonnel" class="labelCheckBox"> Créer un nouveau personnel </label>
+        </div>
+    </div>
+
+    <div id="creation" style="display: none;">
         <div class="row">
-            <div class="col-2 champsTextDroit">
-                <input type="checkbox" name="creerPersonnel" class="checkBox" id="creerPersonnel" />
+            <div class="col-12 text-center">
+                <label for="gradePersonne"> Grade </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.DropDownList("gradePersonne", Model.Grades, new { @class = "champsText allWidth" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="nomPersonne"> Nom </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("nomPersonne", null, new { @class = "champsText allWidth", id = "nomPersonne" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="prenomPersonne"> Prénom </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("prenomPersonne", null, new { @class = "champsText allWidth", id = "prenomPersonne" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="matriculePersonne"> Matricule </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("matriculePersonne", null, new { @class = "champsText allWidth", id = "matriculePersonne" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="naissancePersonne"> Date de naissance </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("naissancePersonne", null, new { @class = "champsText allWidth", id = "naissancePersonne", type = "date" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="mailPersonne"> Adresse mail </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("mailPersonne", null, new { @class = "champsText allWidth", id = "mailPersonne" })
             </div>
         </div>
     </div>
-    <div class="col-8 champsTextCenter">
-        <label for="creerPersonnel" class="labelCheckBox"> Créer un nouveau personnel </label>
+
+    @Html.HiddenFor(m => m.MotDePasse);
+
+    <input type="submit" value="Ajouter" id="lienAjoutPersonnel" style="display:none;" />
+}
+
+<div class="row corpsPopUp" id="erreurAjout" style="display:none; ">
+    <div class="col-12 text-center erreur alertBack" >
+        Il y a des erreurs. Vérifiez votre saisie.
     </div>
 </div>
 
-<div id="creation">
+<div id="partiePreConfirme" style="display:block;">
     <div class="row">
-        <div class="col-12 text-center">
-            <label for="gradePersonne"> Grade </label>
+        <div class="col-6">
+            <div class="row">
+                <button id="boutonChangement" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="validerAjoutPersonnel(false)" >
+                    Ajouter
+                </button>
+            </div>
         </div>
-    </div>
-    <div class="row corpsPopUp">
-        <div class="col-6 champsTextCenter">
-            @Html.DropDownList("gradePersonne", Model.Grades, new { @class = "champsText allWidth" })
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12 text-center">
-            <label for="nomPersonne"> Nom </label>
-        </div>
-    </div>
-    <div class="row corpsPopUp">
-        <div class="col-6 champsTextCenter">
-            @Html.TextBox("nomPersonne", null, new { @class = "champsText allWidth", id = "nomPersonne" })
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12 text-center">
-            <label for="prenomPersonne"> Prénom </label>
-        </div>
-    </div>
-    <div class="row corpsPopUp">
-        <div class="col-6 champsTextCenter">
-            @Html.TextBox("prenomPersonne", null, new { @class = "champsText allWidth", id = "prenomPersonne" })
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12 text-center">
-            <label for="matriculePersonne"> Matricule </label>
-        </div>
-    </div>
-    <div class="row corpsPopUp">
-        <div class="col-6 champsTextCenter">
-            @Html.TextBox("prenomPersonne", null, new { @class = "champsText allWidth", id = "matriculePersonne" })
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12 text-center">
-            <label for="naissancePersonne"> Date de naissance </label>
-        </div>
-    </div>
-    <div class="row corpsPopUp">
-        <div class="col-6 champsTextCenter">
-            @Html.TextBox("naissancePersonne", null, new { @class = "champsText allWidth", id = "naissancePersonne", type = "date" })
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12 text-center">
-            <label for="mailPersonne"> Adresse mail </label>
-        </div>
-    </div>
-    <div class="row corpsPopUp">
-        <div class="col-6 champsTextCenter">
-            @Html.TextBox("mailPersonne", null, new { @class = "champsText allWidth", id = "mailPersonne" })
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-6">
-        <div class="row">
-            <button id="boutonChangement" class="col-8 bouton boutonVert champsTextDroit text-center"
-                    onclick="afficherCacherElement('popUpAjoutPersonnel'); clickOn('lienAjout'); ">
-                Ajouter
-            </button>
-            <div id="partLienAjout" style="display: none; ">
+        <div class="col-6">
+            <div class="row">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpAjoutPersonnel'); ">
+                    Annuler
+                </button>
             </div>
         </div>
     </div>
-    <div class="col-6">
-        <div class="row">
-            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpAjoutPersonnel'); ">
-                Annuler
-            </button>
+</div>
+
+<div id="confirmationAjout" style="display:none;">
+    <div class="row infoValide">
+        <div class="col-12 text-center">
+            Le mot de passe du nouvel utilisateur est : <strong>@Model.MotDePasse</strong>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <button id="boutonChangement" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="validerAjoutPersonnel(true)">
+                    Confirmer
+                </button>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpAjoutPersonnel'); ">
+                    Annuler
+                </button>
+            </div>
         </div>
     </div>
 </div>
