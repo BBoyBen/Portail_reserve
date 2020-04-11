@@ -556,5 +556,29 @@ namespace PortailReserve.DAL.Impl
                 return -1;
             }
         }
+
+        public int PasserCadre(Guid id, int section, int cie)
+        {
+            try
+            {
+                Utilisateur toModif = GetUtilisateurById(id);
+                if (toModif == null || toModif.Equals(typeof(UtilisateurNull)))
+                    return -1;
+
+                toModif.Groupe = Guid.Empty;
+                toModif.Section = section;
+                toModif.Compagnie = cie;
+                toModif.Role = 3;
+
+                bdd.SaveChanges();
+
+                return 1;
+            }
+            catch(Exception e)
+            {
+                Log("ERROR", "Erreur lors du passage à cadre de l'utilisateur : " + id + " -> " + e);
+                return 0;
+            }
+        }
     }
 }

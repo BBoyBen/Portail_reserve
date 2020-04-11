@@ -69,6 +69,20 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
+        public Section GetSectionByNumAndByCie(int section, int cie)
+        {
+            try
+            {
+                Section sec = bdd.Sections.FirstOrDefault(s => s.Numero.Equals(section) && s.NumCie.Equals(cie));
+                return sec;
+            }
+            catch(Exception e)
+            {
+                Log("ERROR", "Erreur récupération de la section numero " + section + " de la cie " + cie + " -> " + e);
+                return null;
+            }
+        }
+
         public Section GetSectionByNumero(int numero)
         {
             try

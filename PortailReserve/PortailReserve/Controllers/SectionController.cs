@@ -72,8 +72,7 @@ namespace PortailReserve.Controllers
             if (u.PremiereCo)
                 return new HttpUnauthorizedResult();
 
-            Groupe userGrp = gDal.GetGroupeById(u.Groupe);
-            Section userSection = sDal.GetSectionById(userGrp.Section);
+            Section userSection = sDal.GetSectionByNumAndByCie(u.Section, u.Compagnie);
 
             List<Groupe> grpSection = gDal.GetGroupesBySection(userSection.Id);
             grpSection = TrierGroupes(grpSection);
@@ -271,7 +270,7 @@ namespace PortailReserve.Controllers
                     Grade = "Soldat"
                 };
 
-            Section section = sDal.GetSectionById(gDal.GetGroupeById(u.Groupe).Section);
+            Section section = sDal.GetSectionByNumAndByCie(u.Section, u.Compagnie);
             List<Groupe> groupes = gDal.GetGroupesBySection(section.Id);
 
             List<SelectListItem> selectGroupe = new List<SelectListItem>();
@@ -359,8 +358,7 @@ namespace PortailReserve.Controllers
             if (u.PremiereCo)
                 return new HttpUnauthorizedResult();
 
-            Groupe groupe = gDal.GetGroupeById(u.Groupe);
-            Section section = sDal.GetSectionById(groupe.Section);
+            Section section = sDal.GetSectionByNumAndByCie(u.Section, u.Compagnie);
 
             List<Groupe> groupes = gDal.GetGroupesBySection(section.Id);
             List<SelectListItem> selectGroupe = new List<SelectListItem>();
@@ -531,6 +529,203 @@ namespace PortailReserve.Controllers
             catch(Exception e)
             {
                 return new HttpStatusCodeResult(400, "Erreur de l'ajout d'un utilisateur.");
+            }
+        }
+
+        /***
+         * Affichage de la pop-up de changement de chef de groupe
+        ***/
+
+        [Authorize]
+        public ActionResult AffciherPopUpChangementCdg(Guid id, Guid grp)
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return new HttpUnauthorizedResult();
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return new HttpUnauthorizedResult();
+            }
+            if (u.PremiereCo)
+                return new HttpUnauthorizedResult();
+
+            Utilisateur ancienCdg = uDal.GetUtilisateurById(id);
+            if (ancienCdg == null || ancienCdg.Equals(typeof(UtilisateurNull)))
+                return new HttpNotFoundResult("Ancien chef de groupe introuvable");
+
+            Section section = sDal.GetSectionByNumAndByCie(ancienCdg.Section, ancienCdg.Compagnie);
+            Groupe groupe = gDal.GetGroupeById(grp);
+            if (groupe == null || groupe.Equals(typeof(GroupeNull)))
+                return new HttpNotFoundResult("Groupe non trouvé.");
+
+            List<SelectListItem> grades = new List<SelectListItem>();
+            grades.Add(new SelectListItem { Text = "Soldat", Value = "Soldat" });
+            grades.Add(new SelectListItem { Text = "1ère classe", Value = "1ère classe" });
+            grades.Add(new SelectListItem { Text = "Caporal", Value = "Caporal" });
+            grades.Add(new SelectListItem { Text = "Caporal-chef", Value = "Caporal-chef", Selected = true });
+            grades.Add(new SelectListItem { Text = "Caporal-chef de 1ère classe", Value = "Caporal-chef de 1ère classe" });
+
+            grades.Add(new SelectListItem { Text = "Sergent", Value = "Sergent" });
+            grades.Add(new SelectListItem { Text = "Sergent-chef", Value = "Sergent-chef" });
+            grades.Add(new SelectListItem { Text = "Adjudant", Value = "Adjudant" });
+            grades.Add(new SelectListItem { Text = "Adjudant-chef", Value = "Adjudant-chef" });
+            grades.Add(new SelectListItem { Text = "Major", Value = "Major" });
+
+            grades.Add(new SelectListItem { Text = "Sous-lieutenant", Value = "Sous-lieutenant" });
+            grades.Add(new SelectListItem { Text = "Lieutenant", Value = "Lieutenant" });
+            grades.Add(new SelectListItem { Text = "Capitaine", Value = "Capitaine" });
+            grades.Add(new SelectListItem { Text = "Commandant", Value = "Commandant" });
+            grades.Add(new SelectListItem { Text = "Lieutenant-colonel", Value = "Lieutenant-colonel" });
+            grades.Add(new SelectListItem { Text = "Colonel", Value = "Colonel" });
+
+            List<Utilisateur> sansSection = uDal.GetUtilisateursSansSection();
+            List<SelectListItem> selectSansSection = new List<SelectListItem>();
+            selectSansSection.Add(new SelectListItem { Text = "--- Choix ---", Value = Guid.Empty.ToString(), Selected = true });
+            foreach (Utilisateur util in sansSection)
+            {
+                selectSansSection.Add(new SelectListItem { Text = util.Grade + " " + util.Nom + " " + util.Prenom, Value = util.Id.ToString() });
+            }
+
+            ChangementCdgViewModel vm = new ChangementCdgViewModel
+            {
+                AncienCdg = ancienCdg,
+                Groupe = groupe,
+                Section = section,
+                Grades = grades,
+                SansSection = selectSansSection,
+                MotDePasse = "changeme"
+            };
+
+            return PartialView("AffciherPopUpChangementCdg", vm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult ChangerCdg()
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                if (u.Role > 3)
+                    return new HttpUnauthorizedResult();
+
+                int numSection = u.Section;
+                int numCie = u.Compagnie;
+
+                Guid ancienCdg = Guid.Parse(Request.Form["AncienCdg.Id"]);
+                if (ancienCdg.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Erreur sur l'ancien cdg.");
+
+                Guid groupe = Guid.Parse(Request.Form["Groupe.Id"]);
+                if (groupe.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Erreur groupe.");
+
+                Guid section = Guid.Parse(Request.Form["Section.Id"]);
+                if (section.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Erreur sur le section.");
+
+                var creerNouveau = Request.Form["creerCdg"];
+                if (creerNouveau != null && creerNouveau.Equals("on"))
+                {
+                    // Récupération des champs du formulaire
+                    var grade = Request.Form["gradeCdg"];
+                    var nom = Request.Form["nomCdg"];
+                    var prenom = Request.Form["prenomCdg"];
+                    var matricule = Request.Form["matriculeCdg"];
+                    var mail = Request.Form["mailCdg"];
+                    var naissanceForm = Request.Form["naissanceCdg"];
+                    var motDePasse = Request.Form["MotDePasse"];
+
+                    DateTime naissance = DateTime.Parse(naissanceForm);
+
+                    //Validation des valeurs
+                    //TO-DO
+
+                    // Création d'une adresse vide
+                    Adresse adresse = new Adresse
+                    {
+                        CodePostal = "",
+                        Pays = "France",
+                        Ville = "",
+                        Voie = ""
+                    };
+                    Guid idAdresse = aDal.AjouterAdresse(adresse);
+                    if (idAdresse.Equals(Guid.Empty))
+                        return new HttpNotFoundResult("Erreur ajout adresse pour nouveau cdg.");
+
+                    //Création de l'utilisateur
+                    Utilisateur pourAjout = new Utilisateur
+                    {
+                        Grade = grade,
+                        Nom = nom,
+                        Prenom = prenom,
+                        Matricule = matricule,
+                        Naissance = naissance,
+                        Groupe = Guid.Empty,
+                        Section = numSection,
+                        Compagnie = numCie,
+                        Email = mail,
+                        Adresse = idAdresse,
+                        Telephone = "",
+                        MotDePasse = motDePasse,
+                        PremiereCo = true,
+                        Role = 3
+                    };
+                    Guid idAjout = uDal.AjouterUtilisateur(pourAjout);
+                    if (idAjout.Equals(Guid.Empty))
+                        return new HttpNotFoundResult("Erreur ajout nouvel utilisateur. ");
+
+                    int retour = gDal.ChangerCdg(groupe, idAjout);
+                    if (retour != 1)
+                        return new HttpStatusCodeResult(500, "Erreur changement de cdg.");
+
+                    retour = uDal.SupprimerUtilisateurSection(ancienCdg);
+                    if (retour != 1)
+                        return new HttpStatusCodeResult(500, "Erreur suppresion d'ancien cdg");
+                }
+                else
+                {
+                    Guid nouveauCdg = Guid.Parse(Request.Form["cdgExistant"]);
+                    if (nouveauCdg.Equals(Guid.Empty))
+                        return new HttpStatusCodeResult(400, "Erreur sur le nouveau cdg.");
+
+                    int retour = uDal.PasserCadre(nouveauCdg, numSection, numCie);
+                    if (retour != 1)
+                        return new HttpStatusCodeResult(500, "Erreur passage cadre.");
+
+                    retour = uDal.SupprimerUtilisateurSection(ancienCdg);
+                    if (retour != 1)
+                        return new HttpStatusCodeResult(500, "Erreur suppression ancien cdg.");
+
+                    retour = gDal.ChangerCdg(groupe, nouveauCdg);
+                    if (retour != 1)
+                        return new HttpStatusCodeResult(500, "Erreur changement de chef de groupe.");
+                }
+
+                    return RedirectToAction("AfficherPersonnelSection");
+            }
+            catch(Exception e)
+            {
+                return new HttpStatusCodeResult(400, "Erreur changement de chef de groupe.");
             }
         }
     }

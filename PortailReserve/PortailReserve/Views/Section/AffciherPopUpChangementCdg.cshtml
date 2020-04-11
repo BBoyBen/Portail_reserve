@@ -1,0 +1,174 @@
+﻿@model PortailReserve.ViewModel.ChangementCdgViewModel
+
+<div class="row">
+    <div class="col-12 text-center titrePopUp">
+        Changer le chef de groupe @Model.Groupe.Numero
+    </div>
+</div>
+
+@using (Ajax.BeginForm("ChangerCdg", "Section", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "partieSection",
+    HttpMethod = "POST",
+    OnBegin = "afficherCacherElement('popChangementCdg')",
+    OnComplete = "modifierSection()",
+    OnSuccess = "messageSuccess('Changement CDG OK !')",
+    OnFailure = "messageError('Erreur chamgement CDG !')"
+}))
+{
+    <div class="row">
+        <div class="col-12 text-center">
+            <label for="cdgExistant"> Personnels existant sans section : </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 champsTextCenter">
+            @Html.DropDownList("cdgExistant", Model.SansSection, new { @class = "champsText allWidth", id = "cdgExistant" })
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-center corpsPopUp">
+            <strong> OU </strong>
+        </div>
+    </div>
+
+    <div class="row corpsPopUp">
+        <div class="col-4">
+            <div class="row">
+                <div class="col-2 champsTextDroit">
+                    <input type="checkbox" name="creerCdg" class="checkBox" id="creerCdg" onchange="clickSurCreerCdg();" />
+                </div>
+            </div>
+        </div>
+        <div class="col-8 champsTextCenter">
+            <label for="creerCdg" class="labelCheckBox"> Créer un nouveau personnel </label>
+        </div>
+    </div>
+
+    <div id="creationCdg" style="display: none;">
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="gradeCdg"> Grade </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.DropDownList("gradeCdg", Model.Grades, new { @class = "champsText allWidth" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="nomCdg"> Nom </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("nomCdg", null, new { @class = "champsText allWidth", id = "nomCdg" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="prenomCdg"> Prénom </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("prenomCdg", null, new { @class = "champsText allWidth", id = "prenomCdg" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="matriculeCdg"> Matricule </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("matriculeCdg", null, new { @class = "champsText allWidth", id = "matriculeCdg" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="naissanceCdg"> Date de naissance </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("naissanceCdg", null, new { @class = "champsText allWidth", id = "naissanceCdg", type = "date" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="mailCdg"> Adresse mail </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("mailCdg", null, new { @class = "champsText allWidth", id = "mailCdg" })
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.MotDePasse)
+    @Html.HiddenFor(m => m.AncienCdg.Id)
+    @Html.HiddenFor(m => m.Groupe.Id)
+    @Html.HiddenFor(m => m.Section.Id)
+
+    <input type="submit" value="Ajouter" id="lienAjoutCdg" style="display:none;" />
+}
+
+<div class="row corpsPopUp" id="erreurAjoutCdg" style="display:none; ">
+    <div class="col-12 text-center erreur alertBack">
+        Il y a des erreurs. Vérifiez votre saisie.
+    </div>
+</div>
+
+<div id="partiePreConfirmeCdg" style="display:block;">
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <button id="boutonChangementCdg" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="validerAjoutCdg(false)">
+                    Ajouter
+                </button>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popChangementCdg'); ">
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmationAjoutCdg" style="display:none;">
+    <div class="row infoValide">
+        <div class="col-12 text-center">
+            Le mot de passe du nouvel utilisateur est : <strong>@Model.MotDePasse</strong>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <button id="boutonChangementCdg" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="validerAjoutCdg(true)">
+                    Confirmer
+                </button>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popChangementCdg'); ">
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

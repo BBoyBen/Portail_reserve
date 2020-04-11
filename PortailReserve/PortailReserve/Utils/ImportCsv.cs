@@ -123,7 +123,8 @@ namespace PortailReserve.Utils
                         SOA = idSoa,
                         Compagnie = idCie,
                         Chant = s.Chant,
-                        Devise = s.Devise
+                        Devise = s.Devise,
+                        NumCie = Int32.Parse(s.NumCie)
                     });
                 }
             }

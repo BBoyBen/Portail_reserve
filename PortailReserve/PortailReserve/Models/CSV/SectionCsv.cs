@@ -20,5 +20,7 @@ namespace PortailReserve.Models.CSV
         public string Devise { get; set; }
         [Name("Compagnie")]
         public string Compagnie { get; set; }
+        [Name("NumCie")]
+        public string NumCie { get; set; }
     }
 }

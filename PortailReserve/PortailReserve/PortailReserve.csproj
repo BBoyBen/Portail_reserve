@@ -285,6 +285,7 @@
     <Compile Include="ViewModel\AcceuilViewModel.cs" />
     <Compile Include="ViewModel\AjouterEventViewModel.cs" />
     <Compile Include="ViewModel\AjouterPersonnelViewModel.cs" />
+    <Compile Include="ViewModel\ChangementCdgViewModel.cs" />
     <Compile Include="ViewModel\ChangementGroupeViewModel.cs" />
     <Compile Include="ViewModel\EventViewModel.cs" />
     <Compile Include="ViewModel\ListeEventViewModel.cs" />
@@ -507,6 +508,7 @@
     <Content Include="Views\Section\AfficherPersonnelSection.cshtml" />
     <Content Include="Views\Section\AfficherPopUpChgmtGroupe.cshtml" />
     <Content Include="Views\Section\AfficherPopUpAjouterPerso.cshtml" />
+    <Content Include="Views\Section\AffciherPopUpChangementCdg.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

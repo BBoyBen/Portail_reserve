@@ -92,6 +92,17 @@ function clickSurCreer() {
         partieCreation.style.display = "none";
 }
 
+function clickSurCreerCdg() {
+
+    var check = document.getElementById("creerCdg");
+    var partieCreation = document.getElementById("creationCdg");
+
+    if (check.checked)
+        partieCreation.style.display = "block";
+    else
+        partieCreation.style.display = "none";
+}
+
 function erreurChamps(id) {
     var champs = document.getElementById(id);
 
@@ -187,6 +198,92 @@ function validerAjoutPersonnel(confirmation) {
         }
         else {
             document.getElementById("lienAjoutPersonnel").click();
+        }
+    }
+    else {
+        erreurAjout.style.display = "block";
+    }
+}
+
+function validerAjoutCdg(confirmation) {
+
+    var allOk = true;
+    var erreurAjout = document.getElementById("erreurAjoutCdg");
+
+    var checkBox = document.getElementById("creerCdg");
+    if (!checkBox.checked) {
+        var selectGroupe = document.getElementById("cdgExistant");
+        if (selectGroupe.options[selectGroupe.selectedIndex].value === "00000000-0000-0000-0000-000000000000") {
+            allOk = false;
+            erreurChamps("cdgExistant");
+        }
+        else {
+            champsOk("cdgExistant");
+        }
+    }
+    else {
+        champsOk("cdgExistant");
+
+        var nom = document.getElementById("nomCdg");
+        if (nom.value.trim().length === 0) {
+            allOk = false;
+            erreurChamps("nomCdg");
+        }
+        else {
+            champsOk("nomCdg");
+        }
+
+        var prenom = document.getElementById("prenomCdg");
+        if (prenom.value.trim().length === 0) {
+            allOk = false;
+            erreurChamps("prenomCdg");
+        }
+        else {
+            champsOk("prenomCdg");
+        }
+
+        var matricule = document.getElementById("matriculeCdg");
+        var validMatricule = /[0-9]{10}/;
+        if (validMatricule.test(matricule.value) && matricule.value.trim().length === 10) {
+            champsOk("matriculeCdg");
+        }
+        else {
+            allOk = false;
+            erreurChamps("matriculeCdg");
+        }
+
+        var dateNaissance = document.getElementById("naissanceCdg");
+        if (dateNaissance.value.trim().length != 10) {
+            allOk = false;
+            erreurChamps("naissanceCdg");
+        }
+        else {
+            champsOk("naissanceCdg");
+        }
+
+        var mail = document.getElementById("mailCdg");
+        var validMail = /.+@.+\..+/;
+        if (validMail.test(mail.value)) {
+            champsOk("mailCdg")
+        }
+        else {
+            allOk = false;
+            erreurChamps("mailCdg")
+        }
+    }
+    if (allOk) {
+        erreurAjout.style.display = "none";
+        if (checkBox.checked) {
+            if (confirmation) {
+                document.getElementById("lienAjoutCdg").click();
+            }
+            else {
+                document.getElementById("partiePreConfirmeCdg").style.display = "none";
+                document.getElementById("confirmationAjoutCdg").style.display = "block";
+            }
+        }
+        else {
+            document.getElementById("lienAjoutCdg").click();
         }
     }
     else {

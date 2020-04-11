@@ -69,6 +69,18 @@
                     }
                     @cdg.Nom.ToUpperInvariant()
                 </div>
+                <div class="col-4 iconeCol" style="display: none; ">
+                    <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
+                         onclick="clickOn('chgmnt_@cdg.Id.ToString().Substring(0, 8)'); afficherCacherElement('popChangementCdg'); " />
+                    <div style="display: none;">
+                        @Ajax.ActionLink("Changer", "AffciherPopUpChangementCdg", new { id = cdg.Id, grp = g.Id }, new AjaxOptions
+                           {
+                               InsertionMode = InsertionMode.Replace,
+                               UpdateTargetId = "popChangementCdg",
+                               HttpMethod = "GET"
+                           }, new { id = "chgmnt_" + cdg.Id.ToString().Substring(0, 8) })
+                    </div>
+                </div>
             </div>
         }
     }

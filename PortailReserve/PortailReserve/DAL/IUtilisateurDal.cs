@@ -24,6 +24,7 @@ namespace PortailReserve.DAL
         int ModifierGroupe(Guid id, Guid grp);
         int PremiereCoOk(Guid id);
         int PremiereCoKO(Guid id);
+        int PasserCadre(Guid id, int section, int cie);
         Guid AjouterUtilisateur(Utilisateur utilisateur);
         int SupprimerUtilisateur(Guid id);
         int SupprimerUtilisateurSection(Guid id);
