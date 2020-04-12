@@ -404,7 +404,7 @@ namespace PortailReserve.Controllers
             grades.Add(new SelectListItem { Text = "Lieutenant-colonel", Value = "Lieutenant-colonel" });
             grades.Add(new SelectListItem { Text = "Colonel", Value = "Colonel" });
 
-            string nouveauMdp = "changeme";
+            string nouveauMdp = GenererMotDePasse();
 
             AjouterPersonnelViewModel vm = new AjouterPersonnelViewModel
             {
@@ -598,7 +598,7 @@ namespace PortailReserve.Controllers
                 Section = section,
                 Grades = grades,
                 SansSection = selectSansSection,
-                MotDePasse = "changeme"
+                MotDePasse = GenererMotDePasse()
             };
 
             return PartialView("AffciherPopUpChangementCdg", vm);

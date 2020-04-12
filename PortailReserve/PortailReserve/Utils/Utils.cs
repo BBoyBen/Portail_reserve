@@ -126,5 +126,19 @@ namespace PortailReserve.Utils
 
             return trie;
         }
+
+        public static string GenererMotDePasse()
+        {
+            string caracs = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890-#@%";
+            string mdp = "";
+
+            Random rand = new Random();
+            for(int i = 0; i < 10; i++)
+            {
+                mdp += caracs[rand.Next(0, caracs.Length)];
+            }
+
+            return mdp;
+        }
     }
 }
