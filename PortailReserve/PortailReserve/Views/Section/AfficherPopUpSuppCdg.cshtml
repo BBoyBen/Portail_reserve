@@ -1,0 +1,45 @@
+﻿@model PortailReserve.ViewModel.SuppressionCdgViewModel
+
+<div class="row">
+    <div class="col-12 text-center titrePopUp"> Suppression de @Model.AncienCdg.Nom @Model.AncienCdg.Prenom (CDG) </div>
+</div>
+<div class="row">
+    <div class="col-12 text-center"> Voulez vraiment supprimer le @Model.AncienCdg.Grade @Model.AncienCdg.Nom, chef du groupe @Model.Groupe.Numero, de votre section ? </div>
+</div>
+<div class="row corpsPopUp">
+    <div class="col-12"> (La personne ne sera plus dans votre section, vous pourrez tout de même la rajouter plus tard, si il n'est affecté à aucune autre section.)</div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <div class="row">
+            <button id="boutonSuppression" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="clickOn('lienSuppCdg'); ">
+                Supprimer
+            </button>
+            <div id="lienSuppressionCdg" style="display: none; ">
+                @using (Ajax.BeginForm("SupprimerCdgSection", "Section", new AjaxOptions
+                {
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "partieSection",
+                    HttpMethod = "POST",
+                    OnBegin = "afficherCacherElement('popSuppressionCdg')",
+                    OnComplete = "modifierSection()",
+                    OnSuccess = "messageSuccess('Suppression CDG OK !')",
+                    OnFailure = "messageError('Erreur suppression CDG !')"
+                }))
+                {
+                    @Html.Hidden("idAncienCdg", Model.AncienCdg.Id)
+                    @Html.Hidden("idGroupe", Model.Groupe.Id)
+
+                    <input type="submit" value="Supprimer" id="lienSuppCdg" />
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popSuppressionCdg'); ">
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>

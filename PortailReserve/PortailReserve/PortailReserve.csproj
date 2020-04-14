@@ -295,6 +295,7 @@
     <Compile Include="ViewModel\ProfilViewModel.cs" />
     <Compile Include="ViewModel\SectionViewModel.cs" />
     <Compile Include="ViewModel\SelectGradeViewModel.cs" />
+    <Compile Include="ViewModel\SuppressionCdgViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
@@ -508,7 +509,9 @@
     <Content Include="Views\Section\AfficherPersonnelSection.cshtml" />
     <Content Include="Views\Section\AfficherPopUpChgmtGroupe.cshtml" />
     <Content Include="Views\Section\AfficherPopUpAjouterPerso.cshtml" />
-    <Content Include="Views\Section\AffciherPopUpChangementCdg.cshtml" />
+    <Content Include="Views\Section\AfficherPopUpChangementCdg.cshtml" />
+    <Content Include="Views\Section\AfficherSansSection.cshtml" />
+    <Content Include="Views\Section\AfficherPopUpSuppCdg.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

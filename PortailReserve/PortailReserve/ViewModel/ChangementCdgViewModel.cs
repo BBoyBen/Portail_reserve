@@ -9,7 +9,7 @@ namespace PortailReserve.ViewModel
 {
     public class ChangementCdgViewModel
     {
-        public Utilisateur AncienCdg { get; set; }
+        public Guid AncienCdg { get; set; }
         public Groupe Groupe { get; set; }
         public Section Section { get; set; }
         public List<SelectListItem> Grades { get; set; }

@@ -92,14 +92,27 @@
 
 <!--
 #############################################################################################
-############################# Pop Up de ajout de personnel ##################################
+############################# Pop Up de changement de cdg ###################################
 #############################################################################################
 -->
 
-@if(Model.Role < 4)
+@if (Model.Role < 4)
 {
     <div class="container popUp" id="popChangementCdg" style="display: none;">
-        @{ Html.RenderAction("AffciherPopUpChangementCdg", new { id = Guid.Empty, grp = Guid.Empty }); }
+        @{ Html.RenderAction("AfficherPopUpChangementCdg", new { id = Guid.Empty, grp = Guid.Empty }); }
+    </div>
+}
+
+<!--
+#############################################################################################
+############################# Pop Up de suppression de cdg ##################################
+#############################################################################################
+-->
+
+@if (Model.Role < 4)
+{
+    <div class="container popUp" id="popSuppressionCdg" style="display: none;">
+        @{ Html.RenderAction("AfficherPopUpSuppCdg", new { id = Guid.Empty, grp = Guid.Empty }); }
     </div>
 }
 

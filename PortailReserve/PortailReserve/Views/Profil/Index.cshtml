@@ -55,34 +55,45 @@
     </div>
 
     <h2 class="titreLegend"> Situation militaire organique </h2>
-    <div class="row elemProfil">
-        <div class="col-6">
-            <strong> Compagnie : </strong> @Model.Cie.Numero
+    @if (Model.Util.Section == -1 && Model.Util.Compagnie == -1)
+    {
+        <div class="row">
+            <div class="col-12">
+                Vous êtes affecté à aucune section.
+            </div>
         </div>
-        <div class="col-6">
-            <strong> Commandant d'unité : </strong> @Model.Cdu.Grade @Model.Cdu.Nom.ToUpperInvariant()
+    }
+    else
+    {
+        <div class="row elemProfil">
+            <div class="col-6">
+                <strong> Compagnie : </strong> @Model.Cie.Numero
+            </div>
+            <div class="col-6">
+                <strong> Commandant d'unité : </strong> @Model.Cdu.Grade @Model.Cdu.Nom.ToUpperInvariant()
+            </div>
         </div>
-    </div>
-    <div class="row elemProfil">
-        <div class="col-6">
-            <strong> Section : </strong> @Model.Section.Numero
+        <div class="row elemProfil">
+            <div class="col-6">
+                <strong> Section : </strong> @Model.Section.Numero
+            </div>
+            <div class="col-6">
+                <strong> Chef de section : </strong> @Model.Cds.Grade @Model.Cds.Nom.ToUpperInvariant()
+            </div>
         </div>
-        <div class="col-6">
-            <strong> Chef de section : </strong> @Model.Cds.Grade @Model.Cds.Nom.ToUpperInvariant()
+        <div class="row elemProfil">
+            <div class="col-6">
+                <strong> Groupe : </strong> @Model.Grp.Numero
+            </div>
+            <div class="col-6">
+                <strong> Chef de groupe : </strong> @Model.Cdg.Grade @Model.Cdg.Nom.ToUpperInvariant()
+            </div>
         </div>
-    </div>
-    <div class="row elemProfil">
-        <div class="col-6">
-            <strong> Groupe : </strong> @Model.Grp.Numero
-        </div>
-        <div class="col-6">
-            <strong> Chef de groupe : </strong> @Model.Cdg.Grade @Model.Cdg.Nom.ToUpperInvariant()
-        </div>
-    </div>
+    }
 
     <div class="row">
         <div class="col-4 selfCenter">
-            <button class="bouton boutonBleu col-12" onclick="clickOn('modifProfil'); "> 
+            <button class="bouton boutonBleu col-12" onclick="clickOn('modifProfil'); ">
                 @Html.ActionLink("Modifier mes informations", "Modifier", "Profil", null, new { @class = "lienBoutonBleu", id = "modifProfil" })
             </button>
         </div>

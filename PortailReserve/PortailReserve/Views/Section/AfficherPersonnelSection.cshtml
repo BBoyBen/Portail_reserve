@@ -51,39 +51,73 @@
         </div>
     </div>
 
-    foreach (PortailReserve.Models.Utilisateur cdg in Model.CDGs)
-    {
-        if (cdg.Id.Equals(g.CDG))
+    <div class="row">
+        <div class="col-2 chefDeGroupe">
+            <strong> Chef de groupe : </strong>
+        </div>
+
+        @if (g.CDG.Equals(Guid.Empty))
         {
-            <div class="row">
-                <div class="col-8 chefDeGroupe">
-                    <strong> Chef de groupe : </strong>
-                    <span id="grade_@cdg.Id.ToString().Substring(0, 5)" class="grade" style="display: inline;">
-                        @{ Html.RenderAction("AfficherGrade", new { id = cdg.Id }); }
-                    </span>
-                    @if (Model.Util.Role < 4)
-                    {
-                        <span class="modifGrade" style="display: none;">
-                            @{ Html.RenderAction("AfficherSelectGrade", new { id = cdg.Id }); }
-                        </span>
-                    }
-                    @cdg.Nom.ToUpperInvariant()
-                </div>
-                <div class="col-4 iconeCol text-center" style="display: none; ">
-                    <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
-                         onclick="clickOn('chgmnt_@cdg.Id.ToString().Substring(0, 8)'); afficherCacherElement('popChangementCdg'); " />
-                    <div style="display: none;">
-                        @Ajax.ActionLink("Changer", "AffciherPopUpChangementCdg", new { id = cdg.Id, grp = g.Id }, new AjaxOptions
-                           {
-                               InsertionMode = InsertionMode.Replace,
-                               UpdateTargetId = "popChangementCdg",
-                               HttpMethod = "GET"
-                           }, new { id = "chgmnt_" + cdg.Id.ToString().Substring(0, 8) })
-                    </div>
+            <div class="col-6 chefDeGroupe"> </div>
+            <div class="col-4 iconeCol text-center" style="display: none; ">
+                <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
+                     onclick="clickOn('chgmnt_@g.Id.ToString().Substring(0, 8)'); afficherCacherElement('popChangementCdg'); " />
+                <div style="display: none;">
+                    @Ajax.ActionLink("Changer", "AfficherPopUpChangementCdg", new { id = Guid.Empty, grp = g.Id }, new AjaxOptions
+                        {
+                            InsertionMode = InsertionMode.Replace,
+                            UpdateTargetId = "popChangementCdg",
+                            HttpMethod = "GET"
+                        }, new { id = "chgmnt_" + g.Id.ToString().Substring(0, 8) })
                 </div>
             </div>
         }
-    }
+        else
+        {
+            foreach (PortailReserve.Models.Utilisateur cdg in Model.CDGs)
+            {
+                if (cdg != null && cdg.Id.Equals(g.CDG))
+                {
+                    <div class="col-6 chefDeGroupe">
+                        <span id="grade_@cdg.Id.ToString().Substring(0, 5)" class="grade" style="display: inline;">
+                            @{ Html.RenderAction("AfficherGrade", new { id = cdg.Id }); }
+                        </span>
+                        @if (Model.Util.Role < 4)
+                        {
+                            <span class="modifGrade" style="display: none;">
+                                @{ Html.RenderAction("AfficherSelectGrade", new { id = cdg.Id }); }
+                            </span>
+                        }
+                        @cdg.Nom.ToUpperInvariant()
+                    </div>
+                    <div class="col-2 iconeCol text-center" style="display: none; ">
+                        <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
+                             onclick="clickOn('chgmnt_@cdg.Id.ToString().Substring(0, 8)'); afficherCacherElement('popChangementCdg'); " />
+                        <div style="display: none;">
+                            @Ajax.ActionLink("Changer", "AfficherPopUpChangementCdg", new { id = cdg.Id, grp = g.Id }, new AjaxOptions
+                                {
+                                    InsertionMode = InsertionMode.Replace,
+                                    UpdateTargetId = "popChangementCdg",
+                                    HttpMethod = "GET"
+                                }, new { id = "chgmnt_" + cdg.Id.ToString().Substring(0, 8) })
+                        </div>
+                    </div>
+                    <div class="col-2 iconeCol text-center" style="display: none; ">
+                        <img src="~/Content/image/icone_supprimer.png" alt="supprimer" class="iconeModif"
+                             onclick="clickOn('supp_@cdg.Id.ToString().Substring(0, 8)'); afficherCacherElement('popSuppressionCdg'); "/>
+                        <div style="display: none;">
+                            @Ajax.ActionLink("Supprimer", "AfficherPopUpSuppCdg", new { id = cdg.Id, grp = g.Id }, new AjaxOptions
+                               {
+                                    InsertionMode = InsertionMode.Replace,
+                                    UpdateTargetId = "popSuppressionCdg",
+                                    HttpMethod = "GET"
+                               }, new { id = "supp_" + cdg.Id.ToString().Substring(0, 8) })
+                        </div>
+                    </div>
+                }
+            }
+        }
+    </div>
 
     foreach (PortailReserve.Models.Utilisateur sdt in Model.Soldats)
     {
@@ -126,26 +160,26 @@
                 {
                     <div class="col-2 iconeCol text-center" style="display: none; ">
                         <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
-                             onclick="clickOn('chgmnt_@sdt.Id.ToString().Substring(0, 8)'); afficherCacherElement('popUpChgmtGroupe'); " />
+                                onclick="clickOn('chgmnt_@sdt.Id.ToString().Substring(0, 8)'); afficherCacherElement('popUpChgmtGroupe'); " />
                         <div style="display: none;">
                             @Ajax.ActionLink("Changer", "AfficherPopUpChgmtGroupe", new { id = sdt.Id }, new AjaxOptions
-                               {
-                                   InsertionMode = InsertionMode.Replace,
-                                   UpdateTargetId = "popUpChgmtGroupe",
-                                   HttpMethod = "GET"
-                               }, new { id = "chgmnt_" + sdt.Id.ToString().Substring(0, 8) })
+                                {
+                                    InsertionMode = InsertionMode.Replace,
+                                    UpdateTargetId = "popUpChgmtGroupe",
+                                    HttpMethod = "GET"
+                                }, new { id = "chgmnt_" + sdt.Id.ToString().Substring(0, 8) })
                         </div>
                     </div>
                     <div class="col-2 iconeCol text-center" style="display: none; ">
-                        <img src="~/Content/image/icone_supprimer.png" alt="supprimer" class="iconeModif" 
-                             onclick="clickOn('supp_@sdt.Id.ToString().Substring(0, 8)'); afficherCacherElement('popUpSuppression'); " />
+                        <img src="~/Content/image/icone_supprimer.png" alt="supprimer" class="iconeModif"
+                                onclick="clickOn('supp_@sdt.Id.ToString().Substring(0, 8)'); afficherCacherElement('popUpSuppression'); " />
                         <div style="display: none; ">
-                            @Ajax.ActionLink("Supprimer", "AfficherPopUpSuppSoldat",new {  id = sdt.Id}, new AjaxOptions
-                               {
-                                   InsertionMode = InsertionMode.Replace,
-                                   UpdateTargetId = "popUpSuppression",
-                                   HttpMethod = "GET"
-                               }, new { id = "supp_" + sdt.Id.ToString().Substring(0, 8) })
+                            @Ajax.ActionLink("Supprimer", "AfficherPopUpSuppSoldat", new { id = sdt.Id }, new AjaxOptions
+                                {
+                                    InsertionMode = InsertionMode.Replace,
+                                    UpdateTargetId = "popUpSuppression",
+                                    HttpMethod = "GET"
+                                }, new { id = "supp_" + sdt.Id.ToString().Substring(0, 8) })
                         </div>
                     </div>
                 }

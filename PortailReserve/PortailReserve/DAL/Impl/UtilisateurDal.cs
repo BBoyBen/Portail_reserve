@@ -95,7 +95,12 @@ namespace PortailReserve.DAL.Impl
             }catch(NullReferenceException nfe)
             {
                 Log("ERROR", "Aucun utilisateur trouve pour l'id : " + id + " -> " + nfe);
-                return new UtilisateurNull() { Error = "Utilisateur introuvable." };
+                return new UtilisateurNull() { 
+                    Error = "Utilisateur introuvable.",
+                    Nom = "",
+                    Prenom = "",
+                    Grade = ""
+                };
             }
             catch(Exception e)
             {

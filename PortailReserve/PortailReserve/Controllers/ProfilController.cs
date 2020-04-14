@@ -54,35 +54,74 @@ namespace PortailReserve.Controllers
 
             Adresse a = aDal.GetAdresseById(u.Adresse);
             if (a == null || a.Equals(typeof(AdresseNull)))
-                a = new Adresse();
+                a = new Adresse { 
+                    Pays = "",
+                    CodePostal = "",
+                    Ville = "",
+                    Voie = ""
+                };
 
             Groupe g = gDal.GetGroupeById(u.Groupe);
             if (g == null || g.Equals(typeof(GroupeNull)))
-                g = new Groupe();
+                g = new Groupe {
+                    CDG = Guid.Empty,
+                    Numero = -1,
+                    Section = Guid.Empty
+                };
 
             Section s = sDal.GetSectionById(g.Section);
             if (s == null || s.Equals(typeof(SectionNull)))
-                s = new Section();
+                s = new Section { 
+                    Numero = -1,
+                    CDS = Guid.Empty,
+                    SOA = Guid.Empty,
+                    Chant = "",
+                    Compagnie = Guid.Empty,
+                    Devise = "",
+                    NumCie = -1
+                };
 
             Compagnie c = cDal.GetCompagnieById(s.Compagnie);
             if (c == null || c.Equals(typeof(CompagnieNull)))
-                c = new Compagnie();
+                c = new Compagnie { 
+                    Numero = -1,
+                    ADU = Guid.Empty,
+                    Chant = "",
+                    Devise = "",
+                    CDU = Guid.Empty
+                };
 
             Utilisateur cdg = uDal.GetUtilisateurById(g.CDG);
             if (cdg == null || cdg.Equals(typeof(UtilisateurNull)))
-                cdg = new Utilisateur();
+                cdg = new Utilisateur { 
+                    Nom = "",
+                    Prenom = "",
+                    Grade = ""
+                };
 
             Utilisateur cds = uDal.GetUtilisateurById(s.CDS);
             if (cds == null || cds.Equals(typeof(UtilisateurNull)))
-                cds = new Utilisateur();
+                cds = new Utilisateur { 
+                    Prenom = "",
+                    Nom = "",
+                    Grade = ""
+                };
 
             Utilisateur soa = uDal.GetUtilisateurById(s.SOA);
             if (soa == null || soa.Equals(typeof(UtilisateurNull)))
-                soa = new Utilisateur();
+                soa = new Utilisateur { 
+                    Prenom = "",
+                    Nom = "",
+                    Grade = ""
+                };
 
             Utilisateur cdu = uDal.GetUtilisateurById(c.CDU);
             if (cdu == null || cdu.Equals(typeof(UtilisateurNull)))
-                cdu = new Utilisateur();
+                cdu = new Utilisateur { 
+                    Prenom = "",
+                    Nom = "",
+                    Grade = ""
+                };
 
             ProfilViewModel vm = new ProfilViewModel()
             {

@@ -72,6 +72,9 @@ namespace PortailReserve.Controllers
             if (u.PremiereCo)
                 return new HttpUnauthorizedResult();
 
+            if (u.Section == -1 && u.Compagnie == -1)
+                return PartialView("AfficherSansSection");
+
             Section userSection = sDal.GetSectionByNumAndByCie(u.Section, u.Compagnie);
 
             List<Groupe> grpSection = gDal.GetGroupesBySection(userSection.Id);
@@ -203,7 +206,7 @@ namespace PortailReserve.Controllers
                 {
                     Id = Guid.Empty,
                     Prenom = "Empty",
-                    Nom = "Empry",
+                    Nom = "Empty",
                     Grade = "Soldat"
                 };
 
@@ -252,7 +255,7 @@ namespace PortailReserve.Controllers
         }
 
         /***
-         * Affichage de la pop-up de suppression d'un soldat d'une section
+         * Affichage de la pop-up de changement de groupe d'un soldat
         ***/
 
         [Authorize]
@@ -537,7 +540,7 @@ namespace PortailReserve.Controllers
         ***/
 
         [Authorize]
-        public ActionResult AffciherPopUpChangementCdg(Guid id, Guid grp)
+        public ActionResult AfficherPopUpChangementCdg(Guid id, Guid grp)
         {
             Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
             if (u == null)
@@ -554,11 +557,9 @@ namespace PortailReserve.Controllers
             if (u.PremiereCo)
                 return new HttpUnauthorizedResult();
 
-            Utilisateur ancienCdg = uDal.GetUtilisateurById(id);
-            if (ancienCdg == null || ancienCdg.Equals(typeof(UtilisateurNull)))
-                return new HttpNotFoundResult("Ancien chef de groupe introuvable");
+            Guid ancienCdg = id;
 
-            Section section = sDal.GetSectionByNumAndByCie(ancienCdg.Section, ancienCdg.Compagnie);
+            Section section = sDal.GetSectionByNumAndByCie(u.Section, u.Compagnie);
             Groupe groupe = gDal.GetGroupeById(grp);
             if (groupe == null || groupe.Equals(typeof(GroupeNull)))
                 return new HttpNotFoundResult("Groupe non trouvé.");
@@ -601,7 +602,7 @@ namespace PortailReserve.Controllers
                 MotDePasse = GenererMotDePasse()
             };
 
-            return PartialView("AffciherPopUpChangementCdg", vm);
+            return PartialView("AfficherPopUpChangementCdg", vm);
         }
 
         [Authorize]
@@ -631,9 +632,7 @@ namespace PortailReserve.Controllers
                 int numSection = u.Section;
                 int numCie = u.Compagnie;
 
-                Guid ancienCdg = Guid.Parse(Request.Form["AncienCdg.Id"]);
-                if (ancienCdg.Equals(Guid.Empty))
-                    return new HttpStatusCodeResult(400, "Erreur sur l'ancien cdg.");
+                Guid ancienCdg = Guid.Parse(Request.Form["AncienCdg"]);
 
                 Guid groupe = Guid.Parse(Request.Form["Groupe.Id"]);
                 if (groupe.Equals(Guid.Empty))
@@ -698,9 +697,12 @@ namespace PortailReserve.Controllers
                     if (retour != 1)
                         return new HttpStatusCodeResult(500, "Erreur changement de cdg.");
 
-                    retour = uDal.SupprimerUtilisateurSection(ancienCdg);
-                    if (retour != 1)
-                        return new HttpStatusCodeResult(500, "Erreur suppresion d'ancien cdg");
+                    if (!ancienCdg.Equals(Guid.Empty))
+                    {
+                        retour = uDal.SupprimerUtilisateurSection(ancienCdg);
+                        if (retour != 1)
+                            return new HttpStatusCodeResult(500, "Erreur suppresion d'ancien cdg");
+                    }
                 }
                 else
                 {
@@ -712,9 +714,12 @@ namespace PortailReserve.Controllers
                     if (retour != 1)
                         return new HttpStatusCodeResult(500, "Erreur passage cadre.");
 
-                    retour = uDal.SupprimerUtilisateurSection(ancienCdg);
-                    if (retour != 1)
-                        return new HttpStatusCodeResult(500, "Erreur suppression ancien cdg.");
+                    if (!ancienCdg.Equals(Guid.Empty))
+                    {
+                        retour = uDal.SupprimerUtilisateurSection(ancienCdg);
+                        if (retour != 1)
+                            return new HttpStatusCodeResult(500, "Erreur suppression ancien cdg.");
+                    }
 
                     retour = gDal.ChangerCdg(groupe, nouveauCdg);
                     if (retour != 1)
@@ -726,6 +731,89 @@ namespace PortailReserve.Controllers
             catch(Exception e)
             {
                 return new HttpStatusCodeResult(400, "Erreur changement de chef de groupe.");
+            }
+        }
+
+        /***
+         * Affichage de la pop-up de suppression de chef de groupe
+        ***/
+
+        [Authorize]
+        public ActionResult AfficherPopUpSuppCdg(Guid id, Guid grp)
+        {
+            Utilisateur cdg = uDal.GetUtilisateurById(id);
+            if (cdg == null || cdg.Equals(typeof(UtilisateurNull)))
+                cdg = new Utilisateur
+                {
+                    Id = Guid.Empty,
+                    Nom = "Empty",
+                    Prenom = "Empty",
+                    Grade = "Empty"
+                };
+
+            Groupe groupe = gDal.GetGroupeById(grp);
+            if (groupe == null || groupe.Equals(typeof(GroupeNull)))
+                groupe = new Groupe
+                {
+                    Numero = -1,
+                    Id = Guid.Empty
+                };
+
+            SuppressionCdgViewModel vm = new SuppressionCdgViewModel
+            {
+                Groupe = groupe,
+                AncienCdg = cdg
+            };
+
+            return PartialView("AfficherPopUpSuppCdg", vm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult SupprimerCdgSection()
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                if (u.Role > 3)
+                    return new HttpUnauthorizedResult();
+
+                Guid idAncienCdg = Guid.Parse(Request.Form["idAncienCdg"]);
+                if (idAncienCdg.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Erreur id ancien cdg.");
+
+                Guid idGroupe = Guid.Parse(Request.Form["idGroupe"]);
+                if (idGroupe.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Erreur id groupe.");
+
+                int retour = gDal.ChangerCdg(idGroupe, Guid.Empty);
+                if (retour != 1)
+                    return new HttpStatusCodeResult(400, "Erreur de changer cdg groupe.");
+
+                retour = uDal.SupprimerUtilisateurSection(idAncienCdg);
+                if (retour != 1)
+                    return new HttpStatusCodeResult(400, "Erreur supp cdg de la section");
+
+
+                return RedirectToAction("AfficherPersonnelSection");
+            }
+            catch(Exception e)
+            {
+                return new HttpStatusCodeResult(400, "Erreur suppression du chef de groupe");
             }
         }
     }
