@@ -1,0 +1,174 @@
+﻿@model PortailReserve.ViewModel.ChangementSoaViewModel
+
+<div class="row">
+    <div class="col-12 text-center titrePopUp">
+        Changer le sous-officier adjoint de a section @Model.Section.Numero
+    </div>
+</div>
+
+@using (Ajax.BeginForm("ChangementSoa", "Section", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "partieSection",
+    HttpMethod = "POST",
+    OnBegin = "afficherCacherElement('popUpChangementSoa')",
+    OnComplete = "modifierSection()",
+    OnSuccess = "messageSuccess('Changement SOA OK !')",
+    OnFailure = "messageError('Erreur chamgement SOA !')"
+}))
+{
+    <div class="row">
+        <div class="col-12 text-center">
+            <label for="cdgExistant"> Personnels existant sans section : </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 champsTextCenter">
+            @Html.DropDownList("soaExistant", Model.SansSection, new { @class = "champsText allWidth", id = "soaExistant" })
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-center corpsPopUp">
+            <strong> OU </strong>
+        </div>
+    </div>
+
+    <div class="row corpsPopUp">
+        <div class="col-4">
+            <div class="row">
+                <div class="col-2 champsTextDroit">
+                    <input type="checkbox" name="creerSoa" class="checkBox" id="creerSoa" onchange="clickSurCreerSoa();" />
+                </div>
+            </div>
+        </div>
+        <div class="col-8 champsTextCenter">
+            <label for="creerSoa" class="labelCheckBox"> Créer un nouveau personnel </label>
+        </div>
+    </div>
+
+    <div id="creationSoa" style="display: none;">
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="gradeSoa"> Grade </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.DropDownList("gradeSoa", Model.Grades, new { @class = "champsText allWidth" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="nomSoa"> Nom </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("nomSoa", null, new { @class = "champsText allWidth", id = "nomSoa" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="prenomSoa"> Prénom </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("prenomSoa", null, new { @class = "champsText allWidth", id = "prenomSoa" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="matriculeSoa"> Matricule </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("matriculeSoa", null, new { @class = "champsText allWidth", id = "matriculeSoa" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="naissanceSoa"> Date de naissance </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("naissanceSoa", null, new { @class = "champsText allWidth", id = "naissanceSoa", type = "date" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="mailSoa"> Adresse mail </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("mailSoa", null, new { @class = "champsText allWidth", id = "mailSoa" })
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.MotDePasse)
+    @Html.HiddenFor(m => m.AncienSoa.Id)
+    @Html.HiddenFor(m => m.Section.Id)
+
+    <input type="submit" value="Ajouter" id="lienAjoutSoa" style="display:none;" />
+}
+
+<div class="row corpsPopUp" id="erreurAjoutSoa" style="display:none; ">
+    <div class="col-12 text-center erreur alertBack">
+        Il y a des erreurs. Vérifiez votre saisie.
+    </div>
+</div>
+
+<div id="partiePreConfirmeSoa" style="display:block;">
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <button id="boutonChangementSoa" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="validerAjoutSoa(false)">
+                    Ajouter
+                </button>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpChangementSoa'); ">
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmationAjoutSoa" style="display:none;">
+    <div class="row infoValide">
+        <div class="col-12 text-center">
+            Le mot de passe du nouvel utilisateur est : <strong>@Model.MotDePasse</strong>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <button id="boutonChangementSoa" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="validerAjoutSoa(true)">
+                    Confirmer
+                </button>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpChangementSoa'); ">
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+

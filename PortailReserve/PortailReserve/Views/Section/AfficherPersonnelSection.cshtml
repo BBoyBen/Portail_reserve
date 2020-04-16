@@ -28,19 +28,64 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-6">
+    <div class="col-3">
         <strong>Sous-officier adjoint : </strong>
-        <span id="grade_@Model.SOA.Id.ToString().Substring(0, 5)" class="grade" style="display: inline;">
-            @{ Html.RenderAction("AfficherGrade", new { id = Model.SOA.Id }); }
-        </span>
-        @if (Model.Util.Role < 4)
-        {
-            <span class="modifGrade" style="display: none;">
-                @{ Html.RenderAction("AfficherSelectGrade", new { id = Model.SOA.Id }); }
-            </span>
-        }
-        @Model.SOA.Nom.ToUpperInvariant()
     </div>
+    @if (Model.SOA.Id.Equals(Guid.Empty))
+    {
+        <div class="col-5"> </div>
+        <div class="col-4 text-center iconeCol" style="display: none;">
+            <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
+                 onclick="clickOn('chgmnt_@Model.SOA.Id.ToString().Substring(0, 8)'); afficherCacherElement('popUpChangementSoa'); " />
+            <div style="display: none;">
+                @Ajax.ActionLink("Changer", "AfficherPopUpChgmntSoa", new { id = Guid.Empty, idSection = Model.Section.Id }, new AjaxOptions
+                    {
+                        InsertionMode = InsertionMode.Replace,
+                        UpdateTargetId = "popUpChangementSoa",
+                        HttpMethod = "GET"
+                    }, new { id = "chgmnt_" + Model.SOA.Id.ToString().Substring(0, 8) })
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="col-5">
+            <span id="grade_@Model.SOA.Id.ToString().Substring(0, 5)" class="grade" style="display: inline;">
+                @{ Html.RenderAction("AfficherGrade", new { id = Model.SOA.Id }); }
+            </span>
+            @if (Model.Util.Role < 4)
+            {
+                <span class="modifGrade" style="display: none;">
+                    @{ Html.RenderAction("AfficherSelectGrade", new { id = Model.SOA.Id }); }
+                </span>
+                        }
+            @Model.SOA.Nom.ToUpperInvariant()
+        </div>
+        <div class="col-2 text-center iconeCol" style="display: none;"> 
+            <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
+                 onclick="clickOn('chgmnt_@Model.SOA.Id.ToString().Substring(0, 8)'); afficherCacherElement('popUpChangementSoa'); " />
+            <div style="display: none;">
+                @Ajax.ActionLink("Changer", "AfficherPopUpChgmntSoa", new { id = Model.SOA.Id, idSection = Model.Section.Id }, new AjaxOptions
+                    {
+                        InsertionMode = InsertionMode.Replace,
+                        UpdateTargetId = "popUpChangementSoa",
+                        HttpMethod = "GET"
+                    }, new { id = "chgmnt_" + Model.SOA.Id.ToString().Substring(0, 8) })
+            </div>
+        </div>
+        <div class="col-2 text-center iconeCol" style="display: none;">
+            <img src="~/Content/image/icone_supprimer.png" alt="supprimer" class="iconeModif"
+                 onclick="clickOn('supp_@Model.SOA.Id.ToString().Substring(0, 8)'); afficherCacherElement('popUpSuppressionSoa'); " />
+            <div style="display: none;">
+                @Ajax.ActionLink("Supprimer", "AfficherPopUpSuppressionSoa", new { id = Model.SOA.Id, idSection = Model.Section.Id }, new AjaxOptions
+                   {
+                        InsertionMode = InsertionMode.Replace,
+                        UpdateTargetId = "popUpSuppressionSoa",
+                        HttpMethod = "GET"
+                   }, new { id = "supp_" + Model.SOA.Id.ToString().Substring(0, 8) })
+            </div>
+        </div>
+    }
 </div>
 
 @foreach (PortailReserve.Models.Groupe g in Model.Groupes)

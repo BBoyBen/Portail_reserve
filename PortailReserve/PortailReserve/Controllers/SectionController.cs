@@ -90,12 +90,32 @@ namespace PortailReserve.Controllers
 
             Compagnie cie = cDal.GetCompagnieById(userSection.Compagnie);
 
+            Utilisateur soa = uDal.GetUtilisateurById(userSection.SOA);
+            if (soa == null || soa.Equals(typeof(UtilisateurNull)))
+                soa = new Utilisateur
+                {
+                    Id = Guid.Empty,
+                    Nom = "",
+                    Prenom = "",
+                    Grade = ""
+                };
+
+            Utilisateur cds = uDal.GetUtilisateurById(userSection.CDS);
+            if (cds == null || cds.Equals(typeof(UtilisateurNull)))
+                cds = new Utilisateur
+                {
+                    Id = Guid.Empty,
+                    Nom = "",
+                    Prenom = "",
+                    Grade = ""
+                };
+
             SectionViewModel vm = new SectionViewModel()
             {
                 Cie = cie,
                 Section = userSection,
-                CDS = uDal.GetUtilisateurById(userSection.CDS),
-                SOA = uDal.GetUtilisateurById(userSection.SOA),
+                CDS = cds,
+                SOA = soa,
                 Groupes = grpSection,
                 CDGs = listCdg,
                 Soldats = listSdt,
@@ -814,6 +834,277 @@ namespace PortailReserve.Controllers
             catch(Exception e)
             {
                 return new HttpStatusCodeResult(400, "Erreur suppression du chef de groupe");
+            }
+        }
+
+        /***
+         * Affichage de la pop-up de changement de SOA
+        ***/
+
+        [Authorize]
+        public ActionResult AfficherPopUpChgmntSoa(Guid id, Guid idSection)
+        {
+            Utilisateur soa = uDal.GetUtilisateurById(id);
+            if (soa == null || soa.Equals(typeof(UtilisateurNull)))
+                soa = new Utilisateur
+                {
+                    Grade = "Soldat",
+                    Nom = "Empty",
+                    Prenom = "Empty",
+                    Id = Guid.Empty
+                };
+
+            Section section = sDal.GetSectionById(idSection);
+            if (section == null || section.Equals(typeof(SectionNull)))
+                section = new Section
+                {
+                    Id = Guid.Empty,
+                    Numero = -1
+                };
+
+            List<SelectListItem> grades = new List<SelectListItem>();
+            grades.Add(new SelectListItem { Text = "Soldat", Value = "Soldat" });
+            grades.Add(new SelectListItem { Text = "1ère classe", Value = "1ère classe" });
+            grades.Add(new SelectListItem { Text = "Caporal", Value = "Caporal" });
+            grades.Add(new SelectListItem { Text = "Caporal-chef", Value = "Caporal-chef" });
+            grades.Add(new SelectListItem { Text = "Caporal-chef de 1ère classe", Value = "Caporal-chef de 1ère classe" });
+
+            grades.Add(new SelectListItem { Text = "Sergent", Value = "Sergent" });
+            grades.Add(new SelectListItem { Text = "Sergent-chef", Value = "Sergent-chef", Selected = true });
+            grades.Add(new SelectListItem { Text = "Adjudant", Value = "Adjudant" });
+            grades.Add(new SelectListItem { Text = "Adjudant-chef", Value = "Adjudant-chef" });
+            grades.Add(new SelectListItem { Text = "Major", Value = "Major" });
+
+            grades.Add(new SelectListItem { Text = "Sous-lieutenant", Value = "Sous-lieutenant" });
+            grades.Add(new SelectListItem { Text = "Lieutenant", Value = "Lieutenant" });
+            grades.Add(new SelectListItem { Text = "Capitaine", Value = "Capitaine" });
+            grades.Add(new SelectListItem { Text = "Commandant", Value = "Commandant" });
+            grades.Add(new SelectListItem { Text = "Lieutenant-colonel", Value = "Lieutenant-colonel" });
+            grades.Add(new SelectListItem { Text = "Colonel", Value = "Colonel" });
+
+            List<Utilisateur> sansSection = uDal.GetUtilisateursSansSection();
+            List<SelectListItem> selectSansSection = new List<SelectListItem>();
+            selectSansSection.Add(new SelectListItem { Text = "--- Choix ---", Value = Guid.Empty.ToString(), Selected = true });
+            foreach (Utilisateur util in sansSection)
+            {
+                selectSansSection.Add(new SelectListItem { Text = util.Grade + " " + util.Nom + " " + util.Prenom, Value = util.Id.ToString() });
+            }
+
+            ChangementSoaViewModel vm = new ChangementSoaViewModel
+            {
+                Section = section,
+                AncienSoa = soa,
+                SansSection = selectSansSection,
+                Grades = grades,
+                MotDePasse = GenererMotDePasse()
+            };
+
+            return PartialView("AfficherPopUpChgmntSoa", vm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult ChangementSoa()
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                if (u.Role > 3)
+                    return new HttpUnauthorizedResult();
+
+                int numSection = u.Section;
+                int numCie = u.Compagnie;
+
+                Guid ancienSoa = Guid.Parse(Request.Form["AncienSoa.Id"]);
+
+                Guid section = Guid.Parse(Request.Form["Section.Id"]);
+                if (section.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Erreur sur le section.");
+
+                var creerNouveau = Request.Form["creerSoa"];
+                if (creerNouveau != null && creerNouveau.Equals("on"))
+                {
+                    // Récupération des champs du formulaire
+                    var grade = Request.Form["gradeSoa"];
+                    var nom = Request.Form["nomSoa"];
+                    var prenom = Request.Form["prenomSoa"];
+                    var matricule = Request.Form["matriculeSoa"];
+                    var mail = Request.Form["mailSoa"];
+                    var naissanceForm = Request.Form["naissanceSoa"];
+                    var motDePasse = Request.Form["MotDePasse"];
+
+                    DateTime naissance = DateTime.Parse(naissanceForm);
+
+                    //Validation des valeurs
+                    //TO-DO
+
+                    // Création d'une adresse vide
+                    Adresse adresse = new Adresse
+                    {
+                        CodePostal = "",
+                        Pays = "France",
+                        Ville = "",
+                        Voie = ""
+                    };
+                    Guid idAdresse = aDal.AjouterAdresse(adresse);
+                    if (idAdresse.Equals(Guid.Empty))
+                        return new HttpNotFoundResult("Erreur ajout adresse pour nouveau cdg.");
+
+                    //Création de l'utilisateur
+                    Utilisateur pourAjout = new Utilisateur
+                    {
+                        Grade = grade,
+                        Nom = nom,
+                        Prenom = prenom,
+                        Matricule = matricule,
+                        Naissance = naissance,
+                        Groupe = Guid.Empty,
+                        Section = numSection,
+                        Compagnie = numCie,
+                        Email = mail,
+                        Adresse = idAdresse,
+                        Telephone = "",
+                        MotDePasse = motDePasse,
+                        PremiereCo = true,
+                        Role = 3
+                    };
+                    Guid idAjout = uDal.AjouterUtilisateur(pourAjout);
+                    if (idAjout.Equals(Guid.Empty))
+                        return new HttpNotFoundResult("Erreur ajout nouvel utilisateur. ");
+
+                    int retour = sDal.ChangerSoa(section, idAjout);
+                    if (retour != 1)
+                        return new HttpStatusCodeResult(500, "Erreur changement de cdg.");
+
+                    if (!ancienSoa.Equals(Guid.Empty))
+                    {
+                        retour = uDal.SupprimerUtilisateurSection(ancienSoa);
+                        if (retour != 1)
+                            return new HttpStatusCodeResult(500, "Erreur suppresion d'ancien cdg");
+                    }
+                }
+                else
+                {
+                    Guid nouveauSoa = Guid.Parse(Request.Form["soaExistant"]);
+                    if (nouveauSoa.Equals(Guid.Empty))
+                        return new HttpStatusCodeResult(400, "Erreur sur le nouveau cdg.");
+
+                    int retour = uDal.PasserCadre(nouveauSoa, numSection, numCie);
+                    if (retour != 1)
+                        return new HttpStatusCodeResult(500, "Erreur passage cadre.");
+
+                    if (!ancienSoa.Equals(Guid.Empty))
+                    {
+                        retour = uDal.SupprimerUtilisateurSection(ancienSoa);
+                        if (retour != 1)
+                            return new HttpStatusCodeResult(500, "Erreur suppression ancien cdg.");
+                    }
+
+                    retour = sDal.ChangerSoa(section, nouveauSoa);
+                    if (retour != 1)
+                        return new HttpStatusCodeResult(500, "Erreur changement de chef de groupe.");
+                }
+
+                return RedirectToAction("AfficherPersonnelSection");
+            }
+            catch(Exception e)
+            {
+                return new HttpStatusCodeResult(400, "Erreur lors du changement de SOA");
+            }
+        }
+
+        /***
+         * Affichage de la pop-up de suppression de SOA
+        ***/
+
+        [Authorize]
+        public ActionResult AfficherPopUpSuppressionSoa(Guid id, Guid idSection)
+        {
+            Utilisateur soa = uDal.GetUtilisateurById(id);
+            if (soa == null || soa.Equals(typeof(UtilisateurNull)))
+                soa = new Utilisateur
+                {
+                    Nom = "Empty",
+                    Prenom = "Empty",
+                    Grade = "Soldat",
+                    Id = Guid.Empty
+                };
+
+            Section section = sDal.GetSectionById(idSection);
+            if (section == null || section.Equals(typeof(SectionNull)))
+                section = new Section
+                {
+                    Id = Guid.Empty
+                };
+
+            SuppressionSoaViewModel vm = new SuppressionSoaViewModel
+            {
+                Soa = soa,
+                Section = section
+            };
+
+            return PartialView("AfficherPopUpSuppressionSoa", vm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult SupprimerSoa()
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                if (u.Role > 3)
+                    return new HttpUnauthorizedResult();
+
+                Guid idAncienSoa = Guid.Parse(Request.Form["idAncienSoa"]);
+                if (idAncienSoa.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Erreur id ancien soa.");
+
+                Guid idSection = Guid.Parse(Request.Form["idSection"]);
+                if (idSection.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Erreur id groupe.");
+
+                int retour = sDal.ChangerSoa(idSection, Guid.Empty);
+                if (retour != 1)
+                    return new HttpStatusCodeResult(400, "Erreur de changer cdg groupe.");
+
+                retour = uDal.SupprimerUtilisateurSection(idAncienSoa);
+                if (retour != 1)
+                    return new HttpStatusCodeResult(400, "Erreur supp cdg de la section");
+
+                return RedirectToAction("AfficherPersonnelSection");
+            }
+            catch(Exception e)
+            {
+                return new HttpStatusCodeResult(400, "Erreur suppression SOA.");
             }
         }
     }

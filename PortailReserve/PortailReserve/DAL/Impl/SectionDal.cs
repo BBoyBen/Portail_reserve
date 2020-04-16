@@ -33,6 +33,52 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
+        public int ChangerCds(Guid id, Guid cds)
+        {
+            try
+            {
+                Section section = bdd.Sections.FirstOrDefault(s => s.Id.Equals(id));
+                if (section == null || section.Equals(typeof(SectionNull)))
+                {
+                    Log("EEROR", "La section " + id + " est introuvable pour le changement de cds");
+                    return -1;
+                }
+
+                section.CDS = cds;
+                bdd.SaveChanges();
+
+                return 1;
+            }
+            catch(Exception e)
+            {
+                Log("EEROR", "Une erreur est survenue lors du changement de CDS de la section : " + id + " -> " + e);
+                return 0;
+            }
+        }
+
+        public int ChangerSoa(Guid id, Guid soa)
+        {
+            try
+            {
+                Section section = bdd.Sections.FirstOrDefault(s => s.Id.Equals(id));
+                if (section == null || section.Equals(typeof(SectionNull)))
+                {
+                    Log("ERROR", "La section " + id + " est introuvable pour le changement de soa.");
+                    return -1;
+                }
+
+                section.SOA = soa;
+                bdd.SaveChanges();
+
+                return 1;
+            }
+            catch (Exception e)
+            {
+                Log("EEROR", "Une erreur est survenue lors du changement de SOA de la section : " + id + " -> " + e);
+                return 0;
+            }
+        }
+
         public void Dispose()
         {
             bdd.Dispose();
