@@ -114,6 +114,17 @@ function clickSurCreerSoa() {
         partieCreation.style.display = "none";
 }
 
+function clickSurCreerCds() {
+
+    var check = document.getElementById("creerCds");
+    var partieCreation = document.getElementById("creationCds");
+
+    if (check.checked)
+        partieCreation.style.display = "block";
+    else
+        partieCreation.style.display = "none";
+}
+
 function erreurChamps(id) {
     var champs = document.getElementById(id);
 
@@ -381,6 +392,92 @@ function validerAjoutSoa(confirmation) {
         }
         else {
             document.getElementById("lienAjoutSoa").click();
+        }
+    }
+    else {
+        erreurAjout.style.display = "block";
+    }
+}
+
+function validerAjoutCds(confirmation) {
+
+    var allOk = true;
+    var erreurAjout = document.getElementById("erreurAjoutCds");
+
+    var checkBox = document.getElementById("creerCds");
+    if (!checkBox.checked) {
+        var selectGroupe = document.getElementById("cdsExistant");
+        if (selectGroupe.options[selectGroupe.selectedIndex].value === "00000000-0000-0000-0000-000000000000") {
+            allOk = false;
+            erreurChamps("cdsExistant");
+        }
+        else {
+            champsOk("cdsExistant");
+        }
+    }
+    else {
+        champsOk("cdsExistant");
+
+        var nom = document.getElementById("nomCds");
+        if (nom.value.trim().length === 0) {
+            allOk = false;
+            erreurChamps("nomCds");
+        }
+        else {
+            champsOk("nomCds");
+        }
+
+        var prenom = document.getElementById("prenomCds");
+        if (prenom.value.trim().length === 0) {
+            allOk = false;
+            erreurChamps("prenomCds");
+        }
+        else {
+            champsOk("prenomCds");
+        }
+
+        var matricule = document.getElementById("matriculeCds");
+        var validMatricule = /[0-9]{10}/;
+        if (validMatricule.test(matricule.value) && matricule.value.trim().length === 10) {
+            champsOk("matriculeCds");
+        }
+        else {
+            allOk = false;
+            erreurChamps("matriculeCds");
+        }
+
+        var dateNaissance = document.getElementById("naissanceCds");
+        if (dateNaissance.value.trim().length != 10) {
+            allOk = false;
+            erreurChamps("naissanceCds");
+        }
+        else {
+            champsOk("naissanceCds");
+        }
+
+        var mail = document.getElementById("mailCds");
+        var validMail = /.+@.+\..+/;
+        if (validMail.test(mail.value)) {
+            champsOk("mailCds")
+        }
+        else {
+            allOk = false;
+            erreurChamps("mailCds")
+        }
+    }
+    if (allOk) {
+        erreurAjout.style.display = "none";
+        if (checkBox.checked) {
+            if (confirmation) {
+                document.getElementById("lienAjoutCds").click();
+            }
+            else {
+                document.getElementById("partiePreConfirmeCds").style.display = "none";
+                document.getElementById("confirmationAjoutCds").style.display = "block";
+            }
+        }
+        else {
+            document.getElementById("lienAjoutCds").click();
         }
     }
     else {

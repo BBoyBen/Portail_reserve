@@ -962,7 +962,7 @@ namespace PortailReserve.Controllers
                     };
                     Guid idAdresse = aDal.AjouterAdresse(adresse);
                     if (idAdresse.Equals(Guid.Empty))
-                        return new HttpNotFoundResult("Erreur ajout adresse pour nouveau cdg.");
+                        return new HttpNotFoundResult("Erreur ajout adresse pour nouveau soa.");
 
                     //Création de l'utilisateur
                     Utilisateur pourAjout = new Utilisateur
@@ -984,24 +984,24 @@ namespace PortailReserve.Controllers
                     };
                     Guid idAjout = uDal.AjouterUtilisateur(pourAjout);
                     if (idAjout.Equals(Guid.Empty))
-                        return new HttpNotFoundResult("Erreur ajout nouvel utilisateur. ");
+                        return new HttpNotFoundResult("Erreur ajout nouvel utilisateur.");
 
                     int retour = sDal.ChangerSoa(section, idAjout);
                     if (retour != 1)
-                        return new HttpStatusCodeResult(500, "Erreur changement de cdg.");
+                        return new HttpStatusCodeResult(500, "Erreur changement de soa.");
 
                     if (!ancienSoa.Equals(Guid.Empty))
                     {
                         retour = uDal.SupprimerUtilisateurSection(ancienSoa);
                         if (retour != 1)
-                            return new HttpStatusCodeResult(500, "Erreur suppresion d'ancien cdg");
+                            return new HttpStatusCodeResult(500, "Erreur suppresion d'ancien soa");
                     }
                 }
                 else
                 {
                     Guid nouveauSoa = Guid.Parse(Request.Form["soaExistant"]);
                     if (nouveauSoa.Equals(Guid.Empty))
-                        return new HttpStatusCodeResult(400, "Erreur sur le nouveau cdg.");
+                        return new HttpStatusCodeResult(400, "Erreur sur le nouveau soa.");
 
                     int retour = uDal.PasserCadre(nouveauSoa, numSection, numCie);
                     if (retour != 1)
@@ -1011,12 +1011,12 @@ namespace PortailReserve.Controllers
                     {
                         retour = uDal.SupprimerUtilisateurSection(ancienSoa);
                         if (retour != 1)
-                            return new HttpStatusCodeResult(500, "Erreur suppression ancien cdg.");
+                            return new HttpStatusCodeResult(500, "Erreur suppression ancien soa.");
                     }
 
                     retour = sDal.ChangerSoa(section, nouveauSoa);
                     if (retour != 1)
-                        return new HttpStatusCodeResult(500, "Erreur changement de chef de groupe.");
+                        return new HttpStatusCodeResult(500, "Erreur changement de sous-officier adjoint.");
                 }
 
                 return RedirectToAction("AfficherPersonnelSection");
@@ -1094,17 +1094,288 @@ namespace PortailReserve.Controllers
 
                 int retour = sDal.ChangerSoa(idSection, Guid.Empty);
                 if (retour != 1)
-                    return new HttpStatusCodeResult(400, "Erreur de changer cdg groupe.");
+                    return new HttpStatusCodeResult(400, "Erreur de changer soa.");
 
                 retour = uDal.SupprimerUtilisateurSection(idAncienSoa);
                 if (retour != 1)
-                    return new HttpStatusCodeResult(400, "Erreur supp cdg de la section");
+                    return new HttpStatusCodeResult(400, "Erreur supp soa de la section");
 
                 return RedirectToAction("AfficherPersonnelSection");
             }
             catch(Exception e)
             {
                 return new HttpStatusCodeResult(400, "Erreur suppression SOA.");
+            }
+        }
+
+        /***
+         * Affichage de la pop-up de changement de CDS
+        ***/
+
+        [Authorize]
+        public ActionResult AfficherPopUpChgmntCds(Guid id, Guid idSection)
+        {
+            Utilisateur cds = uDal.GetUtilisateurById(id);
+            if (cds == null || cds.Equals(typeof(UtilisateurNull)))
+                cds = new Utilisateur
+                {
+                    Grade = "Soldat",
+                    Nom = "Empty",
+                    Prenom = "Empty",
+                    Id = Guid.Empty
+                };
+
+            Section section = sDal.GetSectionById(idSection);
+            if (section == null || section.Equals(typeof(SectionNull)))
+                section = new Section
+                {
+                    Id = Guid.Empty,
+                    Numero = -1
+                };
+
+            List<SelectListItem> grades = new List<SelectListItem>();
+            grades.Add(new SelectListItem { Text = "Soldat", Value = "Soldat" });
+            grades.Add(new SelectListItem { Text = "1ère classe", Value = "1ère classe" });
+            grades.Add(new SelectListItem { Text = "Caporal", Value = "Caporal" });
+            grades.Add(new SelectListItem { Text = "Caporal-chef", Value = "Caporal-chef" });
+            grades.Add(new SelectListItem { Text = "Caporal-chef de 1ère classe", Value = "Caporal-chef de 1ère classe" });
+
+            grades.Add(new SelectListItem { Text = "Sergent", Value = "Sergent" });
+            grades.Add(new SelectListItem { Text = "Sergent-chef", Value = "Sergent-chef", Selected = true });
+            grades.Add(new SelectListItem { Text = "Adjudant", Value = "Adjudant" });
+            grades.Add(new SelectListItem { Text = "Adjudant-chef", Value = "Adjudant-chef" });
+            grades.Add(new SelectListItem { Text = "Major", Value = "Major" });
+
+            grades.Add(new SelectListItem { Text = "Sous-lieutenant", Value = "Sous-lieutenant" });
+            grades.Add(new SelectListItem { Text = "Lieutenant", Value = "Lieutenant" });
+            grades.Add(new SelectListItem { Text = "Capitaine", Value = "Capitaine" });
+            grades.Add(new SelectListItem { Text = "Commandant", Value = "Commandant" });
+            grades.Add(new SelectListItem { Text = "Lieutenant-colonel", Value = "Lieutenant-colonel" });
+            grades.Add(new SelectListItem { Text = "Colonel", Value = "Colonel" });
+
+            List<Utilisateur> sansSection = uDal.GetUtilisateursSansSection();
+            List<SelectListItem> selectSansSection = new List<SelectListItem>();
+            selectSansSection.Add(new SelectListItem { Text = "--- Choix ---", Value = Guid.Empty.ToString(), Selected = true });
+            foreach (Utilisateur util in sansSection)
+            {
+                selectSansSection.Add(new SelectListItem { Text = util.Grade + " " + util.Nom + " " + util.Prenom, Value = util.Id.ToString() });
+            }
+
+            ChangementSoaViewModel vm = new ChangementSoaViewModel
+            {
+                Section = section,
+                AncienSoa = cds,
+                SansSection = selectSansSection,
+                Grades = grades,
+                MotDePasse = GenererMotDePasse()
+            };
+
+            return PartialView("AfficherPopUpChgmntCds", vm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult ChangementCds()
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                if (u.Role > 3)
+                    return new HttpUnauthorizedResult();
+
+                int numSection = u.Section;
+                int numCie = u.Compagnie;
+
+                Guid ancienCds = Guid.Parse(Request.Form["AncienSoa.Id"]);
+
+                Guid section = Guid.Parse(Request.Form["Section.Id"]);
+                if (section.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Erreur sur le section.");
+
+                var creerNouveau = Request.Form["creerCds"];
+                if (creerNouveau != null && creerNouveau.Equals("on"))
+                {
+                    // Récupération des champs du formulaire
+                    var grade = Request.Form["gradeCds"];
+                    var nom = Request.Form["nomCds"];
+                    var prenom = Request.Form["prenomCds"];
+                    var matricule = Request.Form["matriculeCds"];
+                    var mail = Request.Form["mailCds"];
+                    var naissanceForm = Request.Form["naissanceCds"];
+                    var motDePasse = Request.Form["MotDePasse"];
+
+                    DateTime naissance = DateTime.Parse(naissanceForm);
+
+                    //Validation des valeurs
+                    //TO-DO
+
+                    // Création d'une adresse vide
+                    Adresse adresse = new Adresse
+                    {
+                        CodePostal = "",
+                        Pays = "France",
+                        Ville = "",
+                        Voie = ""
+                    };
+                    Guid idAdresse = aDal.AjouterAdresse(adresse);
+                    if (idAdresse.Equals(Guid.Empty))
+                        return new HttpNotFoundResult("Erreur ajout adresse pour nouveau cds.");
+
+                    //Création de l'utilisateur
+                    Utilisateur pourAjout = new Utilisateur
+                    {
+                        Grade = grade,
+                        Nom = nom,
+                        Prenom = prenom,
+                        Matricule = matricule,
+                        Naissance = naissance,
+                        Groupe = Guid.Empty,
+                        Section = numSection,
+                        Compagnie = numCie,
+                        Email = mail,
+                        Adresse = idAdresse,
+                        Telephone = "",
+                        MotDePasse = motDePasse,
+                        PremiereCo = true,
+                        Role = 3
+                    };
+                    Guid idAjout = uDal.AjouterUtilisateur(pourAjout);
+                    if (idAjout.Equals(Guid.Empty))
+                        return new HttpNotFoundResult("Erreur ajout nouvel utilisateur. ");
+
+                    int retour = sDal.ChangerCds(section, idAjout);
+                    if (retour != 1)
+                        return new HttpStatusCodeResult(500, "Erreur changement de cds.");
+
+                    if (!ancienCds.Equals(Guid.Empty))
+                    {
+                        retour = uDal.SupprimerUtilisateurSection(ancienCds);
+                        if (retour != 1)
+                            return new HttpStatusCodeResult(500, "Erreur suppresion d'ancien cds");
+                    }
+                }
+                else
+                {
+                    Guid nouveauCds = Guid.Parse(Request.Form["cdsExistant"]);
+                    if (nouveauCds.Equals(Guid.Empty))
+                        return new HttpStatusCodeResult(400, "Erreur sur le nouveau cds.");
+
+                    int retour = uDal.PasserCadre(nouveauCds, numSection, numCie);
+                    if (retour != 1)
+                        return new HttpStatusCodeResult(500, "Erreur passage cadre.");
+
+                    if (!ancienCds.Equals(Guid.Empty))
+                    {
+                        retour = uDal.SupprimerUtilisateurSection(ancienCds);
+                        if (retour != 1)
+                            return new HttpStatusCodeResult(500, "Erreur suppression ancien cds.");
+                    }
+
+                    retour = sDal.ChangerCds(section, nouveauCds);
+                    if (retour != 1)
+                        return new HttpStatusCodeResult(500, "Erreur changement de chef de section.");
+                }
+
+                return RedirectToAction("AfficherPersonnelSection");
+            }
+            catch (Exception e)
+            {
+                return new HttpStatusCodeResult(400, "Erreur lors du changement de CDS");
+            }
+        }
+
+        /***
+         * Affichage de la pop-up de suppression de CDS
+        ***/
+
+        [Authorize]
+        public ActionResult AfficherPopUpSuppressionCds(Guid id, Guid idSection)
+        {
+            Utilisateur cds = uDal.GetUtilisateurById(id);
+            if (cds == null || cds.Equals(typeof(UtilisateurNull)))
+                cds = new Utilisateur
+                {
+                    Nom = "Empty",
+                    Prenom = "Empty",
+                    Grade = "Soldat",
+                    Id = Guid.Empty
+                };
+
+            Section section = sDal.GetSectionById(idSection);
+            if (section == null || section.Equals(typeof(SectionNull)))
+                section = new Section
+                {
+                    Id = Guid.Empty
+                };
+
+            SuppressionSoaViewModel vm = new SuppressionSoaViewModel
+            {
+                Soa = cds,
+                Section = section
+            };
+
+            return PartialView("AfficherPopUpSuppressionCds", vm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult SupprimerCds()
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                if (u.Role > 3)
+                    return new HttpUnauthorizedResult();
+
+                Guid idAncienCds = Guid.Parse(Request.Form["idAncienCds"]);
+                if (idAncienCds.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Erreur id ancien cds.");
+
+                Guid idSection = Guid.Parse(Request.Form["idSection"]);
+                if (idSection.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Erreur id section.");
+
+                int retour = sDal.ChangerCds(idSection, Guid.Empty);
+                if (retour != 1)
+                    return new HttpStatusCodeResult(400, "Erreur de changer cds.");
+
+                retour = uDal.SupprimerUtilisateurSection(idAncienCds);
+                if (retour != 1)
+                    return new HttpStatusCodeResult(400, "Erreur supp cds de la section");
+
+                return RedirectToAction("AfficherPersonnelSection");
+            }
+            catch (Exception e)
+            {
+                return new HttpStatusCodeResult(400, "Erreur suppression CDS.");
             }
         }
     }

@@ -2,29 +2,29 @@
 
 <div class="row">
     <div class="col-12 text-center titrePopUp">
-        Changer le sous-officier adjoint de la section @Model.Section.Numero
+        Changer le chef de la section @Model.Section.Numero
     </div>
 </div>
 
-@using (Ajax.BeginForm("ChangementSoa", "Section", new AjaxOptions
+@using (Ajax.BeginForm("ChangementCds", "Section", new AjaxOptions
 {
     InsertionMode = InsertionMode.Replace,
     UpdateTargetId = "partieSection",
     HttpMethod = "POST",
-    OnBegin = "afficherCacherElement('popUpChangementSoa')",
+    OnBegin = "afficherCacherElement('popUpChangementCds')",
     OnComplete = "modifierSection()",
-    OnSuccess = "messageSuccess('Changement SOA OK !')",
-    OnFailure = "messageError('Erreur chamgement SOA !')"
+    OnSuccess = "messageSuccess('Changement CDS OK !')",
+    OnFailure = "messageError('Erreur chamgement CDS !')"
 }))
 {
     <div class="row">
         <div class="col-12 text-center">
-            <label for="cdgExistant"> Personnels existant sans section : </label>
+            <label for="cdsExistant"> Personnels existant sans section : </label>
         </div>
     </div>
     <div class="row">
         <div class="col-6 champsTextCenter">
-            @Html.DropDownList("soaExistant", Model.SansSection, new { @class = "champsText allWidth", id = "soaExistant" })
+            @Html.DropDownList("cdsExistant", Model.SansSection, new { @class = "champsText allWidth", id = "cdsExistant" })
         </div>
     </div>
 
@@ -38,79 +38,79 @@
         <div class="col-4">
             <div class="row">
                 <div class="col-2 champsTextDroit">
-                    <input type="checkbox" name="creerSoa" class="checkBox" id="creerSoa" onchange="clickSurCreerSoa();" />
+                    <input type="checkbox" name="creerCds" class="checkBox" id="creerCds" onchange="clickSurCreerCds();" />
                 </div>
             </div>
         </div>
         <div class="col-8 champsTextCenter">
-            <label for="creerSoa" class="labelCheckBox"> Créer un nouveau personnel </label>
+            <label for="creerCds" class="labelCheckBox"> Créer un nouveau personnel </label>
         </div>
     </div>
 
-    <div id="creationSoa" style="display: none;">
+    <div id="creationCds" style="display: none;">
         <div class="row">
             <div class="col-12 text-center">
-                <label for="gradeSoa"> Grade </label>
+                <label for="gradeCds"> Grade </label>
             </div>
         </div>
         <div class="row corpsPopUp">
             <div class="col-6 champsTextCenter">
-                @Html.DropDownList("gradeSoa", Model.Grades, new { @class = "champsText allWidth" })
+                @Html.DropDownList("gradeCds", Model.Grades, new { @class = "champsText allWidth" })
             </div>
         </div>
 
         <div class="row">
             <div class="col-12 text-center">
-                <label for="nomSoa"> Nom </label>
+                <label for="nomCds"> Nom </label>
             </div>
         </div>
         <div class="row corpsPopUp">
             <div class="col-6 champsTextCenter">
-                @Html.TextBox("nomSoa", null, new { @class = "champsText allWidth", id = "nomSoa" })
+                @Html.TextBox("nomCds", null, new { @class = "champsText allWidth", id = "nomCds" })
             </div>
         </div>
 
         <div class="row">
             <div class="col-12 text-center">
-                <label for="prenomSoa"> Prénom </label>
+                <label for="prenomCds"> Prénom </label>
             </div>
         </div>
         <div class="row corpsPopUp">
             <div class="col-6 champsTextCenter">
-                @Html.TextBox("prenomSoa", null, new { @class = "champsText allWidth", id = "prenomSoa" })
+                @Html.TextBox("prenomCds", null, new { @class = "champsText allWidth", id = "prenomCds" })
             </div>
         </div>
 
         <div class="row">
             <div class="col-12 text-center">
-                <label for="matriculeSoa"> Matricule </label>
+                <label for="matriculeCds"> Matricule </label>
             </div>
         </div>
         <div class="row corpsPopUp">
             <div class="col-6 champsTextCenter">
-                @Html.TextBox("matriculeSoa", null, new { @class = "champsText allWidth", id = "matriculeSoa" })
+                @Html.TextBox("matriculeCds", null, new { @class = "champsText allWidth", id = "matriculeCds" })
             </div>
         </div>
 
         <div class="row">
             <div class="col-12 text-center">
-                <label for="naissanceSoa"> Date de naissance </label>
+                <label for="naissanceCds"> Date de naissance </label>
             </div>
         </div>
         <div class="row corpsPopUp">
             <div class="col-6 champsTextCenter">
-                @Html.TextBox("naissanceSoa", null, new { @class = "champsText allWidth", id = "naissanceSoa", type = "date" })
+                @Html.TextBox("naissanceCds", null, new { @class = "champsText allWidth", id = "naissanceCds", type = "date" })
             </div>
         </div>
 
         <div class="row">
             <div class="col-12 text-center">
-                <label for="mailSoa"> Adresse mail </label>
+                <label for="mailCds"> Adresse mail </label>
             </div>
         </div>
         <div class="row corpsPopUp">
             <div class="col-6 champsTextCenter">
-                @Html.TextBox("mailSoa", null, new { @class = "champsText allWidth", id = "mailSoa" })
+                @Html.TextBox("mailCds", null, new { @class = "champsText allWidth", id = "mailCds" })
             </div>
         </div>
     </div>
@@ -119,27 +119,27 @@
     @Html.HiddenFor(m => m.AncienSoa.Id)
     @Html.HiddenFor(m => m.Section.Id)
 
-    <input type="submit" value="Ajouter" id="lienAjoutSoa" style="display:none;" />
+    <input type="submit" value="Ajouter" id="lienAjoutCds" style="display:none;" />
 }
 
-<div class="row corpsPopUp" id="erreurAjoutSoa" style="display:none; ">
+<div class="row corpsPopUp" id="erreurAjoutCds" style="display:none; ">
     <div class="col-12 text-center erreur alertBack">
         Il y a des erreurs. Vérifiez votre saisie.
     </div>
 </div>
 
-<div id="partiePreConfirmeSoa" style="display:block;">
+<div id="partiePreConfirmeCds" style="display:block;">
     <div class="row">
         <div class="col-6">
             <div class="row">
-                <button id="boutonChangementSoa" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="validerAjoutSoa(false)">
+                <button id="boutonChangementCds" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="validerAjoutCds(false)">
                     Ajouter
                 </button>
             </div>
         </div>
         <div class="col-6">
             <div class="row">
-                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpChangementSoa'); ">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpChangementCds'); ">
                     Annuler
                 </button>
             </div>
@@ -147,7 +147,7 @@
     </div>
 </div>
 
-<div id="confirmationAjoutSoa" style="display:none;">
+<div id="confirmationAjoutCds" style="display:none;">
     <div class="row infoValide">
         <div class="col-12 text-center">
             Le mot de passe du nouvel utilisateur est : <strong>@Model.MotDePasse</strong>
@@ -157,18 +157,19 @@
     <div class="row">
         <div class="col-6">
             <div class="row">
-                <button id="boutonChangementSoa" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="validerAjoutSoa(true)">
+                <button id="boutonChangementCds" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="validerAjoutCds(true)">
                     Confirmer
                 </button>
             </div>
         </div>
         <div class="col-6">
             <div class="row">
-                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpChangementSoa'); ">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpChangementCds'); ">
                     Annuler
                 </button>
             </div>
         </div>
     </div>
 </div>
+
 

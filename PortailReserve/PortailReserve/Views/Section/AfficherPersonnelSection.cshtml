@@ -13,19 +13,64 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-6">
+    <div class="col-3">
         <strong>Chef de section : </strong>
-        <span id="grade_@Model.CDS.Id.ToString().Substring(0, 5)" class="grade" style="display: inline;">
-            @{ Html.RenderAction("AfficherGrade", new { id = Model.CDS.Id }); }
-        </span>
-        @if (Model.Util.Role < 4)
-        {
-            <span class="modifGrade" style="display: none;">
-                @{ Html.RenderAction("AfficherSelectGrade", new { id = Model.CDS.Id }); }
-            </span>
-        }
-        @Model.CDS.Nom.ToUpperInvariant()
     </div>
+    @if (Model.CDS.Id.Equals(Guid.Empty))
+    {
+        <div class="col-5"> </div>
+        <div class="col-4 text-center iconeCol" style="display: none;">
+            <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
+                 onclick="clickOn('chgmnt_@Model.CDS.Id.ToString().Substring(0, 8)'); afficherCacherElement('popUpChangementCds'); " />
+            <div style="display: none;">
+                @Ajax.ActionLink("Changer", "AfficherPopUpChgmntCds", new { id = Guid.Empty, idSection = Model.Section.Id }, new AjaxOptions
+                    {
+                        InsertionMode = InsertionMode.Replace,
+                        UpdateTargetId = "popUpChangementCds",
+                        HttpMethod = "GET"
+                    }, new { id = "chgmnt_" + Model.CDS.Id.ToString().Substring(0, 8) })
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="col-5">
+            <span id="grade_@Model.CDS.Id.ToString().Substring(0, 5)" class="grade" style="display: inline;">
+                @{ Html.RenderAction("AfficherGrade", new { id = Model.CDS.Id }); }
+            </span>
+            @if (Model.Util.Role < 4)
+            {
+                <span class="modifGrade" style="display: none;">
+                    @{ Html.RenderAction("AfficherSelectGrade", new { id = Model.CDS.Id }); }
+                </span>
+            }
+            @Model.CDS.Nom.ToUpperInvariant()
+        </div>
+        <div class="col-2 text-center iconeCol" style="display: none;">
+            <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
+                 onclick="clickOn('chgmnt_@Model.CDS.Id.ToString().Substring(0, 8)'); afficherCacherElement('popUpChangementCds'); " />
+            <div style="display: none;">
+                @Ajax.ActionLink("Changer", "AfficherPopUpChgmntCds", new { id = Model.CDS.Id, idSection = Model.Section.Id }, new AjaxOptions
+                    {
+                        InsertionMode = InsertionMode.Replace,
+                        UpdateTargetId = "popUpChangementCds",
+                        HttpMethod = "GET"
+                    }, new { id = "chgmnt_" + Model.CDS.Id.ToString().Substring(0, 8) })
+            </div>
+        </div>
+        <div class="col-2 text-center iconeCol" style="display: none;">
+            <img src="~/Content/image/icone_supprimer.png" alt="supprimer" class="iconeModif"
+                 onclick="clickOn('supp_@Model.CDS.Id.ToString().Substring(0, 8)'); afficherCacherElement('popUpSuppressionCds'); " />
+            <div style="display: none;">
+                @Ajax.ActionLink("Supprimer", "AfficherPopUpSuppressionCds", new { id = Model.CDS.Id, idSection = Model.Section.Id }, new AjaxOptions
+                   {
+                        InsertionMode = InsertionMode.Replace,
+                        UpdateTargetId = "popUpSuppressionCds",
+                        HttpMethod = "GET"
+                   }, new { id = "supp_" + Model.CDS.Id.ToString().Substring(0, 8) })
+            </div>
+        </div>
+    }
 </div>
 <div class="row">
     <div class="col-3">

@@ -1,0 +1,46 @@
+﻿@model PortailReserve.ViewModel.SuppressionSoaViewModel
+
+<div class="row">
+    <div class="col-12 text-center titrePopUp"> Suppression de @Model.Soa.Nom @Model.Soa.Prenom (CDS) </div>
+</div>
+<div class="row">
+    <div class="col-12 text-center"> Voulez vraiment supprimer le @Model.Soa.Grade @Model.Soa.Nom, chef de section, de votre section ? </div>
+</div>
+<div class="row corpsPopUp">
+    <div class="col-12"> (La personne ne sera plus dans votre section, vous pourrez tout de même la rajouter plus tard, si il n'est affecté à aucune autre section.)</div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <div class="row">
+            <button id="boutonSuppression" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="clickOn('lienSuppCds'); ">
+                Supprimer
+            </button>
+            <div id="lienSuppressionCds" style="display: none; ">
+                @using (Ajax.BeginForm("SupprimerCds", "Section", new AjaxOptions
+                {
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "partieSection",
+                    HttpMethod = "POST",
+                    OnBegin = "afficherCacherElement('popUpSuppressionCds')",
+                    OnComplete = "modifierSection()",
+                    OnSuccess = "messageSuccess('Suppression CDS OK !')",
+                    OnFailure = "messageError('Erreur suppression CDS !')"
+                }))
+                {
+                    @Html.Hidden("idAncienCds", Model.Soa.Id)
+                    @Html.Hidden("idSection", Model.Section.Id)
+
+                    <input type="submit" value="Supprimer" id="lienSuppCds" />
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpSuppressionCds'); ">
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>
+
