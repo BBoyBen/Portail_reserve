@@ -16,7 +16,7 @@
             InsertionMode = InsertionMode.Replace,
             UpdateTargetId = "partieSection",
             HttpMethod = "POST",
-            OnBegin = "afficherCacherElement('popUpChgmtGroupe')",
+            OnBegin = "afficherCacherPopUp('popUpChgmtGroupe')",
             OnComplete = "modifierSection()",
             OnSuccess = "messageSuccess('Changement OK !')",
             OnFailure = "messageError('Erreur changement !')"
@@ -49,7 +49,7 @@
     </div>
     <div class="col-6">
         <div class="row">
-            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpChgmtGroupe'); ">
+            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpChgmtGroupe'); ">
                 Annuler
             </button>
         </div>

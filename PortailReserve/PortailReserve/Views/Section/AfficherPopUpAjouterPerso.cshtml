@@ -11,7 +11,7 @@
                     InsertionMode = InsertionMode.Replace,
                     UpdateTargetId = "partieSection",
                     HttpMethod = "POST",
-                    OnBegin = "afficherCacherElement('popUpAjoutPersonnel')",
+                    OnBegin = "afficherCacherPopUp('popUpAjoutPersonnel')",
                     OnComplete = "modifierSection()",
                     OnSuccess = "messageSuccess('Ajout OK !')",
                     OnFailure = "messageError('Erreur ajout !')"
@@ -148,7 +148,7 @@
         </div>
         <div class="col-6">
             <div class="row">
-                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpAjoutPersonnel'); ">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpAjoutPersonnel'); ">
                     Annuler
                 </button>
             </div>
@@ -173,7 +173,7 @@
         </div>
         <div class="col-6">
             <div class="row">
-                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpAjoutPersonnel'); ">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpAjoutPersonnel'); ">
                     Annuler
                 </button>
             </div>

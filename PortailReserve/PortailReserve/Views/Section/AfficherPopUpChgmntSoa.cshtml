@@ -11,7 +11,7 @@
     InsertionMode = InsertionMode.Replace,
     UpdateTargetId = "partieSection",
     HttpMethod = "POST",
-    OnBegin = "afficherCacherElement('popUpChangementSoa')",
+    OnBegin = "afficherCacherPopUp('popUpChangementSoa')",
     OnComplete = "modifierSection()",
     OnSuccess = "messageSuccess('Changement SOA OK !')",
     OnFailure = "messageError('Erreur chamgement SOA !')"
@@ -139,7 +139,7 @@
         </div>
         <div class="col-6">
             <div class="row">
-                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpChangementSoa'); ">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpChangementSoa'); ">
                     Annuler
                 </button>
             </div>
@@ -164,7 +164,7 @@
         </div>
         <div class="col-6">
             <div class="row">
-                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpChangementSoa'); ">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpChangementSoa'); ">
                     Annuler
                 </button>
             </div>

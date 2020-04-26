@@ -11,7 +11,7 @@
     InsertionMode = InsertionMode.Replace,
     UpdateTargetId = "partieSection",
     HttpMethod = "POST",
-    OnBegin = "afficherCacherElement('popUpChangementCds')",
+    OnBegin = "afficherCacherPopUp('popUpChangementCds')",
     OnComplete = "modifierSection()",
     OnSuccess = "messageSuccess('Changement CDS OK !')",
     OnFailure = "messageError('Erreur chamgement CDS !')"
@@ -139,7 +139,7 @@
         </div>
         <div class="col-6">
             <div class="row">
-                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpChangementCds'); ">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpChangementCds'); ">
                     Annuler
                 </button>
             </div>
@@ -164,7 +164,7 @@
         </div>
         <div class="col-6">
             <div class="row">
-                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpChangementCds'); ">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpChangementCds'); ">
                     Annuler
                 </button>
             </div>

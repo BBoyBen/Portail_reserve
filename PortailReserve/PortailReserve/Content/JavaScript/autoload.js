@@ -7,6 +7,19 @@ function afficherCacherElement(id) {
         elem.style.display = "block";
 }
 
+function afficherCacherPopUp(id) {
+    var elem = document.getElementById(id);
+    var background = document.getElementById("background");
+    if (elem.style.display === "block") {
+        elem.style.display = "none";
+        background.style.display = "none";
+    }
+    else {
+        elem.style.display = "block";
+        background.style.display = "block";
+    }
+}
+
 function afficherElem(id) {
     var elem = document.getElementById(id);
     elem.style.display = "block";

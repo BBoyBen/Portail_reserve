@@ -11,7 +11,7 @@
     InsertionMode = InsertionMode.Replace,
     UpdateTargetId = "partieSection",
     HttpMethod = "POST",
-    OnBegin = "afficherCacherElement('popChangementCdg')",
+    OnBegin = "afficherCacherPopUp('popChangementCdg')",
     OnComplete = "modifierSection()",
     OnSuccess = "messageSuccess('Changement CDG OK !')",
     OnFailure = "messageError('Erreur chamgement CDG !')"
@@ -140,7 +140,7 @@
         </div>
         <div class="col-6">
             <div class="row">
-                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popChangementCdg'); ">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popChangementCdg'); ">
                     Annuler
                 </button>
             </div>
@@ -165,7 +165,7 @@
         </div>
         <div class="col-6">
             <div class="row">
-                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popChangementCdg'); ">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popChangementCdg'); ">
                     Annuler
                 </button>
             </div>

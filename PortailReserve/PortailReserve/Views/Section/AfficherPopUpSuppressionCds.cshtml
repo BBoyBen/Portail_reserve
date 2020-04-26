@@ -21,7 +21,7 @@
                     InsertionMode = InsertionMode.Replace,
                     UpdateTargetId = "partieSection",
                     HttpMethod = "POST",
-                    OnBegin = "afficherCacherElement('popUpSuppressionCds')",
+                    OnBegin = "afficherCacherPopUp('popUpSuppressionCds')",
                     OnComplete = "modifierSection()",
                     OnSuccess = "messageSuccess('Suppression CDS OK !')",
                     OnFailure = "messageError('Erreur suppression CDS !')"
@@ -37,7 +37,7 @@
     </div>
     <div class="col-6">
         <div class="row">
-            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpSuppressionCds'); ">
+            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpSuppressionCds'); ">
                 Annuler
             </button>
         </div>

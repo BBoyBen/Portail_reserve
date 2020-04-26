@@ -923,7 +923,7 @@ namespace PortailReserve.Controllers
                 if (u.PremiereCo)
                     return new HttpUnauthorizedResult();
 
-                if (u.Role > 3)
+                if (u.Role > 2)
                     return new HttpUnauthorizedResult();
 
                 int numSection = u.Section;
@@ -1081,7 +1081,7 @@ namespace PortailReserve.Controllers
                 if (u.PremiereCo)
                     return new HttpUnauthorizedResult();
 
-                if (u.Role > 3)
+                if (u.Role > 2)
                     return new HttpUnauthorizedResult();
 
                 Guid idAncienSoa = Guid.Parse(Request.Form["idAncienSoa"]);
@@ -1194,7 +1194,7 @@ namespace PortailReserve.Controllers
                 if (u.PremiereCo)
                     return new HttpUnauthorizedResult();
 
-                if (u.Role > 3)
+                if (u.Role > 2)
                     return new HttpUnauthorizedResult();
 
                 int numSection = u.Section;
@@ -1352,7 +1352,7 @@ namespace PortailReserve.Controllers
                 if (u.PremiereCo)
                     return new HttpUnauthorizedResult();
 
-                if (u.Role > 3)
+                if (u.Role > 2)
                     return new HttpUnauthorizedResult();
 
                 Guid idAncienCds = Guid.Parse(Request.Form["idAncienCds"]);

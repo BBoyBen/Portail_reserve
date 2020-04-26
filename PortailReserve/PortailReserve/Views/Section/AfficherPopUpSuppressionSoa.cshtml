@@ -21,7 +21,7 @@
                     InsertionMode = InsertionMode.Replace,
                     UpdateTargetId = "partieSection",
                     HttpMethod = "POST",
-                    OnBegin = "afficherCacherElement('popUpSuppressionSoa')",
+                    OnBegin = "afficherCacherPopUp('popUpSuppressionSoa')",
                     OnComplete = "modifierSection()",
                     OnSuccess = "messageSuccess('Suppression SOA OK !')",
                     OnFailure = "messageError('Erreur suppression SOA !')"
@@ -37,7 +37,7 @@
     </div>
     <div class="col-6">
         <div class="row">
-            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherElement('popUpSuppressionSoa'); ">
+            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpSuppressionSoa'); ">
                 Annuler
             </button>
         </div>
