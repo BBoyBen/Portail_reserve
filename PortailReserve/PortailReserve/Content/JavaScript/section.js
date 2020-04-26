@@ -21,6 +21,11 @@ function modifierSection() {
     for (var j = 0; j < listIconeModif.length; j++) {
         listIconeModif[j].style.display = "inline";
     }
+
+    var listeTitreCadre = document.getElementsByClassName("titreCadre");
+    for (var k = 0; k < listeTitreCadre.length; k++) {
+        listeTitreCadre[k].style.paddingTop = "10px";
+    }
 }
 
 function validerModifSection() {
@@ -44,6 +49,11 @@ function validerModifSection() {
 
     for (var j = 0; j < listIconeModif.length; j++) {
         listIconeModif[j].style.display = "none";
+    }
+
+    var listeTitreCadre = document.getElementsByClassName("titreCadre");
+    for (var k = 0; k < listeTitreCadre.length; k++) {
+        listeTitreCadre[k].style.paddingTop = "0px";
     }
 }
 
