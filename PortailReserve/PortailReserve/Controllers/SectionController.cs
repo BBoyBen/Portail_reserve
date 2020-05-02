@@ -427,6 +427,11 @@ namespace PortailReserve.Controllers
             grades.Add(new SelectListItem { Text = "Lieutenant-colonel", Value = "Lieutenant-colonel" });
             grades.Add(new SelectListItem { Text = "Colonel", Value = "Colonel" });
 
+            List<SelectListItem> roles = new List<SelectListItem>();
+            roles.Add(new SelectListItem { Text = "Personnel classique", Value = "4", Selected = true });
+            roles.Add(new SelectListItem { Text = "Gestion des groupes", Value = "3" });
+            roles.Add(new SelectListItem { Text = "Gestion de section", Value = "2" });
+
             string nouveauMdp = GenererMotDePasse();
 
             AjouterPersonnelViewModel vm = new AjouterPersonnelViewModel
@@ -434,6 +439,7 @@ namespace PortailReserve.Controllers
                 Groupes = selectGroupe,
                 SansSection = selectSansSection,
                 Grades = grades,
+                Roles = roles,
                 MotDePasse = nouveauMdp
             };
 
@@ -483,6 +489,7 @@ namespace PortailReserve.Controllers
                     var mail = Request.Form["mailPersonne"];
                     var naissanceForm = Request.Form["naissancePersonne"];
                     var motDePasse = Request.Form["MotDePasse"];
+                    var role = Int32.Parse(Request.Form["rolePersonne"]);
 
                     DateTime naissance = DateTime.Parse(naissanceForm);
 
@@ -517,7 +524,7 @@ namespace PortailReserve.Controllers
                         Telephone = "",
                         MotDePasse = motDePasse,
                         PremiereCo = true,
-                        Role = 4
+                        Role = role
                     };
                     Guid idAjout = uDal.AjouterUtilisateur(pourAjout);
                     if (idAjout.Equals(Guid.Empty))
@@ -604,6 +611,11 @@ namespace PortailReserve.Controllers
             grades.Add(new SelectListItem { Text = "Lieutenant-colonel", Value = "Lieutenant-colonel" });
             grades.Add(new SelectListItem { Text = "Colonel", Value = "Colonel" });
 
+            List<SelectListItem> roles = new List<SelectListItem>();
+            roles.Add(new SelectListItem { Text = "Personnel classique", Value = "4" });
+            roles.Add(new SelectListItem { Text = "Gestion des groupes", Value = "3", Selected = true });
+            roles.Add(new SelectListItem { Text = "Gestion de section", Value = "2" });
+
             List<Utilisateur> sansSection = uDal.GetUtilisateursSansSection();
             List<SelectListItem> selectSansSection = new List<SelectListItem>();
             selectSansSection.Add(new SelectListItem { Text = "--- Choix ---", Value = Guid.Empty.ToString(), Selected = true });
@@ -618,6 +630,7 @@ namespace PortailReserve.Controllers
                 Groupe = groupe,
                 Section = section,
                 Grades = grades,
+                Roles = roles,
                 SansSection = selectSansSection,
                 MotDePasse = GenererMotDePasse()
             };
@@ -673,6 +686,7 @@ namespace PortailReserve.Controllers
                     var mail = Request.Form["mailCdg"];
                     var naissanceForm = Request.Form["naissanceCdg"];
                     var motDePasse = Request.Form["MotDePasse"];
+                    var role = Int32.Parse(Request.Form["roleCdg"]);
 
                     DateTime naissance = DateTime.Parse(naissanceForm);
 
@@ -707,7 +721,7 @@ namespace PortailReserve.Controllers
                         Telephone = "",
                         MotDePasse = motDePasse,
                         PremiereCo = true,
-                        Role = 3
+                        Role = role
                     };
                     Guid idAjout = uDal.AjouterUtilisateur(pourAjout);
                     if (idAjout.Equals(Guid.Empty))
@@ -882,6 +896,11 @@ namespace PortailReserve.Controllers
             grades.Add(new SelectListItem { Text = "Lieutenant-colonel", Value = "Lieutenant-colonel" });
             grades.Add(new SelectListItem { Text = "Colonel", Value = "Colonel" });
 
+            List<SelectListItem> roles = new List<SelectListItem>();
+            roles.Add(new SelectListItem { Text = "Personnel classique", Value = "4" });
+            roles.Add(new SelectListItem { Text = "Gestion des groupes", Value = "3" });
+            roles.Add(new SelectListItem { Text = "Gestion de section", Value = "2", Selected = true });
+
             List<Utilisateur> sansSection = uDal.GetUtilisateursSansSection();
             List<SelectListItem> selectSansSection = new List<SelectListItem>();
             selectSansSection.Add(new SelectListItem { Text = "--- Choix ---", Value = Guid.Empty.ToString(), Selected = true });
@@ -896,6 +915,7 @@ namespace PortailReserve.Controllers
                 AncienSoa = soa,
                 SansSection = selectSansSection,
                 Grades = grades,
+                Roles = roles,
                 MotDePasse = GenererMotDePasse()
             };
 
@@ -946,6 +966,7 @@ namespace PortailReserve.Controllers
                     var mail = Request.Form["mailSoa"];
                     var naissanceForm = Request.Form["naissanceSoa"];
                     var motDePasse = Request.Form["MotDePasse"];
+                    var role = Int32.Parse(Request.Form["roleSoa"]);
 
                     DateTime naissance = DateTime.Parse(naissanceForm);
 
@@ -980,7 +1001,7 @@ namespace PortailReserve.Controllers
                         Telephone = "",
                         MotDePasse = motDePasse,
                         PremiereCo = true,
-                        Role = 3
+                        Role = role
                     };
                     Guid idAjout = uDal.AjouterUtilisateur(pourAjout);
                     if (idAjout.Equals(Guid.Empty))
@@ -1153,6 +1174,11 @@ namespace PortailReserve.Controllers
             grades.Add(new SelectListItem { Text = "Lieutenant-colonel", Value = "Lieutenant-colonel" });
             grades.Add(new SelectListItem { Text = "Colonel", Value = "Colonel" });
 
+            List<SelectListItem> roles = new List<SelectListItem>();
+            roles.Add(new SelectListItem { Text = "Personnel classique", Value = "4" });
+            roles.Add(new SelectListItem { Text = "Gestion des groupes", Value = "3" });
+            roles.Add(new SelectListItem { Text = "Gestion de section", Value = "2", Selected = true });
+
             List<Utilisateur> sansSection = uDal.GetUtilisateursSansSection();
             List<SelectListItem> selectSansSection = new List<SelectListItem>();
             selectSansSection.Add(new SelectListItem { Text = "--- Choix ---", Value = Guid.Empty.ToString(), Selected = true });
@@ -1167,6 +1193,7 @@ namespace PortailReserve.Controllers
                 AncienSoa = cds,
                 SansSection = selectSansSection,
                 Grades = grades,
+                Roles = roles,
                 MotDePasse = GenererMotDePasse()
             };
 
@@ -1217,6 +1244,7 @@ namespace PortailReserve.Controllers
                     var mail = Request.Form["mailCds"];
                     var naissanceForm = Request.Form["naissanceCds"];
                     var motDePasse = Request.Form["MotDePasse"];
+                    var role = Int32.Parse(Request.Form["roleCds"]);
 
                     DateTime naissance = DateTime.Parse(naissanceForm);
 
@@ -1251,7 +1279,7 @@ namespace PortailReserve.Controllers
                         Telephone = "",
                         MotDePasse = motDePasse,
                         PremiereCo = true,
-                        Role = 3
+                        Role = role
                     };
                     Guid idAjout = uDal.AjouterUtilisateur(pourAjout);
                     if (idAjout.Equals(Guid.Empty))

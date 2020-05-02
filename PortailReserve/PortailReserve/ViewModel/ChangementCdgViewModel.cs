@@ -13,6 +13,7 @@ namespace PortailReserve.ViewModel
         public Groupe Groupe { get; set; }
         public Section Section { get; set; }
         public List<SelectListItem> Grades { get; set; }
+        public List<SelectListItem> Roles { get; set; }
         public List<SelectListItem> SansSection { get; set; }
         public string MotDePasse { get; set; }
     }
