@@ -3,10 +3,12 @@ function modifierSection() {
     var boutonModif = document.getElementById("modifSection");
     var boutonValider = document.getElementById("valideModif");
     var boutonAjouter = document.getElementById("boutonAjouter");
+    var boutonAjouterGroupe = document.getElementById("partieAjoutGroupe");
 
     boutonModif.style.display = "none";
     boutonValider.style.display = "block";
     boutonAjouter.style.display = "block";
+    boutonAjouterGroupe.style.display = "block";
 
     var listeGrade = document.getElementsByClassName("grade");
     var listeSelectGrade = document.getElementsByClassName("modifGrade");
@@ -32,10 +34,12 @@ function validerModifSection() {
     var boutonModif = document.getElementById("modifSection");
     var boutonValider = document.getElementById("valideModif");
     var boutonAjouter = document.getElementById("boutonAjouter");
+    var boutonAjouterGroupe = document.getElementById("partieAjoutGroupe");
 
     boutonModif.style.display = "block";
     boutonValider.style.display = "none";
     boutonAjouter.style.display = "none";
+    boutonAjouterGroupe.style.display = "none";
 
     var listeGrade = document.getElementsByClassName("grade");
     var listeSelectGrade = document.getElementsByClassName("modifGrade");

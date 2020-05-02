@@ -295,6 +295,7 @@ namespace PortailReserve.Controllers
 
             Section section = sDal.GetSectionByNumAndByCie(u.Section, u.Compagnie);
             List<Groupe> groupes = gDal.GetGroupesBySection(section.Id);
+            groupes = TrierGroupes(groupes);
 
             List<SelectListItem> selectGroupe = new List<SelectListItem>();
             foreach(Groupe g in groupes)
@@ -384,6 +385,7 @@ namespace PortailReserve.Controllers
             Section section = sDal.GetSectionByNumAndByCie(u.Section, u.Compagnie);
 
             List<Groupe> groupes = gDal.GetGroupesBySection(section.Id);
+            groupes = TrierGroupes(groupes);
             List<SelectListItem> selectGroupe = new List<SelectListItem>();
             bool premier = true;
             foreach (Groupe g in groupes)
@@ -1404,6 +1406,82 @@ namespace PortailReserve.Controllers
             catch (Exception e)
             {
                 return new HttpStatusCodeResult(400, "Erreur suppression CDS.");
+            }
+        }
+
+        /***
+         * Affichage de la pop-up d'ajout de nouveau groupe
+        ***/
+
+        [Authorize]
+        public ActionResult AfficherPopUpAjoutGroupe(Guid id)
+        {
+            int numSection = 0;
+            int numGroupe = 0;
+            if (id.Equals(Guid.Empty))
+            {
+                AjoutGroupeViewModel vmEmpty = new AjoutGroupeViewModel
+                {
+                    Section = id,
+                    NumGroupe = numGroupe,
+                    NumSection = numSection
+                };
+
+                return PartialView("AfficherPopUpAjoutGroupe", vmEmpty);
+            }
+
+            Section section = sDal.GetSectionById(id);
+            if (section == null || section.Equals(typeof(SectionNull)))
+            {
+                AjoutGroupeViewModel vmNull = new AjoutGroupeViewModel
+                {
+                    Section = Guid.Empty,
+                    NumGroupe = numGroupe,
+                    NumSection = numSection
+                };
+
+                return PartialView("AfficherPopUpAjoutGroupe", vmNull);
+            }
+
+            numSection = section.Numero;
+            numGroupe = gDal.GetGroupesBySection(id).Count + 1;
+
+            AjoutGroupeViewModel vm = new AjoutGroupeViewModel
+            {
+                Section = id,
+                NumSection = numSection,
+                NumGroupe = numGroupe
+            };
+
+            return PartialView("AfficherPopUpAjoutGroupe", vm);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult AjouterGroupe()
+        {
+            try
+            {
+                var idSection = Guid.Parse(Request.Form["idSection"]);
+                var numGroupe = Int32.Parse(Request.Form["numGroupe"]);
+
+                Groupe groupe = new Groupe
+                {
+                    Section = idSection,
+                    Numero = numGroupe,
+                    CDG = Guid.Empty
+                };
+
+                Guid idGroupe = gDal.AjouterGroupe(groupe);
+
+                if (idGroupe.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(500, "Erreur ajout du groupe");
+
+                return RedirectToAction("AfficherPersonnelSection");
+            }
+            catch(Exception e)
+            {
+                return new HttpStatusCodeResult(500);
             }
         }
     }

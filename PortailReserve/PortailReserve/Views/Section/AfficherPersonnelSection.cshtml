@@ -19,7 +19,8 @@
     @if (Model.CDS.Id.Equals(Guid.Empty))
     {
         <div class="col-5"> </div>
-        if(Model.Util.Role < 3) {
+        if (Model.Util.Role < 3)
+        {
             <div class="col-4 text-center iconeCol" style="display: none;">
                 <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
                      onclick="clickOn('chgmnt_@Model.CDS.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popUpChangementCds'); " />
@@ -48,7 +49,8 @@
             }
             @Model.CDS.Nom.ToUpperInvariant()
         </div>
-        if(Model.Util.Role < 3) {
+        if (Model.Util.Role < 3)
+        {
             <div class="col-2 text-center iconeCol" style="display: none;">
                 <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
                      onclick="clickOn('chgmnt_@Model.CDS.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popUpChangementCds'); " />
@@ -83,7 +85,8 @@
     @if (Model.SOA.Id.Equals(Guid.Empty))
     {
         <div class="col-5"> </div>
-        if(Model.Util.Role < 3) {
+        if (Model.Util.Role < 3)
+        {
             <div class="col-4 text-center iconeCol" style="display: none;">
                 <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
                      onclick="clickOn('chgmnt_@Model.SOA.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popUpChangementSoa'); " />
@@ -109,11 +112,12 @@
                 <span class="modifGrade" style="display: none;">
                     @{ Html.RenderAction("AfficherSelectGrade", new { id = Model.SOA.Id }); }
                 </span>
-                        }
+            }
             @Model.SOA.Nom.ToUpperInvariant()
         </div>
-        if(Model.Util.Role < 3) {
-            <div class="col-2 text-center iconeCol" style="display: none;"> 
+        if (Model.Util.Role < 3)
+        {
+            <div class="col-2 text-center iconeCol" style="display: none;">
                 <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
                      onclick="clickOn('chgmnt_@Model.SOA.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popUpChangementSoa'); " />
                 <div style="display: none;">
@@ -157,7 +161,8 @@
         @if (g.CDG.Equals(Guid.Empty))
         {
             <div class="col-6 chefDeGroupe"> </div>
-            if(Model.Util.Role < 4) {
+            if (Model.Util.Role < 4)
+            {
                 <div class="col-4 iconeCol text-center" style="display: none; ">
                     <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
                          onclick="clickOn('chgmnt_@g.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popChangementCdg'); " />
@@ -170,7 +175,7 @@
                             }, new { id = "chgmnt_" + g.Id.ToString().Substring(0, 8) })
                     </div>
                 </div>
-             }
+            }
         }
         else
         {
@@ -190,7 +195,8 @@
                         }
                         @cdg.Nom.ToUpperInvariant()
                     </div>
-                    if(Model.Util.Role < 4) {
+                    if (Model.Util.Role < 4)
+                    {
                         <div class="col-2 iconeCol text-center" style="display: none; ">
                             <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
                                  onclick="clickOn('chgmnt_@cdg.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popChangementCdg'); " />
@@ -205,7 +211,7 @@
                         </div>
                         <div class="col-2 iconeCol text-center" style="display: none; ">
                             <img src="~/Content/image/icone_supprimer.png" alt="supprimer" class="iconeModif"
-                                 onclick="clickOn('supp_@cdg.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popSuppressionCdg'); "/>
+                                 onclick="clickOn('supp_@cdg.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popSuppressionCdg'); " />
                             <div style="display: none;">
                                 @Ajax.ActionLink("Supprimer", "AfficherPopUpSuppCdg", new { id = cdg.Id, grp = g.Id }, new AjaxOptions
                                    {
@@ -262,7 +268,7 @@
                 {
                     <div class="col-2 iconeCol text-center" style="display: none; ">
                         <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
-                                onclick="clickOn('chgmnt_@sdt.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popUpChgmtGroupe'); " />
+                             onclick="clickOn('chgmnt_@sdt.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popUpChgmtGroupe'); " />
                         <div style="display: none;">
                             @Ajax.ActionLink("Changer", "AfficherPopUpChgmtGroupe", new { id = sdt.Id }, new AjaxOptions
                                 {
@@ -274,7 +280,7 @@
                     </div>
                     <div class="col-2 iconeCol text-center" style="display: none; ">
                         <img src="~/Content/image/icone_supprimer.png" alt="supprimer" class="iconeModif"
-                                onclick="clickOn('supp_@sdt.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popUpSuppression'); " />
+                             onclick="clickOn('supp_@sdt.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popUpSuppression'); " />
                         <div style="display: none; ">
                             @Ajax.ActionLink("Supprimer", "AfficherPopUpSuppSoldat", new { id = sdt.Id }, new AjaxOptions
                                 {
@@ -288,6 +294,25 @@
             </div>
         }
     }
+}
+
+@if (Model.Util.Role < 4)
+{
+    <div class="row" id="partieAjoutGroupe" style="display: none;">
+        <div class="col-4 champsTextCenter">
+            <button class="bouton boutonBleu allWidth text-center" onclick="afficherCacherPopUp('popUpAjoutGroupe'); clickOn('lienCreationGroupe');">
+                <span class="lienBouton lienBoutonBleu"> Créer un groupe </span>
+            </button>
+            <div style="display: none;">
+                @Ajax.ActionLink("Creer", "AfficherPopUpAjoutGroupe", new { id = Model.Section.Id }, new AjaxOptions
+                    {
+                        InsertionMode = InsertionMode.Replace,
+                        UpdateTargetId = "popUpAjoutGroupe",
+                        HttpMethod = "GET"
+                    }, new { id = "lienCreationGroupe" })
+            </div>
+        </div>
+    </div>
 }
 
 <div class="row">

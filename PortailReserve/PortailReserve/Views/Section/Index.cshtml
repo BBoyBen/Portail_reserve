@@ -51,6 +51,7 @@
     @{ Html.RenderAction("AfficherPersonnelSection", "Section", null); }
 </div>
 
+
 <!--
 #############################################################################################
 ########################## Pop Up de suppression d'utilisateur ##############################
@@ -165,6 +166,19 @@
 {
     <div class="container popUp" id="popUpSuppressionCds" style="display: none;">
         @{ Html.RenderAction("AfficherPopUpSuppressionCds", new { id = Guid.Empty, idSection = Guid.Empty }); }
+    </div>
+}
+
+<!--
+#############################################################################################
+############################## Pop Up ajout nouveau groupe ##################################
+#############################################################################################
+-->
+
+@if (Model.Role < 4)
+{
+    <div class="container popUp" id="popUpAjoutGroupe" style="display: none;">
+        @{ Html.RenderAction("AfficherPopUpAjoutGroupe", new { id = Guid.Empty }); }
     </div>
 }
 

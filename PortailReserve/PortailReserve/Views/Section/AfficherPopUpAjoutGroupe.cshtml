@@ -1,0 +1,45 @@
+﻿@model PortailReserve.ViewModel.AjoutGroupeViewModel
+
+<div class="row">
+    <div class="col-12 text-center titrePopUp"> Création du groupe @Model.NumGroupe </div>
+</div>
+<div class="row">
+    <div class="col-12 text-center"> Voulez vous créer le groupe @Model.NumGroupe dans la section @Model.NumSection ? </div>
+</div>
+<div class="row corpsPopUp text-center">
+    <div class="col-12"> (Le groupe sera ajouté sans aucun personnel.)</div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <div class="row">
+            <button id="boutonSuppression" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="clickOn('lienCreer'); ">
+                Créer
+            </button>
+            <div id="lienCreation" style="display: none; ">
+                @using (Ajax.BeginForm("AjouterGroupe", "Section", new AjaxOptions
+                {
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "partieSection",
+                    HttpMethod = "POST",
+                    OnBegin = "afficherCacherPopUp('popUpAjoutGroupe')",
+                    OnComplete = "modifierSection()",
+                    OnSuccess = "messageSuccess('Création OK !')",
+                    OnFailure = "messageError('Erreur création !')"
+                }))
+                {
+                    @Html.Hidden("idSection", Model.Section)
+                    @Html.Hidden("numGroupe", Model.NumGroupe)
+
+                    <input type="submit" value="Créer" id="lienCreer" />
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpAjoutGroupe'); ">
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>
