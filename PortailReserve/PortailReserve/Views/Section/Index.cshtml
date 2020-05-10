@@ -48,7 +48,15 @@
 </div>
 
 <div class="container" id="partieSection">
-    @{ Html.RenderAction("AfficherPersonnelSection", "Section", null); }
+    @{
+        if (Model.Section == 0)
+        {
+            Html.RenderAction("AfficherPersonnelSectionCom", "Section", null);
+        }
+        else {
+            Html.RenderAction("AfficherPersonnelSection", "Section", null);
+        }
+    }
 </div>
 
 

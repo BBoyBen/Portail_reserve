@@ -1,0 +1,113 @@
+﻿@model PortailReserve.ViewModel.SectionCommandementViewModel
+
+<div class="row">
+    <div class="col-12">
+        <h2 class="titreLegend"> Section commandement de la <span>@Model.Cie.Numero</span>e Compagnie </h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-3 titreCadre">
+        <strong> Commandant d'unité : </strong>
+    </div>
+    @if (Model.CDU.Id.Equals(Guid.Empty))
+    {
+        <div class="col-5"></div>
+    }
+    else
+    {
+        <div class="col-5">
+            <span id="grade_@Model.CDU.Id.ToString().Substring(0, 5)" class="grade" style="display: inline;">
+                @{ Html.RenderAction("AfficherGrade", new { id = Model.CDU.Id }); }
+            </span>
+            @if (Model.Util.Role < 3)
+            {
+                <span class="modifGrade" style="display: none;">
+                    @{ Html.RenderAction("AfficherSelectGrade", new { id = Model.CDU.Id }); }
+                </span>
+            }
+            @Model.CDU.Nom.ToUpperInvariant()
+        </div>
+    }
+</div>
+
+<div class="row">
+    <div class="col-3 titreCadre">
+        <strong> Adjudant d'unité : </strong>
+    </div>
+    @if (Model.ADU.Id.Equals(Guid.Empty))
+    {
+        <div class="col-5"></div>
+    }
+    else
+    {
+        <div class="col-5">
+            <span id="grade_@Model.ADU.Id.ToString().Substring(0, 5)" class="grade" style="display: inline;">
+                @{ Html.RenderAction("AfficherGrade", new { id = Model.ADU.Id }); }
+            </span>
+            @if (Model.Util.Role < 3)
+            {
+                <span class="modifGrade" style="display: none;">
+                    @{ Html.RenderAction("AfficherSelectGrade", new { id = Model.ADU.Id }); }
+                </span>
+            }
+            @Model.ADU.Nom.ToUpperInvariant()
+        </div>
+        <div class="col-4"></div>
+    }
+</div>
+
+<div id="listePersoCom">
+    @foreach(PortailReserve.Models.Utilisateur sdt in Model.UtilCmdt)
+    {
+        <div class="row">
+            <div class="col-8 soldat">
+                    @if (sdt.Id.Equals(Model.Util.Id))
+                    {
+                        <span class="user">
+                            <span id="grade_@sdt.Id.ToString().Substring(0, 5)" class="grade" style="display:inline;">
+                                @{ Html.RenderAction("AfficherGrade", new { id = sdt.Id }); }
+                            </span>
+                            @if (Model.Util.Role < 4)
+                            {
+                                <span class="modifGrade" style="display: none;">
+                                    @{ Html.RenderAction("AfficherSelectGrade", new { id = sdt.Id }); }
+                                </span>
+                            }
+                            @sdt.Nom.ToUpperInvariant()  @sdt.Prenom
+                        </span>
+                    }
+                    else
+                    {
+                        <span>
+                            <span id="grade_@sdt.Id.ToString().Substring(0, 5)" class="grade" style="display: inline;">
+                                @{ Html.RenderAction("AfficherGrade", new { id = sdt.Id }); }
+                            </span>
+                            @if (Model.Util.Role < 4)
+                            {
+                                <span class="modifGrade" style="display: none;">
+                                    @{ Html.RenderAction("AfficherSelectGrade", new { id = sdt.Id }); }
+                                </span>
+                            }
+                            @sdt.Nom.ToUpperInvariant()  @sdt.Prenom
+                        </span>
+                    }
+                </div>
+                @if (Model.Util.Role < 4)
+                {
+                    <div class="col-4 iconeCol text-center" style="display: none; ">
+                        <img src="~/Content/image/icone_supprimer.png" alt="supprimer" class="iconeModif"
+                             onclick="clickOn('supp_@sdt.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popUpSuppression'); " />
+                        <div style="display: none; ">
+                            @Ajax.ActionLink("Supprimer", "AfficherPopUpSuppSoldat", new { id = sdt.Id }, new AjaxOptions
+                                {
+                                    InsertionMode = InsertionMode.Replace,
+                                    UpdateTargetId = "popUpSuppression",
+                                    HttpMethod = "GET"
+                                }, new { id = "supp_" + sdt.Id.ToString().Substring(0, 8) })
+                        </div>
+                    </div>
+                }
+        </div>
+    }
+</div>

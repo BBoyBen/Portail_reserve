@@ -295,6 +295,7 @@
     <Compile Include="ViewModel\ModifProfilViewModel.cs" />
     <Compile Include="ViewModel\PremiereCoViewModel.cs" />
     <Compile Include="ViewModel\ProfilViewModel.cs" />
+    <Compile Include="ViewModel\SectionCommandementViewModel.cs" />
     <Compile Include="ViewModel\SectionViewModel.cs" />
     <Compile Include="ViewModel\SelectGradeViewModel.cs" />
     <Compile Include="ViewModel\SuppressionCdgViewModel.cs" />
@@ -520,6 +521,7 @@
     <Content Include="Views\Section\AfficherPopUpChgmntCds.cshtml" />
     <Content Include="Views\Section\AfficherPopUpSuppressionCds.cshtml" />
     <Content Include="Views\Section\AfficherPopUpAjoutGroupe.cshtml" />
+    <Content Include="Views\Section\AfficherPersonnelSectionCom.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

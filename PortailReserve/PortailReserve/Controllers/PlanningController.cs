@@ -3,6 +3,7 @@ using PortailReserve.DAL;
 using PortailReserve.DAL.Impl;
 using PortailReserve.Models;
 using PortailReserve.Models.NullObject;
+using PortailReserve.Utils;
 using PortailReserve.ViewModel;
 using System;
 using System.Collections.Generic;

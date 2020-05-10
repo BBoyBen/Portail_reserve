@@ -75,6 +75,9 @@ namespace PortailReserve.Controllers
             if (u.Section == -1 && u.Compagnie == -1)
                 return PartialView("AfficherSansSection");
 
+            if (u.Section == 0)
+                return RedirectToAction("AfficherPersonnelSectionCom");
+
             Section userSection = sDal.GetSectionByNumAndByCie(u.Section, u.Compagnie);
 
             List<Groupe> grpSection = gDal.GetGroupesBySection(userSection.Id);
@@ -123,6 +126,81 @@ namespace PortailReserve.Controllers
             };
 
             return PartialView("AfficherPersonnelSection", vm);
+        }
+
+        [Authorize]
+        public ActionResult AfficherPersonnelSectionCom()
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return new HttpUnauthorizedResult();
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return new HttpUnauthorizedResult();
+            }
+            if (u.PremiereCo)
+                return new HttpUnauthorizedResult();
+
+            if (u.Section == -1 && u.Compagnie == -1)
+                return PartialView("AfficherSansSection");
+
+            if (u.Section != 0)
+                return RedirectToAction("AfficherPersonnelSection");
+
+            Section userSection = sDal.GetSectionByNumAndByCie(u.Section, u.Compagnie);
+            Compagnie cie = cDal.GetCompagnieById(userSection.Compagnie);
+
+            Utilisateur cdu = uDal.GetUtilisateurById(cie.CDU);
+            if (cdu == null || cdu.Equals(typeof(UtilisateurNull)))
+                cdu = new Utilisateur
+                {
+                    Nom = "",
+                    Prenom = "",
+                    Grade = "",
+                    Id = Guid.Empty
+                };
+
+            Utilisateur adu = uDal.GetUtilisateurById(cie.ADU);
+            if (adu == null || adu.Equals(typeof(UtilisateurNull)))
+                adu = new Utilisateur
+                {
+                    Nom = "",
+                    Prenom = "",
+                    Grade = "",
+                    Id = Guid.Empty
+                };
+
+            List<Utilisateur> utilCom = uDal.GetUtilisateursBySectionByGroupe(u.Section, u.Compagnie);
+            List<int> toSupp = new List<int>();
+            int index = 0;
+            foreach(Utilisateur us in utilCom)
+            {
+                if (us.Id.Equals(cdu.Id) || us.Id.Equals(adu.Id))
+                    toSupp.Add(index);
+
+                index++;
+            }
+            foreach(int i in toSupp)
+            {
+                utilCom.RemoveAt(i);
+            }
+
+            SectionCommandementViewModel vm = new SectionCommandementViewModel
+            {
+                Util = u,
+                CDU = cdu,
+                ADU = adu,
+                UtilCmdt = utilCom,
+                Section = userSection,
+                Cie = cie
+            };
+
+            return PartialView("AfficherPersonnelSectionCom", vm);
         }
 
         [Authorize]
