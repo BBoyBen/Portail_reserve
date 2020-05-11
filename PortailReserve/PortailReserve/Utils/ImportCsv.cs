@@ -71,7 +71,7 @@ namespace PortailReserve.Utils
                     if (cdu != null && !cdu.Equals(typeof(UtilisateurNull)))
                         idCdu = cdu.Id;
 
-                    Utilisateur adu = uDal.GetUtilisateurById(c.Adu);
+                    Utilisateur adu = uDal.GetUtilisateurByMatricule(c.Adu);
                     Guid idAdu = Guid.Empty;
                     if (adu != null && !adu.Equals(typeof(UtilisateurNull)))
                         idAdu = adu.Id;

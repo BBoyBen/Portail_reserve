@@ -8,7 +8,9 @@ function modifierSection() {
     boutonModif.style.display = "none";
     boutonValider.style.display = "block";
     boutonAjouter.style.display = "block";
-    boutonAjouterGroupe.style.display = "block";
+
+    if (boutonAjouterGroupe != null)
+        boutonAjouterGroupe.style.display = "block";
 
     var listeGrade = document.getElementsByClassName("grade");
     var listeSelectGrade = document.getElementsByClassName("modifGrade");

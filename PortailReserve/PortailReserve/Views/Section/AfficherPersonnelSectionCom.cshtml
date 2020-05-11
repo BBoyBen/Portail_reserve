@@ -13,6 +13,21 @@
     @if (Model.CDU.Id.Equals(Guid.Empty))
     {
         <div class="col-5"></div>
+        if (Model.Util.Role < 3)
+        {
+            <div class="col-4 text-center iconeCol" style="display: none;">
+                <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
+                     onclick="clickOn('chgmnt_@Model.CDU.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popUpChangementCdu'); " />
+                <div style="display: none;">
+                    @Ajax.ActionLink("Changer", "AfficherPopUpChgmntCdu", new { id = Guid.Empty, idCie = Model.Cie.Id }, new AjaxOptions
+                        {
+                            InsertionMode = InsertionMode.Replace,
+                            UpdateTargetId = "popUpChangementCdu",
+                            HttpMethod = "GET"
+                        }, new { id = "chgmnt_" + Model.CDU.Id.ToString().Substring(0, 8) })
+                </div>
+            </div>
+        }
     }
     else
     {
@@ -28,6 +43,33 @@
             }
             @Model.CDU.Nom.ToUpperInvariant()
         </div>
+        if (Model.Util.Role < 3)
+        {
+            <div class="col-2 text-center iconeCol" style="display: none;">
+                <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
+                     onclick="clickOn('chgmnt_@Model.CDU.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popUpChangementCdu'); " />
+                <div style="display: none;">
+                    @Ajax.ActionLink("Changer", "AfficherPopUpChgmntCdu", new { id = Model.CDU.Id, idCie = Model.Cie.Id }, new AjaxOptions
+                        {
+                            InsertionMode = InsertionMode.Replace,
+                            UpdateTargetId = "popUpChangementCdu",
+                            HttpMethod = "GET"
+                        }, new { id = "chgmnt_" + Model.CDU.Id.ToString().Substring(0, 8) })
+                </div>
+            </div>
+            <div class="col-2 text-center iconeCol" style="display: none;">
+                <img src="~/Content/image/icone_supprimer.png" alt="supprimer" class="iconeModif"
+                     onclick="clickOn('supp_@Model.CDU.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popUpSuppressionCdu'); " />
+                <div style="display: none;">
+                    @Ajax.ActionLink("Supprimer", "AfficherPopUpSuppressionCdu", new { id = Model.CDU.Id, idCie = Model.Cie.Id }, new AjaxOptions
+                       {
+                            InsertionMode = InsertionMode.Replace,
+                            UpdateTargetId = "popUpSuppressionCdu",
+                            HttpMethod = "GET"
+                       }, new { id = "supp_" + Model.CDU.Id.ToString().Substring(0, 8) })
+                </div>
+            </div>
+        }
     }
 </div>
 
@@ -38,6 +80,21 @@
     @if (Model.ADU.Id.Equals(Guid.Empty))
     {
         <div class="col-5"></div>
+        if (Model.Util.Role < 3)
+        {
+            <div class="col-4 text-center iconeCol" style="display: none;">
+                <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
+                     onclick="clickOn('chgmnt_@Model.ADU.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popUpChangementAdu'); " />
+                <div style="display: none;">
+                    @Ajax.ActionLink("Changer", "AfficherPopUpChgmntAdu", new { id = Guid.Empty, idCie = Model.Cie.Id }, new AjaxOptions
+                        {
+                            InsertionMode = InsertionMode.Replace,
+                            UpdateTargetId = "popUpChangementAdu",
+                            HttpMethod = "GET"
+                        }, new { id = "chgmnt_" + Model.ADU.Id.ToString().Substring(0, 8) })
+                </div>
+            </div>
+        }
     }
     else
     {
@@ -53,7 +110,33 @@
             }
             @Model.ADU.Nom.ToUpperInvariant()
         </div>
-        <div class="col-4"></div>
+        if (Model.Util.Role < 3)
+        {
+            <div class="col-2 text-center iconeCol" style="display: none;">
+                <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeModif"
+                     onclick="clickOn('chgmnt_@Model.ADU.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popUpChangementAdu'); " />
+                <div style="display: none;">
+                    @Ajax.ActionLink("Changer", "AfficherPopUpChgmntAdu", new { id = Model.ADU.Id, idCie = Model.Cie.Id }, new AjaxOptions
+                        {
+                            InsertionMode = InsertionMode.Replace,
+                            UpdateTargetId = "popUpChangementAdu",
+                            HttpMethod = "GET"
+                        }, new { id = "chgmnt_" + Model.ADU.Id.ToString().Substring(0, 8) })
+                </div>
+            </div>
+            <div class="col-2 text-center iconeCol" style="display: none;">
+                <img src="~/Content/image/icone_supprimer.png" alt="supprimer" class="iconeModif"
+                     onclick="clickOn('supp_@Model.ADU.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popUpSuppressionAdu'); " />
+                <div style="display: none;">
+                    @Ajax.ActionLink("Supprimer", "AfficherPopUpSuppressionAdu", new { id = Model.ADU.Id, idCie = Model.Cie.Id }, new AjaxOptions
+                       {
+                            InsertionMode = InsertionMode.Replace,
+                            UpdateTargetId = "popUpSuppressionAdu",
+                            HttpMethod = "GET"
+                       }, new { id = "supp_" + Model.ADU.Id.ToString().Substring(0, 8) })
+                </div>
+            </div>
+        }
     }
 </div>
 

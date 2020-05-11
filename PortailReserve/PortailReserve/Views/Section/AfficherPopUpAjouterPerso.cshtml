@@ -17,16 +17,22 @@
                     OnFailure = "messageError('Erreur ajout !')"
                 }))
 {
-    <div class="row">
-        <div class="col-12 text-center">
-            <label for="selectGroupe"> Groupe : </label>
+    if(Model.NumSection != 0) {
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="selectGroupe"> Groupe : </label>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-6 champsTextCenter">
-            @Html.DropDownList("selectGroupe", Model.Groupes, new { @class = "champsText allWidth" })
+        <div class="row">
+            <div class="col-6 champsTextCenter">
+                @Html.DropDownList("selectGroupe", Model.Groupes, new { @class = "champsText allWidth" })
+            </div>
         </div>
-    </div>
+    }
+    else
+    {
+        @Html.Hidden("selectGroupe", Guid.Empty)
+    }
 
     <div class="row">
         <div class="col-12 text-center">

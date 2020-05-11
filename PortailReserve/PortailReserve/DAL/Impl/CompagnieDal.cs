@@ -33,6 +33,29 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
+        public int ChangerCdu(Guid id, Guid cdu)
+        {
+            try
+            {
+                Compagnie cie = bdd.Compagnies.FirstOrDefault(c => c.Id.Equals(id));
+                if (cie == null || cie.Equals(typeof(CompagnieNull)))
+                {
+                    Log("EEROR", "La compagnie " + id + " est introuvable pour le changement de cdu");
+                    return -1;
+                }
+
+                cie.CDU = cdu;
+                bdd.SaveChanges();
+
+                return 1;
+            }
+            catch (Exception e)
+            {
+                Log("EEROR", "Une erreur est survenue lors du changement de CDU de la compagnie : " + id + " -> " + e);
+                return 0;
+            }
+        }
+
         public void Dispose()
         {
             bdd.Dispose();

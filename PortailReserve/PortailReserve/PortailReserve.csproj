@@ -286,6 +286,7 @@
     <Compile Include="ViewModel\AjouterEventViewModel.cs" />
     <Compile Include="ViewModel\AjouterPersonnelViewModel.cs" />
     <Compile Include="ViewModel\AjoutGroupeViewModel.cs" />
+    <Compile Include="ViewModel\ChangementCadreComViewModel.cs" />
     <Compile Include="ViewModel\ChangementCdgViewModel.cs" />
     <Compile Include="ViewModel\ChangementGroupeViewModel.cs" />
     <Compile Include="ViewModel\ChangementSoaViewModel.cs" />

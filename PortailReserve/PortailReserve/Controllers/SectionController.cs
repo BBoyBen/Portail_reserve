@@ -176,18 +176,15 @@ namespace PortailReserve.Controllers
                 };
 
             List<Utilisateur> utilCom = uDal.GetUtilisateursBySectionByGroupe(u.Section, u.Compagnie);
-            List<int> toSupp = new List<int>();
-            int index = 0;
+            List<Utilisateur> toSupp = new List<Utilisateur>();
             foreach(Utilisateur us in utilCom)
             {
                 if (us.Id.Equals(cdu.Id) || us.Id.Equals(adu.Id))
-                    toSupp.Add(index);
-
-                index++;
+                    toSupp.Add(us);
             }
-            foreach(int i in toSupp)
+            foreach(Utilisateur i in toSupp)
             {
-                utilCom.RemoveAt(i);
+                utilCom.Remove(i);
             }
 
             SectionCommandementViewModel vm = new SectionCommandementViewModel
@@ -520,7 +517,8 @@ namespace PortailReserve.Controllers
                 SansSection = selectSansSection,
                 Grades = grades,
                 Roles = roles,
-                MotDePasse = nouveauMdp
+                MotDePasse = nouveauMdp,
+                NumSection = u.Section
             };
 
             return PartialView("AfficherPopUpAjouterPerso", vm);
@@ -555,7 +553,7 @@ namespace PortailReserve.Controllers
 
                 var groupe = Request.Form["selectGroupe"];
                 Guid idGroupe = Guid.Parse(groupe);
-                if (idGroupe.Equals(Guid.Empty))
+                if (idGroupe.Equals(Guid.Empty) && numSection != 0)
                     return new HttpStatusCodeResult(400, "Erreur id groupe ajout utilisateur.");
 
                 var creerNouveau = Request.Form["creerPersonnel"];
@@ -1560,6 +1558,203 @@ namespace PortailReserve.Controllers
             catch(Exception e)
             {
                 return new HttpStatusCodeResult(500);
+            }
+        }
+
+        /***
+         * Affichage de la pop-up de changement de CDU
+        ***/
+
+        [Authorize]
+        public ActionResult AfficherPopUpChgmntCdu(Guid id, Guid idCie)
+        {
+            Utilisateur cdu = uDal.GetUtilisateurById(id);
+            if (cdu == null || cdu.Equals(typeof(UtilisateurNull)))
+                cdu = new Utilisateur
+                {
+                    Grade = "Soldat",
+                    Nom = "Empty",
+                    Prenom = "Empty",
+                    Id = Guid.Empty
+                };
+
+            Compagnie cie = cDal.GetCompagnieById(idCie);
+            if (cie == null || cie.Equals(typeof(CompagnieNull)))
+                cie = new Compagnie
+                {
+                    Id = Guid.Empty,
+                    Numero = -1
+                };
+
+            List<SelectListItem> grades = new List<SelectListItem>();
+            grades.Add(new SelectListItem { Text = "Soldat", Value = "Soldat" });
+            grades.Add(new SelectListItem { Text = "1ère classe", Value = "1ère classe" });
+            grades.Add(new SelectListItem { Text = "Caporal", Value = "Caporal" });
+            grades.Add(new SelectListItem { Text = "Caporal-chef", Value = "Caporal-chef" });
+            grades.Add(new SelectListItem { Text = "Caporal-chef de 1ère classe", Value = "Caporal-chef de 1ère classe" });
+
+            grades.Add(new SelectListItem { Text = "Sergent", Value = "Sergent" });
+            grades.Add(new SelectListItem { Text = "Sergent-chef", Value = "Sergent-chef" });
+            grades.Add(new SelectListItem { Text = "Adjudant", Value = "Adjudant" });
+            grades.Add(new SelectListItem { Text = "Adjudant-chef", Value = "Adjudant-chef" });
+            grades.Add(new SelectListItem { Text = "Major", Value = "Major" });
+
+            grades.Add(new SelectListItem { Text = "Sous-lieutenant", Value = "Sous-lieutenant" });
+            grades.Add(new SelectListItem { Text = "Lieutenant", Value = "Lieutenant" });
+            grades.Add(new SelectListItem { Text = "Capitaine", Value = "Capitaine", Selected = true });
+            grades.Add(new SelectListItem { Text = "Commandant", Value = "Commandant" });
+            grades.Add(new SelectListItem { Text = "Lieutenant-colonel", Value = "Lieutenant-colonel" });
+            grades.Add(new SelectListItem { Text = "Colonel", Value = "Colonel" });
+
+            List<SelectListItem> roles = new List<SelectListItem>();
+            roles.Add(new SelectListItem { Text = "Personnel classique", Value = "4" });
+            roles.Add(new SelectListItem { Text = "Gestion des groupes", Value = "3" });
+            roles.Add(new SelectListItem { Text = "Gestion de section", Value = "2", Selected = true });
+
+            List<Utilisateur> sansSection = uDal.GetUtilisateursSansSection();
+            List<SelectListItem> selectSansSection = new List<SelectListItem>();
+            selectSansSection.Add(new SelectListItem { Text = "--- Choix ---", Value = Guid.Empty.ToString(), Selected = true });
+            foreach (Utilisateur util in sansSection)
+            {
+                selectSansSection.Add(new SelectListItem { Text = util.Grade + " " + util.Nom + " " + util.Prenom, Value = util.Id.ToString() });
+            }
+
+            ChangementCadreComViewModel vm = new ChangementCadreComViewModel
+            {
+                Cie = cie,
+                AncienCadre = cdu,
+                SansSection = selectSansSection,
+                Grades = grades,
+                Roles = roles,
+                MotDePasse = GenererMotDePasse()
+            };
+
+            return PartialView("AfficherPopUpChgmntCds", vm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult ChangementCdu()
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                if (u.Role > 2)
+                    return new HttpUnauthorizedResult();
+
+                int numSection = u.Section;
+                int numCie = u.Compagnie;
+
+                Guid ancienCdu = Guid.Parse(Request.Form["AncienCadre.Id"]);
+
+                Guid cie = Guid.Parse(Request.Form["Cie.Id"]);
+                if (cie.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Erreur sur la compagnie.");
+
+                var creerNouveau = Request.Form["creerCdu"];
+                if (creerNouveau != null && creerNouveau.Equals("on"))
+                {
+                    // Récupération des champs du formulaire
+                    var grade = Request.Form["gradeCdu"];
+                    var nom = Request.Form["nomCdu"];
+                    var prenom = Request.Form["prenomCdu"];
+                    var matricule = Request.Form["matriculeCdu"];
+                    var mail = Request.Form["mailCdu"];
+                    var naissanceForm = Request.Form["naissanceCdu"];
+                    var motDePasse = Request.Form["MotDePasse"];
+                    var role = Int32.Parse(Request.Form["roleCdu"]);
+
+                    DateTime naissance = DateTime.Parse(naissanceForm);
+
+                    //Validation des valeurs
+                    //TO-DO
+
+                    // Création d'une adresse vide
+                    Adresse adresse = new Adresse
+                    {
+                        CodePostal = "",
+                        Pays = "France",
+                        Ville = "",
+                        Voie = ""
+                    };
+                    Guid idAdresse = aDal.AjouterAdresse(adresse);
+                    if (idAdresse.Equals(Guid.Empty))
+                        return new HttpNotFoundResult("Erreur ajout adresse pour nouveau cdu.");
+
+                    //Création de l'utilisateur
+                    Utilisateur pourAjout = new Utilisateur
+                    {
+                        Grade = grade,
+                        Nom = nom,
+                        Prenom = prenom,
+                        Matricule = matricule,
+                        Naissance = naissance,
+                        Groupe = Guid.Empty,
+                        Section = numSection,
+                        Compagnie = numCie,
+                        Email = mail,
+                        Adresse = idAdresse,
+                        Telephone = "",
+                        MotDePasse = motDePasse,
+                        PremiereCo = true,
+                        Role = role
+                    };
+                    Guid idAjout = uDal.AjouterUtilisateur(pourAjout);
+                    if (idAjout.Equals(Guid.Empty))
+                        return new HttpNotFoundResult("Erreur ajout nouvel utilisateur. ");
+
+                    int retour = cDal.ChangerCdu(cie, idAjout);
+                    if (retour != 1)
+                        return new HttpStatusCodeResult(500, "Erreur changement de cdu.");
+
+                    if (!ancienCdu.Equals(Guid.Empty))
+                    {
+                        retour = uDal.SupprimerUtilisateurSection(ancienCdu);
+                        if (retour != 1)
+                            return new HttpStatusCodeResult(500, "Erreur suppresion d'ancien cdu");
+                    }
+                }
+                else
+                {
+                    Guid nouveauCdu = Guid.Parse(Request.Form["cduExistant"]);
+                    if (nouveauCdu.Equals(Guid.Empty))
+                        return new HttpStatusCodeResult(400, "Erreur sur le nouveau cdu.");
+
+                    int retour = uDal.PasserCadre(nouveauCdu, numSection, numCie);
+                    if (retour != 1)
+                        return new HttpStatusCodeResult(500, "Erreur passage cadre.");
+
+                    if (!ancienCdu.Equals(Guid.Empty))
+                    {
+                        retour = uDal.SupprimerUtilisateurSection(ancienCdu);
+                        if (retour != 1)
+                            return new HttpStatusCodeResult(500, "Erreur suppression ancien cdu.");
+                    }
+
+                    retour = cDal.ChangerCdu(cie, nouveauCdu);
+                    if (retour != 1)
+                        return new HttpStatusCodeResult(500, "Erreur changement de commandant d'unité.");
+                }
+
+                return RedirectToAction("AfficherPersonnelSection");
+            }
+            catch (Exception e)
+            {
+                return new HttpStatusCodeResult(400, "Erreur lors du changement de CDU");
             }
         }
     }
