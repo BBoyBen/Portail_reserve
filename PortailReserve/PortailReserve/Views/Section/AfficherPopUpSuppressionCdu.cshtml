@@ -1,0 +1,47 @@
+﻿@model PortailReserve.ViewModel.SuppressionCadreComViewModel
+
+<div class="row">
+    <div class="col-12 text-center titrePopUp"> Suppression de @Model.Cadre.Nom @Model.Cadre.Prenom (CDU) </div>
+</div>
+<div class="row">
+    <div class="col-12 text-center"> Voulez vraiment supprimer le @Model.Cadre.Grade @Model.Cadre.Nom, commandant d'unité, de votre section ? </div>
+</div>
+<div class="row corpsPopUp text-center">
+    <div class="col-12"> (La personne ne sera plus dans votre section, vous pourrez tout de même la rajouter plus tard, si il n'est affecté à aucune autre section.)</div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <div class="row">
+            <button id="boutonSuppression" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="clickOn('lienSuppCdu'); ">
+                Supprimer
+            </button>
+            <div id="lienSuppressionCdu" style="display: none; ">
+                @using (Ajax.BeginForm("SupprimerCdu", "Section", new AjaxOptions
+                {
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "partieSection",
+                    HttpMethod = "POST",
+                    OnBegin = "afficherCacherPopUp('popUpSuppressionCdu')",
+                    OnComplete = "modifierSection()",
+                    OnSuccess = "messageSuccess('Suppression CDU OK !')",
+                    OnFailure = "messageError('Erreur suppression CDU !')"
+                }))
+                {
+                    @Html.Hidden("idAncienCdu", Model.Cadre.Id)
+                    @Html.Hidden("idCie", Model.Cie.Id)
+
+                    <input type="submit" value="Supprimer" id="lienSuppCdu" />
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpSuppressionCdu'); ">
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>
+
+

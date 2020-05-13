@@ -1,0 +1,184 @@
+﻿@model PortailReserve.ViewModel.ChangementCadreComViewModel
+
+<div class="row">
+    <div class="col-12 text-center titrePopUp">
+        Changer le commandant d'unité de la <span>@Model.Cie.Numero</span>e compagnie
+    </div>
+</div>
+
+@using (Ajax.BeginForm("ChangementCdu", "Section", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "partieSection",
+    HttpMethod = "POST",
+    OnBegin = "afficherCacherPopUp('popUpChangementCdu')",
+    OnComplete = "modifierSection()",
+    OnSuccess = "messageSuccess('Changement CDU OK !')",
+    OnFailure = "messageError('Erreur chamgement CDU !')"
+}))
+{
+    <div class="row">
+        <div class="col-12 text-center">
+            <label for="cduExistant"> Personnels existant sans section : </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 champsTextCenter">
+            @Html.DropDownList("cduExistant", Model.SansSection, new { @class = "champsText allWidth", id = "cduExistant" })
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-center corpsPopUp">
+            <strong> OU </strong>
+        </div>
+    </div>
+
+    <div class="row corpsPopUp">
+        <div class="col-4">
+            <div class="row">
+                <div class="col-2 champsTextDroit">
+                    <input type="checkbox" name="creerCdu" class="checkBox" id="creerCdu" onchange="clickSurCreerCdu();" />
+                </div>
+            </div>
+        </div>
+        <div class="col-8 champsTextCenter">
+            <label for="creerCdu" class="labelCheckBox"> Créer un nouveau personnel </label>
+        </div>
+    </div>
+
+    <div id="creationCdu" style="display: none;">
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="gradeCdu"> Grade </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.DropDownList("gradeCdu", Model.Grades, new { @class = "champsText allWidth" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="roleCdu"> Role </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.DropDownList("roleCdu", Model.Roles, new { @class = "champsText allWidth" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="nomCdu"> Nom </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("nomCdu", null, new { @class = "champsText allWidth", id = "nomCdu" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="prenomCdu"> Prénom </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("prenomCdu", null, new { @class = "champsText allWidth", id = "prenomCdu" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="matriculeCdu"> Matricule </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("matriculeCdu", null, new { @class = "champsText allWidth", id = "matriculeCdu" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="naissanceCdu"> Date de naissance </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("naissanceCdu", null, new { @class = "champsText allWidth", id = "naissanceCdu", type = "date" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="mailCdu"> Adresse mail </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("mailCdu", null, new { @class = "champsText allWidth", id = "mailCdu" })
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.MotDePasse)
+    @Html.HiddenFor(m => m.AncienCadre.Id)
+    @Html.HiddenFor(m => m.Cie.Id)
+
+    <input type="submit" value="Ajouter" id="lienAjoutCdu" style="display:none;" />
+}
+
+<div class="row corpsPopUp" id="erreurAjoutCdu" style="display:none; ">
+    <div class="col-12 text-center erreur alertBack">
+        Il y a des erreurs. Vérifiez votre saisie.
+    </div>
+</div>
+
+<div id="partiePreConfirmeCdu" style="display:block;">
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <button id="boutonChangementCdu" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="validerAjoutCdu(false)">
+                    Ajouter
+                </button>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpChangementCdu'); ">
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmationAjoutCdu" style="display:none;">
+    <div class="row infoValide">
+        <div class="col-12 text-center">
+            Le mot de passe du nouvel utilisateur est : <strong>@Model.MotDePasse</strong>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <button id="boutonChangementCdu" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="validerAjoutCdu(true)">
+                    Confirmer
+                </button>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpChangementCdu'); ">
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

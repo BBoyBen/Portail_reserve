@@ -262,7 +262,6 @@ C:\Users\ben63\Documents\Projet\Portail_reserve\PortailReserve\PortailReserve\bi
 C:\Users\ben63\Documents\Projet\Portail_reserve\PortailReserve\PortailReserve\bin\fr\System.Web.WebPages.resources.dll
 C:\Users\ben63\Documents\Projet\Portail_reserve\PortailReserve\PortailReserve\bin\fr\System.Web.WebPages.Deployment.resources.dll
 C:\Users\ben63\Documents\Projet\Portail_reserve\PortailReserve\PortailReserve\bin\fr\System.Web.WebPages.Razor.resources.dll
-C:\Users\ben63\Documents\Projet\Portail_reserve\PortailReserve\PortailReserve\obj\Debug\PortailReserve.csprojAssemblyReference.cache
 C:\Users\ben63\Documents\Projet\Portail_reserve\PortailReserve\PortailReserve\obj\Debug\PortailReserve.csproj.CopyComplete
 C:\Users\ben63\Documents\Projet\Portail_reserve\PortailReserve\PortailReserve\obj\Debug\PortailReserve.dll
 C:\Users\ben63\Documents\Projet\Portail_reserve\PortailReserve\PortailReserve\obj\Debug\PortailReserve.pdb
@@ -270,3 +269,4 @@ C:\Users\ben63\Documents\Projet\Portail_reserve\PortailReserve\PortailReserve\bi
 C:\Users\ben63\Documents\Projet\Portail_reserve\PortailReserve\PortailReserve\bin\CsvHelper.xml
 D:\Developpement\Portail_reserve\PortailReserve\PortailReserve\bin\CsvHelper.dll
 D:\Developpement\Portail_reserve\PortailReserve\PortailReserve\bin\CsvHelper.xml
+C:\Users\ben63\Documents\Projet\Portail_reserve\PortailReserve\PortailReserve\obj\Debug\PortailReserve.csprojAssemblyReference.cache

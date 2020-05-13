@@ -53,7 +53,8 @@
         {
             Html.RenderAction("AfficherPersonnelSectionCom", "Section", null);
         }
-        else {
+        else
+        {
             Html.RenderAction("AfficherPersonnelSection", "Section", null);
         }
     }
@@ -174,6 +175,32 @@
 {
     <div class="container popUp" id="popUpSuppressionCds" style="display: none;">
         @{ Html.RenderAction("AfficherPopUpSuppressionCds", new { id = Guid.Empty, idSection = Guid.Empty }); }
+    </div>
+}
+
+<!--
+#############################################################################################
+############################## Pop Up de changement de CDU ##################################
+#############################################################################################
+-->
+
+@if (Model.Role < 3)
+{
+    <div class="container popUp" id="popUpChangementCdu" style="display: none;">
+        @{ Html.RenderAction("AfficherPopUpChgmntCdu", new { id = Guid.Empty, idCie = Guid.Empty }); }
+    </div>
+}
+
+<!--
+#############################################################################################
+############################## Pop Up de suppression de CDU #################################
+#############################################################################################
+-->
+
+@if (Model.Role < 3)
+{
+    <div class="container popUp" id="popUpSuppressionCdu" style="display: none;">
+        @{ Html.RenderAction("AfficherPopUpSuppressionCdu", new { id = Guid.Empty, idCie = Guid.Empty }); }
     </div>
 }
 

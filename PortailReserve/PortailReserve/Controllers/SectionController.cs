@@ -1629,7 +1629,7 @@ namespace PortailReserve.Controllers
                 MotDePasse = GenererMotDePasse()
             };
 
-            return PartialView("AfficherPopUpChgmntCds", vm);
+            return PartialView("AfficherPopUpChgmntCdu", vm);
         }
 
         [Authorize]
@@ -1755,6 +1755,87 @@ namespace PortailReserve.Controllers
             catch (Exception e)
             {
                 return new HttpStatusCodeResult(400, "Erreur lors du changement de CDU");
+            }
+        }
+
+        /***
+        * Affichage de la pop-up de suppression de CDU
+       ***/
+
+        [Authorize]
+        public ActionResult AfficherPopUpSuppressionCdu(Guid id, Guid idCie)
+        {
+            Utilisateur cdu = uDal.GetUtilisateurById(id);
+            if (cdu == null || cdu.Equals(typeof(UtilisateurNull)))
+                cdu = new Utilisateur
+                {
+                    Nom = "Empty",
+                    Prenom = "Empty",
+                    Grade = "Soldat",
+                    Id = Guid.Empty
+                };
+
+            Compagnie cie = cDal.GetCompagnieById(idCie);
+            if (cie == null || cie.Equals(typeof(CompagnieNull)))
+                cie = new Compagnie
+                {
+                    Id = Guid.Empty
+                };
+
+            SuppressionCadreComViewModel vm = new SuppressionCadreComViewModel
+            {
+                Cadre = cdu,
+                Cie = cie
+            };
+
+            return PartialView("AfficherPopUpSuppressionCdu", vm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult SupprimerCdu()
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                if (u.Role > 2)
+                    return new HttpUnauthorizedResult();
+
+                Guid idAncienCdu = Guid.Parse(Request.Form["idAncienCdu"]);
+                if (idAncienCdu.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Erreur id ancien cdu.");
+
+                Guid idCie = Guid.Parse(Request.Form["idCie"]);
+                if (idCie.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Erreur id compagnie.");
+
+                int retour = cDal.ChangerCdu(idCie, Guid.Empty);
+                if (retour != 1)
+                    return new HttpStatusCodeResult(400, "Erreur de changer cdu.");
+
+                retour = uDal.SupprimerUtilisateurSection(idAncienCdu);
+                if (retour != 1)
+                    return new HttpStatusCodeResult(400, "Erreur supp cdu de la compagnie");
+
+                return RedirectToAction("AfficherPersonnelSection");
+            }
+            catch (Exception e)
+            {
+                return new HttpStatusCodeResult(400, "Erreur suppression CDU.");
             }
         }
     }
