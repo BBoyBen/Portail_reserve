@@ -526,6 +526,7 @@
     <Content Include="Views\Section\AfficherPersonnelSectionCom.cshtml" />
     <Content Include="Views\Section\AfficherPopUpChgmntCdu.cshtml" />
     <Content Include="Views\Section\AfficherPopUpSuppressionCdu.cshtml" />
+    <Content Include="Views\Section\AfficherPopUpChgmntAdu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

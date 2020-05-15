@@ -42,7 +42,8 @@ function validerModifSection() {
     boutonValider.style.display = "none";
     if (boutonAjouter != null)
         boutonAjouter.style.display = "none";
-    boutonAjouterGroupe.style.display = "none";
+    if (boutonAjouterGroupe != null)
+        boutonAjouterGroupe.style.display = "none";
 
     var listeGrade = document.getElementsByClassName("grade");
     var listeSelectGrade = document.getElementsByClassName("modifGrade");
@@ -146,6 +147,17 @@ function clickSurCreerCdu() {
 
     var check = document.getElementById("creerCdu");
     var partieCreation = document.getElementById("creationCdu");
+
+    if (check.checked)
+        partieCreation.style.display = "block";
+    else
+        partieCreation.style.display = "none";
+}
+
+function clickSurCreerAdu() {
+
+    var check = document.getElementById("creerAdu");
+    var partieCreation = document.getElementById("creationAdu");
 
     if (check.checked)
         partieCreation.style.display = "block";
@@ -592,6 +604,92 @@ function validerAjoutCdu(confirmation) {
         }
         else {
             document.getElementById("lienAjoutCdu").click();
+        }
+    }
+    else {
+        erreurAjout.style.display = "block";
+    }
+}
+
+function validerAjoutAdu(confirmation) {
+
+    var allOk = true;
+    var erreurAjout = document.getElementById("erreurAjoutAdu");
+
+    var checkBox = document.getElementById("creerAdu");
+    if (!checkBox.checked) {
+        var selectGroupe = document.getElementById("aduExistant");
+        if (selectGroupe.options[selectGroupe.selectedIndex].value === "00000000-0000-0000-0000-000000000000") {
+            allOk = false;
+            erreurChamps("aduExistant");
+        }
+        else {
+            champsOk("aduExistant");
+        }
+    }
+    else {
+        champsOk("aduExistant");
+
+        var nom = document.getElementById("nomAdu");
+        if (nom.value.trim().length === 0) {
+            allOk = false;
+            erreurChamps("nomAdu");
+        }
+        else {
+            champsOk("nomAdu");
+        }
+
+        var prenom = document.getElementById("prenomAdu");
+        if (prenom.value.trim().length === 0) {
+            allOk = false;
+            erreurChamps("prenomAdu");
+        }
+        else {
+            champsOk("prenomAdu");
+        }
+
+        var matricule = document.getElementById("matriculeAdu");
+        var validMatricule = /[0-9]{10}/;
+        if (validMatricule.test(matricule.value) && matricule.value.trim().length === 10) {
+            champsOk("matriculeAdu");
+        }
+        else {
+            allOk = false;
+            erreurChamps("matriculeAdu");
+        }
+
+        var dateNaissance = document.getElementById("naissanceAdu");
+        if (dateNaissance.value.trim().length != 10) {
+            allOk = false;
+            erreurChamps("naissanceAdu");
+        }
+        else {
+            champsOk("naissanceAdu");
+        }
+
+        var mail = document.getElementById("mailAdu");
+        var validMail = /.+@.+\..+/;
+        if (validMail.test(mail.value)) {
+            champsOk("mailAdu")
+        }
+        else {
+            allOk = false;
+            erreurChamps("mailAdu")
+        }
+    }
+    if (allOk) {
+        erreurAjout.style.display = "none";
+        if (checkBox.checked) {
+            if (confirmation) {
+                document.getElementById("lienAjoutAdu").click();
+            }
+            else {
+                document.getElementById("partiePreConfirmeAdu").style.display = "none";
+                document.getElementById("confirmationAjoutAdu").style.display = "block";
+            }
+        }
+        else {
+            document.getElementById("lienAjoutAdu").click();
         }
     }
     else {

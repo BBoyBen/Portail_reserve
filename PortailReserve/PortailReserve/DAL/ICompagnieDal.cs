@@ -13,6 +13,7 @@ namespace PortailReserve.DAL
         int ModifierCompagnie(Guid id, Compagnie compagnie);
         int SupprimerCompagnie(Guid id);
         int ChangerCdu(Guid id, Guid cdu);
+        int ChangerAdu(Guid id, Guid adu);
         Compagnie GetCompagnieById(Guid id);
         List<Compagnie> GetAllCompagnie();
         Compagnie GetCompagnieByNumero(int numero);
