@@ -527,6 +527,7 @@
     <Content Include="Views\Section\AfficherPopUpChgmntCdu.cshtml" />
     <Content Include="Views\Section\AfficherPopUpSuppressionCdu.cshtml" />
     <Content Include="Views\Section\AfficherPopUpChgmntAdu.cshtml" />
+    <Content Include="Views\Section\AfficherPopUpSuppressionAdu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,45 @@
+﻿@model PortailReserve.ViewModel.SuppressionCadreComViewModel
+
+<div class="row">
+    <div class="col-12 text-center titrePopUp"> Suppression de @Model.Cadre.Nom @Model.Cadre.Prenom (ADU) </div>
+</div>
+<div class="row">
+    <div class="col-12 text-center"> Voulez vraiment supprimer le @Model.Cadre.Grade @Model.Cadre.Nom, adjudant d'unité, de votre section ? </div>
+</div>
+<div class="row corpsPopUp text-center">
+    <div class="col-12"> (La personne ne sera plus dans votre section, vous pourrez tout de même la rajouter plus tard, si il n'est affecté à aucune autre section.)</div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <div class="row">
+            <button id="boutonSuppression" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="clickOn('lienSuppAdu'); ">
+                Supprimer
+            </button>
+            <div id="lienSuppressionAdu" style="display: none; ">
+                @using (Ajax.BeginForm("SupprimerAdu", "Section", new AjaxOptions
+                {
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "partieSection",
+                    HttpMethod = "POST",
+                    OnBegin = "afficherCacherPopUp('popUpSuppressionAdu')",
+                    OnComplete = "modifierSection()",
+                    OnSuccess = "messageSuccess('Suppression ADU OK !')",
+                    OnFailure = "messageError('Erreur suppression ADU !')"
+                }))
+                {
+                    @Html.Hidden("idAncienAdu", Model.Cadre.Id)
+                    @Html.Hidden("idCie", Model.Cie.Id)
+
+                    <input type="submit" value="Supprimer" id="lienSuppAdu" />
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpSuppressionAdu'); ">
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>

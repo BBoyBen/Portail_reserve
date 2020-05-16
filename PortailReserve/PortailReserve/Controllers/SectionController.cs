@@ -2035,5 +2035,86 @@ namespace PortailReserve.Controllers
                 return new HttpStatusCodeResult(400, "Erreur lors du changement de ADU");
             }
         }
+
+    /***
+     * Affichage de la pop-up de suppression de CDU
+    ***/
+
+        [Authorize]
+        public ActionResult AfficherPopUpSuppressionAdu(Guid id, Guid idCie)
+        {
+            Utilisateur adu = uDal.GetUtilisateurById(id);
+            if (adu == null || adu.Equals(typeof(UtilisateurNull)))
+                adu = new Utilisateur
+                {
+                    Nom = "Empty",
+                    Prenom = "Empty",
+                    Grade = "Soldat",
+                    Id = Guid.Empty
+                };
+
+            Compagnie cie = cDal.GetCompagnieById(idCie);
+            if (cie == null || cie.Equals(typeof(CompagnieNull)))
+                cie = new Compagnie
+                {
+                    Id = Guid.Empty
+                };
+
+            SuppressionCadreComViewModel vm = new SuppressionCadreComViewModel
+            {
+                Cadre = adu,
+                Cie = cie
+            };
+
+            return PartialView("AfficherPopUpSuppressionAdu", vm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult SupprimerAdu()
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                if (u.Role > 2)
+                    return new HttpUnauthorizedResult();
+
+                Guid idAncienAdu = Guid.Parse(Request.Form["idAncienAdu"]);
+                if (idAncienAdu.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Erreur id ancien adu.");
+
+                Guid idCie = Guid.Parse(Request.Form["idCie"]);
+                if (idCie.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400, "Erreur id compagnie.");
+
+                int retour = cDal.ChangerAdu(idCie, Guid.Empty);
+                if (retour != 1)
+                    return new HttpStatusCodeResult(400, "Erreur de changer adu.");
+
+                retour = uDal.SupprimerUtilisateurSection(idAncienAdu);
+                if (retour != 1)
+                    return new HttpStatusCodeResult(400, "Erreur supp adu de la compagnie");
+
+                return RedirectToAction("AfficherPersonnelSection");
+            }
+            catch (Exception e)
+            {
+                return new HttpStatusCodeResult(400, "Erreur suppression ADU.");
+            }
+        }
     }
 }
