@@ -573,7 +573,7 @@ namespace PortailReserve.DAL.Impl
                 toModif.Groupe = Guid.Empty;
                 toModif.Section = section;
                 toModif.Compagnie = cie;
-                toModif.Role = 3;
+                toModif.Role = 2;
 
                 bdd.SaveChanges();
 

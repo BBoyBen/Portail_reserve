@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Security;
 using static PortailReserve.Utils.Utils;
+using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.Controllers
 {
@@ -20,6 +21,10 @@ namespace PortailReserve.Controllers
         private ICompagnieDal cDal;
         private IAdresseDal aDal;
 
+        private List<SelectListItem> grades;
+        private List<SelectListItem> selectSansSection;
+        private List<SelectListItem> roles;
+
         public SectionController()
         {
             uDal = new UtilisateurDal();
@@ -27,6 +32,39 @@ namespace PortailReserve.Controllers
             sDal = new SectionDal();
             cDal = new CompagnieDal();
             aDal = new AdresseDal();
+
+            grades = new List<SelectListItem>();
+            grades.Add(new SelectListItem { Text = "Soldat", Value = "Soldat", Selected = true });
+            grades.Add(new SelectListItem { Text = "1ère classe", Value = "1ère classe" });
+            grades.Add(new SelectListItem { Text = "Caporal", Value = "Caporal" });
+            grades.Add(new SelectListItem { Text = "Caporal-chef", Value = "Caporal-chef" });
+            grades.Add(new SelectListItem { Text = "Caporal-chef de 1ère classe", Value = "Caporal-chef de 1ère classe" });
+
+            grades.Add(new SelectListItem { Text = "Sergent", Value = "Sergent" });
+            grades.Add(new SelectListItem { Text = "Sergent-chef", Value = "Sergent-chef" });
+            grades.Add(new SelectListItem { Text = "Adjudant", Value = "Adjudant" });
+            grades.Add(new SelectListItem { Text = "Adjudant-chef", Value = "Adjudant-chef" });
+            grades.Add(new SelectListItem { Text = "Major", Value = "Major" });
+
+            grades.Add(new SelectListItem { Text = "Sous-lieutenant", Value = "Sous-lieutenant" });
+            grades.Add(new SelectListItem { Text = "Lieutenant", Value = "Lieutenant" });
+            grades.Add(new SelectListItem { Text = "Capitaine", Value = "Capitaine" });
+            grades.Add(new SelectListItem { Text = "Commandant", Value = "Commandant" });
+            grades.Add(new SelectListItem { Text = "Lieutenant-colonel", Value = "Lieutenant-colonel" });
+            grades.Add(new SelectListItem { Text = "Colonel", Value = "Colonel" });
+
+            roles = new List<SelectListItem>();
+            roles.Add(new SelectListItem { Text = "Personnel classique", Value = "4", Selected = true });
+            roles.Add(new SelectListItem { Text = "Gestion des groupes", Value = "3" });
+            roles.Add(new SelectListItem { Text = "Gestion de section", Value = "2" });
+
+            List<Utilisateur> sansSection = uDal.GetUtilisateursSansSection();
+            selectSansSection = new List<SelectListItem>();
+            selectSansSection.Add(new SelectListItem { Text = "--- Choix ---", Value = Guid.Empty.ToString(), Selected = true });
+            foreach (Utilisateur util in sansSection)
+            {
+                selectSansSection.Add(new SelectListItem { Text = util.Grade + " " + util.Nom + " " + util.Prenom, Value = util.Id.ToString() });
+            }
         }
 
         [Authorize]
@@ -221,30 +259,10 @@ namespace PortailReserve.Controllers
                     Id = Guid.Empty
                 };
 
-            List<SelectListItem> grades = new List<SelectListItem>();
-            grades.Add(new SelectListItem { Text = "Soldat", Value = "Soldat" });
-            grades.Add(new SelectListItem { Text = "1ère classe", Value = "1ère classe" });
-            grades.Add(new SelectListItem { Text = "Caporal", Value = "Caporal" });
-            grades.Add(new SelectListItem { Text = "Caporal-chef", Value = "Caporal-chef" });
-            grades.Add(new SelectListItem { Text = "Caporal-chef de 1ère classe", Value = "Caporal-chef de 1ère classe" });
-
-            grades.Add(new SelectListItem { Text = "Sergent", Value = "Sergent" });
-            grades.Add(new SelectListItem { Text = "Sergent-chef", Value = "Sergent-chef" });
-            grades.Add(new SelectListItem { Text = "Adjudant", Value = "Adjudant" });
-            grades.Add(new SelectListItem { Text = "Adjudant-chef", Value = "Adjudant-chef" });
-            grades.Add(new SelectListItem { Text = "Major", Value = "Major" });
-
-            grades.Add(new SelectListItem { Text = "Sous-lieutenant", Value = "Sous-lieutenant" });
-            grades.Add(new SelectListItem { Text = "Lieutenant", Value = "Lieutenant" });
-            grades.Add(new SelectListItem { Text = "Capitaine", Value = "Capitaine" });
-            grades.Add(new SelectListItem { Text = "Commandant", Value = "Commandant" });
-            grades.Add(new SelectListItem { Text = "Lieutenant-colonel", Value = "Lieutenant-colonel" });
-            grades.Add(new SelectListItem { Text = "Colonel", Value = "Colonel" });
-
             SelectGradeViewModel vm = new SelectGradeViewModel
             {
                 Util = util,
-                Grades = grades
+                Grades = this.grades
             };
 
             return PartialView("AfficherSelectGrade", vm);
@@ -476,47 +494,14 @@ namespace PortailReserve.Controllers
                 }
             }
 
-            List<Utilisateur> sansSection = uDal.GetUtilisateursSansSection();
-            List<SelectListItem> selectSansSection = new List<SelectListItem>();
-            selectSansSection.Add(new SelectListItem { Text = "--- Choix ---", Value = Guid.Empty.ToString(), Selected = true });
-            foreach(Utilisateur util in sansSection)
-            {
-                selectSansSection.Add(new SelectListItem { Text = util.Grade + " " + util.Nom + " " + util.Prenom, Value = util.Id.ToString() });
-            }
-
-            List<SelectListItem> grades = new List<SelectListItem>();
-            grades.Add(new SelectListItem { Text = "Soldat", Value = "Soldat", Selected = true });
-            grades.Add(new SelectListItem { Text = "1ère classe", Value = "1ère classe" });
-            grades.Add(new SelectListItem { Text = "Caporal", Value = "Caporal" });
-            grades.Add(new SelectListItem { Text = "Caporal-chef", Value = "Caporal-chef" });
-            grades.Add(new SelectListItem { Text = "Caporal-chef de 1ère classe", Value = "Caporal-chef de 1ère classe" });
-
-            grades.Add(new SelectListItem { Text = "Sergent", Value = "Sergent" });
-            grades.Add(new SelectListItem { Text = "Sergent-chef", Value = "Sergent-chef" });
-            grades.Add(new SelectListItem { Text = "Adjudant", Value = "Adjudant" });
-            grades.Add(new SelectListItem { Text = "Adjudant-chef", Value = "Adjudant-chef" });
-            grades.Add(new SelectListItem { Text = "Major", Value = "Major" });
-
-            grades.Add(new SelectListItem { Text = "Sous-lieutenant", Value = "Sous-lieutenant" });
-            grades.Add(new SelectListItem { Text = "Lieutenant", Value = "Lieutenant" });
-            grades.Add(new SelectListItem { Text = "Capitaine", Value = "Capitaine" });
-            grades.Add(new SelectListItem { Text = "Commandant", Value = "Commandant" });
-            grades.Add(new SelectListItem { Text = "Lieutenant-colonel", Value = "Lieutenant-colonel" });
-            grades.Add(new SelectListItem { Text = "Colonel", Value = "Colonel" });
-
-            List<SelectListItem> roles = new List<SelectListItem>();
-            roles.Add(new SelectListItem { Text = "Personnel classique", Value = "4", Selected = true });
-            roles.Add(new SelectListItem { Text = "Gestion des groupes", Value = "3" });
-            roles.Add(new SelectListItem { Text = "Gestion de section", Value = "2" });
-
             string nouveauMdp = GenererMotDePasse();
 
             AjouterPersonnelViewModel vm = new AjouterPersonnelViewModel
             {
                 Groupes = selectGroupe,
-                SansSection = selectSansSection,
-                Grades = grades,
-                Roles = roles,
+                SansSection = this.selectSansSection,
+                Grades = this.grades,
+                Roles = this.roles,
                 MotDePasse = nouveauMdp,
                 NumSection = u.Section
             };
@@ -669,47 +654,14 @@ namespace PortailReserve.Controllers
             if (groupe == null || groupe.Equals(typeof(GroupeNull)))
                 return new HttpNotFoundResult("Groupe non trouvé.");
 
-            List<SelectListItem> grades = new List<SelectListItem>();
-            grades.Add(new SelectListItem { Text = "Soldat", Value = "Soldat" });
-            grades.Add(new SelectListItem { Text = "1ère classe", Value = "1ère classe" });
-            grades.Add(new SelectListItem { Text = "Caporal", Value = "Caporal" });
-            grades.Add(new SelectListItem { Text = "Caporal-chef", Value = "Caporal-chef", Selected = true });
-            grades.Add(new SelectListItem { Text = "Caporal-chef de 1ère classe", Value = "Caporal-chef de 1ère classe" });
-
-            grades.Add(new SelectListItem { Text = "Sergent", Value = "Sergent" });
-            grades.Add(new SelectListItem { Text = "Sergent-chef", Value = "Sergent-chef" });
-            grades.Add(new SelectListItem { Text = "Adjudant", Value = "Adjudant" });
-            grades.Add(new SelectListItem { Text = "Adjudant-chef", Value = "Adjudant-chef" });
-            grades.Add(new SelectListItem { Text = "Major", Value = "Major" });
-
-            grades.Add(new SelectListItem { Text = "Sous-lieutenant", Value = "Sous-lieutenant" });
-            grades.Add(new SelectListItem { Text = "Lieutenant", Value = "Lieutenant" });
-            grades.Add(new SelectListItem { Text = "Capitaine", Value = "Capitaine" });
-            grades.Add(new SelectListItem { Text = "Commandant", Value = "Commandant" });
-            grades.Add(new SelectListItem { Text = "Lieutenant-colonel", Value = "Lieutenant-colonel" });
-            grades.Add(new SelectListItem { Text = "Colonel", Value = "Colonel" });
-
-            List<SelectListItem> roles = new List<SelectListItem>();
-            roles.Add(new SelectListItem { Text = "Personnel classique", Value = "4" });
-            roles.Add(new SelectListItem { Text = "Gestion des groupes", Value = "3", Selected = true });
-            roles.Add(new SelectListItem { Text = "Gestion de section", Value = "2" });
-
-            List<Utilisateur> sansSection = uDal.GetUtilisateursSansSection();
-            List<SelectListItem> selectSansSection = new List<SelectListItem>();
-            selectSansSection.Add(new SelectListItem { Text = "--- Choix ---", Value = Guid.Empty.ToString(), Selected = true });
-            foreach (Utilisateur util in sansSection)
-            {
-                selectSansSection.Add(new SelectListItem { Text = util.Grade + " " + util.Nom + " " + util.Prenom, Value = util.Id.ToString() });
-            }
-
             ChangementCdgViewModel vm = new ChangementCdgViewModel
             {
                 AncienCdg = ancienCdg,
                 Groupe = groupe,
                 Section = section,
-                Grades = grades,
-                Roles = roles,
-                SansSection = selectSansSection,
+                Grades = this.grades,
+                Roles = this.roles,
+                SansSection = this.selectSansSection,
                 MotDePasse = GenererMotDePasse()
             };
 
@@ -954,46 +906,13 @@ namespace PortailReserve.Controllers
                     Numero = -1
                 };
 
-            List<SelectListItem> grades = new List<SelectListItem>();
-            grades.Add(new SelectListItem { Text = "Soldat", Value = "Soldat" });
-            grades.Add(new SelectListItem { Text = "1ère classe", Value = "1ère classe" });
-            grades.Add(new SelectListItem { Text = "Caporal", Value = "Caporal" });
-            grades.Add(new SelectListItem { Text = "Caporal-chef", Value = "Caporal-chef" });
-            grades.Add(new SelectListItem { Text = "Caporal-chef de 1ère classe", Value = "Caporal-chef de 1ère classe" });
-
-            grades.Add(new SelectListItem { Text = "Sergent", Value = "Sergent" });
-            grades.Add(new SelectListItem { Text = "Sergent-chef", Value = "Sergent-chef", Selected = true });
-            grades.Add(new SelectListItem { Text = "Adjudant", Value = "Adjudant" });
-            grades.Add(new SelectListItem { Text = "Adjudant-chef", Value = "Adjudant-chef" });
-            grades.Add(new SelectListItem { Text = "Major", Value = "Major" });
-
-            grades.Add(new SelectListItem { Text = "Sous-lieutenant", Value = "Sous-lieutenant" });
-            grades.Add(new SelectListItem { Text = "Lieutenant", Value = "Lieutenant" });
-            grades.Add(new SelectListItem { Text = "Capitaine", Value = "Capitaine" });
-            grades.Add(new SelectListItem { Text = "Commandant", Value = "Commandant" });
-            grades.Add(new SelectListItem { Text = "Lieutenant-colonel", Value = "Lieutenant-colonel" });
-            grades.Add(new SelectListItem { Text = "Colonel", Value = "Colonel" });
-
-            List<SelectListItem> roles = new List<SelectListItem>();
-            roles.Add(new SelectListItem { Text = "Personnel classique", Value = "4" });
-            roles.Add(new SelectListItem { Text = "Gestion des groupes", Value = "3" });
-            roles.Add(new SelectListItem { Text = "Gestion de section", Value = "2", Selected = true });
-
-            List<Utilisateur> sansSection = uDal.GetUtilisateursSansSection();
-            List<SelectListItem> selectSansSection = new List<SelectListItem>();
-            selectSansSection.Add(new SelectListItem { Text = "--- Choix ---", Value = Guid.Empty.ToString(), Selected = true });
-            foreach (Utilisateur util in sansSection)
-            {
-                selectSansSection.Add(new SelectListItem { Text = util.Grade + " " + util.Nom + " " + util.Prenom, Value = util.Id.ToString() });
-            }
-
             ChangementSoaViewModel vm = new ChangementSoaViewModel
             {
                 Section = section,
                 AncienSoa = soa,
-                SansSection = selectSansSection,
-                Grades = grades,
-                Roles = roles,
+                SansSection = this.selectSansSection,
+                Grades = this.grades,
+                Roles = this.roles,
                 MotDePasse = GenererMotDePasse()
             };
 
@@ -1232,46 +1151,13 @@ namespace PortailReserve.Controllers
                     Numero = -1
                 };
 
-            List<SelectListItem> grades = new List<SelectListItem>();
-            grades.Add(new SelectListItem { Text = "Soldat", Value = "Soldat" });
-            grades.Add(new SelectListItem { Text = "1ère classe", Value = "1ère classe" });
-            grades.Add(new SelectListItem { Text = "Caporal", Value = "Caporal" });
-            grades.Add(new SelectListItem { Text = "Caporal-chef", Value = "Caporal-chef" });
-            grades.Add(new SelectListItem { Text = "Caporal-chef de 1ère classe", Value = "Caporal-chef de 1ère classe" });
-
-            grades.Add(new SelectListItem { Text = "Sergent", Value = "Sergent" });
-            grades.Add(new SelectListItem { Text = "Sergent-chef", Value = "Sergent-chef", Selected = true });
-            grades.Add(new SelectListItem { Text = "Adjudant", Value = "Adjudant" });
-            grades.Add(new SelectListItem { Text = "Adjudant-chef", Value = "Adjudant-chef" });
-            grades.Add(new SelectListItem { Text = "Major", Value = "Major" });
-
-            grades.Add(new SelectListItem { Text = "Sous-lieutenant", Value = "Sous-lieutenant" });
-            grades.Add(new SelectListItem { Text = "Lieutenant", Value = "Lieutenant" });
-            grades.Add(new SelectListItem { Text = "Capitaine", Value = "Capitaine" });
-            grades.Add(new SelectListItem { Text = "Commandant", Value = "Commandant" });
-            grades.Add(new SelectListItem { Text = "Lieutenant-colonel", Value = "Lieutenant-colonel" });
-            grades.Add(new SelectListItem { Text = "Colonel", Value = "Colonel" });
-
-            List<SelectListItem> roles = new List<SelectListItem>();
-            roles.Add(new SelectListItem { Text = "Personnel classique", Value = "4" });
-            roles.Add(new SelectListItem { Text = "Gestion des groupes", Value = "3" });
-            roles.Add(new SelectListItem { Text = "Gestion de section", Value = "2", Selected = true });
-
-            List<Utilisateur> sansSection = uDal.GetUtilisateursSansSection();
-            List<SelectListItem> selectSansSection = new List<SelectListItem>();
-            selectSansSection.Add(new SelectListItem { Text = "--- Choix ---", Value = Guid.Empty.ToString(), Selected = true });
-            foreach (Utilisateur util in sansSection)
-            {
-                selectSansSection.Add(new SelectListItem { Text = util.Grade + " " + util.Nom + " " + util.Prenom, Value = util.Id.ToString() });
-            }
-
             ChangementSoaViewModel vm = new ChangementSoaViewModel
             {
                 Section = section,
                 AncienSoa = cds,
-                SansSection = selectSansSection,
-                Grades = grades,
-                Roles = roles,
+                SansSection = this.selectSansSection,
+                Grades = this.grades,
+                Roles = this.roles,
                 MotDePasse = GenererMotDePasse()
             };
 
@@ -1586,46 +1472,13 @@ namespace PortailReserve.Controllers
                     Numero = -1
                 };
 
-            List<SelectListItem> grades = new List<SelectListItem>();
-            grades.Add(new SelectListItem { Text = "Soldat", Value = "Soldat" });
-            grades.Add(new SelectListItem { Text = "1ère classe", Value = "1ère classe" });
-            grades.Add(new SelectListItem { Text = "Caporal", Value = "Caporal" });
-            grades.Add(new SelectListItem { Text = "Caporal-chef", Value = "Caporal-chef" });
-            grades.Add(new SelectListItem { Text = "Caporal-chef de 1ère classe", Value = "Caporal-chef de 1ère classe" });
-
-            grades.Add(new SelectListItem { Text = "Sergent", Value = "Sergent" });
-            grades.Add(new SelectListItem { Text = "Sergent-chef", Value = "Sergent-chef" });
-            grades.Add(new SelectListItem { Text = "Adjudant", Value = "Adjudant" });
-            grades.Add(new SelectListItem { Text = "Adjudant-chef", Value = "Adjudant-chef" });
-            grades.Add(new SelectListItem { Text = "Major", Value = "Major" });
-
-            grades.Add(new SelectListItem { Text = "Sous-lieutenant", Value = "Sous-lieutenant" });
-            grades.Add(new SelectListItem { Text = "Lieutenant", Value = "Lieutenant" });
-            grades.Add(new SelectListItem { Text = "Capitaine", Value = "Capitaine", Selected = true });
-            grades.Add(new SelectListItem { Text = "Commandant", Value = "Commandant" });
-            grades.Add(new SelectListItem { Text = "Lieutenant-colonel", Value = "Lieutenant-colonel" });
-            grades.Add(new SelectListItem { Text = "Colonel", Value = "Colonel" });
-
-            List<SelectListItem> roles = new List<SelectListItem>();
-            roles.Add(new SelectListItem { Text = "Personnel classique", Value = "4" });
-            roles.Add(new SelectListItem { Text = "Gestion des groupes", Value = "3" });
-            roles.Add(new SelectListItem { Text = "Gestion de section", Value = "2", Selected = true });
-
-            List<Utilisateur> sansSection = uDal.GetUtilisateursSansSection();
-            List<SelectListItem> selectSansSection = new List<SelectListItem>();
-            selectSansSection.Add(new SelectListItem { Text = "--- Choix ---", Value = Guid.Empty.ToString(), Selected = true });
-            foreach (Utilisateur util in sansSection)
-            {
-                selectSansSection.Add(new SelectListItem { Text = util.Grade + " " + util.Nom + " " + util.Prenom, Value = util.Id.ToString() });
-            }
-
             ChangementCadreComViewModel vm = new ChangementCadreComViewModel
             {
                 Cie = cie,
                 AncienCadre = cdu,
-                SansSection = selectSansSection,
-                Grades = grades,
-                Roles = roles,
+                SansSection = this.selectSansSection,
+                Grades = this.grades,
+                Roles = this.roles,
                 MotDePasse = GenererMotDePasse()
             };
 
@@ -1864,46 +1717,13 @@ namespace PortailReserve.Controllers
                     Numero = -1
                 };
 
-            List<SelectListItem> grades = new List<SelectListItem>();
-            grades.Add(new SelectListItem { Text = "Soldat", Value = "Soldat" });
-            grades.Add(new SelectListItem { Text = "1ère classe", Value = "1ère classe" });
-            grades.Add(new SelectListItem { Text = "Caporal", Value = "Caporal" });
-            grades.Add(new SelectListItem { Text = "Caporal-chef", Value = "Caporal-chef" });
-            grades.Add(new SelectListItem { Text = "Caporal-chef de 1ère classe", Value = "Caporal-chef de 1ère classe" });
-
-            grades.Add(new SelectListItem { Text = "Sergent", Value = "Sergent" });
-            grades.Add(new SelectListItem { Text = "Sergent-chef", Value = "Sergent-chef" });
-            grades.Add(new SelectListItem { Text = "Adjudant", Value = "Adjudant", Selected = true });
-            grades.Add(new SelectListItem { Text = "Adjudant-chef", Value = "Adjudant-chef" });
-            grades.Add(new SelectListItem { Text = "Major", Value = "Major" });
-
-            grades.Add(new SelectListItem { Text = "Sous-lieutenant", Value = "Sous-lieutenant" });
-            grades.Add(new SelectListItem { Text = "Lieutenant", Value = "Lieutenant" });
-            grades.Add(new SelectListItem { Text = "Capitaine", Value = "Capitaine" });
-            grades.Add(new SelectListItem { Text = "Commandant", Value = "Commandant" });
-            grades.Add(new SelectListItem { Text = "Lieutenant-colonel", Value = "Lieutenant-colonel" });
-            grades.Add(new SelectListItem { Text = "Colonel", Value = "Colonel" });
-
-            List<SelectListItem> roles = new List<SelectListItem>();
-            roles.Add(new SelectListItem { Text = "Personnel classique", Value = "4" });
-            roles.Add(new SelectListItem { Text = "Gestion des groupes", Value = "3" });
-            roles.Add(new SelectListItem { Text = "Gestion de section", Value = "2", Selected = true });
-
-            List<Utilisateur> sansSection = uDal.GetUtilisateursSansSection();
-            List<SelectListItem> selectSansSection = new List<SelectListItem>();
-            selectSansSection.Add(new SelectListItem { Text = "--- Choix ---", Value = Guid.Empty.ToString(), Selected = true });
-            foreach (Utilisateur util in sansSection)
-            {
-                selectSansSection.Add(new SelectListItem { Text = util.Grade + " " + util.Nom + " " + util.Prenom, Value = util.Id.ToString() });
-            }
-
             ChangementCadreComViewModel vm = new ChangementCadreComViewModel
             {
                 Cie = cie,
                 AncienCadre = adu,
-                SansSection = selectSansSection,
-                Grades = grades,
-                Roles = roles,
+                SansSection = this.selectSansSection,
+                Grades = this.grades,
+                Roles = this.roles,
                 MotDePasse = GenererMotDePasse()
             };
 
@@ -2114,6 +1934,201 @@ namespace PortailReserve.Controllers
             catch (Exception e)
             {
                 return new HttpStatusCodeResult(400, "Erreur suppression ADU.");
+            }
+        }
+
+        /***
+         * Affichage de la pop-up d'ajout de nouveau section
+        ***/
+
+        [Authorize]
+        public ActionResult AfficherPopUpAjoutSection(Guid id)
+        {
+            int numSection = 0;
+            int numCie = 0;
+            if (id.Equals(Guid.Empty))
+            {
+                AjoutSectionViewModel vmEmpty = new AjoutSectionViewModel
+                {
+                    Cie = id,
+                    NumCie = numCie,
+                    NumSection = numSection,
+                    Grades = this.grades,
+                    SansSection = this.selectSansSection,
+                    MotDePasse = GenererMotDePasse()
+                };
+
+                return PartialView("AfficherPopUpAjoutSection", vmEmpty);
+            }
+
+            Compagnie cie = cDal.GetCompagnieById(id);
+            if (cie == null || cie.Equals(typeof(SectionNull)))
+            {
+                AjoutSectionViewModel vmNull = new AjoutSectionViewModel
+                {
+                    Cie = Guid.Empty,
+                    NumCie = numCie,
+                    NumSection = numSection,
+                    Grades = this.grades,
+                    SansSection = this.selectSansSection,
+                    MotDePasse = GenererMotDePasse()
+                };
+
+                return PartialView("AfficherPopUpAjoutSection", vmNull);
+            }
+
+            numCie = cie.Numero;
+            numSection = sDal.GetSectionsByCompagnie(id).Count;
+
+            AjoutSectionViewModel vm = new AjoutSectionViewModel
+            {
+                Cie = id,
+                NumSection = numSection,
+                NumCie = numCie,
+                Grades = this.grades,
+                SansSection = this.selectSansSection,
+                MotDePasse = GenererMotDePasse()
+            };
+
+            return PartialView("AfficherPopUpAjoutSection", vm);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult AjouterSection()
+        {
+            try
+            {
+                var idCie = Guid.Parse(Request.Form["Cie"]);
+                var numSection = Int32.Parse(Request.Form["NumSection"]);
+
+                Compagnie cie = cDal.GetCompagnieById(idCie);
+                int numCie = 0;
+                if (cie != null || !cie.Equals(typeof(CompagnieNull)))
+                    numCie = cie.Numero;
+
+                Section section = new Section
+                {
+                    Numero = numSection,
+                    Compagnie = idCie,
+                    Chant = "",
+                    Devise = "",
+                    CDS = Guid.Empty,
+                    SOA = Guid.Empty,
+                    NumCie = numCie
+                };
+
+                Guid idSection = sDal.AjouterSection(section);
+
+                if (idSection.Equals(Guid.Empty))
+                {
+                    Log("ERROR", "Id section empty pour ajout de nouvelle section.");
+                    return new HttpStatusCodeResult(500, "Erreur ajout du section");
+                }
+
+                var creerNouveau = Request.Form["creerNvCds"];
+                if (creerNouveau != null && creerNouveau.Equals("on"))
+                {
+                    // Récupération des champs du formulaire
+                    var grade = Request.Form["gradeNvCds"];
+                    var nom = Request.Form["nomNvCds"];
+                    var prenom = Request.Form["prenomNvCds"];
+                    var matricule = Request.Form["matriculeNvCds"];
+                    var mail = Request.Form["mailNvCds"];
+                    var naissanceForm = Request.Form["naissanceNvCds"];
+                    var motDePasse = Request.Form["MotDePasse"];
+
+                    DateTime naissance = DateTime.Parse(naissanceForm);
+
+                    //Validation des valeurs
+                    //TO-DO
+
+                    // Création d'une adresse vide
+                    Adresse adresse = new Adresse
+                    {
+                        CodePostal = "",
+                        Pays = "France",
+                        Ville = "",
+                        Voie = ""
+                    };
+                    Guid idAdresse = aDal.AjouterAdresse(adresse);
+                    if (idAdresse.Equals(Guid.Empty))
+                    {
+                        Log("ERROR", "Erreur ajout de l'adresse pour nouveau CDS lors d'une ajout section.");
+                        sDal.SupprimerSection(idSection);
+                        return new HttpNotFoundResult("Erreur ajout adresse pour nouveau cds.");
+                    }
+
+                    //Création de l'utilisateur
+                    Utilisateur pourAjout = new Utilisateur
+                    {
+                        Grade = grade,
+                        Nom = nom,
+                        Prenom = prenom,
+                        Matricule = matricule,
+                        Naissance = naissance,
+                        Groupe = Guid.Empty,
+                        Section = numSection,
+                        Compagnie = numCie,
+                        Email = mail,
+                        Adresse = idAdresse,
+                        Telephone = "",
+                        MotDePasse = motDePasse,
+                        PremiereCo = true,
+                        Role = 2
+                    };
+                    Guid idAjout = uDal.AjouterUtilisateur(pourAjout);
+                    if (idAjout.Equals(Guid.Empty))
+                    {
+                        Log("ERROR", "Erreur ajout du noueau CDS lors de la création de nouvelle section.");
+                        sDal.SupprimerSection(idSection);
+                        aDal.SupprimerAdresse(idAdresse);
+                        return new HttpNotFoundResult("Erreur ajout nouvel utilisateur. ");
+                    }
+
+                    int retour = sDal.ChangerCds(idSection, idAjout);
+                    if (retour != 1)
+                    {
+                        Log("ERROR", "Erreur changement de CDS lors de la création d'une nouvelle section.");
+                        sDal.SupprimerSection(idSection);
+                        uDal.SupprimerUtilisateur(idAjout);
+                        aDal.SupprimerAdresse(idAdresse);
+                        return new HttpStatusCodeResult(500, "Erreur changement de cds.");
+                    }
+                }
+                else
+                {
+                    Guid nouveauCds = Guid.Parse(Request.Form["nvCdsExistant"]);
+                    if (nouveauCds.Equals(Guid.Empty))
+                    {
+                        Log("ERROR", "Erreur id nouveau CDS pour ajout de nouvelle section.");
+                        sDal.SupprimerSection(idSection);
+                        return new HttpStatusCodeResult(400, "Erreur sur le nouveau cds.");
+                    }
+
+                    int retour = uDal.PasserCadre(nouveauCds, numSection, numCie);
+                    if (retour != 1)
+                    {
+                        Log("ERROR", "Erreur passage cadre nouveau CDS pour ajout nouvelle section.");
+                        sDal.SupprimerSection(idSection);
+                        return new HttpStatusCodeResult(500, "Erreur passage cadre.");
+                    }
+
+                    retour = sDal.ChangerCds(idSection, nouveauCds);
+                    if (retour != 1)
+                    {
+                        sDal.SupprimerSection(idSection);
+                        Log("ERROR", "Erreur changement de CDS pour ajout section avec CDS existant.");
+                        return new HttpStatusCodeResult(500, "Erreur changement de chef de section.");
+                    }
+                }
+
+                return RedirectToAction("AfficherPersonnelSectionCom");
+            }
+            catch (Exception e)
+            {
+                Log("ERROR", "Erreur lors de l'ajout d'une nouvelle section -> " + e);
+                return new HttpStatusCodeResult(500);
             }
         }
     }

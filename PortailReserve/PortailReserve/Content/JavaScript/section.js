@@ -4,6 +4,7 @@ function modifierSection() {
     var boutonValider = document.getElementById("valideModif");
     var boutonAjouter = document.getElementById("boutonAjouter");
     var boutonAjouterGroupe = document.getElementById("partieAjoutGroupe");
+    var boutonAjouterSection = document.getElementById("partieAjoutSection");
 
     boutonModif.style.display = "none";
     boutonValider.style.display = "block";
@@ -11,6 +12,9 @@ function modifierSection() {
 
     if (boutonAjouterGroupe != null)
         boutonAjouterGroupe.style.display = "block";
+
+    if (boutonAjouterSection != null)
+        boutonAjouterSection.style.display = "block";
 
     var listeGrade = document.getElementsByClassName("grade");
     var listeSelectGrade = document.getElementsByClassName("modifGrade");
@@ -37,13 +41,18 @@ function validerModifSection() {
     var boutonValider = document.getElementById("valideModif");
     var boutonAjouter = document.getElementById("boutonAjouter");
     var boutonAjouterGroupe = document.getElementById("partieAjoutGroupe");
+    var boutonAjouterSection = document.getElementById("partieAjoutSection");
 
     boutonModif.style.display = "block";
     boutonValider.style.display = "none";
     if (boutonAjouter != null)
         boutonAjouter.style.display = "none";
+
     if (boutonAjouterGroupe != null)
         boutonAjouterGroupe.style.display = "none";
+
+    if (boutonAjouterSection != null)
+        boutonAjouterSection.style.display = "block";
 
     var listeGrade = document.getElementsByClassName("grade");
     var listeSelectGrade = document.getElementsByClassName("modifGrade");
@@ -164,6 +173,18 @@ function clickSurCreerAdu() {
     else
         partieCreation.style.display = "none";
 }
+
+function clickSurCreerNvCds() {
+
+    var check = document.getElementById("creerNvCds");
+    var partieCreation = document.getElementById("creationNvCds");
+
+    if (check.checked)
+        partieCreation.style.display = "block";
+    else
+        partieCreation.style.display = "none";
+}
+
 
 function erreurChamps(id) {
     var champs = document.getElementById(id);
@@ -690,6 +711,92 @@ function validerAjoutAdu(confirmation) {
         }
         else {
             document.getElementById("lienAjoutAdu").click();
+        }
+    }
+    else {
+        erreurAjout.style.display = "block";
+    }
+}
+
+function validerAjoutNvCds(confirmation) {
+
+    var allOk = true;
+    var erreurAjout = document.getElementById("erreurAjoutNvCds");
+
+    var checkBox = document.getElementById("creerNvCds");
+    if (!checkBox.checked) {
+        var selectGroupe = document.getElementById("nvCdsExistant");
+        if (selectGroupe.options[selectGroupe.selectedIndex].value === "00000000-0000-0000-0000-000000000000") {
+            allOk = false;
+            erreurChamps("nvCdsExistant");
+        }
+        else {
+            champsOk("nvCdsExistant");
+        }
+    }
+    else {
+        champsOk("nvCdsExistant");
+
+        var nom = document.getElementById("nomNvCds");
+        if (nom.value.trim().length === 0) {
+            allOk = false;
+            erreurChamps("nomNvCds");
+        }
+        else {
+            champsOk("nomNvCds");
+        }
+
+        var prenom = document.getElementById("prenomNvCds");
+        if (prenom.value.trim().length === 0) {
+            allOk = false;
+            erreurChamps("prenomNvCds");
+        }
+        else {
+            champsOk("prenomNvCds");
+        }
+
+        var matricule = document.getElementById("matriculeNvCds");
+        var validMatricule = /[0-9]{10}/;
+        if (validMatricule.test(matricule.value) && matricule.value.trim().length === 10) {
+            champsOk("matriculeNvCds");
+        }
+        else {
+            allOk = false;
+            erreurChamps("matriculeNvCds");
+        }
+
+        var dateNaissance = document.getElementById("naissanceNvCds");
+        if (dateNaissance.value.trim().length != 10) {
+            allOk = false;
+            erreurChamps("naissanceNvCds");
+        }
+        else {
+            champsOk("naissanceNvCds");
+        }
+
+        var mail = document.getElementById("mailNvCds");
+        var validMail = /.+@.+\..+/;
+        if (validMail.test(mail.value)) {
+            champsOk("mailNvCds")
+        }
+        else {
+            allOk = false;
+            erreurChamps("mailNvCds")
+        }
+    }
+    if (allOk) {
+        erreurAjout.style.display = "none";
+        if (checkBox.checked) {
+            if (confirmation) {
+                document.getElementById("lienAjoutNvCds").click();
+            }
+            else {
+                document.getElementById("partiePreConfirmeNvCds").style.display = "none";
+                document.getElementById("confirmationAjoutNvCds").style.display = "block";
+            }
+        }
+        else {
+            document.getElementById("lienAjoutNvCds").click();
         }
     }
     else {

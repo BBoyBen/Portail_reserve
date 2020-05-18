@@ -286,6 +286,7 @@
     <Compile Include="ViewModel\AjouterEventViewModel.cs" />
     <Compile Include="ViewModel\AjouterPersonnelViewModel.cs" />
     <Compile Include="ViewModel\AjoutGroupeViewModel.cs" />
+    <Compile Include="ViewModel\AjoutSectionViewModel.cs" />
     <Compile Include="ViewModel\ChangementCadreComViewModel.cs" />
     <Compile Include="ViewModel\ChangementCdgViewModel.cs" />
     <Compile Include="ViewModel\ChangementGroupeViewModel.cs" />
@@ -528,6 +529,7 @@
     <Content Include="Views\Section\AfficherPopUpSuppressionCdu.cshtml" />
     <Content Include="Views\Section\AfficherPopUpChgmntAdu.cshtml" />
     <Content Include="Views\Section\AfficherPopUpSuppressionAdu.cshtml" />
+    <Content Include="Views\Section\AfficherPopUpAjoutSection.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

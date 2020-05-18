@@ -141,56 +141,75 @@
 </div>
 
 <div id="listePersoCom">
-    @foreach(PortailReserve.Models.Utilisateur sdt in Model.UtilCmdt)
+    @foreach (PortailReserve.Models.Utilisateur sdt in Model.UtilCmdt)
     {
         <div class="row">
             <div class="col-8 soldat">
-                    @if (sdt.Id.Equals(Model.Util.Id))
-                    {
-                        <span class="user">
-                            <span id="grade_@sdt.Id.ToString().Substring(0, 5)" class="grade" style="display:inline;">
-                                @{ Html.RenderAction("AfficherGrade", new { id = sdt.Id }); }
-                            </span>
-                            @if (Model.Util.Role < 4)
-                            {
-                                <span class="modifGrade" style="display: none;">
-                                    @{ Html.RenderAction("AfficherSelectGrade", new { id = sdt.Id }); }
-                                </span>
-                            }
-                            @sdt.Nom.ToUpperInvariant()  @sdt.Prenom
-                        </span>
-                    }
-                    else
-                    {
-                        <span>
-                            <span id="grade_@sdt.Id.ToString().Substring(0, 5)" class="grade" style="display: inline;">
-                                @{ Html.RenderAction("AfficherGrade", new { id = sdt.Id }); }
-                            </span>
-                            @if (Model.Util.Role < 4)
-                            {
-                                <span class="modifGrade" style="display: none;">
-                                    @{ Html.RenderAction("AfficherSelectGrade", new { id = sdt.Id }); }
-                                </span>
-                            }
-                            @sdt.Nom.ToUpperInvariant()  @sdt.Prenom
-                        </span>
-                    }
-                </div>
-                @if (Model.Util.Role < 4)
+                @if (sdt.Id.Equals(Model.Util.Id))
                 {
-                    <div class="col-4 iconeCol text-center" style="display: none; ">
-                        <img src="~/Content/image/icone_supprimer.png" alt="supprimer" class="iconeModif"
-                             onclick="clickOn('supp_@sdt.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popUpSuppression'); " />
-                        <div style="display: none; ">
-                            @Ajax.ActionLink("Supprimer", "AfficherPopUpSuppSoldat", new { id = sdt.Id }, new AjaxOptions
-                                {
-                                    InsertionMode = InsertionMode.Replace,
-                                    UpdateTargetId = "popUpSuppression",
-                                    HttpMethod = "GET"
-                                }, new { id = "supp_" + sdt.Id.ToString().Substring(0, 8) })
-                        </div>
-                    </div>
+                    <span class="user">
+                        <span id="grade_@sdt.Id.ToString().Substring(0, 5)" class="grade" style="display:inline;">
+                            @{ Html.RenderAction("AfficherGrade", new { id = sdt.Id }); }
+                        </span>
+                        @if (Model.Util.Role < 4)
+                        {
+                            <span class="modifGrade" style="display: none;">
+                                @{ Html.RenderAction("AfficherSelectGrade", new { id = sdt.Id }); }
+                            </span>
+                        }
+                        @sdt.Nom.ToUpperInvariant()  @sdt.Prenom
+                    </span>
                 }
+                else
+                {
+                    <span>
+                        <span id="grade_@sdt.Id.ToString().Substring(0, 5)" class="grade" style="display: inline;">
+                            @{ Html.RenderAction("AfficherGrade", new { id = sdt.Id }); }
+                        </span>
+                        @if (Model.Util.Role < 4)
+                        {
+                            <span class="modifGrade" style="display: none;">
+                                @{ Html.RenderAction("AfficherSelectGrade", new { id = sdt.Id }); }
+                            </span>
+                        }
+                        @sdt.Nom.ToUpperInvariant()  @sdt.Prenom
+                    </span>
+                }
+            </div>
+            @if (Model.Util.Role < 4)
+            {
+                <div class="col-4 iconeCol text-center" style="display: none; ">
+                    <img src="~/Content/image/icone_supprimer.png" alt="supprimer" class="iconeModif"
+                         onclick="clickOn('supp_@sdt.Id.ToString().Substring(0, 8)'); afficherCacherPopUp('popUpSuppression'); " />
+                    <div style="display: none; ">
+                        @Ajax.ActionLink("Supprimer", "AfficherPopUpSuppSoldat", new { id = sdt.Id }, new AjaxOptions
+                            {
+                                InsertionMode = InsertionMode.Replace,
+                                UpdateTargetId = "popUpSuppression",
+                                HttpMethod = "GET"
+                            }, new { id = "supp_" + sdt.Id.ToString().Substring(0, 8) })
+                    </div>
+                </div>
+            }
         </div>
     }
 </div>
+
+@if (Model.Util.Role < 4)
+{
+    <div class="row" id="partieAjoutSection" style="display: none;">
+        <div class="col-4 champsTextCenter">
+            <button class="bouton boutonBleu allWidth text-center" onclick="afficherCacherPopUp('popUpAjoutSection'); clickOn('lienCreationSection');">
+                <span class="lienBouton lienBoutonBleu"> Créer une section </span>
+            </button>
+            <div style="display: none;">
+                @Ajax.ActionLink("Creer", "AfficherPopUpAjoutSection", new { id = Model.Cie.Id }, new AjaxOptions
+                    {
+                        InsertionMode = InsertionMode.Replace,
+                        UpdateTargetId = "popUpAjoutSection",
+                        HttpMethod = "GET"
+                    }, new { id = "lienCreationSection" })
+            </div>
+        </div>
+    </div>
+}

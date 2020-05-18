@@ -1,0 +1,177 @@
+﻿@model PortailReserve.ViewModel.AjoutSectionViewModel
+
+<div class="row">
+    <div class="col-12 text-center titrePopUp"> Création de la section @Model.NumSection </div>
+</div>
+<div class="row">
+    <div class="col-12 text-center"> Voulez vous créer la section @Model.NumSection dans la compagnie @Model.NumCie ? </div>
+</div>
+<div class="row corpsPopUp text-center">
+    <div class="col-12"> Vous devez choisir le chef de section </div>
+</div>
+
+@using (Ajax.BeginForm("AjouterSection", "Section", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "partieSection",
+    HttpMethod = "POST",
+    OnBegin = "afficherCacherPopUp('popUpAjoutSection')",
+    OnComplete = "modifierSection()",
+    OnSuccess = "messageSuccess('Ajout section OK !')",
+    OnFailure = "messageError('Erreur ajout section !')"
+}))
+{
+    <div class="row">
+        <div class="col-12 text-center">
+            <label for="nvCdsExistant"> Personnels existant sans section : </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 champsTextCenter">
+            @Html.DropDownList("nvCdsExistant", Model.SansSection, new { @class = "champsText allWidth", id = "nvCdsExistant" })
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-center corpsPopUp">
+            <strong> OU </strong>
+        </div>
+    </div>
+
+    <div class="row corpsPopUp">
+        <div class="col-4">
+            <div class="row">
+                <div class="col-2 champsTextDroit">
+                    <input type="checkbox" name="creerNvCds" class="checkBox" id="creerNvCds" onchange="clickSurCreerNvCds();" />
+                </div>
+            </div>
+        </div>
+        <div class="col-8 champsTextCenter">
+            <label for="creerNvCds" class="labelCheckBox"> Créer un nouveau personnel </label>
+        </div>
+    </div>
+
+    <div id="creationNvCds" style="display: none;">
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="gradeNvCds"> Grade </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.DropDownList("gradeNvCds", Model.Grades, new { @class = "champsText allWidth" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="nomNvCds"> Nom </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("nomNvCds", null, new { @class = "champsText allWidth", id = "nomNvCds" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="prenomNvCds"> Prénom </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("prenomNvCds", null, new { @class = "champsText allWidth", id = "prenomNvCds" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="matriculeNvCds"> Matricule </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("matriculeNvCds", null, new { @class = "champsText allWidth", id = "matriculeNvCds" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="naissanceNvCds"> Date de naissance </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("naissanceNvCds", null, new { @class = "champsText allWidth", id = "naissanceNvCds", type = "date" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <label for="mailNvCds"> Adresse mail </label>
+            </div>
+        </div>
+        <div class="row corpsPopUp">
+            <div class="col-6 champsTextCenter">
+                @Html.TextBox("mailNvCds", null, new { @class = "champsText allWidth", id = "mailNvCds" })
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.MotDePasse)
+    @Html.HiddenFor(m => m.Cie);
+    @Html.HiddenFor(m => m.NumSection)
+
+    <input type="submit" value="Ajouter" id="lienAjoutNvCds" style="display:none;" />
+}
+
+<div class="row corpsPopUp" id="erreurAjoutNvCds" style="display:none; ">
+    <div class="col-12 text-center erreur alertBack">
+        Il y a des erreurs. Vérifiez votre saisie.
+    </div>
+</div>
+
+<div id="partiePreConfirmeNvCds" style="display:block;">
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <button id="boutonChangementNvCds" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="validerAjoutNvCds(false)">
+                    Créer
+                </button>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpAjoutSection'); ">
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmationAjoutNvCds" style="display:none;">
+    <div class="row infoValide">
+        <div class="col-12 text-center">
+            Le mot de passe du nouvel utilisateur est : <strong>@Model.MotDePasse</strong>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <button id="boutonChangementNvCds" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="validerAjoutNvCds(true)">
+                    Confirmer
+                </button>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpChangementNvCds'); ">
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
