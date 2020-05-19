@@ -75,20 +75,33 @@
         </div>
         <div class="row elemProfil">
             <div class="col-6">
-                <strong> Section : </strong> @Model.Section.Numero
+                @if (Model.Section.Numero == 0)
+                {
+                    <strong> Section Commandement </strong>
+                }
+                else
+                {
+                    <strong> Section : </strong> @Model.Section.Numero
+                }
             </div>
-            <div class="col-6">
-                <strong> Chef de section : </strong> @Model.Cds.Grade @Model.Cds.Nom.ToUpperInvariant()
-            </div>
+            @if (Model.Section.Numero != 0)
+            {
+                <div class="col-6">
+                    <strong> Chef de section : </strong> @Model.Cds.Grade @Model.Cds.Nom.ToUpperInvariant()
+                </div>
+            }
         </div>
-        <div class="row elemProfil">
-            <div class="col-6">
-                <strong> Groupe : </strong> @Model.Grp.Numero
+        if (Model.Grp.Numero != -1)
+        {
+            <div class="row elemProfil">
+                <div class="col-6">
+                    <strong> Groupe : </strong> @Model.Grp.Numero
+                </div>
+                <div class="col-6">
+                    <strong> Chef de groupe : </strong> @Model.Cdg.Grade @Model.Cdg.Nom.ToUpperInvariant()
+                </div>
             </div>
-            <div class="col-6">
-                <strong> Chef de groupe : </strong> @Model.Cdg.Grade @Model.Cdg.Nom.ToUpperInvariant()
-            </div>
-        </div>
+        }
     }
 
     <div class="row">

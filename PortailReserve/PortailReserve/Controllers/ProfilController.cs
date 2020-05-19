@@ -52,6 +52,9 @@ namespace PortailReserve.Controllers
             ViewBag.Nom = u.Nom.ToUpperInvariant();
             ViewBag.Role = u.Role;
 
+            int numSection = u.Section;
+            int numCie = u.Compagnie;
+
             Adresse a = aDal.GetAdresseById(u.Adresse);
             if (a == null || a.Equals(typeof(AdresseNull)))
                 a = new Adresse { 
@@ -69,7 +72,7 @@ namespace PortailReserve.Controllers
                     Section = Guid.Empty
                 };
 
-            Section s = sDal.GetSectionById(g.Section);
+            Section s = sDal.GetSectionByNumAndByCie(numSection, numCie);
             if (s == null || s.Equals(typeof(SectionNull)))
                 s = new Section { 
                     Numero = -1,

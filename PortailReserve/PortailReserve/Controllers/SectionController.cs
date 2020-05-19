@@ -1603,7 +1603,7 @@ namespace PortailReserve.Controllers
                         return new HttpStatusCodeResult(500, "Erreur changement de commandant d'unité.");
                 }
 
-                return RedirectToAction("AfficherPersonnelSection");
+                return RedirectToAction("AfficherPersonnelSectionCom");
             }
             catch (Exception e)
             {
@@ -1684,7 +1684,7 @@ namespace PortailReserve.Controllers
                 if (retour != 1)
                     return new HttpStatusCodeResult(400, "Erreur supp cdu de la compagnie");
 
-                return RedirectToAction("AfficherPersonnelSection");
+                return RedirectToAction("AfficherPersonnelSectionCom");
             }
             catch (Exception e)
             {
@@ -1848,7 +1848,7 @@ namespace PortailReserve.Controllers
                         return new HttpStatusCodeResult(500, "Erreur changement d'adjudant d'unité.");
                 }
 
-                return RedirectToAction("AfficherPersonnelSection");
+                return RedirectToAction("AfficherPersonnelSectionCom");
             }
             catch (Exception e)
             {
@@ -1929,7 +1929,7 @@ namespace PortailReserve.Controllers
                 if (retour != 1)
                     return new HttpStatusCodeResult(400, "Erreur supp adu de la compagnie");
 
-                return RedirectToAction("AfficherPersonnelSection");
+                return RedirectToAction("AfficherPersonnelSectionCom");
             }
             catch (Exception e)
             {
