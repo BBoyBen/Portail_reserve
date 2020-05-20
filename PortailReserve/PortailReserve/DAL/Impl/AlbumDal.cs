@@ -55,6 +55,21 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
+        public List<Album> GetAlbumsByCie(int cie)
+        {
+            try
+            {
+                List<Album> albums = bdd.Albums.Where(a => a.Cie.Equals(cie)).ToList();
+
+                return albums;
+            }
+            catch(Exception e)
+            {
+                Log("ERROR", "Erreur récupération des albums de la cie : " + cie + " -> " + e);
+                return new List<Album>();
+            }
+        }
+
         public int ModifierAlbum(Guid id, Album album)
         {
             try

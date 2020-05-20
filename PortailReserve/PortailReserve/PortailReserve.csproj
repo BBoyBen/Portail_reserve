@@ -207,6 +207,7 @@
     <Compile Include="Controllers\PlanningController.cs" />
     <Compile Include="Controllers\ProfilController.cs" />
     <Compile Include="Controllers\SectionController.cs" />
+    <Compile Include="Controllers\SouvenirController.cs" />
     <Compile Include="DAL\IAdresseDal.cs" />
     <Compile Include="DAL\IAlbumDal.cs" />
     <Compile Include="DAL\IChantDal.cs" />
@@ -292,6 +293,7 @@
     <Compile Include="ViewModel\ChangementGroupeViewModel.cs" />
     <Compile Include="ViewModel\ChangementSoaViewModel.cs" />
     <Compile Include="ViewModel\EventViewModel.cs" />
+    <Compile Include="ViewModel\ListeAlbumsViewModel.cs" />
     <Compile Include="ViewModel\ListeEventViewModel.cs" />
     <Compile Include="ViewModel\ModifMdpViewModel.cs" />
     <Compile Include="ViewModel\ModifProfilViewModel.cs" />
@@ -318,6 +320,7 @@
     <Content Include="Content\CSS\login.css" />
     <Content Include="Content\CSS\profil.css" />
     <Content Include="Content\CSS\section.css" />
+    <Content Include="Content\CSS\souvenir.css" />
     <Content Include="Content\image\blason_ri.png" />
     <Content Include="Content\image\blason_six.png" />
     <Content Include="Content\image\chevron_bas.png" />
@@ -530,10 +533,12 @@
     <Content Include="Views\Section\AfficherPopUpChgmntAdu.cshtml" />
     <Content Include="Views\Section\AfficherPopUpSuppressionAdu.cshtml" />
     <Content Include="Views\Section\AfficherPopUpAjoutSection.cshtml" />
+    <Content Include="Views\Souvenir\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\PATRACDR\" />
+    <Folder Include="Content\Souvenirs\" />
     <Folder Include="Views\Disponibilite\" />
     <Folder Include="Views\Participation\" />
     <Folder Include="Views\Test\" />

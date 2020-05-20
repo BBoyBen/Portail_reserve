@@ -13,5 +13,6 @@ namespace PortailReserve.DAL
         int ModifierAlbum(Guid id, Album album);
         int SupprimerAlbum(Guid id);
         Album GetAlbumById(Guid id);
+        List<Album> GetAlbumsByCie(int cie);
     }
 }

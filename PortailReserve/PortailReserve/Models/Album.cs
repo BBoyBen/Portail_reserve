@@ -15,5 +15,6 @@ namespace PortailReserve.Models
         public string Titre { get; set; }
         public string Description { get; set; }
         public DateTime Creation { get; set; }
+        public int Cie { get; set; }
     }
 }
