@@ -58,5 +58,75 @@ namespace PortailReserve.Controllers
 
             return View(vm);
         }
+
+        [Authorize]
+        public ActionResult Ajouter()
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            if(u.Role > 3 || u.Compagnie == -1)
+                return RedirectToAction("Index", "Login");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
+
+            Album album = new Album
+            {
+                Titre = "",
+                Description = "",
+                Cie = u.Compagnie
+            };
+
+            return View(album);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult Ajouter(Album album)
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            if (u.Role > 3 || u.Compagnie == -1)
+                return RedirectToAction("Index", "Login");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
+
+            Guid idAlbum = aDal.AjouterAlbum(album);
+            if (idAlbum.Equals(Guid.Empty)){
+                ViewBag.Erreur = "Une erreur est survenue lors de l'ajout du nouvel album.";
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("Index");
+        }
     }
 }

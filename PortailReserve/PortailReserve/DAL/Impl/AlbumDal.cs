@@ -21,6 +21,8 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
+                album.Creation = DateTime.Now;
+
                 bdd.Albums.Add(album);
                 bdd.SaveChanges();
 

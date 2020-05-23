@@ -1,0 +1,88 @@
+﻿@model PortailReserve.Models.Album
+@{
+    ViewBag.Title = "Nouvel album";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style {
+    <link rel="stylesheet" href="~/Content/CSS/souvenir.css" />
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <button class="bouton boutonBleu allWidth" onclick="clickOn('retourSouvenir'); ">
+                @Html.ActionLink("Retour", "Index", "Souvenir", null, new { @class = "lienBoutonBleu", id = "retourSouvenir" })
+            </button>
+        </div>
+    </div>
+</div>
+
+<h1> Créer un nouvel album  </h1>
+
+<div class="container">
+    @using (Html.BeginForm("Ajouter", "Souvenir", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="row">
+            @Html.LabelFor(m => m.Titre, "Titre de l'album", new { @class = "col-12 labelMiddle" })
+        </div>
+        <div class="row">
+            @Html.TextBoxFor(m => m.Titre, new { @class = "col-6 champsText champsTextCenter", required = "required" })
+        </div>
+        <div class="row">
+            <div class="col-12 erreur">
+                <span id="erreurTitre"> @Html.ValidationMessageFor(m => m.Titre) </span>
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => m.Description, "Description", new { @class = "col-12 labelMiddle" })
+        </div>
+        <div class="row">
+            @Html.TextAreaFor(m => m.Description, new { @class = "col-6 champsText champsTextCenter champsTextArea", required = "required" })
+        </div>
+        <div class="row">
+            <div class="col-12 erreur">
+                <span id="erreurDes"> @Html.ValidationMessageFor(m => m.Description) </span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6 champsTextCenter text-center">
+                <label for="photoFiles" id="photoLabel"> Ajouter des photos </label>
+            </div>
+            <input type="file"
+                   name="photoFiles"
+                   id="photoFiles"
+                   style="display: none; "
+                   accept=".jpg, .jpeg, .png"
+                   multiple
+                   required />
+        </div>
+        <div class="row">
+            <div class="col-12 text-center" id="nombrePhotos"></div>
+        </div>
+        <div class="row">
+            <div class="col-12 erreur">
+                <span id="erreurPhotos"> </span>
+            </div>
+        </div>
+
+        <div class="row" id="partiePrevisu">
+
+        </div>
+
+        @Html.HiddenFor(m => m.Cie)
+
+        <input type="submit" value="Créer" style="display: none;" id="creerAlbum" />
+    }
+
+    <div class="row">
+        <button class="col-4 btnSubmit boutonVert" id="valideAjoutAlbum" onclick="clickOn('creerAlbum'); "> Créer </button>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Content/JavaScript/albums.js"></script>
+}
+

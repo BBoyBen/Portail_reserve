@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="~/Content/CSS/souvenir.css" />
 }
 
+<div class="row">
+    <div class="col-12 text-center erreur"> @ViewBag.Erreur </div>
+</div>
+
 @if (Model.NumCie != 0)
 {
     <h1> Souvenir de la @Model.NumCie<span>e</span> Compagnie </h1>
@@ -17,8 +21,8 @@
             @if (ViewBag.Role < 4)
             {
                 <div id="ajoutAlbum" class="col-3 champsTextDroit" style="display: block; ">
-                    <button id="boutonAjoutAlbum" class="boutonOrange bouton" onclick="">
-                        <span class="lienBouton lienBoutonBleu"> Ajouter un album </span>
+                    <button id="boutonAjoutAlbum" class="boutonBleu bouton allWidth" onclick="clickOn('lienAjoutAlbum'); ">
+                        @Html.ActionLink("Ajouter un album", "Ajouter", "Souvenir", null, new { @class = "lienBouton lienBoutonBleu", id = "lienAjoutAlbum"})
                     </button>
                 </div>
             }
@@ -35,13 +39,36 @@
             </div>
         }
         else
-        {
-
+        {   
+            <div class="row">
+                @foreach(PortailReserve.Models.Album album in Model.Albums)
+                {
+                    <div class="col-12 col-md-5 elemAlbum selfCenter">
+                        <div class="row">
+                            <div class="col-8 titreElemAlbum">
+                                @album.Titre
+                            </div>
+                            <div class="col-4 dateElemAlbum">
+                                @album.Creation.ToShortDateString()
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 desElemAlbum">
+                                @album.Description
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
         }
     </div>
 }
 else
 {
-
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center"> Vous n'êtes assigné à aucune compagnie </div>
+        </div>
+    </div>
 }
 

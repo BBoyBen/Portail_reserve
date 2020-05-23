@@ -341,6 +341,7 @@
     <Content Include="Content\image\point_rouge.png" />
     <Content Include="Content\image\point_vert.png" />
     <Content Include="Content\JavaScript\ajoutEvent.js" />
+    <Content Include="Content\JavaScript\albums.js" />
     <Content Include="Content\JavaScript\autoload.js" />
     <Content Include="Content\JavaScript\event.js" />
     <Content Include="Content\JavaScript\listeEvent.js" />
@@ -534,6 +535,7 @@
     <Content Include="Views\Section\AfficherPopUpSuppressionAdu.cshtml" />
     <Content Include="Views\Section\AfficherPopUpAjoutSection.cshtml" />
     <Content Include="Views\Souvenir\Index.cshtml" />
+    <Content Include="Views\Souvenir\Ajouter.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
