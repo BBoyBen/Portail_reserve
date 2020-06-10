@@ -140,5 +140,19 @@ namespace PortailReserve.Utils
 
             return mdp;
         }
+
+        public static string FormatTitreAlbum(string titre)
+        {
+            string nveauTitre = titre.Replace(" ", "_");
+            nveauTitre = nveauTitre.Replace("'", "");
+            nveauTitre = nveauTitre.Replace("é", "e");
+            nveauTitre = nveauTitre.Replace("è", "e");
+            nveauTitre = nveauTitre.Replace("ê", "e");
+            nveauTitre = nveauTitre.Replace("à", "a");
+            nveauTitre = nveauTitre.Replace("ô", "o");
+            nveauTitre = nveauTitre.Replace("î", "i");
+
+            return nveauTitre;
+        }
     }
 }

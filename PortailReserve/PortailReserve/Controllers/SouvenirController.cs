@@ -9,6 +9,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using System.IO;
+using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.Controllers
 {
@@ -16,11 +18,13 @@ namespace PortailReserve.Controllers
     {
         private IUtilisateurDal uDal;
         private IAlbumDal aDal;
+        private IPhotoDal pDal;
 
         public SouvenirController()
         {
             uDal = new UtilisateurDal();
             aDal = new AlbumDal();
+            pDal = new PhotoDal();
         }
 
         [Authorize]
@@ -91,12 +95,17 @@ namespace PortailReserve.Controllers
                 Cie = u.Compagnie
             };
 
-            return View(album);
+            CreationAlbumViewModel vm = new CreationAlbumViewModel
+            {
+                Album = album,
+            };
+
+            return View(vm);
         }
 
         [Authorize]
         [HttpPost]
-        public ActionResult Ajouter(Album album)
+        public ActionResult Ajouter(CreationAlbumViewModel vm)
         {
             Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
             if (u == null)
@@ -120,11 +129,54 @@ namespace PortailReserve.Controllers
             ViewBag.Nom = u.Nom.ToUpperInvariant();
             ViewBag.Role = u.Role;
 
-            Guid idAlbum = aDal.AjouterAlbum(album);
+            int numCie = u.Compagnie;
+
+            vm.Album.Cie = numCie;
+            string nomAlbum = Utils.Utils.FormatTitreAlbum(vm.Album.Titre);
+            vm.Album.Dossier = nomAlbum;
+
+            if(aDal.ExisteParDossierEtCie(nomAlbum, numCie))
+            {
+                ModelState.AddModelError("Album.Titre", "Titre déjà existant !");
+                return View(vm);
+            }
+
+            Guid idAlbum = aDal.AjouterAlbum(vm.Album);
             if (idAlbum.Equals(Guid.Empty)){
                 ViewBag.Erreur = "Une erreur est survenue lors de l'ajout du nouvel album.";
                 return RedirectToAction("Index");
             }
+            ViewBag.Erreur = "Test d'erreur !";
+            Directory.CreateDirectory(HttpContext.Server.MapPath("~/Content/Souvenirs/") + numCie);
+            Directory.CreateDirectory(HttpContext.Server.MapPath("~/Content/Souvenirs/") + numCie + "/" + nomAlbum);
+            int nbPhotoErreur = 0;
+
+            int nbPhotos = Request.Files.Count;
+            for(int i = 0; i < nbPhotos; i++)
+            {
+                var photo = Request.Files[i];
+
+                string path = HttpContext.Server.MapPath("~/Content/Souvenirs/") + numCie + "/" + nomAlbum + "/" + photo.FileName;
+                photo.SaveAs(path);
+                string url = "/Content/Souvenirs/" + numCie + "/" + nomAlbum + "/" + photo.FileName;
+
+                Photo toAdd = new Photo
+                {
+                    Fichier = url,
+                    Album = idAlbum
+                };
+
+                Guid idPhoto = pDal.AjouterPhoto(toAdd);
+
+                if (idPhoto.Equals(Guid.Empty))
+                    nbPhotoErreur++;
+            }
+
+            if (nbPhotoErreur > 1)
+                ViewBag.Erreur = nbPhotoErreur + " photos n'ont pas été importées sur " + nbPhotos;
+
+            if(nbPhotoErreur == 1)
+                ViewBag.Erreur = nbPhotoErreur + " photo n'a pas été importée sur " + nbPhotos;
 
             return RedirectToAction("Index");
         }

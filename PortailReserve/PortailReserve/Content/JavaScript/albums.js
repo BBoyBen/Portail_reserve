@@ -38,6 +38,10 @@
     }
 }
 
-$("#photoFiles").change(function () {
+$("#photos").change(function () {
     updatePrevisu(this);
+});
+
+$("#photoLabel").click(function () {
+    document.getElementById("photos").click();
 });

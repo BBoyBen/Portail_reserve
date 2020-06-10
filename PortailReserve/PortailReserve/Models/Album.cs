@@ -13,6 +13,7 @@ namespace PortailReserve.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public string Titre { get; set; }
+        public string Dossier { get; set; }
         public string Description { get; set; }
         public DateTime Creation { get; set; }
         public int Cie { get; set; }

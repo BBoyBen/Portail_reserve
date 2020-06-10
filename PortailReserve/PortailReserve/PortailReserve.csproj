@@ -292,6 +292,7 @@
     <Compile Include="ViewModel\ChangementCdgViewModel.cs" />
     <Compile Include="ViewModel\ChangementGroupeViewModel.cs" />
     <Compile Include="ViewModel\ChangementSoaViewModel.cs" />
+    <Compile Include="ViewModel\CreationAlbumViewModel.cs" />
     <Compile Include="ViewModel\EventViewModel.cs" />
     <Compile Include="ViewModel\ListeAlbumsViewModel.cs" />
     <Compile Include="ViewModel\ListeEventViewModel.cs" />

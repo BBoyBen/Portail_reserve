@@ -1,4 +1,4 @@
-﻿@model PortailReserve.Models.Album
+﻿@model PortailReserve.ViewModel.CreationAlbumViewModel
 @{
     ViewBag.Title = "Nouvel album";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -24,40 +24,35 @@
     @using (Html.BeginForm("Ajouter", "Souvenir", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         <div class="row">
-            @Html.LabelFor(m => m.Titre, "Titre de l'album", new { @class = "col-12 labelMiddle" })
+            @Html.LabelFor(m => m.Album.Titre, "Titre de l'album", new { @class = "col-12 labelMiddle" })
         </div>
         <div class="row">
-            @Html.TextBoxFor(m => m.Titre, new { @class = "col-6 champsText champsTextCenter", required = "required" })
+            @Html.TextBoxFor(m => m.Album.Titre, null, new { @class = "col-6 champsText champsTextCenter", required = "required" })
         </div>
         <div class="row">
             <div class="col-12 erreur">
-                <span id="erreurTitre"> @Html.ValidationMessageFor(m => m.Titre) </span>
+                <span id="erreurTitre"> @Html.ValidationMessageFor(m => m.Album.Titre) </span>
             </div>
         </div>
 
         <div class="row">
-            @Html.LabelFor(m => m.Description, "Description", new { @class = "col-12 labelMiddle" })
+            @Html.LabelFor(m => m.Album.Description, "Description", new { @class = "col-12 labelMiddle" })
         </div>
         <div class="row">
-            @Html.TextAreaFor(m => m.Description, new { @class = "col-6 champsText champsTextCenter champsTextArea", required = "required" })
-        </div>
-        <div class="row">
-            <div class="col-12 erreur">
-                <span id="erreurDes"> @Html.ValidationMessageFor(m => m.Description) </span>
-            </div>
+            @Html.TextAreaFor(m => m.Album.Description, new { @class = "col-6 champsText champsTextCenter champsTextArea" })
         </div>
 
         <div class="row">
             <div class="col-6 champsTextCenter text-center">
-                <label for="photoFiles" id="photoLabel"> Ajouter des photos </label>
+                @Html.Label("photos", "Ajouter des photos", new { id = "photoLabel" })
             </div>
-            <input type="file"
-                   name="photoFiles"
-                   id="photoFiles"
-                   style="display: none; "
-                   accept=".jpg, .jpeg, .png"
-                   multiple
-                   required />
+            @Html.TextBox("photos", null,  new { 
+                type="file", 
+                id="photos", 
+                style="display: none;", 
+                accept=".jpg, .jpeg, .png", 
+                multiple = "multiple",
+                required = "required"})
         </div>
         <div class="row">
             <div class="col-12 text-center" id="nombrePhotos"></div>
@@ -72,7 +67,7 @@
 
         </div>
 
-        @Html.HiddenFor(m => m.Cie)
+        <div id="soloInput" style="display: none;"></div>
 
         <input type="submit" value="Créer" style="display: none;" id="creerAlbum" />
     }

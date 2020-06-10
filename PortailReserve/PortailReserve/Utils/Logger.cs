@@ -12,7 +12,7 @@ namespace PortailReserve.Utils
         {
             //C:/Users/ben63/Documents/Projet/Logs/LogPortailReserve/
             //D:/Developpement/Logs/PortailReserve/
-            string filePath = "C:/Users/ben63/Documents/Projet/Logs/LogPortailReserve/";
+            string filePath = "D:/Developpement/Logs/PortailReserve/";
 
             switch (type)
             {
@@ -48,7 +48,7 @@ namespace PortailReserve.Utils
 
             try
             {
-                StreamWriter fichierLog = new StreamWriter(filePath + fileName, false);
+                StreamWriter fichierLog = new StreamWriter(filePath + fileName, true);
                 fichierLog.WriteLine(type + " " + DateTime.Now + " : " + message);
                 fichierLog.Close();
             }

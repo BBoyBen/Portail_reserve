@@ -39,6 +39,23 @@ namespace PortailReserve.DAL.Impl
             bdd.Dispose();
         }
 
+        public bool ExisteParDossierEtCie(string dossier, int cie)
+        {
+            try
+            {
+                Album trouve = bdd.Albums.FirstOrDefault(a => a.Dossier.Equals(dossier) && a.Cie.Equals(cie));
+
+                if (trouve.Equals(null))
+                    return false;
+
+                return true;
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+        }
+
         public Album GetAlbumById(Guid id)
         {
             try

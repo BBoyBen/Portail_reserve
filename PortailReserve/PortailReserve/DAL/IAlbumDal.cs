@@ -14,5 +14,6 @@ namespace PortailReserve.DAL
         int SupprimerAlbum(Guid id);
         Album GetAlbumById(Guid id);
         List<Album> GetAlbumsByCie(int cie);
+        bool ExisteParDossierEtCie(string dossier, int cie);
     }
 }
