@@ -1,0 +1,38 @@
+﻿@model PortailReserve.Models.Album
+
+<div class="row">
+    <div class="col-12 text-center titrePopUp">
+        Supprimer l'album "@Model.Titre"
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 text-center">
+        Vouler-vous vraiment supprimer cet album de manière définitive ?
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+        <div class="row">
+            <button id="boutonSuppression" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="clickOn('lienSuppAlbum'); ">
+                Supprimer
+            </button>
+            <div id="lienSuppressionCdu" style="display: none; ">
+                @using (Html.BeginForm("SupprimerAlbum", "Souvenir"))
+                {
+                    @Html.Hidden("idAlbum", Model.Id)
+
+                    <input type="submit" value="Supprimer" id="lienSuppAlbum" />
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpSuppresionAlbum'); ">
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>

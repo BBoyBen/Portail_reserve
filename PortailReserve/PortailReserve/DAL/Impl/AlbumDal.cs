@@ -126,6 +126,7 @@ namespace PortailReserve.DAL.Impl
                 }
 
                 bdd.Albums.Remove(toDelete);
+                bdd.SaveChanges();
 
                 return 1;
             }catch(Exception e)

@@ -28,7 +28,7 @@ namespace PortailReserve.Controllers
         }
 
         [Authorize]
-        public ActionResult Index()
+        public ActionResult Index(string erreur = "")
         {
             Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
             if (u == null)
@@ -48,6 +48,8 @@ namespace PortailReserve.Controllers
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
             ViewBag.Role = u.Role;
+
+            ViewBag.Erreur = erreur;
 
             int numCie = u.Compagnie;
 
@@ -82,7 +84,7 @@ namespace PortailReserve.Controllers
                 return RedirectToAction("PremiereCo", "Login");
 
             if(u.Role > 3 || u.Compagnie == -1)
-                return RedirectToAction("Index", "Login");
+                return RedirectToAction("Index", "Souvenir");
 
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
@@ -123,7 +125,7 @@ namespace PortailReserve.Controllers
                 return RedirectToAction("PremiereCo", "Login");
 
             if (u.Role > 3 || u.Compagnie == -1)
-                return RedirectToAction("Index", "Login");
+                return RedirectToAction("Index", "Souvenir");
 
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
@@ -179,6 +181,146 @@ namespace PortailReserve.Controllers
                 ViewBag.Erreur = nbPhotoErreur + " photo n'a pas été importée sur " + nbPhotos;
 
             return RedirectToAction("Index");
+        }
+
+        [Authorize]
+        public ActionResult Album (Guid id)
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            if (u.Compagnie == -1)
+                return RedirectToAction("Index", "Home");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
+
+            int numCie = u.Compagnie;
+
+            Album album = aDal.GetAlbumById(id);
+            if (album == null && album.Equals(typeof(AlbumNull)))
+                return RedirectToAction("Index", "Souvenir");
+
+            if (album.Cie != numCie)
+                return RedirectToAction("Index", "Home");
+
+            List<Photo> photos = pDal.GetPhotosByAlbum(album.Id);
+            int nbPhotos = photos.Count;
+
+            AlbumViewModel vm = new AlbumViewModel
+            {
+                Album = album,
+                Photos = photos,
+                NbPhotos = nbPhotos
+            };
+
+            return View(vm);
+        }
+
+        [Authorize]
+        public ActionResult AfficherPopUpSupprimerAlbum(Guid id)
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            if (u.Compagnie == -1)
+                return RedirectToAction("Index", "Home");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
+
+            Album album = aDal.GetAlbumById(id);
+            if (album == null || album.Equals(typeof(AlbumNull)))
+                album = new Album
+                {
+                    Titre = "Empty",
+                    Id = Guid.Empty
+                };
+
+            return PartialView("AfficherPopUpSupprimerAlbum", album);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult SupprimerAlbum()
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            if (u.Role > 3 || u.Compagnie == -1)
+                return RedirectToAction("Index", "Souvenir");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
+
+            int numCie = u.Compagnie;
+
+            Guid idAlbum = Guid.Parse(Request.Form["idAlbum"]);
+            if(idAlbum.Equals(Guid.Empty))
+            {
+                string e = "Erreur lors de la suppression de l'album.";
+                return RedirectToAction("Index", "Souvenir", new { erreur = e });
+            }
+
+            Album album = aDal.GetAlbumById(idAlbum);
+            if(album == null || album.Equals(typeof(AlbumNull)))
+            {
+                string e = "Erreur lors de la suppression de l'album.";
+                return RedirectToAction("Index", "Souvenir", new { erreur = e });
+            }
+
+            int retour = aDal.SupprimerAlbum(idAlbum);
+
+            if (retour == 1)
+            {
+                Directory.Delete(HttpContext.Server.MapPath("~/Content/Souvenirs/") + numCie + "/" + album.Dossier, true);
+            }
+            else
+            {
+                string e = "Erreur lors de la suppression de l'album.";
+                return RedirectToAction("Index", "Souvenir", new { erreur = e });
+            }
+
+            return RedirectToAction("Index", "Souvenir");
         }
     }
 }

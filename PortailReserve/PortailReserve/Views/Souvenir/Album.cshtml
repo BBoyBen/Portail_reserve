@@ -1,0 +1,121 @@
+﻿@model PortailReserve.ViewModel.AlbumViewModel
+@{
+    ViewBag.Title = "Album";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style {
+    <link rel="stylesheet" href="~/Content/CSS/souvenir.css" />
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <button class="bouton boutonBleu allWidth" onclick="clickOn('retourSouvenir'); ">
+                @Html.ActionLink("Retour", "Index", "Souvenir", null, new { @class = "lienBoutonBleu", id = "retourSouvenir" })
+            </button>
+        </div>
+    </div>
+</div>
+
+<h1> @Model.Album.Titre </h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center">
+            @Model.Album.Description
+        </div>
+    </div>
+</div>
+
+<div id="affichagePhotos" class="container">
+    @if (Model.NbPhotos.Equals(0))
+    {
+        <div class="row">
+            <div class="col-12 text-center">
+                Aucune photos dans cette album.
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @{ int index = 0; }
+            @foreach (PortailReserve.Models.Photo p in Model.Photos)
+            {
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 selfCenter divImage">
+                    <img class="imagePrevisu imageAlbum" src=@p.Fichier alt="photo" onclick="afficherZoom(@index); " />
+                </div>
+                { index++; }
+            }
+        </div>
+    }
+</div>
+
+@if (Model.NbPhotos != 0)
+{
+    <div id="partieZoom" style="display:none; ">
+        <div class="row">
+            <div class="col-2 text-center champsTextDroit" onclick="fermerZoom(); ">
+                <img src="~/Content/image/icone_fermer.png" alt="Fermer" class="iconePhoto" />
+            </div>
+        </div>
+
+        @{ int index = 0; }
+        @foreach (PortailReserve.Models.Photo p in Model.Photos)
+        {
+            <div class="row lignePhoto">
+                <div class="col-2 text-center boutonChgmtPhoto divPhotoZoom @index" onclick="precendant(@index); " style="display: none;">
+                    <img src="~/Content/image/icone_precedent.png" alt="Précédent" class="iconePhoto" />
+                </div>
+                <div class="col-8 text-center divPhotoZoom @index" style="display: none;">
+                    <img class="imageZoom" src=@p.Fichier />
+                </div>
+                <div class="col-2 text-center boutonChgmtPhoto divPhotoZoom @index" onclick="suivant(@index); " style="display: none;">
+                    <img src="~/Content/image/icone_suivant.png" alt="Suivant" class="iconePhoto" />
+                </div>
+            </div>
+            { index++; }
+        }
+
+    </div>
+}
+
+@if (ViewBag.Role < 4)
+{
+    <div class="container" id="boutonSupprimer">
+        <div class="row">
+            <div class="col-3 selfCenter">
+                <button class="bouton boutonRouge allWidth text-center" onclick="afficherCacherPopUp('popUpSuppresionAlbum'); clickOn('boutonSupp'); ">
+                    <span class="lienBouton lienBoutonBleu"> Supprimer l'album </span>
+                </button>
+            </div>
+            <div style="display: none;">
+                @Ajax.ActionLink("Supprimer", "AfficherPopUpSupprimerAlbum", new { id = Model.Album.Id }, new AjaxOptions
+                   {
+                       InsertionMode = InsertionMode.Replace,
+                       UpdateTargetId = "popUpSuppresionAlbum",
+                       HttpMethod = "GET"
+                   }, new { id = "boutonSupp" })
+            </div>
+        </div>
+    </div>
+}
+
+<!--
+#############################################################################################
+########################## Pop Up de suppression d'un album #################################
+#############################################################################################
+-->
+
+@if (ViewBag.Role < 4)
+{
+    <div class="container popUp" id="popUpSuppresionAlbum" style="display: none; ">
+        @{ Html.RenderAction("AfficherPopUpSupprimerAlbum", new { id = Guid.Empty }); }
+    </div>
+}
+
+@section scripts {
+    <script src="~/Content/JavaScript/albums.js"></script>
+}
+

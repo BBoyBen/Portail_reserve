@@ -45,3 +45,62 @@ $("#photos").change(function () {
 $("#photoLabel").click(function () {
     document.getElementById("photos").click();
 });
+
+function afficherZoom(i) {
+    var partieZoom = document.getElementById("partieZoom");
+    var background = document.getElementById("background");
+    var photo = document.getElementsByClassName(i);
+
+    partieZoom.style.display = "block";
+    background.style.display = "block";
+
+    photo[0].style.display = "block";
+    photo[1].style.display = "block";
+    photo[2].style.display = "block";
+}
+
+function fermerZoom() {
+    var partieZoom = document.getElementById("partieZoom");
+    var background = document.getElementById("background");
+    var photos = document.getElementsByClassName("divPhotoZoom");
+
+    partieZoom.style.display = "none";
+    background.style.display = "none";
+    for (var i = 0; i < photos.length; i++) {
+        photos[i].style.display = "none";
+    }
+}
+
+function suivant(i) {
+    var photo = document.getElementsByClassName(i);
+
+    if (i + 1 == document.getElementsByClassName('lignePhoto').length)
+        var suivante = document.getElementsByClassName(0);
+    else
+        var suivante = document.getElementsByClassName(i+1);
+
+    photo[0].style.display = "none";
+    photo[1].style.display = "none";
+    photo[2].style.display = "none";
+
+    suivante[0].style.display = "block";
+    suivante[1].style.display = "block";
+    suivante[2].style.display = "block";
+}
+
+function precendant(i) {
+    var photo = document.getElementsByClassName(i);
+
+    if (i - 1 == -1)
+        var precedante = document.getElementsByClassName(document.getElementsByClassName('lignePhoto').length - 1);
+    else
+        var precedante = document.getElementsByClassName(i - 1);
+
+    photo[0].style.display = "none";
+    photo[1].style.display = "none";
+    photo[2].style.display = "none";
+
+    precedante[0].style.display = "block";
+    precedante[1].style.display = "block";
+    precedante[2].style.display = "block";
+}

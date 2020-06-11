@@ -288,6 +288,7 @@
     <Compile Include="ViewModel\AjouterPersonnelViewModel.cs" />
     <Compile Include="ViewModel\AjoutGroupeViewModel.cs" />
     <Compile Include="ViewModel\AjoutSectionViewModel.cs" />
+    <Compile Include="ViewModel\AlbumViewModel.cs" />
     <Compile Include="ViewModel\ChangementCadreComViewModel.cs" />
     <Compile Include="ViewModel\ChangementCdgViewModel.cs" />
     <Compile Include="ViewModel\ChangementGroupeViewModel.cs" />
@@ -330,11 +331,14 @@
     <Content Include="Content\image\icone_confirmation.png" />
     <Content Include="Content\image\icone_cours.png" />
     <Content Include="Content\image\icone_erreur.png" />
+    <Content Include="Content\image\icone_fermer.png" />
     <Content Include="Content\image\icone_fermeture.png" />
     <Content Include="Content\image\icone_groupe.png" />
     <Content Include="Content\image\icone_planning.png" />
+    <Content Include="Content\image\icone_precedent.png" />
     <Content Include="Content\image\icone_profile.png" />
     <Content Include="Content\image\icone_soldat.png" />
+    <Content Include="Content\image\icone_suivant.png" />
     <Content Include="Content\image\icone_supprimer.png" />
     <Content Include="Content\image\icon_modif.png" />
     <Content Include="Content\image\point_bleu.png" />
@@ -350,6 +354,24 @@
     <Content Include="Content\JavaScript\modifProfil.js" />
     <Content Include="Content\JavaScript\premiereCo.js" />
     <Content Include="Content\JavaScript\section.js" />
+    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013477.JPG" />
+    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013478.JPG" />
+    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013479.JPG" />
+    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013480.JPG" />
+    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013481.JPG" />
+    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013482.JPG" />
+    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013483.JPG" />
+    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013484.JPG" />
+    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013485.JPG" />
+    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013486.JPG" />
+    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013487.JPG" />
+    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0023488.JPG" />
+    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0023489.JPG" />
+    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0023490.JPG" />
+    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0023491.JPG" />
+    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0023492.JPG" />
+    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0023493.JPG" />
+    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0023494.JPG" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -537,11 +559,12 @@
     <Content Include="Views\Section\AfficherPopUpAjoutSection.cshtml" />
     <Content Include="Views\Souvenir\Index.cshtml" />
     <Content Include="Views\Souvenir\Ajouter.cshtml" />
+    <Content Include="Views\Souvenir\Album.cshtml" />
+    <Content Include="Views\Souvenir\AfficherPopUpSupprimerAlbum.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\PATRACDR\" />
-    <Folder Include="Content\Souvenirs\" />
     <Folder Include="Views\Disponibilite\" />
     <Folder Include="Views\Participation\" />
     <Folder Include="Views\Test\" />

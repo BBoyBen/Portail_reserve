@@ -43,7 +43,7 @@
             <div class="row">
                 @foreach(PortailReserve.Models.Album album in Model.Albums)
                 {
-                    <div class="col-12 col-md-5 elemAlbum selfCenter">
+                    <div class="col-12 col-md-5 elemAlbum selfCenter" onclick="clickOn('@album.Id')">
                         <div class="row">
                             <div class="col-8 titreElemAlbum">
                                 @album.Titre
@@ -58,6 +58,7 @@
                             </div>
                         </div>
                     </div>
+                    @Html.ActionLink("Album", "Album", "Souvenir", new { id = album.Id }, new { id = album.Id, style = "display: none;" })
                 }
             </div>
         }
