@@ -9,11 +9,24 @@
 }
 
 <div class="container">
-    <div class="row">
+    <div class="row" id="boutonRetoutAjout">
         <div class="col-3">
             <button class="bouton boutonBleu allWidth" onclick="clickOn('retourSouvenir'); ">
                 @Html.ActionLink("Retour", "Index", "Souvenir", null, new { @class = "lienBoutonBleu", id = "retourSouvenir" })
             </button>
+        </div>
+        <div class="col-3 champsTextDroit">
+            <button class="bouton boutonBleu allWidth text-center" onclick="afficherCacherPopUp('popUpAjoutPhoto'); clickOn('boutonAjout');">
+                <span class="lienBouton lienBoutonBleu"> Ajouter des photos </span>
+            </button>
+            <div style="display: none;">
+                @Ajax.ActionLink("Ajouter des photos", "AfficherPopUpAjouterPhoto", null, new AjaxOptions
+                    {
+                        InsertionMode = InsertionMode.Replace,
+                        UpdateTargetId = "popUpAjoutPhoto",
+                        HttpMethod = "GET"
+                    }, new { id = "boutonAjout" })
+            </div>
         </div>
     </div>
 </div>
@@ -28,58 +41,9 @@
     </div>
 </div>
 
-<div id="affichagePhotos" class="container">
-    @if (Model.NbPhotos.Equals(0))
-    {
-        <div class="row">
-            <div class="col-12 text-center">
-                Aucune photos dans cette album.
-            </div>
-        </div>
-    }
-    else
-    {
-        <div class="row">
-            @{ int index = 0; }
-            @foreach (PortailReserve.Models.Photo p in Model.Photos)
-            {
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3 selfCenter divImage">
-                    <img class="imagePrevisu imageAlbum" src=@p.Fichier alt="photo" onclick="afficherZoom(@index); " />
-                </div>
-                { index++; }
-            }
-        </div>
-    }
+<div id="listePhotos">
+    @{ Html.RenderAction("AfficherListePhotos", new { id = Model.Album.Id }); }
 </div>
-
-@if (Model.NbPhotos != 0)
-{
-    <div id="partieZoom" style="display:none; ">
-        <div class="row">
-            <div class="col-2 text-center champsTextDroit" onclick="fermerZoom(); ">
-                <img src="~/Content/image/icone_fermer.png" alt="Fermer" class="iconePhoto" />
-            </div>
-        </div>
-
-        @{ int index = 0; }
-        @foreach (PortailReserve.Models.Photo p in Model.Photos)
-        {
-            <div class="row lignePhoto">
-                <div class="col-2 text-center boutonChgmtPhoto divPhotoZoom @index" onclick="precendant(@index); " style="display: none;">
-                    <img src="~/Content/image/icone_precedent.png" alt="Précédent" class="iconePhoto" />
-                </div>
-                <div class="col-8 text-center divPhotoZoom @index" style="display: none;">
-                    <img class="imageZoom" src=@p.Fichier />
-                </div>
-                <div class="col-2 text-center boutonChgmtPhoto divPhotoZoom @index" onclick="suivant(@index); " style="display: none;">
-                    <img src="~/Content/image/icone_suivant.png" alt="Suivant" class="iconePhoto" />
-                </div>
-            </div>
-            { index++; }
-        }
-
-    </div>
-}
 
 @if (ViewBag.Role < 4)
 {
@@ -111,11 +75,53 @@
 @if (ViewBag.Role < 4)
 {
     <div class="container popUp" id="popUpSuppresionAlbum" style="display: none; ">
-        @{ Html.RenderAction("AfficherPopUpSupprimerAlbum", new { id = Guid.Empty }); }
+        @{ Html.RenderAction("AfficherPopUpSupprimerAlbum", new { id = Model.Album.Id }); }
     </div>
 }
 
+<!--
+#############################################################################################
+################################ Pop Up d'ajout de photo ###################################
+#############################################################################################
+-->
+
+@if (ViewBag.Role < 4)
+{
+    <div class="container popUp" id="popUpAjoutPhoto" style="display: none; ">
+        @{ Html.RenderAction("AfficherPopUpAjouterPhoto", new { id = Model.Album.Id }); }
+    </div>
+}
+
+<!--
+#############################################################################################
+################################ Messages d'information #####################################
+#############################################################################################
+-->
+
+<div class="container popUpSuccess" id="suppressionOk" style="display: none;">
+    <div class="row">
+        <div class="col-2">
+            <img src="~/Content/image/icone_confirmation.png" alt="OK" class="imagePopUpSE" />
+        </div>
+        <div id="texteSuccess" class="col-10 text-center messageSuccess">
+
+        </div>
+    </div>
+</div>
+
+<div class="container popUpError" id="suppressionKo" style="display: none; ">
+    <div class="row">
+        <div class="col-2">
+            <img src="~/Content/image/icone_erreur.png" alt="KO" class="imagePopUpSE" />
+        </div>
+        <div id="texteError" class="col-10 text-center messageError">
+
+        </div>
+    </div>
+</div>
+
 @section scripts {
     <script src="~/Content/JavaScript/albums.js"></script>
+    <script src="~/Content/JavaScript/section.js"></script>
 }
 

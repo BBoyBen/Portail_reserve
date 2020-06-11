@@ -1,0 +1,69 @@
+﻿@model PortailReserve.Models.Album
+
+<div class="row">
+    <div class="col-12 text-center titrePopUp">
+        Ajouter des photos dans l'album "@Model.Titre"
+    </div>
+</div>
+
+
+@using (Ajax.BeginForm("AjouterPhotos", "Souvenir", new AjaxOptions
+    {
+        InsertionMode = InsertionMode.Replace,
+        UpdateTargetId = "listePhotos",
+        HttpMethod = "POST",
+        OnBegin = "afficherCacherPopUp('popUpAjoutPhoto')",
+        OnSuccess = "messageSuccess('Photos ajoutées avec succés !')",
+        OnFailure = "messageError('Echec ajout photos !')"
+    }, new { enctype = "multipart/form-data" }))
+{
+    <div class="row">
+        <div class="col-6 champsTextCenter text-center">
+            @Html.Label("photos", "Ajouter des photos", new { id = "photoLabel" })
+        </div>
+        @Html.TextBox("photos", null, new
+        {
+            type = "file",
+            id = "photos",
+            style = "display: none;",
+            accept = ".jpg, .jpeg, .png",
+            multiple = "multiple",
+            required = "required"
+        })
+    </div>
+    <div class="row">
+        <div class="col-12 text-center" id="nombrePhotos"></div>
+    </div>
+    <div class="row">
+        <div class="col-12 erreur">
+            <span id="erreurPhotos"> </span>
+        </div>
+    </div>
+
+    <div class="row" id="partiePrevisu">
+
+    </div>
+
+    @Html.Hidden("idAlbum", Model.Id);
+    @Html.Hidden("cie", Model.Cie);
+    @Html.Hidden("dossier", Model.Dossier)
+
+    <input type="submit" value="Ajouter" style="display: none;" id="ajouterPhoto" />
+}
+
+<div class="row ligneBouton">
+    <div class="col-6">
+        <div class="row">
+            <button id="valideAjoutPhoto" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="clickOn('ajouterPhoto');">
+                Ajouter
+            </button>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpAjoutPhoto'); ">
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>

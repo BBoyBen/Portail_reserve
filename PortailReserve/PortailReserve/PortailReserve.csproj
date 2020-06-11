@@ -561,6 +561,8 @@
     <Content Include="Views\Souvenir\Ajouter.cshtml" />
     <Content Include="Views\Souvenir\Album.cshtml" />
     <Content Include="Views\Souvenir\AfficherPopUpSupprimerAlbum.cshtml" />
+    <Content Include="Views\Souvenir\AfficherListePhotos.cshtml" />
+    <Content Include="Views\Souvenir\AfficherPopUpAjouterPhoto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

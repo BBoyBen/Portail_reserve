@@ -61,3 +61,14 @@ function toutVert(classe) {
         item.style.border = "1px solid green";
     });
 }
+
+function fermerAllPopUp() {
+    var back = document.getElementById("background");
+    var popup = document.getElementsByClassName("popUp");
+
+    back.style.display = "none";
+
+    for (var i = 0; i < popup.length; i++) {
+        popup[i].style.display = "none";
+    }
+}

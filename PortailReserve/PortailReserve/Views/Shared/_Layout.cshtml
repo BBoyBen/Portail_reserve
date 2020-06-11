@@ -45,7 +45,7 @@
 
     <div id="menu">
         <div class="row">
-            <div class="menuItem col-3 borderDroite"> @Html.ActionLink("ACCEUIL", "Index", "Home", null, new { @class = "lienMenu" }) </div>
+            <div class="menuItem col-3 borderDroite"> @Html.ActionLink("ACCUEIL", "Index", "Home", null, new { @class = "lienMenu" }) </div>
             <div class="menuItem col-3 borderDroite" onclick="afficherCacherElement('sousMenuEvent'); ">
                 <div class="lienMenu"> EVENEMENT </div>
                 <div class="sousMenu" id="sousMenuEvent" style="display: none;">
@@ -68,7 +68,7 @@
         </div>
     </div>
 
-    <div id="background" style="display:none;"></div>
+    <div id="background" style="display:none;" onclick="fermerAllPopUp(); "></div>
 
     <div id="corpsDePage" class="container body-content">
         @RenderBody()

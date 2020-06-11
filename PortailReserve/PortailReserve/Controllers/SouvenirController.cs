@@ -217,17 +217,42 @@ namespace PortailReserve.Controllers
             if (album.Cie != numCie)
                 return RedirectToAction("Index", "Home");
 
-            List<Photo> photos = pDal.GetPhotosByAlbum(album.Id);
+            AlbumViewModel vm = new AlbumViewModel
+            {
+                Album = album,
+                Photos = new List<Photo>(),
+                NbPhotos = 0
+            };
+
+            return View(vm);
+        }
+
+        [Authorize]
+        public ActionResult AfficherListePhotos(Guid id)
+        {
+            if (id.Equals(Guid.Empty))
+            {
+                AlbumViewModel vmEmpty = new AlbumViewModel
+                {
+                    Album = new Album(),
+                    Photos = new List<Photo>(),
+                    NbPhotos = 0
+                };
+
+                return PartialView("AfficherListePhotos", vmEmpty);
+            }
+
+            List<Photo> photos = pDal.GetPhotosByAlbum(id);
             int nbPhotos = photos.Count;
 
             AlbumViewModel vm = new AlbumViewModel
             {
-                Album = album,
+                Album = new Album(),
                 Photos = photos,
                 NbPhotos = nbPhotos
             };
 
-            return View(vm);
+            return PartialView("AfficherListePhotos", vm);
         }
 
         [Authorize]
@@ -321,6 +346,105 @@ namespace PortailReserve.Controllers
             }
 
             return RedirectToAction("Index", "Souvenir");
+        }
+
+        [Authorize]
+        public ActionResult AfficherPopUpAjouterPhoto(Guid id)
+        {
+            if (id.Equals(Guid.Empty))
+            {
+                Album albumIdEmpty = new Album
+                {
+                    Titre = "Empty",
+                    Cie = 0,
+                    Id = Guid.Empty
+                };
+
+                return PartialView("AfficherPopUpAjouterPhoto", albumIdEmpty);
+            }
+
+            Album album = aDal.GetAlbumById(id);
+            if(album == null || album.Equals(typeof(AlbumNull)))
+                album = new Album
+                {
+                    Titre = "Empty",
+                    Cie = 0,
+                    Id = Guid.Empty
+                };
+
+            return PartialView("AfficherPopUpAjouterPhoto", album);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult AjouterPhotos()
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                Guid idAlbum = Guid.Parse(Request.Form["idAlbum"]);
+                if (idAlbum.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400);
+
+                int numCie = Int32.Parse(Request.Form["cie"]);
+                if (numCie < 1)
+                    return new HttpStatusCodeResult(400);
+
+                string dossier = Request.Form["dossier"];
+
+                string cheminDossier = HttpContext.Server.MapPath("~/Content/Souvenirs/") + numCie + "/" + dossier;
+
+                if (!Directory.Exists(cheminDossier))
+                    return new HttpStatusCodeResult(400);
+
+                int nbPhotoErreur = 0;
+                int nbPhotos = Request.Files.Count;
+                for (int i = 0; i < nbPhotos; i++)
+                {
+                    var photo = Request.Files[i];
+
+                    string path = cheminDossier + "/" + photo.FileName;
+                    photo.SaveAs(path);
+                    string url = "/Content/Souvenirs/" + numCie + "/" + dossier + "/" + photo.FileName;
+
+                    Photo toAdd = new Photo
+                    {
+                        Fichier = url,
+                        Album = idAlbum
+                    };
+
+                    Guid idPhoto = pDal.AjouterPhoto(toAdd);
+
+                    if (idPhoto.Equals(Guid.Empty))
+                        nbPhotoErreur++;
+                }
+
+                if (nbPhotoErreur > 1)
+                    ViewBag.Erreur = nbPhotoErreur + " photos n'ont pas été importées sur " + nbPhotos;
+
+                if (nbPhotoErreur == 1)
+                    ViewBag.Erreur = nbPhotoErreur + " photo n'a pas été importée sur " + nbPhotos;
+
+                return RedirectToAction("AfficherListePhotos", new { id = idAlbum });
+            }
+            catch(Exception e)
+            {
+                return new HttpStatusCodeResult(400, "Erreur de l'ajout d'un utilisateur.");
+            }
         }
     }
 }
