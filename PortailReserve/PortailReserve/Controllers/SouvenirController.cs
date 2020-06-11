@@ -180,7 +180,7 @@ namespace PortailReserve.Controllers
             if(nbPhotoErreur == 1)
                 ViewBag.Erreur = nbPhotoErreur + " photo n'a pas été importée sur " + nbPhotos;
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Album", new { id = idAlbum });
         }
 
         [Authorize]

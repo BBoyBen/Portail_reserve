@@ -42,10 +42,6 @@ $("#photos").change(function () {
     updatePrevisu(this);
 });
 
-$("#photoLabel").click(function () {
-    document.getElementById("photos").click();
-});
-
 function afficherZoom(i) {
     var partieZoom = document.getElementById("partieZoom");
     var background = document.getElementById("background");
