@@ -256,6 +256,85 @@ namespace PortailReserve.Controllers
         }
 
         [Authorize]
+        public ActionResult AfficherListePhotosPourSuppression(Guid id)
+        {
+            if (id.Equals(Guid.Empty))
+            {
+                AlbumViewModel vmEmpty = new AlbumViewModel
+                {
+                    Album = new Album(),
+                    Photos = new List<Photo>(),
+                    NbPhotos = 0
+                };
+
+                return PartialView("AfficherListePhotos", vmEmpty);
+            }
+            Album album = aDal.GetAlbumById(id);
+
+            List<Photo> photos = pDal.GetPhotosByAlbum(id);
+            int nbPhotos = photos.Count;
+
+            AlbumViewModel vm = new AlbumViewModel
+            {
+                Album = album,
+                Photos = photos,
+                NbPhotos = nbPhotos
+            };
+
+            return PartialView("AfficherListePhotosPourSuppression", vm);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult SupprimerPhotos()
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                Guid idAlbum = Guid.Parse(Request.Form["idAlbum"]);
+                if (idAlbum.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400);
+
+                List<Photo> photos = pDal.GetPhotosByAlbum(idAlbum);
+                List<Photo> toDelete = new List<Photo>();
+                foreach(Photo p in photos)
+                {
+                    var checkBoxPhoto = Request.Form[p.Id.ToString()];
+                    if (checkBoxPhoto != null && checkBoxPhoto.Equals("on"))
+                        toDelete.Add(p);
+                }
+
+                foreach(Photo trash in toDelete)
+                {
+                    if (System.IO.File.Exists(trash.Fichier))
+                        System.IO.File.Delete(trash.Fichier);
+
+                    pDal.SupprimerPhoto(trash.Id);
+                }
+
+                return RedirectToAction("AfficherListePhotosPourSuppression", new { id = idAlbum });
+            }
+            catch(Exception e)
+            {
+                return new HttpStatusCodeResult(400, "Erreur de la suppression des photos.");
+            }
+        }
+
+        [Authorize]
         public ActionResult AfficherPopUpSupprimerAlbum(Guid id)
         {
             Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
@@ -443,7 +522,7 @@ namespace PortailReserve.Controllers
             }
             catch(Exception e)
             {
-                return new HttpStatusCodeResult(400, "Erreur de l'ajout d'un utilisateur.");
+                return new HttpStatusCodeResult(400, "Erreur de l'ajout des photos.");
             }
         }
     }

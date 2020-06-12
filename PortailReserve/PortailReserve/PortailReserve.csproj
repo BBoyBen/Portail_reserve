@@ -563,6 +563,7 @@
     <Content Include="Views\Souvenir\AfficherPopUpSupprimerAlbum.cshtml" />
     <Content Include="Views\Souvenir\AfficherListePhotos.cshtml" />
     <Content Include="Views\Souvenir\AfficherPopUpAjouterPhoto.cshtml" />
+    <Content Include="Views\Souvenir\AfficherListePhotosPourSuppression.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

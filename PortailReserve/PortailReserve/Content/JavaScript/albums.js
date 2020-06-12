@@ -100,3 +100,57 @@ function precendant(i) {
     precedante[1].style.display = "block";
     precedante[2].style.display = "block";
 }
+
+function modifierAlbum() {
+    var boutonModifier = document.getElementById("boutonModifier");
+    var boutonTerminer = document.getElementById("boutonTerminer");
+    var listeClassique = document.getElementById("listePhotos");
+    var listeSupp = document.getElementById("listePhotosSupp");
+
+    boutonModifier.style.display = "none";
+    listeClassique.style.display = "none";
+
+    boutonTerminer.style.display = "block";
+    listeSupp.style.display = "block";
+}
+
+function terminerAlbum() {
+    var boutonModifier = document.getElementById("boutonModifier");
+    var boutonTerminer = document.getElementById("boutonTerminer");
+    var listeClassique = document.getElementById("listePhotos");
+    var listeSupp = document.getElementById("listePhotosSupp");
+
+    boutonModifier.style.display = "block";
+    listeClassique.style.display = "block";
+
+    boutonTerminer.style.display = "none";
+    listeSupp.style.display = "none";
+}
+
+function selecPhoto(index) {
+
+    var checkBox = document.getElementById("check_" + index);
+    var image = document.getElementById("image_" + index);
+    var nbPhotoSelec = document.getElementById("inputNbPhotoSelec");
+    var messagePhotoSelec = document.getElementById("nbPhotosSelec");
+    var nbPopUp = document.getElementById("nbPhotosPopUp");
+
+    var valueNbSelec = parseInt(messagePhotoSelec.innerHTML);
+
+    if (checkBox.checked == true) {
+        image.classList.remove("selecPourSupp");
+        checkBox.checked = false;
+
+        valueNbSelec--;
+    }
+    else {
+        image.classList.add("selecPourSupp");
+        checkBox.checked = true;
+
+        valueNbSelec++;
+    }
+
+    nbPhotoSelec.value = valueNbSelec;
+    messagePhotoSelec.innerHTML = valueNbSelec;
+    nbPopUp.innerHTML = valueNbSelec;
+}

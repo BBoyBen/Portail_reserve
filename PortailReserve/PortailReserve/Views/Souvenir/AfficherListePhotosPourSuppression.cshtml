@@ -1,0 +1,97 @@
+﻿@model PortailReserve.ViewModel.AlbumViewModel
+
+<div class="row">
+    <div class="col-12 text-center erreur">
+        @ViewBag.Erreur
+    </div>
+</div>
+
+<div id="affichagePhotos" class="container">
+    @if (Model.NbPhotos.Equals(0))
+    {
+        <div class="row">
+            <div class="col-12 text-center">
+                Aucune photos dans cette album.
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-12 text-center">
+                Cliquez sur les photos pour les séléctionner.
+            </div>
+        </div>
+        using (Ajax.BeginForm("SupprimerPhotos", "Souvenir", new AjaxOptions 
+            { 
+                InsertionMode = InsertionMode.Replace,
+                UpdateTargetId = "listePhotosSupp",
+                HttpMethod = "POST",
+                OnBegin = "afficherCacherPopUp('popUpSuppPhotos')",
+                OnSuccess = "messageSuccess('Photos supprimées avec succés !')",
+                OnFailure = "messageError('Echec suppression photos !')"
+            }))
+        {
+            <div class="row">
+                @{ int i = 0; }
+                @foreach (PortailReserve.Models.Photo p in Model.Photos)
+                {
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 selfCenter divImage">
+                        <img id="image_@i" class="imagePrevisu imageAlbumSelec" src=@p.Fichier alt="photo" onclick="selecPhoto(@i); " />
+                    </div>
+                    <input type="checkbox" id="check_@i" name="@p.Id" class="checkboxSupp" style="display: none;" />
+                    { i++; }
+                }
+            </div>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <span id="nbPhotosSelec">0</span> photos séléctionnées.
+                </div>
+            </div>
+
+            @Html.Hidden("nbPhotoSelec", 0, new { id = "inputNbPhotoSelec" })
+            @Html.Hidden("idAlbum", Model.Album.Id)
+
+            <input type="submit" value="Supprimer" id="validerSuppPhoto" style="display: none;" />
+        }
+
+        <div class="row marginTop">
+            <div class="col-3 selfCenter">
+                <button class="bouton boutonVert text-center allWidth" onclick="afficherCacherPopUp('popUpSuppPhotos');">
+                    <span class="lienBoutonVert"> Supprimer les photos </span>
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="container popUp" id="popUpSuppPhotos" style="display: none;">
+    <div class="row">
+        <div class="col-12 titrePopUp text-center">
+            Suppression de photos
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 corpsPopUp text-center">
+            Voulez-vous supprimer ces <span id="nbPhotosPopUp">0</span> photos définitivement ?
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <button id="boutonChangement" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="clickOn('validerSuppPhoto'); ">
+                    Valider
+                </button>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpSuppPhotos'); ">
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

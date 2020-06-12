@@ -368,7 +368,11 @@ option {
     margin-top: 30px;
 }
 
-.pastilleNum{
+.marginTopZero {
+    margin-top: 0;
+}
+
+.pastilleNum {
     background-color: red;
     color: white;
     border-radius: 50%;
@@ -377,7 +381,6 @@ option {
     padding-left: 0.5rem;
     padding-top: 0.15rem;
     padding-bottom: 0.15rem;
-
 }
 
 .pastilleNumDouble {
