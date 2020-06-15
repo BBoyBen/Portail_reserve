@@ -38,12 +38,12 @@
         <div class="col-3 champsTextDroit" id="boutonTerminer" style="display: none;">
             <button class="bouton boutonVert allWidth" onclick="clickOn('lienBoutonTerminer');">
                 @Ajax.ActionLink("Terminer", "AfficherListePhotos", new { id = Model.Album.Id }, new AjaxOptions
-           {
-               InsertionMode = InsertionMode.Replace,
-               UpdateTargetId = "listePhotos",
-               HttpMethod = "GET",
-               OnSuccess = "terminerAlbum();",
-           }, new { id = "lienBoutonTerminer", @class = "lienBouton lienBoutonVert text-center" })
+                   {
+                       InsertionMode = InsertionMode.Replace,
+                       UpdateTargetId = "listePhotos",
+                       HttpMethod = "GET",
+                       OnSuccess = "terminerAlbum();"
+                   }, new { id = "lienBoutonTerminer", @class = "lienBouton lienBoutonVert text-center" })
             </button>
             
         </div>
@@ -66,6 +66,18 @@
 
 <div id="listePhotosSupp" style="display: none;">
     @{ Html.RenderAction("AfficherListePhotosPourSuppression", new { id = Model.Album.Id }); }
+</div>
+
+<div class="container" id="partieTelechargement">
+    <div class="row">
+        <div class="col-3 selfCenter" id="boutonTelechargement" style="display: inline;">
+            <button class="bouton boutonVert allWidth text-center" onclick="clickOn('lienDownload'); ">
+                @Html.ActionLink("Télécharger l'album", "TelechargerAlbum",
+                    new { id = Model.Album.Id },
+                    new { @class = "lienBouton lienBoutonVert", id = "lienDownload"})
+            </button>
+        </div>
+    </div>
 </div>
 
 @if (ViewBag.Role < 4)

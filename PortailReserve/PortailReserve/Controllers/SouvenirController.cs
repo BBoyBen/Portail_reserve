@@ -10,7 +10,9 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using System.IO;
+using System.IO.Compression;
 using static PortailReserve.Utils.Logger;
+
 
 namespace PortailReserve.Controllers
 {
@@ -414,9 +416,12 @@ namespace PortailReserve.Controllers
 
             int retour = aDal.SupprimerAlbum(idAlbum);
 
+            string cheminAlbum = HttpContext.Server.MapPath("~/Content/Souvenirs/") + numCie + "/" + album.Dossier;
             if (retour == 1)
             {
-                Directory.Delete(HttpContext.Server.MapPath("~/Content/Souvenirs/") + numCie + "/" + album.Dossier, true);
+                Directory.Delete(cheminAlbum, true);
+                if(System.IO.File.Exists(cheminAlbum + ".zip"))
+                    System.IO.File.Delete(cheminAlbum + ".zip");
             }
             else
             {
@@ -524,6 +529,28 @@ namespace PortailReserve.Controllers
             {
                 return new HttpStatusCodeResult(400, "Erreur de l'ajout des photos.");
             }
+        }
+
+        [Authorize]
+        public FileResult TelechargerAlbum(Guid id)
+        {
+            Album album = aDal.GetAlbumById(id);
+            if (album == null || album.Equals(typeof(AlbumNull)))
+                album = new Album
+                {
+                    Dossier = "",
+                    Cie = 0
+                };
+
+            string cheminDossier = HttpContext.Server.MapPath("~/Content/Souvenirs/") + album.Cie + "\\" + album.Dossier;
+            string cheminArchive = HttpContext.Server.MapPath("~/Content/Souvenirs/") + album.Cie + "\\" + album.Dossier + ".zip";
+
+            if (System.IO.File.Exists(cheminArchive))
+                System.IO.File.Delete(cheminArchive);
+
+           ZipFile.CreateFromDirectory(cheminDossier, cheminArchive, CompressionLevel.Fastest, true);
+            
+           return File(cheminArchive, "application/zip", album.Dossier + ".zip");
         }
     }
 }
