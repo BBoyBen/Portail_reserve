@@ -43,3 +43,36 @@
         </div>
     </div>
 </div>
+
+<div class="row ligne-ou">
+    <div class="col-12 text-center font-weight-bold">
+        OU
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6 selfCenter">
+        <button class="bouton boutonRouge allWidth text-center" onclick="clickOn('lienSuppSoaDef');">
+            Supprimer définitivement
+        </button>
+    </div>
+    <div style="display: none;">
+        @using (Ajax.BeginForm("SupprimerDefinitivement", "Section", new AjaxOptions
+        {
+            InsertionMode = InsertionMode.Replace,
+            UpdateTargetId = "partieSection",
+            HttpMethod = "POST",
+            OnBegin = "afficherCacherPopUp('popUpSuppressionSoa')",
+            OnComplete = "modifierSection()",
+            OnSuccess = "messageSuccess('Suppression définitive OK !')",
+            OnFailure = "messageError('Erreur suppression définitive !')"
+        }))
+        {
+            @Html.Hidden("idPerso", Model.Soa.Id)
+            @Html.Hidden("idSection", Model.Section.Id)
+            @Html.Hidden("typePerso", 2)
+
+            <input type="submit" value="Supprimer définitivement" id="lienSuppSoaDef" />
+        }
+    </div>
+</div>

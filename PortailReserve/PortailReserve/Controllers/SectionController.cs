@@ -2131,5 +2131,146 @@ namespace PortailReserve.Controllers
                 return new HttpStatusCodeResult(500);
             }
         }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult SupprimerDefinitivement()
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                if (u.Role > 3)
+                    return new HttpUnauthorizedResult();
+
+                int typePerso = Int32.Parse(Request.Form["typePerso"]);
+
+                Guid idPerso = Guid.Parse(Request.Form["idPerso"]);
+                if (idPerso.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400);
+
+                switch (typePerso)
+                {
+                    // personnel classique
+                    case 0:
+                        int retour_zero = uDal.SupprimerUtilisateur(idPerso);
+                        if (retour_zero != 1)
+                            return new HttpStatusCodeResult(400, "Erreur suppression définitive de personnel.");
+
+                        return RedirectToAction("AfficherPersonnelSection");
+
+                    // chef de groupe
+                    case 1:
+                        Guid idGroupe = Guid.Parse(Request.Form["idGroupe"]);
+                        if (idGroupe.Equals(Guid.Empty))
+                            return new HttpStatusCodeResult(400, "Erreur id groupe pour supp def.");
+
+                        int retour_un = gDal.ChangerCdg(idGroupe, Guid.Empty);
+                        if (retour_un != 1)
+                            return new HttpStatusCodeResult(400, "Erreur de changer cdg groupe pour supp def.");
+
+                        retour_un = uDal.SupprimerUtilisateur(idPerso);
+                        if (retour_un != 1)
+                            return new HttpStatusCodeResult(400, "Erreur supp def cdg de la section");
+
+                        return RedirectToAction("AfficherPersonnelSection");
+
+                    // sous-officier adjoint
+                    case 2:
+                        if (u.Role > 2)
+                            return new HttpUnauthorizedResult();
+
+                        Guid idSection = Guid.Parse(Request.Form["idSection"]);
+                        if (idSection.Equals(Guid.Empty))
+                            return new HttpStatusCodeResult(400, "Erreur id section supp def.");
+
+                        int retour_deux = sDal.ChangerSoa(idSection, Guid.Empty);
+                        if (retour_deux != 1)
+                            return new HttpStatusCodeResult(400, "Erreur changer soa supp def.");
+
+                        retour_deux = uDal.SupprimerUtilisateur(idPerso);
+                        if (retour_deux != 1)
+                            return new HttpStatusCodeResult(400, "Erreur supp soa de la section pour supp def.");
+
+                        return RedirectToAction("AfficherPersonnelSection");
+
+                    // chef de section
+                    case 3:
+                        if (u.Role > 2)
+                            return new HttpUnauthorizedResult();
+
+                        Guid idSection_trois = Guid.Parse(Request.Form["idSection"]);
+                        if (idSection_trois.Equals(Guid.Empty))
+                            return new HttpStatusCodeResult(400, "Erreur id section pour supp dsc def.");
+
+                        int retour_trois = sDal.ChangerCds(idSection_trois, Guid.Empty);
+                        if (retour_trois != 1)
+                            return new HttpStatusCodeResult(400, "Erreur de changer cds pour supp def.");
+
+                        retour_trois = uDal.SupprimerUtilisateur(idPerso);
+                        if (retour_trois != 1)
+                            return new HttpStatusCodeResult(400, "Erreur supp def cds.");
+
+                        return RedirectToAction("AfficherPersonnelSection");
+
+                    // adjudant d'unité
+                    case 4:
+                        if (u.Role > 2)
+                            return new HttpUnauthorizedResult();
+
+                        Guid idCie_quatre = Guid.Parse(Request.Form["idCie"]);
+                        if (idCie_quatre.Equals(Guid.Empty))
+                            return new HttpStatusCodeResult(400, "Erreur id compagnie supp def adu.");
+
+                        int retour_quatre = cDal.ChangerAdu(idCie_quatre, Guid.Empty);
+                        if (retour_quatre != 1)
+                            return new HttpStatusCodeResult(400, "Erreur de changer adu pour supp def.");
+
+                        retour_quatre = uDal.SupprimerUtilisateur(idPerso);
+                        if (retour_quatre != 1)
+                            return new HttpStatusCodeResult(400, "Erreur supp def adu de la compagnie");
+
+                        return RedirectToAction("AfficherPersonnelSectionCom");
+
+                    // commendant d'unité
+                    case 5:
+                        if (u.Role > 2)
+                            return new HttpUnauthorizedResult();
+
+                        Guid idCie = Guid.Parse(Request.Form["idCie"]);
+                        if (idCie.Equals(Guid.Empty))
+                            return new HttpStatusCodeResult(400, "Erreur id compagnie pour supp def cdu.");
+
+                        int retour_cinq = cDal.ChangerCdu(idCie, Guid.Empty);
+                        if (retour_cinq != 1)
+                            return new HttpStatusCodeResult(400, "Erreur de changer cdu pour supp def.");
+
+                        retour_cinq = uDal.SupprimerUtilisateur(idPerso);
+                        if (retour_cinq != 1)
+                            return new HttpStatusCodeResult(400, "Erreur supp def cdu.");
+
+                        return RedirectToAction("AfficherPersonnelSectionCom");
+                    default:
+                        return new HttpStatusCodeResult(400, "Type de perso non pris en compte.");
+                }
+            }
+            catch(Exception e)
+            {
+                return new HttpStatusCodeResult(500);
+            }
+        }
     }
 }
