@@ -1,0 +1,589 @@
+﻿@model PortailReserve.ViewModel.EventViewModel
+
+<div class="container">
+    @if (Model.Event.Debut > DateTime.Now)
+    {
+        <div id="boutonPart">
+            @if (Model.Event.Type.Equals("Instruction") || Model.Event.Type.Equals("Exercice")) //Cas des intructions et exercice avec juste patticpation
+            {
+                if (Model.Participation == null) // le user n'a pas encore répondu
+                {
+                    <div class="row">
+                        <div class="col-6">
+                            @using (Ajax.BeginForm("Ajouter", "Participation", new AjaxOptions 
+                                {
+                                    InsertionMode = InsertionMode.Replace,
+                                    UpdateTargetId = "partBoutonEtListeDispo",
+                                    HttpMethod = "POST"
+                                }))
+                            {
+                                @Html.HiddenFor(m => m.Event.Id);
+                                @Html.HiddenFor(m => m.Util.Id)
+                                <input type="hidden" value="Oui" name="participation" id="participation" />
+
+                                <div class="row">
+                                    <input type="submit" value="Participe" class="bouton boutonVert col-6 champsTextDroit" />
+                                </div>
+                            }
+                        </div>
+                        <div class="col-6">
+                            @using (Ajax.BeginForm("Ajouter", "Participation", new AjaxOptions 
+                                {
+                                    InsertionMode = InsertionMode.Replace,
+                                    UpdateTargetId = "partBoutonEtListeDispo",
+                                    HttpMethod = "POST"
+                                }))
+                            {
+                                @Html.HiddenFor(m => m.Event.Id);
+                                @Html.HiddenFor(m => m.Util.Id)
+                                <input type="hidden" value="Non" name="participation" id="participation" />
+
+                                <div class="row">
+                                    <input type="submit" value="Ne participe pas" class="bouton boutonRouge col-6" />
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                else //Le user a déjà donné une réponse, il peut tout de fois la midifier
+                {
+                    if (Model.Participation.Participe)
+                    {
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                Vous avez répondu que vous participez à cet événement.
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                @using (Ajax.BeginForm("Modifier", "Participation", new AjaxOptions 
+                                    {
+                                        InsertionMode = InsertionMode.Replace,
+                                        UpdateTargetId = "partBoutonEtListeDispo",
+                                        HttpMethod = "POST"
+                                    }))
+                                {
+                                    @Html.HiddenFor(m => m.Event.Id)
+                                    @Html.HiddenFor(m => m.Util.Id)
+                                    <input type="hidden" value="Non" name="modifParticipation" id="modifParticipation" />
+
+                                    <div class="row">
+                                        <input type="submit" value="Ne plus participer" class="bouton boutonRouge col-6 champsTextCenter" />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                Vous avez répondu que vous ne participez pas à cet événement.
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                @using (Ajax.BeginForm("Modifier", "Participation", new AjaxOptions 
+                                    {
+                                        InsertionMode = InsertionMode.Replace,
+                                        UpdateTargetId = "partBoutonEtListeDispo",
+                                        HttpMethod = "POST"
+                                    }))
+                                {
+                                    @Html.HiddenFor(m => m.Event.Id)
+                                    @Html.HiddenFor(m => m.Util.Id)
+                                    <input type="hidden" value="Oui" name="modifParticipation" id="modifParticipation" />
+
+                                    <div class="row">
+                                        <input type="submit" value="Participer" class="bouton boutonVert col-6 champsTextCenter" />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                }
+            }
+            else // cas de stage et de mission donc donner des dispos
+            {
+                if (Model.AllDispo.Count < 1) // Le user n'a pas de dispos alors qu'elle était attendu
+                {
+                    if (Model.Event.LimiteReponse >= DateTime.Now)
+                    {
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="row">
+                                    <button class="bouton boutonVert col-6 champsTextDroit" onclick="afficherCacherPopUp('popupDispo'); clickOn('disponible'); ">
+                                        Disponible
+                                    </button>
+                                    <div style="display: none;">
+                                        @Ajax.ActionLink("Ajouter", "AfficherPopUpAjoutDispo", "Planning", new { id = Model.Event.Id },
+                                            new AjaxOptions
+                                            {
+                                                InsertionMode = InsertionMode.Replace,
+                                                HttpMethod = "GET",
+                                                UpdateTargetId = "popupDispo"
+                                            }, new { id = "disponible" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                @using (Ajax.BeginForm("Ajouter", "Disponibilite", new AjaxOptions 
+                                    {
+                                        InsertionMode = InsertionMode.Replace,
+                                        UpdateTargetId = "partBoutonEtListeDispo",
+                                        HttpMethod = "POST"
+                                    }))
+                                {
+                                    @Html.HiddenFor(m => m.Event.Id);
+                                    @Html.HiddenFor(m => m.Event.Debut);
+                                    @Html.HiddenFor(m => m.Event.Fin);
+                                    @Html.HiddenFor(m => m.Util.Id);
+
+                                    <input type="hidden" value="Non" name="disponibilite" id="disponibilite" />
+
+                                    <div class="row">
+                                        <input type="submit" value="Non disponible" class="bouton boutonRouge col-6" />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-12 text-center marginTop">
+                                <strong> La date de limite de réponse est passée. </strong>
+                            </div>
+                        </div>
+                    }
+                }
+                else // le user a déjà donner (ou pas) une dispo
+                {
+                    if (Model.ADispo) // le user a déjà une dispo
+                    {
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                Disponibilité(s) actuelle(s) :
+                            </div>
+                        </div>
+                        foreach (PortailReserve.Models.Disponibilite d in Model.AllDispo)
+                        {
+                            <div class="row ligneDispo">
+                                <div class="col-8 text-center boutonLike">
+                                    Du <strong>@d.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong> au <strong>@d.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong>
+                                </div>
+                                <div class="col-2 text-center boutonLike">
+                                    @switch (d.Valide)
+                                    {
+                                        case 0:
+                                            <span> En attente </span>
+                                            break;
+                                        case 1:
+                                            <span style="color: forestgreen; "> Validé </span>
+                                            break;
+                                        case 2:
+                                            <span style="color: red; "> Refusé </span>
+                                            break;
+                                    }
+                                </div>
+                                @if (d.Valide == 0)
+                                {
+                                    <div class="col-2">
+                                        @using (Ajax.BeginForm("Supprimer", "Disponibilite", new AjaxOptions 
+                                            {
+                                                InsertionMode = InsertionMode.Replace,
+                                                UpdateTargetId = "partBoutonEtListeDispo",
+                                                HttpMethod = "POST"
+                                            }))
+                                        {
+                                            @Html.HiddenFor(m => m.Event.Id);
+                                            @Html.HiddenFor(m => m.Util.Id);
+                                            <input type="hidden" name="toSupp" id="toSuppp" value="@d.Id" />
+
+                                            <button class="bouton boutonRouge"> Supprimer </button>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        }
+
+                        if (Model.Event.LimiteReponse >= DateTime.Now)
+                        {
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <button class="col-6 bouton boutonVert champsTextCenter" 
+                                                onclick="afficherCacherPopUp('popupDispo'); clickOn('ajouter_une_dispo'); "> 
+                                            Ajouter une disponibilité
+                                        </button>
+                                        <div style="display: none;">
+                                            @Ajax.ActionLink("Ajouter", "AfficherPopUpAjoutDispo", "Planning", new { id = Model.Event.Id },
+                                                new AjaxOptions
+                                                {
+                                                    InsertionMode = InsertionMode.Replace,
+                                                    HttpMethod = "GET",
+                                                    UpdateTargetId = "popupDispo"
+                                                }, new { id = "ajouter_une_dispo" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row">
+                                <div class="col-12 text-center marginTop">
+                                    <strong> La date limite de réponse est passée.</strong>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else // le user n'a pas de dispo
+                    {
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                Vous avez indiqué que vous n'êtes pas disponible.
+                            </div>
+                        </div>
+
+                        if (Model.Event.LimiteReponse >= DateTime.Now)
+                        {
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <button class="col-6 bouton boutonVert champsTextCenter" onclick="afficherCacherPopUp('popupDispoModif'); "> 
+                                            Se rendre disponible 
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row">
+                                <div class="col-12 text-center marginTop">
+                                    <strong> La date limite de réponse est passée. </strong>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            }
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-12 text-center marginTop">
+                <strong> Cet événement a déjà commencé ou est déjà passé. </strong>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-12 erreur">
+            @ViewBag.Erreur
+        </div>
+    </div>
+</div>
+
+<!--
+################################################################################
+###########################  Afficahge des participants  #######################
+################################################################################
+-->
+@if(Model.Util.Role < 4)
+{
+    <h1 class="titrePresence"> Liste des participants </h1>
+
+    if (Model.Event.Type.Equals("Exercice") || Model.Event.Type.Equals("Instruction"))
+    {
+        <div class="container">
+            <div class="partPresence">
+                <div class="row">
+                    <div class="col-10">
+                        <h2 class="titreLegend"> Participe <span class="@(Model.UtilParticipation.Count<10?"pastilleNum":"pastilleNumDouble")">@Model.UtilParticipation.Count</span> </h2>
+                    </div>
+                    <div class="col-2">
+                        <img src="~/Content/image/chevron_bas.png" class="imgChevron" id="chevronParti" onclick="afficherCacherPartPres('chevronParti', 'partParti'); " />
+                    </div>
+                </div>
+                <div id="partParti" style="display: none;">
+                    <div class="row">
+                        <div class="col-4">
+                            <strong> Grade NOM </strong>
+                        </div>
+                        <div class="col-4">
+                            <strong> Date de réponse </strong>
+                        </div>
+                        <div class="col-4">
+                            <strong> Dernière modification </strong>
+                        </div>
+                    </div>
+                    @if (Model.UtilParticipation.Count == 0)
+                    {
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                Aucune personne à afficher.
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (PortailReserve.Models.UtilisateurParticipation u in Model.UtilParticipation)
+                        {
+                            <div class="row">
+                                <div class="col-4">
+                                    @u.Util.Grade @u.Util.Nom.ToUpperInvariant()
+                                </div>
+                                <div class="col-4">
+                                    @u.Participation.Reponse.ToString()
+                                </div>
+                                <div class="col-4">
+                                    @u.Participation.Modification.ToString()
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="partPresence">
+                <div class="row">
+                    <div class="col-10">
+                        <h2 class="titreLegend"> Ne participe pas <span class="@(Model.UtilNonParticipation.Count<10?"pastilleNum":"pastilleNumDouble")">@Model.UtilNonParticipation.Count</span> </h2>
+                    </div>
+                    <div class="col-2">
+                        <img src="~/Content/image/chevron_bas.png" class="imgChevron" id="chevronNonParti" onclick="afficherCacherPartPres('chevronNonParti', 'partNonParti'); " />
+                    </div>
+                </div>
+                <div id="partNonParti" style="display: none;">
+                    <div class="row">
+                        <div class="col-4">
+                            <strong> Grade NOM </strong>
+                        </div>
+                        <div class="col-4">
+                            <strong> Date de réponse </strong>
+                        </div>
+                        <div class="col-4">
+                            <strong> Dernière modification </strong>
+                        </div>
+                    </div>
+                    @if (Model.UtilNonParticipation.Count == 0)
+                    {
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                Aucune personne à afficher.
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (PortailReserve.Models.UtilisateurParticipation u in Model.UtilNonParticipation)
+                        {
+                            <div class="row">
+                                <div class="col-4">
+                                    @u.Util.Grade @u.Util.Nom.ToUpperInvariant()
+                                </div>
+                                <div class="col-4">
+                                    @u.Participation.Reponse.ToString()
+                                </div>
+                                <div class="col-4">
+                                    @u.Participation.Modification.ToString()
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="partPresence">
+                <div class="row">
+                    <div class="col-10">
+                        <h2 class="titreLegend"> Sans réponse <span class="@(Model.NoReponseP.Count<10?"pastilleNum":"pastilleNumDouble")">@Model.NoReponseP.Count</span> </h2>
+                    </div>
+                    <div class="col-2">
+                        <img src="~/Content/image/chevron_bas.png" class="imgChevron" id="chevronNoRepParti" onclick="afficherCacherPartPres('chevronNoRepParti', 'partNoRepParti'); " />
+                    </div>
+                </div>
+                <div id="partNoRepParti" style="display: none;">
+                    <div class="row">
+                        <div class="col-12">
+                            <strong> Grade NOM </strong>
+                        </div>
+                    </div>
+                    @if (Model.NoReponseP.Count == 0)
+                    {
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                Aucune personne à afficher.
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (PortailReserve.Models.Utilisateur u in Model.NoReponseP)
+                        {
+                            <div class="row">
+                                <div class="col-12">
+                                    @u.Grade @u.Nom.ToUpperInvariant()
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="partPresence">
+                <div class="row">
+                    <div class="col-10">
+                        <h2 class="titreLegend"> Disponible <span class="@(Model.UtilDispo.Count<10?"pastilleNum":"pastilleNumDouble")">@Model.UtilDispo.Count</span> </h2>
+                    </div>
+                    <div class="col-2">
+                        <img src="~/Content/image/chevron_bas.png" id="chevronDispo" class="imgChevron" onclick="afficherCacherPartPres('chevronDispo', 'partDispo'); " />
+                    </div>
+                </div>
+                <div id="partDispo" style="display: none;">
+                    @if (Model.UtilDispo.Count == 0)
+                    {
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                Aucune personne à affciher.
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (PortailReserve.Models.UtilisateurDispo u in Model.UtilDispo)
+                        {
+                            <div class="row">
+                                <div class="col-12">
+                                    <strong> @u.Util.Grade @u.Util.Nom.ToUpperInvariant() </strong>
+                                </div>
+                            </div>
+                            <div class="partDispo">
+                                @foreach (PortailReserve.Models.Disponibilite d in u.Dispos)
+                                {
+                                    <div class="row marginTop">
+                                        <div class="col-6 boutonLike text-center">
+                                            Du @d.Debut.ToString("dd/MM/yyyy") au @d.Fin.ToString("dd/MM/yyyy")
+                                        </div>
+                                        <div class="col-3">
+                                            @if (d.Valide == 1)
+                                            {
+                                                <div class="col-10 text-center" style="color: forestgreen; "> Validé </div>
+                                            }
+                                            else
+                                            {
+                                                @Ajax.ActionLink("Valider", "Valider", "Disponibilite",
+                                                    new { id = d.Id, ev = Model.Event.Id },
+                                                    new AjaxOptions 
+                                                    {
+                                                        InsertionMode = InsertionMode.Replace,
+                                                        UpdateTargetId = "partBoutonEtListeDispo",
+                                                        HttpMethod = "GET",
+                                                        OnComplete = "afficherCacherPartPres('chevronDispo', 'partDispo')"
+                                                    },
+                                                    new { style = "display: none; ", id = "valid_" + d.Id })
+                                                <button class="bouton boutonVert col-10 champsTextCenter" onclick="clickOnValid('@d.Id'); "> Valider </button>
+                                            }
+                                        </div>
+                                        <div class="col-3">
+                                            @if (d.Valide == 2)
+                                            {
+                                                <div class=" col-10 text-center" style="color: red; "> Refusé </div>
+                                            }
+                                            else
+                                            {
+                                                @Ajax.ActionLink("Refuser", "Refuser", "Disponibilite",
+                                                    new { id = d.Id, ev = Model.Event.Id },
+                                                    new AjaxOptions 
+                                                    {
+                                                        InsertionMode = InsertionMode.Replace,
+                                                        UpdateTargetId = "partBoutonEtListeDispo",
+                                                        HttpMethod = "GET",
+                                                        OnComplete = "afficherCacherPartPres('chevronDispo', 'partDispo')"
+                                                    },
+                                                    new { style = "display: none; ", id = "refus_" + d.Id })
+                                                <button class="bouton boutonRouge col-10 champsTextCenter" onclick="clickOnRefus('@d.Id'); "> Refuser </button>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="partPresence">
+                <div class="row">
+                    <div class="col-10">
+                        <h2 class="titreLegend"> Non disponible <span class="@(Model.UtilNonDispo.Count<10?"pastilleNum":"pastilleNumDouble")">@Model.UtilNonDispo.Count</span> </h2>
+                    </div>
+                    <div class="col-2">
+                        <img src="~/Content/image/chevron_bas.png" id="chevronNonDispo" class="imgChevron" onclick="afficherCacherPartPres('chevronNonDispo', 'partNoDispo'); " />
+                    </div>
+                </div>
+                <div id="partNoDispo" style="display: none;">
+                    @if (Model.UtilNonDispo.Count == 0)
+                    {
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                Aucune personne à afficher.
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (PortailReserve.Models.UtilisateurDispo u in Model.UtilNonDispo)
+                        {
+                            <div class="row">
+                                <div class="col-12">
+                                    @u.Util.Grade @u.Util.Nom.ToUpperInvariant()
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="partPresence">
+                <div class="row">
+                    <div class="col-10">
+                        <h2 class="titreLegend"> Sans réponse <span class="@(Model.NoReponseD.Count<10?"pastilleNum":"pastilleNumDouble")">@Model.NoReponseD.Count</span> </h2>
+                    </div>
+                    <div class="col-2">
+                        <img src="~/Content/image/chevron_bas.png" id="chevronNoRep" class="imgChevron" onclick="afficherCacherPartPres('chevronNoRep', 'partNoRep'); " />
+                    </div>
+                </div>
+                <div id="partNoRep" style="display: none;">
+                    @if (Model.NoReponseD.Count == 0)
+                    {
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                Aucune personne à afficher.
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (PortailReserve.Models.Utilisateur u in Model.NoReponseD)
+                        {
+                            <div class="row">
+                                <div class="col-12">
+                                    @u.Grade @u.Nom.ToUpperInvariant()
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
+}

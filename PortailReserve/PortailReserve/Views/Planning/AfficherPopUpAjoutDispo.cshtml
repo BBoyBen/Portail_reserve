@@ -1,0 +1,76 @@
+﻿@model PortailReserve.ViewModel.EventViewModel
+
+<div class="row">
+    <div class="col-12 text-center titrePopUp"> Je suis disponible : </div>
+</div>
+@using (Ajax.BeginForm("Ajouter", "Disponibilite", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "partBoutonEtListeDispo",
+    HttpMethod = "POST",
+    OnBegin = "afficherCacherPopUp('popupDispo')"
+}))
+{
+    @Html.HiddenFor(m => m.Event.Id);
+    @Html.HiddenFor(m => m.Event.Debut);
+    @Html.HiddenFor(m => m.Event.Fin);
+    @Html.HiddenFor(m => m.Util.Id);
+
+    <input type="hidden" value="Oui" name="disponibilite" id="disponibilite" />
+
+    <div class="row toutePeriode">
+        <div class="col-6 text-right">
+            @Html.CheckBoxFor(m => m.Dispo.TouteLaPeriode, new { @class = "checkBox" })
+        </div>
+        @Html.LabelFor(m => m.Dispo.TouteLaPeriode, "Toute la période", new { @class = "col-6 labelCheckBox" })
+    </div>
+
+    <div id="partieDate" style="display: block; ">
+        <div class="row">
+            <div class="col-6 text-right">
+                Du @Html.TextBoxFor(m => m.Dispo.Debut, new { 
+                        type = "date", 
+                        @class = "champsText", 
+                        min = Model.Event.Debut.ToString("yyyy-MM-dd"), 
+                        max = Model.Event.Fin.ToString("yyyy-MM-dd") 
+                    })
+            </div>
+            <div class="col-6">
+                Au @Html.TextBoxFor(m => m.Dispo.Fin, new { 
+                        type = "date", 
+                        @class = "champsText", 
+                        min = Model.Event.Debut.ToString("yyyy-MM-dd"), 
+                        max = Model.Event.Fin.ToString("yyyy-MM-dd") 
+                    })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <span id="erreurDateDispo" class="erreur"></span>
+            </div>
+        </div>
+    </div>
+
+    <input type="submit" value="Valier" id="popUpSubmit" style="display: none;" />
+}
+
+<div class="row">
+    <div class="col-12 text-center erreur">
+        @ViewBag.Erreur
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+        <div class="row">
+            <button class="col-4 bouton boutonVert champsTextDroit" onclick="checkDateAjout(); "> 
+                Ajouter 
+            </button>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <button class="col-4 bouton boutonRouge" onclick="afficherCacherPopUp('popupDispo'); "> Annuler </button>
+        </div>
+    </div>
+</div>

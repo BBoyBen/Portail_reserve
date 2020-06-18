@@ -22,10 +22,11 @@ namespace PortailReserve.Controllers
             bool participe = Request.Form["participation"].Equals("Oui") ? true : false;
 
             Guid created = pDal.AjouterParticipation(vm.Util.Id, vm.Event.Id, participe);
+            string er = "";
             if (created.Equals(Guid.Empty))
-                ViewBag.Erreur = "Une erreure c'est produite. Veuillez réessayer.";
+                er = "Une erreure c'est produite. Veuillez réessayer.";
 
-            return RedirectToAction("Evenement", "Planning", new { id = vm.Event.Id });
+            return RedirectToAction("AfficherBoutonEtListeDispo", "Planning", new { id = vm.Event.Id, erreur = er });
         }
 
         [Authorize]
@@ -35,10 +36,11 @@ namespace PortailReserve.Controllers
             bool modif = Request.Form["modifParticipation"].Equals("Oui") ? true : false;
 
             int retour = pDal.ModifierParticipation(vm.Event.Id, modif, vm.Util.Id);
+            string er = "";
             if(retour != 1)
-                ViewBag.Erreur = "Une erreure c'est produite. Veuillez réessayer.";
+                er = "Une erreure c'est produite. Veuillez réessayer.";
 
-            return RedirectToAction("Evenement", "Planning", new { id = vm.Event.Id });
+            return RedirectToAction("AfficherBoutonEtListeDispo", "Planning", new { id = vm.Event.Id, erreur = er });
         }
     }
 }

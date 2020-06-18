@@ -45,6 +45,26 @@ function checkDateAjout() {
 
     var submitButon = document.getElementById("popUpSubmit");
 
+    if (dateDebut.value == "") {
+        erreurDate.innerText = "Veuillez renseigner une date de début";
+        erreurChamps("Dispo_Debut");
+        return;
+    }
+    else {
+        erreurDate.innerText = "";
+        champsOk("Dispo_Debut");
+    }
+
+    if (dateFin.value == "") {
+        erreurDate.innerText = "Veuillez renseigner une date de fin";
+        erreurChamps("Dispo_Fin");
+        return;
+    }
+    else {
+        erreurDate.innerText = "";
+        champsOk("Dispo_Fin");
+    }
+
     var debut = new Date(dateDebut.value);
     var fin = new Date(dateFin.value);
 

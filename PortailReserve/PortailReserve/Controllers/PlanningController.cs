@@ -85,8 +85,39 @@ namespace PortailReserve.Controllers
             Effectif eff = effDal.GetEffectifById(e.Effectif);
 
             List<Disponibilite> allDispo = dDal.GetDispoByIdUtilAndByIdEvent(u.Id, e.Id);
+
+            Disponibilite dispo = new Disponibilite();
+            if (allDispo.Count > 0)
+                dispo = (Disponibilite)allDispo.ToArray().GetValue(0);
+
+            EventViewModel vm = new EventViewModel()
+            {
+                Event = e,
+                Util = u,
+                Effectif = eff,
+                Dispo = dispo
+            };  
+
+            return View(vm);
+        }
+
+        [Authorize]
+        public ActionResult AfficherBoutonEtListeDispo(Guid id, string erreur = "")
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+
+            ViewBag.Erreur = erreur;
+
+            Evenement e = eDal.GetEvenementById(id);
+            ViewBag.Erreur = "";
+            if (e == null || e.Equals(typeof(EvenementNull)))
+                ViewBag.Erreur = "Une erreur s'est produite lors de la récupération de l'événement.";
+
+            Effectif eff = effDal.GetEffectifById(e.Effectif);
+
+            List<Disponibilite> allDispo = dDal.GetDispoByIdUtilAndByIdEvent(u.Id, e.Id);
             bool aUneDispo = false;
-            foreach(Disponibilite d in allDispo)
+            foreach (Disponibilite d in allDispo)
             {
                 if (d.Disponible)
                     aUneDispo = true;
@@ -111,9 +142,63 @@ namespace PortailReserve.Controllers
                 UtilNonDispo = uDal.GetUtilisateursByDispoKO(e.Id, u.Section, u.Compagnie),
                 NoReponseD = uDal.GetUtilisateursSansReponseDispo(e.Id, u.Section, u.Compagnie),
                 NoReponseP = uDal.GetUtilisateursSansReponseParticipation(e.Id, u.Section, u.Compagnie)
-            };  
+            };
 
-            return View(vm);
+            return PartialView("AfficherBoutonEtListeDispo", vm);
+        }
+
+        [Authorize]
+        public ActionResult AfficherPopUpAjoutDispo(Guid id)
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+
+            Evenement e = eDal.GetEvenementById(id);
+            ViewBag.Erreur = "";
+            if (e == null || e.Equals(typeof(EvenementNull)))
+                e = new Evenement
+                {
+                    Id = Guid.Empty,
+                    Debut = DateTime.Now,
+                    Fin = DateTime.Now
+                };
+
+            Disponibilite dispo = new Disponibilite();
+
+            EventViewModel vm = new EventViewModel
+            {
+                Util = u,
+                Event = e,
+                Dispo = dispo
+            };
+
+            return PartialView("AfficherPopUpAjoutDispo", vm);
+        }
+
+        [Authorize]
+        public ActionResult AfficherPopUpModifDispo(Guid id)
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+
+            Evenement e = eDal.GetEvenementById(id);
+            ViewBag.Erreur = "";
+            if (e == null || e.Equals(typeof(EvenementNull)))
+                e = new Evenement
+                {
+                    Id = Guid.Empty,
+                    Debut = DateTime.Now,
+                    Fin = DateTime.Now
+                };
+
+            Disponibilite dispo = new Disponibilite();
+
+            EventViewModel vm = new EventViewModel
+            {
+                Util = u,
+                Event = e,
+                Dispo = dispo
+            };
+
+            return PartialView("AfficherPopUpModifDispo", vm);
         }
 
         [Authorize]

@@ -58,10 +58,11 @@ namespace PortailReserve.Controllers
             }
 
             Guid retour = dDal.AjouterDispo(toAdd);
+            string er = "";
             if (retour.Equals(Guid.Empty))
-                ViewBag.Erreur = "Une erreure est survenue. Réessayer plus tard.";
+                er = "Une erreure est survenue. Réessayer plus tard.";
 
-            return RedirectToAction("Evenement", "Planning", new { id = vm.Event.Id });
+            return RedirectToAction("AfficherBoutonEtListeDispo", "Planning", new { id = vm.Event.Id, erreur = er });
         }
 
         [Authorize]
@@ -72,7 +73,7 @@ namespace PortailReserve.Controllers
 
             dDal.SupprimerDispo(idDispo);
 
-            return RedirectToAction("Evenement", "Planning", new { id = vm.Event.Id });
+            return RedirectToAction("AfficherBoutonEtListeDispo", "Planning", new { id = vm.Event.Id });
         }
 
         [Authorize]
@@ -96,7 +97,7 @@ namespace PortailReserve.Controllers
 
             dDal.ModifierDispo(vm.Dispo.Id, newDispo);
 
-            return RedirectToAction("Evenement", "Planning", new { id = vm.Event.Id });
+            return RedirectToAction("AfficherBoutonEtListeDispo", "Planning", new { id = vm.Event.Id });
         }
 
         [Authorize]
@@ -106,29 +107,30 @@ namespace PortailReserve.Controllers
             if (u == null)
             {
                 FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
+                return new HttpStatusCodeResult(401);
             }
             if (u.Equals(typeof(UtilisateurNull)))
             {
                 FormsAuthentication.SignOut();
                 ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
+                return new HttpStatusCodeResult(401);
             }
             if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
+                return new HttpStatusCodeResult(401);
 
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
             ViewBag.Role = u.Role;
 
             if (u.Role > 3)
-                return RedirectToAction("Evenement", "Planning", new { id = ev });
+                return RedirectToAction("AfficherBoutonEtListeDispo", "Planning", new { id = ev });
 
             int retour = dDal.ValiderDispo(id);
+            string er = "";
             if (retour != 1)
-                ViewBag.Erreur = "Une erreur est survenue. Veuillez réessayer plus tard.";
+                er = "Une erreur est survenue. Veuillez réessayer plus tard.";
 
-            return RedirectToAction("Evenement", "Planning", new { id = ev });
+            return RedirectToAction("AfficherBoutonEtListeDispo", "Planning", new { id = ev, erreur = er });
         }
 
         [Authorize]
@@ -138,29 +140,29 @@ namespace PortailReserve.Controllers
             if (u == null)
             {
                 FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
+                return new HttpStatusCodeResult(401);
             }
             if (u.Equals(typeof(UtilisateurNull)))
             {
                 FormsAuthentication.SignOut();
                 ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
+                return new HttpStatusCodeResult(401);
             }
             if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
+                return new HttpStatusCodeResult(401);
 
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
             ViewBag.Role = u.Role;
 
             if (u.Role > 3)
-                return RedirectToAction("Evenement", "Planning", new { id = ev });
+                return RedirectToAction("AfficherBoutonEtListeDispo", "Planning", new { id = ev });
 
             int retour = dDal.RefuserDispo(id);
             if (retour != 1)
                 ViewBag.Erreur = "Une erreur est survenue. Veuillez réessayer plus tard.";
 
-            return RedirectToAction("Evenement", "Planning", new { id = ev });
+            return RedirectToAction("AfficherBoutonEtListeDispo", "Planning", new { id = ev });
         }
     }
 }

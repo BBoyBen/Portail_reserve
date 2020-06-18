@@ -570,6 +570,9 @@
     <Content Include="Views\Souvenir\AfficherListePhotos.cshtml" />
     <Content Include="Views\Souvenir\AfficherPopUpAjouterPhoto.cshtml" />
     <Content Include="Views\Souvenir\AfficherListePhotosPourSuppression.cshtml" />
+    <Content Include="Views\Planning\AfficherBoutonEtListeDispo.cshtml" />
+    <Content Include="Views\Planning\AfficherPopUpAjoutDispo.cshtml" />
+    <Content Include="Views\Planning\AfficherPopUpModifDispo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
