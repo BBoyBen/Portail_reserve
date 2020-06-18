@@ -1,16 +1,16 @@
 ﻿
-document.getElementById("Dispo_TouteLaPeriode").addEventListener("change", function (target) {
+function clickToutePeriodeAjout () {
     var date = document.getElementById("partieDate");
-    var box = document.getElementById("Dispo_TouteLaPeriode");
+    var box = document.getElementById("dispoTouteLaPeriodeAjout");
 
     if (box.checked)
         date.style.display = "none";
     else
         date.style.display = "block";
-})
+}
 
 
-document.getElementById("touteLaPeriodeModif").addEventListener("change", function (target) {
+function clickToutePeriodeModif () {
     var date = document.getElementById("partieDateModif");
     var box = document.getElementById("touteLaPeriodeModif");
 
@@ -18,7 +18,7 @@ document.getElementById("touteLaPeriodeModif").addEventListener("change", functi
         date.style.display = "none";
     else
         date.style.display = "block";
-})
+}
 
 function erreurChamps(id) {
     var champs = document.getElementById(id);
@@ -39,30 +39,32 @@ function champsOk(id) {
 function checkDateAjout() {
     var dateDebut = document.getElementById("Dispo_Debut");
     var dateFin = document.getElementById("Dispo_Fin");
-    var check = document.getElementById("Dispo_TouteLaPeriode");
+    var check = document.getElementById("dispoTouteLaPeriodeAjout");
 
     var erreurDate = document.getElementById("erreurDateDispo");
 
     var submitButon = document.getElementById("popUpSubmit");
 
-    if (dateDebut.value == "") {
-        erreurDate.innerText = "Veuillez renseigner une date de début";
-        erreurChamps("Dispo_Debut");
-        return;
-    }
-    else {
-        erreurDate.innerText = "";
-        champsOk("Dispo_Debut");
-    }
+    if (!check.checked) {
+        if (dateDebut.value == "") {
+            erreurDate.innerText = "Veuillez renseigner une date de début";
+            erreurChamps("Dispo_Debut");
+            return;
+        }
+        else {
+            erreurDate.innerText = "";
+            champsOk("Dispo_Debut");
+        }
 
-    if (dateFin.value == "") {
-        erreurDate.innerText = "Veuillez renseigner une date de fin";
-        erreurChamps("Dispo_Fin");
-        return;
-    }
-    else {
-        erreurDate.innerText = "";
-        champsOk("Dispo_Fin");
+        if (dateFin.value == "") {
+            erreurDate.innerText = "Veuillez renseigner une date de fin";
+            erreurChamps("Dispo_Fin");
+            return;
+        }
+        else {
+            erreurDate.innerText = "";
+            champsOk("Dispo_Fin");
+        }
     }
 
     var debut = new Date(dateDebut.value);
@@ -97,6 +99,28 @@ function checkDateModif() {
     var erreurDate = document.getElementById("erreurDateDispoModif");
 
     var submitButon = document.getElementById("popUpSubmitModif");
+
+    if (!check.checked) {
+        if (dateDebut.value == "") {
+            erreurDate.innerText = "Veuillez renseigner une date de début";
+            erreurChamps("debutModif");
+            return;
+        }
+        else {
+            erreurDate.innerText = "";
+            champsOk("debutModif");
+        }
+
+        if (dateFin.value == "") {
+            erreurDate.innerText = "Veuillez renseigner une date de fin";
+            erreurChamps("finModif");
+            return;
+        }
+        else {
+            erreurDate.innerText = "";
+            champsOk("finModif");
+        }
+    }
 
     var debut = new Date(dateDebut.value);
     var fin = new Date(dateFin.value);

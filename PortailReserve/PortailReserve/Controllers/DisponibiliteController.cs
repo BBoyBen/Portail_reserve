@@ -95,7 +95,9 @@ namespace PortailReserve.Controllers
                 newDispo.Fin = vm.Dispo.Fin;
             }
 
-            dDal.ModifierDispo(vm.Dispo.Id, newDispo);
+            int retour = dDal.ModifierDispo(vm.Dispo.Id, newDispo);
+            if (retour != 1)
+                ViewBag.Erreur = "Une erreur s'est produite lors de la mise à jour de la disponibilité.";
 
             return RedirectToAction("AfficherBoutonEtListeDispo", "Planning", new { id = vm.Event.Id });
         }

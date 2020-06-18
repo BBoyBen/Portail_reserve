@@ -20,7 +20,7 @@
 
     <div class="row toutePeriode">
         <div class="col-6 text-right">
-            @Html.CheckBoxFor(m => m.Dispo.TouteLaPeriode, new { @class = "checkBox" })
+            @Html.CheckBoxFor(m => m.Dispo.TouteLaPeriode, new { id = "dispoTouteLaPeriodeAjout", @class = "checkBox", onchange= "clickToutePeriodeAjout(); " })
         </div>
         @Html.LabelFor(m => m.Dispo.TouteLaPeriode, "Toute la période", new { @class = "col-6 labelCheckBox" })
     </div>

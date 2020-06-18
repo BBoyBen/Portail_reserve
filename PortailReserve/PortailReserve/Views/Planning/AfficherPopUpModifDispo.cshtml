@@ -19,7 +19,7 @@
 
     <div class="row toutePeriode">
         <div class="col-6 text-right">
-            @Html.CheckBoxFor(m => m.Dispo.TouteLaPeriode, new { id = "touteLaPeriodeModif", @class = "checkBox" })
+            @Html.CheckBoxFor(m => m.Dispo.TouteLaPeriode, new { id = "touteLaPeriodeModif", @class = "checkBox", onchange= "clickToutePeriodeModif();" })
         </div>
         @Html.LabelFor(m => m.Dispo.TouteLaPeriode, "Toute la période", new { @class = "col-6 labelCheckBox" })
     </div>
@@ -48,7 +48,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 text-center">
                 <span id="erreurDateDispoModif" class="erreur"></span>
             </div>
         </div>
@@ -59,7 +59,7 @@
 <div class="row">
     <div class="col-6">
         <div class="row">
-            <button class="col-4 bouton boutonVert champsTextDroit" onclick="checkDateAjout(); ">
+            <button class="col-4 bouton boutonVert champsTextDroit" onclick="checkDateModif(); ">
                 Ajouter
             </button>
         </div>

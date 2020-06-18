@@ -127,6 +127,8 @@ namespace PortailReserve.Controllers
             if (allDispo.Count > 0)
                 dispo = (Disponibilite)allDispo.ToArray().GetValue(0);
 
+            dispo.TouteLaPeriode = true;
+
             EventViewModel vm = new EventViewModel()
             {
                 Event = e,
@@ -189,7 +191,11 @@ namespace PortailReserve.Controllers
                     Fin = DateTime.Now
                 };
 
+            List<Disponibilite> allDispo = dDal.GetDispoByIdUtilAndByIdEvent(u.Id, e.Id);
+
             Disponibilite dispo = new Disponibilite();
+            if (allDispo.Count > 0)
+                dispo = (Disponibilite)allDispo.ToArray().GetValue(0);
 
             EventViewModel vm = new EventViewModel
             {
