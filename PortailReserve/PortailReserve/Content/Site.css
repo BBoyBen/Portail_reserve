@@ -372,6 +372,10 @@ option {
     margin-top: 0;
 }
 
+.marginBottom {
+    margin-bottom: 30px;
+}
+
 .pastilleNum {
     background-color: red;
     color: white;

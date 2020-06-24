@@ -1,0 +1,102 @@
+﻿.tab-planning {
+    font-size: 0.8rem;
+}
+
+.mois {
+    text-align: center;
+    padding-right: 4%;
+    padding-left: 0.5%;
+}
+
+@media all and (max-width: 1200px) {
+    .tab-planning {
+        font-size: 0.7rem;
+    }
+}
+
+@media all and (max-width: 992px) {
+    .tab-planning {
+        font-size: 0.6rem;
+    }
+
+    .mois {
+        text-align: center;
+        padding-right: 3.5%;
+        padding-left: 0.5%;
+    }
+}
+
+@media all and (max-width: 768px) {
+    .tab-planning {
+        font-size: 0.4rem;
+    }
+}
+
+@media all and (max-width: 500px) {
+    .tab-planning {
+        font-size: 0.2rem;
+    }
+}
+
+rect {
+    min-width: 2%;
+    min-height: 2%;
+    background-color: lightgray;
+    padding-left: 0.7%;
+    padding-right: 0.7%;
+    margin-left: 0.2%;
+    margin-right: 0.2%;
+}
+
+rect:hover, rect:focus {
+    margin-left: 0;
+    margin-right: 0;
+    border: 2px solid black;
+    cursor: pointer;
+}
+
+.Mission {
+    background-color: red;
+}
+
+.Stage {
+    background-color: mediumblue
+}
+
+.Instruction {
+    background-color: forestgreen
+}
+
+.Exercice {
+    background-color: yellow;
+}
+.ligne-carre {
+}
+
+.blanc {
+    background-color: rgb(255, 255, 255);
+}
+
+.blanc:hover, .blanc:focus {
+    border: 1.5px solid white;
+    cursor: default;
+}
+
+rect .info-rect {
+    position: absolute;
+    margin-top: 23px;
+    margin-left: -35px;
+    color: #09c;
+    background: rgba(0,0,0,.9);
+    padding: 15px;
+    border-radius: 3px;
+    box-shadow: 0 0 2px rgba(0,0,0,.5);
+    transform: scale(0) rotate(-12deg);
+    transition: all .25s;
+    z-index: 1000;
+}
+
+rect:hover .info-rect, rect:focus .info-rect {
+    transform: scale(1) rotate(0);
+}
+

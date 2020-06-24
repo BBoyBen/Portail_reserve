@@ -1,0 +1,216 @@
+﻿@model PortailReserve.ViewModel.EventPlanningViewModel
+
+<h1 class="marginTop"> @Model.Jour.ToString("D") </h1>
+
+@if (Model.Event.Id.Equals(Guid.Empty))
+{
+    <div class="row">
+        <div class="col-12 text-center">
+            Aucun événement à afficher
+        </div>
+    </div>
+}
+else
+{
+    <div class="row marginBottom">
+        <div class="col-12 text-center">
+            <h2> @Model.Event.Nom  </h2>
+        </div>
+    </div>
+    
+    <div class="row" id="eventType">
+        <div class="col-1">
+            @if (Model.Event.Type.Equals("Instruction"))
+            {
+                <img src="~/Content/image/point_vert.png" alt="point vert" id="pastilleType" />
+            }
+            else if (Model.Event.Type.Equals("Stage"))
+            {
+                <img src="~/Content/image/point_bleu.png" alt="point bleu" id="pastilleType" />
+            }
+            else if (Model.Event.Type.Equals("Mission"))
+            {
+                <img src="~/Content/image/point_rouge.png" alt="point rouge" id="pastilleType" />
+            }
+            else if (Model.Event.Type.Equals("Exercice"))
+            {
+                <img src="~/Content/image/point_jaune.png" alt="point jaune" id="pastilleType" />
+            }
+            else
+            {
+                <img src="~/Content/image/point_vert.png" alt="point vert" id="pastilleType" />
+            }
+        </div>
+        <div class="col-5" id="textType">
+            @Model.Event.Type
+        </div>
+        <div class="col-6">
+            <button id="patracdr">
+                <a href="@Model.Event.Patracdr" id="lienPatrac" target="_blank">PATRACDR</a>
+            </button>
+        </div>
+    </div>
+
+    <div class="row" id="eventDate">
+        <div class="col-12">
+            Du <strong>@Model.Event.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong> au <strong>@Model.Event.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong>
+        </div>
+    </div>
+
+    <div class="row" id="lieuEvent">
+        <div class="col-12">
+            <strong> Lieu : </strong> @Model.Event.Lieu
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-10">
+            <h2 class="titreLegend"> Informations </h2>
+        </div>
+    </div>
+    <div class="row" id="desEvent">
+        <div class="col-12">
+            @Model.Event.Description
+        </div>
+    </div>
+
+    if (Model.Event.Type.Equals("Stage") || Model.Event.Type.Equals("Mission"))
+    {
+        <div class="row">
+            <div class="col-10">
+                <h2 class="titreLegend"> Complément </h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                @if (Model.Effectif != null)
+                {
+                    <strong> Effectif : </strong> <span> @Model.Effectif.Officier / @Model.Effectif.SousOfficier / @Model.Effectif.Militaire </span>
+                }
+                else
+                {
+                    <strong> Effectif : </strong> <span> X / X / X </span>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <strong> Date limite de réponse : </strong> @Model.Event.LimiteReponse.ToString("D", new System.Globalization.CultureInfo("fr-FR"))
+            </div>
+        </div>
+    }
+
+    <div class="row marginTop">
+        <div class="col-3 selfCenter">
+            <button class="bouton boutonBleu allWidth text-center">
+                @Html.ActionLink("Aller sur l'événement", "Evenement", "Planning", new { id = Model.Event.Id}, new { id = "lien_event", @class = "lienBoutonBleu" })
+            </button>
+        </div>
+    </div>
+
+    if(Model.AutresEvents.Count > 0)
+    {
+        <div class="row">
+            @foreach(PortailReserve.Models.EventEffectif ef in Model.AutresEvents)
+            {
+            <div class="col-sm-6 col-12">
+                <div class="row marginBottom marginTop">
+                    <div class="col-12 text-center">
+                        <h2> @ef.Event.Nom  </h2>
+                    </div>
+                </div>
+
+                <div class="row" id="eventType">
+                    <div class="col-2">
+                        @if (ef.Event.Type.Equals("Instruction"))
+                        {
+                            <img src="~/Content/image/point_vert.png" alt="point vert" id="pastilleType" />
+                        }
+                        else if (ef.Event.Type.Equals("Stage"))
+                        {
+                            <img src="~/Content/image/point_bleu.png" alt="point bleu" id="pastilleType" />
+                        }
+                        else if (ef.Event.Type.Equals("Mission"))
+                        {
+                            <img src="~/Content/image/point_rouge.png" alt="point rouge" id="pastilleType" />
+                        }
+                        else if (ef.Event.Type.Equals("Exercice"))
+                        {
+                            <img src="~/Content/image/point_jaune.png" alt="point jaune" id="pastilleType" />
+                        }
+                        else
+                        {
+                            <img src="~/Content/image/point_vert.png" alt="point vert" id="pastilleType" />
+                        }
+                    </div>
+                    <div class="col-4" id="textType">
+                        @ef.Event.Type
+                    </div>
+                    <div class="col-6">
+                        <button id="patracdr">
+                            <a href="@ef.Event.Patracdr" id="lienPatrac" target="_blank">PATRACDR</a>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row" id="eventDate">
+                    <div class="col-12">
+                        Du <strong>@ef.Event.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong> au <strong>@ef.Event.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong>
+                    </div>
+                </div>
+
+                <div class="row" id="lieuEvent">
+                    <div class="col-12">
+                        <strong> Lieu : </strong> @ef.Event.Lieu
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-10">
+                        <h2 class="titreLegend"> Informations </h2>
+                    </div>
+                </div>
+                <div class="row" id="desEvent">
+                    <div class="col-12">
+                        @ef.Event.Description
+                    </div>
+                </div>
+
+                @if (ef.Event.Type.Equals("Stage") || ef.Event.Type.Equals("Mission"))
+                {
+                <div class="row">
+                    <div class="col-10">
+                        <h2 class="titreLegend"> Complément </h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        @if (ef.Effectif != null)
+                        {
+                            <strong> Effectif : </strong> <span> @ef.Effectif.Officier / @ef.Effectif.SousOfficier / @ef.Effectif.Militaire </span>
+                        }
+                        else
+                        {
+                            <strong> Effectif : </strong> <span> X / X / X </span>
+                        }
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <strong> Date limite de réponse : </strong> @ef.Event.LimiteReponse.ToString("D", new System.Globalization.CultureInfo("fr-FR"))
+                    </div>
+                </div>
+                }
+
+                <div class="row marginTop">
+                    <div class="col-6 selfCenter">
+                        <button class="bouton boutonBleu allWidth text-center">
+                            @Html.ActionLink("Aller sur l'événement", "Evenement", "Planning", new { id = ef.Event.Id }, new { id = "lien_event", @class = "lienBoutonBleu" })
+                        </button>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    }
+}

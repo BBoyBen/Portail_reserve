@@ -7,6 +7,8 @@ using PortailReserve.Utils;
 using PortailReserve.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
 using static PortailReserve.Utils.Utils;
@@ -52,7 +54,201 @@ namespace PortailReserve.Controllers
             ViewBag.Nom = u.Nom.ToUpperInvariant();
             ViewBag.Role = u.Role;
 
-            return View();
+            // On créé une liste contenant toutes les dates sur la prochaine année
+            DateTime dateDuJour = DateTime.Now;
+            int numMois = dateDuJour.Month;
+            List<DateTime> listeDesDates = new List<DateTime>();
+            List<string> listeMois = new List<string>();
+
+            listeDesDates.Add(dateDuJour);
+            listeMois.Add(dateDuJour.ToString("Y").Substring(0, 4));
+            DateTime pourAjout = dateDuJour.AddDays(1);
+
+            while(pourAjout.CompareTo(dateDuJour.AddYears(1)) <= 0)
+            {
+                listeDesDates.Add(pourAjout);
+                if(pourAjout.Month != numMois)
+                {
+                    listeMois.Add(pourAjout.ToString("Y").Substring(0, 4));
+                    numMois = pourAjout.Month;
+                }
+                pourAjout = pourAjout.AddDays(1);
+            }
+
+            // on récupère tous les événement
+            List<Evenement> events = eDal.GetEvenementsPourPlanning();
+
+            // association des jour aux evenement
+            List<JourEvenement> eventsParJour = new List<JourEvenement>();
+            foreach(DateTime jour in listeDesDates)
+            {
+                JourEvenement je = new JourEvenement();
+                je.Jour = jour;
+                je.Evenement = null;
+                je.CarreBlanc = false;
+                je.Type = "";
+                je.AutresEvents = new List<Guid>();
+
+                foreach(Evenement e in events)
+                {
+                    if(jour.CompareTo(e.Debut) >= 0 && jour.CompareTo(e.Fin.AddDays(1)) <= 0)
+                    {
+                        if (je.Evenement == null)
+                        {
+                            je.Evenement = e;
+                            je.Type = e.Type;
+                        }
+                        else
+                        {
+                            je.AutresEvents.Add(e.Id);
+                        }
+                    }
+                }
+
+                eventsParJour.Add(je);
+            }
+
+            // création d'une liste par jour de la semaine
+            List<JourEvenement> lundi = new List<JourEvenement>();
+            List<JourEvenement> mardi = new List<JourEvenement>();
+            List<JourEvenement> mercredi = new List<JourEvenement>();
+            List<JourEvenement> jeudi = new List<JourEvenement>();
+            List<JourEvenement> vendredi = new List<JourEvenement>();
+            List<JourEvenement> samedi = new List<JourEvenement>();
+            List<JourEvenement> dimanche = new List<JourEvenement>();
+
+            bool premierJourAjout = false;
+            foreach(JourEvenement je in eventsParJour)
+            {
+                // Ajout des lundi
+                if (je.Jour.DayOfWeek.Equals(DayOfWeek.Monday))
+                {
+                    lundi.Add(je);
+                    premierJourAjout = true;
+                }
+                else if (!premierJourAjout)
+                    lundi.Add(new JourEvenement { CarreBlanc = true });
+
+                // ajout des mardi
+                if (je.Jour.DayOfWeek.Equals(DayOfWeek.Tuesday))
+                {
+                    mardi.Add(je);
+                    premierJourAjout = true;
+                }
+                else if (!premierJourAjout)
+                    mardi.Add(new JourEvenement { CarreBlanc = true });
+
+                // ajout des mercredi
+                if (je.Jour.DayOfWeek.Equals(DayOfWeek.Wednesday))
+                {
+                    mercredi.Add(je);
+                    premierJourAjout = true;
+                }
+                else if (!premierJourAjout)
+                    mercredi.Add(new JourEvenement { CarreBlanc = true });
+
+                // ajout des jeudi
+                if (je.Jour.DayOfWeek.Equals(DayOfWeek.Thursday))
+                {
+                    jeudi.Add(je);
+                    premierJourAjout = true;
+                }
+                else if (!premierJourAjout)
+                    jeudi.Add(new JourEvenement { CarreBlanc = true });
+
+                // ajout des vendredi
+                if (je.Jour.DayOfWeek.Equals(DayOfWeek.Friday))
+                {
+                    vendredi.Add(je);
+                    premierJourAjout = true;
+                }
+                else if (!premierJourAjout)
+                    vendredi.Add(new JourEvenement { CarreBlanc = true });
+
+                // ajout des samedi
+                if (je.Jour.DayOfWeek.Equals(DayOfWeek.Saturday))
+                {
+                    samedi.Add(je);
+                    premierJourAjout = true;
+                }
+                else if (!premierJourAjout)
+                    samedi.Add(new JourEvenement { CarreBlanc = true });
+
+                // ajout des dimanche
+                if (je.Jour.DayOfWeek.Equals(DayOfWeek.Sunday))
+                {
+                    dimanche.Add(je);
+                    premierJourAjout = true;
+                }
+                else if (!premierJourAjout)
+                    dimanche.Add(new JourEvenement { CarreBlanc = true });
+            }
+
+            Guid idEventAjd = Guid.Empty;
+            if (eventsParJour.ElementAt(0).Evenement != null)
+                idEventAjd = eventsParJour.ElementAt(0).Evenement.Id;
+
+            TableauPlanningViewModel vm = new TableauPlanningViewModel
+            {
+                Lundi = lundi,
+                Mardi = mardi,
+                Mercredi = mercredi,
+                Jeudi = jeudi,
+                Vendredi = vendredi,
+                Samedi = samedi,
+                Dimanche = dimanche,
+                Mois = listeMois,
+                IdEventDuJour = idEventAjd
+            };
+
+            return View(vm);
+        }
+
+        [Authorize]
+        public ActionResult AfficherEventPlanning(Guid id, DateTime jour, bool autre)
+        {
+            try
+            {
+                Evenement e = eDal.GetEvenementById(id);
+                if (e == null || e.Equals(typeof(EvenementNull)))
+                    e = new Evenement
+                    {
+                        Id = Guid.Empty,
+                        Effectif = Guid.Empty
+                    };
+
+                Effectif eff = effDal.GetEffectifById(e.Effectif);
+
+                List<EventEffectif> autresEvents = new List<EventEffectif>();
+                if (autre)
+                {
+                    foreach(Evenement ev in eDal.GetEvenementsPourPlanning())
+                    {
+                        if(jour.CompareTo(ev.Debut) >= 0 && jour.CompareTo(ev.Fin.AddDays(1)) <= 0 && !ev.Id.Equals(e.Id))
+                        {
+                            autresEvents.Add(new EventEffectif
+                            {
+                                Event = ev,
+                                Effectif = effDal.GetEffectifById(ev.Effectif)
+                            });
+                        }
+                    }
+                }
+
+                EventPlanningViewModel vm = new EventPlanningViewModel
+                {
+                    Event = e,
+                    Effectif = eff,
+                    Jour = jour,
+                    AutresEvents = autresEvents
+                };
+
+                return PartialView("AfficherEventPlanning", vm);
+            }
+            catch(Exception e)
+            {
+                return new HttpStatusCodeResult(500);
+            }
         }
 
         [Authorize]

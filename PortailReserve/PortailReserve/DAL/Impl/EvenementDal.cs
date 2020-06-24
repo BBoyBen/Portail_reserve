@@ -128,6 +128,21 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
+        public List<Evenement> GetEvenementsPourPlanning()
+        {
+            try
+            {
+                List<Evenement> eventPlanning = bdd.Evenements.Where(e => e.Fin.CompareTo(DateTime.Today) >= 0).ToList();
+
+                return eventPlanning;
+            }
+            catch(Exception e)
+            {
+                Log("ERROR", "Erreur de la récupération des evenement pour le planning -> " + e);
+                return new List<Evenement>();
+            }
+        }
+
         public Evenement GetProchainEvenement()
         {
             try

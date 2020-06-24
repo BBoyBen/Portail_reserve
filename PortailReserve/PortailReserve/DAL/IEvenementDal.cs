@@ -18,6 +18,7 @@ namespace PortailReserve.DAL
         List<Evenement> GetEvenementsAVenir();
         List<Evenement> GetEvenementsPasse();
         Evenement GetProchainEvenement();
+        List<Evenement> GetEvenementsPourPlanning();
 
     }
 }

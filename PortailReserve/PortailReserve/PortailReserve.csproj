@@ -261,7 +261,9 @@
     <Compile Include="Models\Disponibilite.cs" />
     <Compile Include="Models\Effectif.cs" />
     <Compile Include="Models\Evenement.cs" />
+    <Compile Include="Models\EventEffectif.cs" />
     <Compile Include="Models\Groupe.cs" />
+    <Compile Include="Models\JourEvenement.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\NullObject\AdresseNull.cs" />
     <Compile Include="Models\NullObject\AlbumNull.cs" />
@@ -300,6 +302,7 @@
     <Compile Include="ViewModel\ChangementGroupeViewModel.cs" />
     <Compile Include="ViewModel\ChangementSoaViewModel.cs" />
     <Compile Include="ViewModel\CreationAlbumViewModel.cs" />
+    <Compile Include="ViewModel\EventPlanningViewModel.cs" />
     <Compile Include="ViewModel\EventViewModel.cs" />
     <Compile Include="ViewModel\ListeAlbumsViewModel.cs" />
     <Compile Include="ViewModel\ListeEventViewModel.cs" />
@@ -313,6 +316,7 @@
     <Compile Include="ViewModel\SuppressionCadreComViewModel.cs" />
     <Compile Include="ViewModel\SuppressionCdgViewModel.cs" />
     <Compile Include="ViewModel\SuppressionSoaViewModel.cs" />
+    <Compile Include="ViewModel\TableauPlanningViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
@@ -326,6 +330,7 @@
     <Content Include="Content\CSS\home.css" />
     <Content Include="Content\CSS\listeEvent.css" />
     <Content Include="Content\CSS\login.css" />
+    <Content Include="Content\CSS\planning.css" />
     <Content Include="Content\CSS\profil.css" />
     <Content Include="Content\CSS\section.css" />
     <Content Include="Content\CSS\souvenir.css" />
@@ -573,6 +578,7 @@
     <Content Include="Views\Planning\AfficherBoutonEtListeDispo.cshtml" />
     <Content Include="Views\Planning\AfficherPopUpAjoutDispo.cshtml" />
     <Content Include="Views\Planning\AfficherPopUpModifDispo.cshtml" />
+    <Content Include="Views\Planning\AfficherEventPlanning.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

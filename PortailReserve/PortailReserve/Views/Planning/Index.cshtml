@@ -1,8 +1,393 @@
-﻿
+﻿@model PortailReserve.ViewModel.TableauPlanningViewModel
 @{
     ViewBag.Title = "Planning";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section style {
+    <link rel="stylesheet" href="~/Content/CSS/planning.css" />
+    <link rel="stylesheet" href="~/Content/CSS/event.css" />
+}
+
 <h1> Planning </h1>
 
+<div class="container tab-planning">
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-11 text-justify">
+            @foreach (string mois in Model.Mois)
+            {
+                <span class="mois"> @mois </span>
+            }
+        </div>
+    </div>
+    <div class="row ligne-carre">
+        <div class="col-1 text-center">
+            L
+        </div>
+        <div class="col-11">
+            @{ int index_lundi = 0; }
+            @foreach (PortailReserve.Models.JourEvenement je in Model.Lundi)
+            {
+                if (je.CarreBlanc)
+                {
+                    <rect class="blanc"></rect>
+                }
+                else
+                {
+                    <rect class="@je.Type" onclick="clickOn('lundi_@index_lundi');">
+                        @if (je.Evenement == null)
+                        {
+                            <span class="info-rect text-center"> @je.Jour.ToString("D") </span>
+                            <div style="display: none;">
+                                @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = Guid.Empty, jour = je.Jour, autre = (je.AutresEvents.Count>0) }, new AjaxOptions
+                                   {
+                                       InsertionMode = InsertionMode.Replace,
+                                       HttpMethod = "GET",
+                                       UpdateTargetId = "affichageEvent"
+                                   }, new { id = "lundi_" + index_lundi })
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="info-rect text-center">
+                                @je.Jour.ToString("D")<br />
+                                @je.Evenement.Type<br />
+                                @je.Evenement.Nom
+                                @if (je.AutresEvents.Count > 0)
+                                {
+                                    <span><br />+ @je.AutresEvents.Count événements</span>
+                                }
+                            </span>
+                            <div style="display: none;">
+                                @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = je.Evenement.Id, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
+                           {
+                               InsertionMode = InsertionMode.Replace,
+                               HttpMethod = "GET",
+                               UpdateTargetId = "affichageEvent"
+                           }, new { id = "lundi_" + index_lundi })
+                            </div>
+                        }
+                    </rect>
+                }
+                { index_lundi++; }
+            }
+        </div>
+    </div>
+    <div class="row ligne-carre">
+        <div class="col-1 text-center"></div>
+        <div class="col-11">
+            @{ int index_mardi = 0; }
+            @foreach (PortailReserve.Models.JourEvenement je in Model.Mardi)
+            {
+                if (je.CarreBlanc)
+                {
+                    <rect class="blanc"></rect>
+                }
+                else
+                {
+                    <rect class="@je.Type" onclick="clickOn('mardi_@index_mardi');">
+                        @if (je.Evenement == null)
+                        {
+                            <span class="info-rect text-center"> @je.Jour.ToString("D") </span>
+                            <div style="display: none;">
+                                @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = Guid.Empty, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
+                           {
+                               InsertionMode =  InsertionMode.Replace,
+                               HttpMethod = "GET",
+                               UpdateTargetId = "affichageEvent"
+                           }, new { id = "mardi_"+index_mardi })
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="info-rect text-center">
+                                @je.Jour.ToString("D")<br />
+                                @je.Evenement.Type<br />
+                                @je.Evenement.Nom
+                                @if (je.AutresEvents.Count > 0)
+                                {
+                                    <span><br />+ @je.AutresEvents.Count événements</span>
+                                }
+                            </span>
+                            <div style="display: none;">
+                                @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = je.Evenement.Id, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
+                           {
+                               InsertionMode =  InsertionMode.Replace,
+                               HttpMethod = "GET",
+                               UpdateTargetId = "affichageEvent"
+                           }, new { id = "mardi_"+index_mardi })
+                            </div>
+                        }
+                    </rect>
+                }
+                { index_mardi++; }
+            }
+        </div>
+    </div>
+    <div class="row ligne-carre">
+        <div class="col-1 text-center">
+            M
+        </div>
+        <div class="col-11">
+            @{ int index_mercredi = 0; }
+            @foreach (PortailReserve.Models.JourEvenement je in Model.Mercredi)
+            {
+                if (je.CarreBlanc)
+                {
+                    <rect class="blanc"></rect>
+                }
+                else
+                {
+                    <rect class="@je.Type" onclick="clickOn('mercredi_@index_mercredi');">
+                        @if (je.Evenement == null)
+                        {
+                            <span class="info-rect text-center"> @je.Jour.ToString("D") </span>
+                            <div style="display: none;">
+                                @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = Guid.Empty, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
+                           {
+                               InsertionMode = InsertionMode.Replace,
+                               HttpMethod = "GET",
+                               UpdateTargetId = "affichageEvent"
+                           }, new { id = "mercredi_" + index_mercredi })
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="info-rect text-center">
+                                @je.Jour.ToString("D")<br />
+                                @je.Evenement.Type<br />
+                                @je.Evenement.Nom
+                                @if (je.AutresEvents.Count > 0)
+                                {
+                                    <span><br />+ @je.AutresEvents.Count événements</span>
+                                }
+                            </span>
+                            <div style="display: none;">
+                                @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = je.Evenement.Id, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
+                           {
+                               InsertionMode = InsertionMode.Replace,
+                               HttpMethod = "GET",
+                               UpdateTargetId = "affichageEvent"
+                           }, new { id = "mercredi_" + index_mercredi })
+                            </div>
+                        }
+                    </rect>
+                }
+                { index_mercredi++; }
+            }
+        </div>
+    </div>
+    <div class="row ligne-carre">
+        <div class="col-1 text-center"></div>
+        <div class="col-11">
+            @{ int index_jeudi = 0; }
+            @foreach (PortailReserve.Models.JourEvenement je in Model.Jeudi)
+            {
+                if (je.CarreBlanc)
+                {
+                    <rect class="blanc"></rect>
+                }
+                else
+                {
+                    <rect class="@je.Type" onclick="clickOn('jeudi_@index_jeudi');">
+                        @if (je.Evenement == null)
+                        {
+                            <span class="info-rect text-center"> @je.Jour.ToString("D") </span>
+                            <div style="display: none;">
+                                @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = Guid.Empty, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
+                           {
+                               InsertionMode = InsertionMode.Replace,
+                               HttpMethod = "GET",
+                               UpdateTargetId = "affichageEvent"
+                           }, new { id = "jeudi_" + index_jeudi })
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="info-rect text-center">
+                                @je.Jour.ToString("D")<br />
+                                @je.Evenement.Type<br />
+                                @je.Evenement.Nom
+                                @if (je.AutresEvents.Count > 0)
+                                {
+                                    <span><br />+ @je.AutresEvents.Count événements</span>
+                                }
+                            </span>
+                            <div style="display: none;">
+                                @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = je.Evenement.Id, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
+                           {
+                               InsertionMode = InsertionMode.Replace,
+                               HttpMethod = "GET",
+                               UpdateTargetId = "affichageEvent"
+                           }, new { id = "jeudi_" + index_jeudi })
+                            </div>
+                        }
+                    </rect>
+                }
+                { index_jeudi++; }
+            }
+        </div>
+    </div>
+    <div class="row ligne-carre">
+        <div class="col-1 text-center">
+            V
+        </div>
+        <div class="col-11">
+            @{ int index_vendredi = 0; }
+            @foreach (PortailReserve.Models.JourEvenement je in Model.Vendredi)
+            {
+                if (je.CarreBlanc)
+                {
+                    <rect class="blanc"></rect>
+                }
+                else
+                {
+                    <rect class="@je.Type" onclick="clickOn('vendredi_@index_vendredi');">
+                        @if (je.Evenement == null)
+                        {
+                            <span class="info-rect text-center"> @je.Jour.ToString("D") </span>
+                            <div style="display: none;">
+                                @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = Guid.Empty, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
+                           {
+                               InsertionMode = InsertionMode.Replace,
+                               HttpMethod = "GET",
+                               UpdateTargetId = "affichageEvent"
+                           }, new { id = "vendredi_" + index_vendredi })
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="info-rect text-center">
+                                @je.Jour.ToString("D")<br />
+                                @je.Evenement.Type<br />
+                                @je.Evenement.Nom
+                                @if (je.AutresEvents.Count > 0)
+                                {
+                                    <span><br />+ @je.AutresEvents.Count événements</span>
+                                }
+                            </span>
+                            <div style="display: none;">
+                                @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = je.Evenement.Id, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
+                           {
+                               InsertionMode = InsertionMode.Replace,
+                               HttpMethod = "GET",
+                               UpdateTargetId = "affichageEvent"
+                           }, new { id = "vendredi_" + index_vendredi })
+                            </div>
+                        }
+                    </rect>
+                }
+                { index_vendredi++; }
+            }
+        </div>
+    </div>
+    <div class="row ligne-carre">
+        <div class="col-1 text-center"></div>
+        <div class="col-11">
+            @{ int index_samedi = 0; }
+            @foreach (PortailReserve.Models.JourEvenement je in Model.Samedi)
+            {
+                if (je.CarreBlanc)
+                {
+                    <rect class="blanc"></rect>
+                }
+                else
+                {
+                    <rect class="@je.Type" onclick="clickOn('samedi_@index_samedi');">
+                        @if (je.Evenement == null)
+                        {
+                            <span class="info-rect text-center"> @je.Jour.ToString("D") </span>
+                            <div style="display: none;">
+                                @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = Guid.Empty, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
+                           {
+                               InsertionMode = InsertionMode.Replace,
+                               HttpMethod = "GET",
+                               UpdateTargetId = "affichageEvent"
+                           }, new { id = "samedi_" + index_samedi })
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="info-rect text-center">
+                                @je.Jour.ToString("D")<br />
+                                @je.Evenement.Type<br />
+                                @je.Evenement.Nom
+                                @if (je.AutresEvents.Count > 0)
+                                {
+                                    <span><br />+ @je.AutresEvents.Count événements</span>
+                                }
+                            </span>
+                            <div style="display: none;">
+                                @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = je.Evenement.Id, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
+                           {
+                               InsertionMode = InsertionMode.Replace,
+                               HttpMethod = "GET",
+                               UpdateTargetId = "affichageEvent"
+                           }, new { id = "samedi_" + index_samedi })
+                            </div>
+                        }
+                    </rect>
+                }
+                { index_samedi++; }
+            }
+        </div>
+    </div>
+    <div class="row ligne-carre">
+        <div class="col-1 text-center">
+            D
+        </div>
+        <div class="col-11">
+            @{ int index_dimanche = 0; }
+            @foreach (PortailReserve.Models.JourEvenement je in Model.Dimanche)
+            {
+                if (je.CarreBlanc)
+                {
+                    <rect class="blanc"></rect>
+                }
+                else
+                {
+                    <rect class="@je.Type" onclick="clickOn('dimanche_@index_dimanche');">
+                        @if (je.Evenement == null)
+                        {
+                            <span class="info-rect text-center"> @je.Jour.ToString("D") </span>
+                            <div style="display: none;">
+                                @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = Guid.Empty, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
+                           {
+                               InsertionMode = InsertionMode.Replace,
+                               HttpMethod = "GET",
+                               UpdateTargetId = "affichageEvent"
+                           }, new { id = "dimanche_" + index_dimanche })
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="info-rect text-center">
+                                @je.Jour.ToString("D")<br />
+                                @je.Evenement.Type<br />
+                                @je.Evenement.Nom
+                                @if (je.AutresEvents.Count > 0)
+                                {
+                                    <span><br />+ @je.AutresEvents.Count événements</span>
+                                }
+                            </span>
+                            <div style="display: none;">
+                                @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = je.Evenement.Id, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
+                           {
+                               InsertionMode = InsertionMode.Replace,
+                               HttpMethod = "GET",
+                               UpdateTargetId = "affichageEvent"
+                           }, new { id = "dimanche_" + index_dimanche })
+                            </div>
+                        }
+                    </rect>
+                }
+                { index_dimanche++; }
+            }
+        </div>
+    </div>
+</div>
+
+<div class="container" id="affichageEvent">
+    @{ Html.RenderAction("AfficherEventPlanning", "Planning", new { id = Model.IdEventDuJour, jour = DateTime.Now, autre = true });}
+</div>
