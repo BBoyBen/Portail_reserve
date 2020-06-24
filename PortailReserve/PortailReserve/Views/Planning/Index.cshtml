@@ -45,7 +45,7 @@
                                        InsertionMode = InsertionMode.Replace,
                                        HttpMethod = "GET",
                                        UpdateTargetId = "affichageEvent"
-                                   }, new { id = "lundi_" + index_lundi })
+                                   }, new { id = "lundi_" + index_lundi })  
                             </div>
                         }
                         else
@@ -56,17 +56,21 @@
                                 @je.Evenement.Nom
                                 @if (je.AutresEvents.Count > 0)
                                 {
-                                    <span><br />+ @je.AutresEvents.Count événements</span>
+                                    <span><br />+ @je.AutresEvents.Count événement(s)</span>
                                 }
                             </span>
                             <div style="display: none;">
                                 @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = je.Evenement.Id, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
-                           {
-                               InsertionMode = InsertionMode.Replace,
-                               HttpMethod = "GET",
-                               UpdateTargetId = "affichageEvent"
-                           }, new { id = "lundi_" + index_lundi })
+                               {
+                                   InsertionMode = InsertionMode.Replace,
+                                   HttpMethod = "GET",
+                                   UpdateTargetId = "affichageEvent"
+                               }, new { id = "lundi_" + index_lundi })
                             </div>
+                            if(je.AutresEvents.Count > 0)
+                            {
+                                <span class="indicateur-multi-event"></span>
+                            }
                         }
                     </rect>
                 }
@@ -92,11 +96,11 @@
                             <span class="info-rect text-center"> @je.Jour.ToString("D") </span>
                             <div style="display: none;">
                                 @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = Guid.Empty, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
-                           {
-                               InsertionMode =  InsertionMode.Replace,
-                               HttpMethod = "GET",
-                               UpdateTargetId = "affichageEvent"
-                           }, new { id = "mardi_"+index_mardi })
+                               {
+                                   InsertionMode =  InsertionMode.Replace,
+                                   HttpMethod = "GET",
+                                   UpdateTargetId = "affichageEvent"
+                               }, new { id = "mardi_"+index_mardi })
                             </div>
                         }
                         else
@@ -107,17 +111,21 @@
                                 @je.Evenement.Nom
                                 @if (je.AutresEvents.Count > 0)
                                 {
-                                    <span><br />+ @je.AutresEvents.Count événements</span>
+                                    <span><br />+ @je.AutresEvents.Count événement(s)</span>
                                 }
                             </span>
                             <div style="display: none;">
                                 @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = je.Evenement.Id, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
-                           {
-                               InsertionMode =  InsertionMode.Replace,
-                               HttpMethod = "GET",
-                               UpdateTargetId = "affichageEvent"
-                           }, new { id = "mardi_"+index_mardi })
+                               {
+                                   InsertionMode =  InsertionMode.Replace,
+                                   HttpMethod = "GET",
+                                   UpdateTargetId = "affichageEvent"
+                               }, new { id = "mardi_"+index_mardi })
                             </div>
+                            if(je.AutresEvents.Count > 0)
+                            {
+                                <span class="indicateur-multi-event"></span>
+                            }
                         }
                     </rect>
                 }
@@ -145,11 +153,11 @@
                             <span class="info-rect text-center"> @je.Jour.ToString("D") </span>
                             <div style="display: none;">
                                 @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = Guid.Empty, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
-                           {
-                               InsertionMode = InsertionMode.Replace,
-                               HttpMethod = "GET",
-                               UpdateTargetId = "affichageEvent"
-                           }, new { id = "mercredi_" + index_mercredi })
+                               {
+                                   InsertionMode = InsertionMode.Replace,
+                                   HttpMethod = "GET",
+                                   UpdateTargetId = "affichageEvent"
+                               }, new { id = "mercredi_" + index_mercredi })
                             </div>
                         }
                         else
@@ -160,17 +168,21 @@
                                 @je.Evenement.Nom
                                 @if (je.AutresEvents.Count > 0)
                                 {
-                                    <span><br />+ @je.AutresEvents.Count événements</span>
+                                    <span><br />+ @je.AutresEvents.Count événement(s)</span>
                                 }
                             </span>
                             <div style="display: none;">
                                 @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = je.Evenement.Id, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
-                           {
-                               InsertionMode = InsertionMode.Replace,
-                               HttpMethod = "GET",
-                               UpdateTargetId = "affichageEvent"
-                           }, new { id = "mercredi_" + index_mercredi })
+                               {
+                                   InsertionMode = InsertionMode.Replace,
+                                   HttpMethod = "GET",
+                                   UpdateTargetId = "affichageEvent"
+                               }, new { id = "mercredi_" + index_mercredi })
                             </div>
+                            if(je.AutresEvents.Count > 0)
+                            {
+                                <span class="indicateur-multi-event"></span>
+                            }
                         }
                     </rect>
                 }
@@ -196,11 +208,11 @@
                             <span class="info-rect text-center"> @je.Jour.ToString("D") </span>
                             <div style="display: none;">
                                 @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = Guid.Empty, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
-                           {
-                               InsertionMode = InsertionMode.Replace,
-                               HttpMethod = "GET",
-                               UpdateTargetId = "affichageEvent"
-                           }, new { id = "jeudi_" + index_jeudi })
+                               {
+                                   InsertionMode = InsertionMode.Replace,
+                                   HttpMethod = "GET",
+                                   UpdateTargetId = "affichageEvent"
+                               }, new { id = "jeudi_" + index_jeudi })
                             </div>
                         }
                         else
@@ -211,17 +223,21 @@
                                 @je.Evenement.Nom
                                 @if (je.AutresEvents.Count > 0)
                                 {
-                                    <span><br />+ @je.AutresEvents.Count événements</span>
+                                    <span><br />+ @je.AutresEvents.Count événement(s)</span>
                                 }
                             </span>
                             <div style="display: none;">
                                 @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = je.Evenement.Id, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
-                           {
-                               InsertionMode = InsertionMode.Replace,
-                               HttpMethod = "GET",
-                               UpdateTargetId = "affichageEvent"
-                           }, new { id = "jeudi_" + index_jeudi })
+                               {
+                                   InsertionMode = InsertionMode.Replace,
+                                   HttpMethod = "GET",
+                                   UpdateTargetId = "affichageEvent"
+                               }, new { id = "jeudi_" + index_jeudi })
                             </div>
+                            if(je.AutresEvents.Count > 0)
+                            {
+                                <span class="indicateur-multi-event"></span>
+                            }
                         }
                     </rect>
                 }
@@ -249,11 +265,11 @@
                             <span class="info-rect text-center"> @je.Jour.ToString("D") </span>
                             <div style="display: none;">
                                 @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = Guid.Empty, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
-                           {
-                               InsertionMode = InsertionMode.Replace,
-                               HttpMethod = "GET",
-                               UpdateTargetId = "affichageEvent"
-                           }, new { id = "vendredi_" + index_vendredi })
+                               {
+                                   InsertionMode = InsertionMode.Replace,
+                                   HttpMethod = "GET",
+                                   UpdateTargetId = "affichageEvent"
+                               }, new { id = "vendredi_" + index_vendredi })
                             </div>
                         }
                         else
@@ -264,17 +280,21 @@
                                 @je.Evenement.Nom
                                 @if (je.AutresEvents.Count > 0)
                                 {
-                                    <span><br />+ @je.AutresEvents.Count événements</span>
+                                    <span><br />+ @je.AutresEvents.Count événement(s)</span>
                                 }
                             </span>
                             <div style="display: none;">
                                 @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = je.Evenement.Id, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
-                           {
-                               InsertionMode = InsertionMode.Replace,
-                               HttpMethod = "GET",
-                               UpdateTargetId = "affichageEvent"
-                           }, new { id = "vendredi_" + index_vendredi })
+                               {
+                                   InsertionMode = InsertionMode.Replace,
+                                   HttpMethod = "GET",
+                                   UpdateTargetId = "affichageEvent"
+                               }, new { id = "vendredi_" + index_vendredi })
                             </div>
+                            if(je.AutresEvents.Count > 0)
+                            {
+                                <span class="indicateur-multi-event"></span>
+                            }
                         }
                     </rect>
                 }
@@ -300,11 +320,11 @@
                             <span class="info-rect text-center"> @je.Jour.ToString("D") </span>
                             <div style="display: none;">
                                 @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = Guid.Empty, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
-                           {
-                               InsertionMode = InsertionMode.Replace,
-                               HttpMethod = "GET",
-                               UpdateTargetId = "affichageEvent"
-                           }, new { id = "samedi_" + index_samedi })
+                               {
+                                   InsertionMode = InsertionMode.Replace,
+                                   HttpMethod = "GET",
+                                   UpdateTargetId = "affichageEvent"
+                               }, new { id = "samedi_" + index_samedi })
                             </div>
                         }
                         else
@@ -315,17 +335,21 @@
                                 @je.Evenement.Nom
                                 @if (je.AutresEvents.Count > 0)
                                 {
-                                    <span><br />+ @je.AutresEvents.Count événements</span>
+                                    <span><br />+ @je.AutresEvents.Count événement(s)</span>
                                 }
                             </span>
                             <div style="display: none;">
                                 @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = je.Evenement.Id, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
-                           {
-                               InsertionMode = InsertionMode.Replace,
-                               HttpMethod = "GET",
-                               UpdateTargetId = "affichageEvent"
-                           }, new { id = "samedi_" + index_samedi })
+                               {
+                                   InsertionMode = InsertionMode.Replace,
+                                   HttpMethod = "GET",
+                                   UpdateTargetId = "affichageEvent"
+                               }, new { id = "samedi_" + index_samedi })
                             </div>
+                            if(je.AutresEvents.Count > 0)
+                            {
+                                <span class="indicateur-multi-event"></span>
+                            }
                         }
                     </rect>
                 }
@@ -353,11 +377,11 @@
                             <span class="info-rect text-center"> @je.Jour.ToString("D") </span>
                             <div style="display: none;">
                                 @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = Guid.Empty, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
-                           {
-                               InsertionMode = InsertionMode.Replace,
-                               HttpMethod = "GET",
-                               UpdateTargetId = "affichageEvent"
-                           }, new { id = "dimanche_" + index_dimanche })
+                               {
+                                   InsertionMode = InsertionMode.Replace,
+                                   HttpMethod = "GET",
+                                   UpdateTargetId = "affichageEvent"
+                               }, new { id = "dimanche_" + index_dimanche })
                             </div>
                         }
                         else
@@ -368,17 +392,21 @@
                                 @je.Evenement.Nom
                                 @if (je.AutresEvents.Count > 0)
                                 {
-                                    <span><br />+ @je.AutresEvents.Count événements</span>
+                                    <span><br />+ @je.AutresEvents.Count événement(s)</span>
                                 }
                             </span>
                             <div style="display: none;">
                                 @Ajax.ActionLink("Event", "AfficherEventPlanning", "Planning", new { id = je.Evenement.Id, jour = je.Jour, autre = (je.AutresEvents.Count > 0) }, new AjaxOptions
-                           {
-                               InsertionMode = InsertionMode.Replace,
-                               HttpMethod = "GET",
-                               UpdateTargetId = "affichageEvent"
-                           }, new { id = "dimanche_" + index_dimanche })
+                               {
+                                   InsertionMode = InsertionMode.Replace,
+                                   HttpMethod = "GET",
+                                   UpdateTargetId = "affichageEvent"
+                               }, new { id = "dimanche_" + index_dimanche })
                             </div>
+                            if(je.AutresEvents.Count > 0)
+                            {
+                                <span class="indicateur-multi-event"></span>
+                            }
                         }
                     </rect>
                 }

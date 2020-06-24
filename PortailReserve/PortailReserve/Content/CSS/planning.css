@@ -100,3 +100,12 @@ rect:hover .info-rect, rect:focus .info-rect {
     transform: scale(1) rotate(0);
 }
 
+rect .indicateur-multi-event {
+    position: absolute;
+    background-color: black;
+    padding: 0.3%;
+    margin-top: 0.15%;
+    border-radius: 100%;
+    z-index: 1000;
+}
+

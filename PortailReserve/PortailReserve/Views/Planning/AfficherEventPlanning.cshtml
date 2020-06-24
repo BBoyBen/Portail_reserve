@@ -111,9 +111,15 @@ else
     if(Model.AutresEvents.Count > 0)
     {
         <div class="row">
+            @{ string classe = "col-sm-6";
+                if (Model.AutresEvents.Count.Equals(1))
+                {
+                    classe = "";
+                }
+            }
             @foreach(PortailReserve.Models.EventEffectif ef in Model.AutresEvents)
             {
-            <div class="col-sm-6 col-12">
+            <div class="@classe col-12">
                 <div class="row marginBottom marginTop">
                     <div class="col-12 text-center">
                         <h2> @ef.Event.Nom  </h2>
