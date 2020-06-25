@@ -321,18 +321,78 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-6">
+    <div class="col-4 info-comp">
         <strong> Chant compagnie : </strong> @Model.Cie.Chant
     </div>
-    <div class="col-6">
+    @if (Model.Util.Role < 3)
+    {
+        <div class="col-2 iconeCol text-center" style="display: none;">
+            <img src="~/Content/image/icon_modif.png" class="iconeModif" 
+                 onclick="clickOn('lienModifChantCie'); afficherCacherPopUp('popUpModifInfosCie');"/>
+        </div>
+        <div style="display: none;">
+            @Ajax.ActionLink("Modifier chant", "AfficherPopUpModifInfoCie", "Section", new { id = Model.Cie.Id, info = "chant" }, new AjaxOptions
+               {
+                   InsertionMode = InsertionMode.Replace,
+                   UpdateTargetId = "popUpModifInfosCie",
+                   HttpMethod = "GET"
+               }, new { id = "lienModifChantCie" })
+        </div>
+    }
+    <div class="col-4 info-comp selfCenter" id="chantSection">
         <strong> Chant section : </strong> @Model.Section.Chant
     </div>
+    @if (Model.Util.Role < 4)
+    {
+        <div class="col-2 iconeCol text-center" style="display: none;">
+            <img src="~/Content/image/icon_modif.png" class="iconeModif"
+                 onclick="clickOn('lienModifChantSection'); afficherCacherPopUp('popUpModifInfosSection');" />
+        </div>
+        <div style="display: none;">
+            @Ajax.ActionLink("Modifier chant", "AfficherPopUpModifInfoSection", "Section", new { id = Model.Section.Id, info = "chant" }, new AjaxOptions
+               {
+                   InsertionMode = InsertionMode.Replace,
+                   UpdateTargetId = "popUpModifInfosSection",
+                   HttpMethod = "GET"
+               }, new { id = "lienModifChantSection" })
+        </div>
+    }
 </div>
 <div class="row">
-    <div class="col-6">
+    <div class="col-4 info-comp">
         <strong> Devise compagnie : </strong> @Model.Cie.Devise
     </div>
-    <div class="col-6">
+    @if (Model.Util.Role < 3)
+    {
+        <div class="col-2 iconeCol text-center" style="display: none;">
+            <img src="~/Content/image/icon_modif.png" class="iconeModif" 
+                 onclick="clickOn('lienModifDeviseCie'); afficherCacherPopUp('popUpModifInfosCie');"/>
+        </div>
+        <div style="display: none;">
+            @Ajax.ActionLink("Modifier chant", "AfficherPopUpModifInfoCie", "Section", new { id = Model.Cie.Id, info = "devise" }, new AjaxOptions
+               {
+                   InsertionMode = InsertionMode.Replace,
+                   UpdateTargetId = "popUpModifInfosCie",
+                   HttpMethod = "GET"
+               }, new { id = "lienModifDeviseCie" })
+        </div>
+    }
+    <div class="col-4 info-comp selfCenter" id="deviseSection">
         <strong> Devise section : </strong> @Model.Section.Devise
     </div>
+    @if (Model.Util.Role < 4)
+    {
+        <div class="col-2 iconeCol text-center" style="display: none;">
+            <img src="~/Content/image/icon_modif.png" class="iconeModif"
+                 onclick="clickOn('lienModifDeviseSection'); afficherCacherPopUp('popUpModifInfosSection');" />
+        </div>
+        <div style="display: none;">
+            @Ajax.ActionLink("Modifier chant", "AfficherPopUpModifInfoSection", "Section", new { id = Model.Section.Id, info = "devise" }, new AjaxOptions
+               {
+                   InsertionMode = InsertionMode.Replace,
+                   UpdateTargetId = "popUpModifInfosSection",
+                   HttpMethod = "GET"
+               }, new { id = "lienModifDeviseSection" })
+        </div>
+    }
 </div>

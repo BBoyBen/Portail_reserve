@@ -306,6 +306,8 @@
     <Compile Include="ViewModel\EventViewModel.cs" />
     <Compile Include="ViewModel\ListeAlbumsViewModel.cs" />
     <Compile Include="ViewModel\ListeEventViewModel.cs" />
+    <Compile Include="ViewModel\ModifInfoCieViewModel.cs" />
+    <Compile Include="ViewModel\ModifInfoSectionViewModel.cs" />
     <Compile Include="ViewModel\ModifMdpViewModel.cs" />
     <Compile Include="ViewModel\ModifProfilViewModel.cs" />
     <Compile Include="ViewModel\PremiereCoViewModel.cs" />
@@ -579,6 +581,8 @@
     <Content Include="Views\Planning\AfficherPopUpAjoutDispo.cshtml" />
     <Content Include="Views\Planning\AfficherPopUpModifDispo.cshtml" />
     <Content Include="Views\Planning\AfficherEventPlanning.cshtml" />
+    <Content Include="Views\Section\AfficherPopUpModifInfoSection.cshtml" />
+    <Content Include="Views\Section\AfficherPopUpModifInfoCie.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

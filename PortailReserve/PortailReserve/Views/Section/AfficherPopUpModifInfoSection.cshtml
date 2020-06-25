@@ -1,0 +1,127 @@
+﻿@model PortailReserve.ViewModel.ModifInfoSectionViewModel
+
+
+@if (Model.Info.Equals("chant"))
+{
+    <div class="row">
+        <div class="col-12 text-center titrePopUp">
+            Changer le chant de la section
+            @if (Model.Section.Numero.Equals(0))
+            {
+                <span> commandement </span>
+            }
+            else
+            {
+                <span> @Model.Section.Numero</span>
+            }
+        </div>
+    </div>
+
+    using (Ajax.BeginForm("ChangerInfoSection", "Section", new AjaxOptions
+    {
+        InsertionMode = InsertionMode.Replace,
+        UpdateTargetId = "partieSection",
+        HttpMethod = "POST",
+        OnBegin = "afficherCacherPopUp('popUpModifInfosSection')",
+        OnComplete = "modifierSection()",
+        OnSuccess = "messageSuccess('Changement de chant section OK !')",
+        OnFailure = "messageError('Erreur changement chant section !')"
+    }))
+    {
+        <div class="row">
+            @Html.TextBoxFor(m => m.Section.Chant, new { @class = "col-8 champsTextCenter champsText selfCenter" })
+        </div>
+        
+        @Html.HiddenFor(m => m.Section.Id)
+        @Html.HiddenFor(m => m.Section.Devise)
+        @Html.HiddenFor(m => m.Section.Numero)
+        @Html.HiddenFor(m => m.Info)
+
+        <input type="submit" value="Valider" id="validerModifSection" style="display: none;" />
+    }
+    <div class="row marginTop">
+        <div class="col-6">
+            <div class="row">
+                <button class="col-6 bouton boutonVert champsTextDroit text-center allWidth" onclick="clickOn('validerModifSection');">
+                    Valider
+                </button>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <button class="col-6 bouton boutonRouge text-center allWidth" onclick="afficherCacherPopUp('popUpModifInfosSection');">
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+}
+else if (Model.Info.Equals("devise"))
+{
+    <div class="row">
+        <div class="col-12 text-center titrePopUp">
+            Changer la devise de la section
+            @if (Model.Section.Numero.Equals(0))
+            {
+                <span> commandement </span>
+            }
+            else
+            {
+                <span> @Model.Section.Numero</span>
+            }
+        </div>
+    </div>
+
+    using (Ajax.BeginForm("ChangerInfoSection", "Section", new AjaxOptions
+    {
+        InsertionMode = InsertionMode.Replace,
+        UpdateTargetId = "partieSection",
+        HttpMethod = "POST",
+        OnBegin = "afficherCacherPopUp('popUpModifInfosSection')",
+        OnComplete = "modifierSection()",
+        OnSuccess = "messageSuccess('Changement de la devise section OK !')",
+        OnFailure = "messageError('Erreur changement devise section !')"
+    }))
+    {
+        <div class="row">
+            @Html.TextBoxFor(m => m.Section.Devise, new { @class = "col-8 champsTextCenter champsText selfCenter" })
+        </div>
+        
+        @Html.HiddenFor(m => m.Section.Id)
+        @Html.HiddenFor(m => m.Section.Chant)
+        @Html.HiddenFor(m => m.Section.Numero)
+        @Html.HiddenFor(m => m.Info)
+
+        <input type="submit" value="Valider" id="validerModifSection" style="display: none;" />
+    }
+    <div class="row marginTop">
+        <div class="col-6">
+            <div class="row">
+                <button class="col-6 bouton boutonVert champsTextDroit text-center allWidth" onclick="clickOn('validerModifSection');">
+                    Valider
+                </button>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <button class="col-6 bouton boutonRouge text-center allWidth" onclick="afficherCacherPopUp('popUpModifInfosSection');">
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-12 text-center erreur">
+            Une erreur c'est produite veuillez réessayer.
+        </div>
+    </div>
+
+    <div class="row marginTop">
+        <button class="col-6 selfCenter text-center bouton boutonRouge allWidth" onclick="afficherCacherPopUp('popUpModifInfosSection');">
+            Annuler
+        </button>
+    </div>
+}

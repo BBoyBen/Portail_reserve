@@ -2272,5 +2272,87 @@ namespace PortailReserve.Controllers
                 return new HttpStatusCodeResult(500);
             }
         }
+
+        /***
+         * Modification des informations complémentaire
+        ***/
+
+        [Authorize]
+        public ActionResult AfficherPopUpModifInfoSection(Guid id, string info)
+        {
+            Section section = sDal.GetSectionById(id);
+            if (section == null || section.Equals(typeof(SectionNull)))
+                section = new Section
+                {
+                    Id = Guid.Empty,
+                    Chant = "",
+                    Devise = "",
+                    Numero = -1
+                };
+
+            ModifInfoSectionViewModel vm = new ModifInfoSectionViewModel
+            {
+                Section = section,
+                Info = info
+            };
+
+            return PartialView("AfficherPopUpModifInfoSection", vm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult ChangerInfoSection(ModifInfoSectionViewModel vm)
+        {
+            if (vm.Section == null || vm.Section.Id.Equals(Guid.Empty))
+                return new HttpStatusCodeResult(400);
+
+            int retour = sDal.ModifierSection(vm.Section.Id, vm.Section);
+            if (retour != 1)
+                return new HttpStatusCodeResult(500);
+
+            if(vm.Section.Numero.Equals(0))
+                return RedirectToAction("AfficherPersonnelSectionCom");
+
+            return RedirectToAction("AfficherPersonnelSection");
+        }
+
+        [Authorize]
+        public ActionResult AfficherPopUpModifInfoCie(Guid id, string info)
+        {
+            Compagnie cie = cDal.GetCompagnieById(id);
+            if (cie == null || cie.Equals(typeof(CompagnieNull)))
+                cie = new Compagnie
+                {
+                    Id = Guid.Empty,
+                    Chant = "",
+                    Devise = "",
+                    Numero = -1
+                };
+
+            ModifInfoCieViewModel vm = new ModifInfoCieViewModel
+            {
+                Cie = cie,
+                Info = info
+            };
+
+            return PartialView("AfficherPopUpModifInfoCie", vm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult ChangerInfoCie(ModifInfoCieViewModel vm)
+        {
+            if (vm.Cie == null || vm.Cie.Id.Equals(Guid.Empty))
+                return new HttpStatusCodeResult(400);
+
+            int retour = cDal.ModifierCompagnie(vm.Cie.Id, vm.Cie);
+            if (retour != 1)
+                return new HttpStatusCodeResult(500);
+
+            if (vm.Cie.Numero.Equals(0))
+                return RedirectToAction("AfficherPersonnelSectionCom");
+
+            return RedirectToAction("AfficherPersonnelSection");
+        }
     }
 }
