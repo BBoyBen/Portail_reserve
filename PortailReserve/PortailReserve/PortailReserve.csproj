@@ -209,6 +209,7 @@
     <Compile Include="Controllers\DisponibiliteController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\MessagerieController.cs" />
     <Compile Include="Controllers\ParticipationController.cs" />
     <Compile Include="Controllers\PlanningController.cs" />
     <Compile Include="Controllers\ProfilController.cs" />
@@ -223,6 +224,7 @@
     <Compile Include="DAL\IEffectifDal.cs" />
     <Compile Include="DAL\IEvenementDal.cs" />
     <Compile Include="DAL\IGroupeDal.cs" />
+    <Compile Include="DAL\ILectureDal.cs" />
     <Compile Include="DAL\IMessageDal.cs" />
     <Compile Include="DAL\Impl\AdresseDal.cs" />
     <Compile Include="DAL\Impl\AlbumDal.cs" />
@@ -233,6 +235,7 @@
     <Compile Include="DAL\Impl\EffectifDal.cs" />
     <Compile Include="DAL\Impl\EvenementDal.cs" />
     <Compile Include="DAL\Impl\GroupeDal.cs" />
+    <Compile Include="DAL\Impl\LectureDal.cs" />
     <Compile Include="DAL\Impl\MessageDal.cs" />
     <Compile Include="DAL\Impl\ParticipationDal.cs" />
     <Compile Include="DAL\Impl\PhotoDal.cs" />
@@ -264,7 +267,9 @@
     <Compile Include="Models\EventEffectif.cs" />
     <Compile Include="Models\Groupe.cs" />
     <Compile Include="Models\JourEvenement.cs" />
+    <Compile Include="Models\Lecture.cs" />
     <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\MessageUtil.cs" />
     <Compile Include="Models\NullObject\AdresseNull.cs" />
     <Compile Include="Models\NullObject\AlbumNull.cs" />
     <Compile Include="Models\NullObject\ChantNull.cs" />
@@ -283,6 +288,7 @@
     <Compile Include="Models\Participation.cs" />
     <Compile Include="Models\Photo.cs" />
     <Compile Include="Models\Reponse.cs" />
+    <Compile Include="Models\ReponseUtil.cs" />
     <Compile Include="Models\Section.cs" />
     <Compile Include="Models\Utilisateur.cs" />
     <Compile Include="Models\UtilisateurDispo.cs" />
@@ -306,6 +312,7 @@
     <Compile Include="ViewModel\EventViewModel.cs" />
     <Compile Include="ViewModel\ListeAlbumsViewModel.cs" />
     <Compile Include="ViewModel\ListeEventViewModel.cs" />
+    <Compile Include="ViewModel\MessagerieViewModel.cs" />
     <Compile Include="ViewModel\ModifInfoCieViewModel.cs" />
     <Compile Include="ViewModel\ModifInfoSectionViewModel.cs" />
     <Compile Include="ViewModel\ModifMdpViewModel.cs" />
@@ -583,6 +590,7 @@
     <Content Include="Views\Planning\AfficherEventPlanning.cshtml" />
     <Content Include="Views\Section\AfficherPopUpModifInfoSection.cshtml" />
     <Content Include="Views\Section\AfficherPopUpModifInfoCie.cshtml" />
+    <Content Include="Views\Messagerie\AfficherMessagerie.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

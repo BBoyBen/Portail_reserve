@@ -23,6 +23,7 @@ namespace PortailReserve.Models
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Compagnie> Compagnies { get; set; }
         public DbSet<Chant> Chants { get; set; }
+        public DbSet<Lecture> Lectures { get; set; }
 
      
     }

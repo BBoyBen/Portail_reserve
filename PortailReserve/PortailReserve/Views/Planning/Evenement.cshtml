@@ -15,12 +15,12 @@
                 @Html.ActionLink("Retour au planning", "Index", "Planning", null, new { @class = "lienBoutonBleu", id = "retourPlanning" })
             </button>
         </div>
-        @if(Model.Util.Role < 4)
+        @if (Model.Util.Role < 4)
         {
             <div class="col-6"></div>
             <div class="col-3">
                 <button id="boutonModifier" class="boutonOrange bouton" onclick="clickOn('modifierEvent'); ">
-                    @Html.ActionLink("Modifier", "Modifier", "Planning", new { id = Model.Event.Id}, new { @class = "lienBoutonVert", id = "modifierEvent" })
+                    @Html.ActionLink("Modifier", "Modifier", "Planning", new { id = Model.Event.Id }, new { @class = "lienBoutonVert", id = "modifierEvent" })
                 </button>
             </div>
         }
@@ -141,6 +141,20 @@ else
 -->
 <div class="container popUp" id="popupDispoModif" style="display: none;">
     @{ Html.RenderAction("AfficherPopUpModifDispo", "Planning", new { id = Model.Event.Id }); }
+</div>
+
+<!--
+################################################################################
+##############################  Partie messagerie  #############################
+################################################################################
+-->
+
+<div class="container" id="messagerie" style="display: none;">
+    @{ Html.RenderAction("AfficherMessagerie", "Messagerie", new { id = Model.Event.Id }); }
+</div>
+
+<div class="container" id="boutonAfficherMessagerie">
+    <img src="~/Content/image/icone_precedent.png" alt="Afficher" id="afficherMessagerie" />
 </div>
 
 @section scripts{
