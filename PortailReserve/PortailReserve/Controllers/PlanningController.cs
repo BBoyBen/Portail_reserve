@@ -22,6 +22,8 @@ namespace PortailReserve.Controllers
         private IEffectifDal effDal;
         private IParticipationDal pDal;
         private IDisponibiliteDal dDal;
+        private IMessageDal mDal;
+        private ILectureDal lDal;
 
         public PlanningController()
         {
@@ -30,6 +32,8 @@ namespace PortailReserve.Controllers
             effDal = new EffectifDal();
             pDal = new ParticipationDal();
             dDal = new DisponibiliteDal();
+            mDal = new MessageDal();
+            lDal = new LectureDal();
         }
 
         [Authorize]
@@ -286,12 +290,21 @@ namespace PortailReserve.Controllers
             if (allDispo.Count > 0)
                 dispo = (Disponibilite)allDispo.ToArray().GetValue(0);
 
+            List<Message> messages = mDal.GetMessagesByEvent(id);
+            int nbNonLu = 0;
+            foreach(Message m in messages)
+            {
+                if (lDal.GetLectureByMessageAndByUtil(m.Id, u.Id) == null)
+                    nbNonLu++;
+            }
+
             EventViewModel vm = new EventViewModel()
             {
                 Event = e,
                 Util = u,
                 Effectif = eff,
-                Dispo = dispo
+                Dispo = dispo,
+                NonLu = nbNonLu
             };  
 
             return View(vm);

@@ -1,0 +1,60 @@
+﻿@model PortailReserve.ViewModel.MessageViewModel
+
+@if (!Model.Message.Lu)
+{
+    <script>
+        document.getElementById("message_@Model.Message.Message.Id").addEventListener('mouseover', function () {
+            clickOn("lire_@Model.Message.Message.Id");
+        });
+    </script>
+}
+@{
+    string alignement = "champsTextGauche";
+    string classMessage = "message";
+    if (Model.Message.Message.Envoyeur.Equals(Model.Util.Id))
+    {
+        classMessage = "messageProprio";
+        alignement = "champsTextDroit";
+    }
+}
+<div class="col-10 @classMessage @alignement">
+    <div class="row">
+        <div class="col-12">
+            <strong>@Model.Message.Auteur</strong>
+            <div id="notif_@Model.Message.Message.Id" style="display: inline;">
+                @{ Html.RenderAction("AfficherNotifNonLu", "Messagerie", new { lu = Model.Message.Lu });}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-justify">
+            @Model.Message.Message.Texte
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-right dateMessage">
+            @Model.Message.Message.Date.ToString()
+        </div>
+    </div>
+    <!--
+        Réponses
+    -->
+    <div class="row">
+        <div class="col-12 lienReponse" onclick="afficherCacherElement('rep_@Model.Message.Message.Id');">
+            Répondre
+        </div>
+    </div>
+    <div class="listeReponse" id="rep_@Model.Message.Message.Id" style="display: none;">
+        @{ Html.RenderAction("AfficherReponses", "Messagerie", new { id = Model.Message.Message.Id });}
+    </div>
+</div>
+<div style="display: none;">
+    @Ajax.ActionLink("Lire", "Lire", "Messagerie",
+        new { idMessage = Model.Message.Message.Id, idUtil = Model.Util.Id }, new AjaxOptions
+        {
+            InsertionMode = InsertionMode.Replace,
+            HttpMethod = "GET",
+            UpdateTargetId = "notif_" + Model.Message.Message.Id
+        }, new { id = "lire_" + Model.Message.Message.Id })
+</div>
+

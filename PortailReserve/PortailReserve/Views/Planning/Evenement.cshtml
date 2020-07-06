@@ -153,8 +153,15 @@ else
     @{ Html.RenderAction("AfficherMessagerie", "Messagerie", new { id = Model.Event.Id }); }
 </div>
 
-<div class="container" id="boutonAfficherMessagerie">
-    <img src="~/Content/image/icone_precedent.png" alt="Afficher" id="afficherMessagerie" />
+<div class="container" id="boutonAfficherMessagerie" style="display: block;" onclick="showMessagerie();">
+    @if (Model.NonLu.Equals(0))
+    {
+        <img src="~/Content/image/icone_precedent.png" alt="Afficher" id="afficherMessagerie" />
+    }
+    else
+    {
+        <img src="~/Content/image/notif_non_lu.png" alt="Afficher" id="afficherMessagerie" />
+    }
 </div>
 
 @section scripts{

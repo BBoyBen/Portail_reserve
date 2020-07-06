@@ -6,10 +6,9 @@ using System.Web;
 
 namespace PortailReserve.ViewModel
 {
-    public class MessagerieViewModel
+    public class MessageViewModel
     {
+        public MessageUtil Message { get; set; }
         public Utilisateur Util { get; set; }
-        public List<MessageUtil> Messages { get; set; }
-        public Guid Event { get; set; }
     }
 }

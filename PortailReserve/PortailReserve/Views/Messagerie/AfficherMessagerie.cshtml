@@ -1,6 +1,14 @@
 ﻿@model PortailReserve.ViewModel.MessagerieViewModel
 
-<h1 class="text-center"> Questions / Remarques </h1>
+<div id="enteteMessagerie">
+    <div class="row">
+        <div class="col-2" onclick="closeMessagerie();">
+            <img src="~/Content/image/icone_fermer.png" class="iconeFermer" />
+        </div>
+    </div>
+
+    <h3 class="text-center marginBottom"> Questions / Remarques </h3>
+</div>
 
 @if (Model.Messages.Count.Equals(0))
 {
@@ -12,5 +20,33 @@
 }
 else
 {
-
+<div id="listeMessage">
+    @foreach (PortailReserve.Models.MessageUtil message in Model.Messages)
+    {
+        <div class="row" id="message_@message.Message.Id">
+            @{ Html.RenderAction("AfficherMessage", "Messagerie", new { id = message.Message.Id }); }
+        </div>
+    }
+</div>
 }
+
+<div class="container" id="ecrireMessage">
+    @using(Ajax.BeginForm("Ecrire", "Messagerie", new AjaxOptions
+    {
+        InsertionMode = InsertionMode.Replace,
+        UpdateTargetId = "messagerie",
+        HttpMethod = "POST"
+    }))
+    {
+        <div class="row">
+            @Html.TextArea("message", new { @class = "col-10 champsText selfCenter champsMessage" })
+        </div>
+
+        @Html.Hidden("idEvent", Model.Event)
+        @Html.Hidden("util", Model.Util.Id)
+
+        <div class="row">
+            <input id="envoieMessage" type="submit" value="Envoyer" class="col-6 bouton selfCenter boutonBleu" />
+        </div>        
+    }
+</div>

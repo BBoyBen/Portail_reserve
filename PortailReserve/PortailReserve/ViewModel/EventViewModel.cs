@@ -21,5 +21,6 @@ namespace PortailReserve.ViewModel
         public List<Utilisateur> NoReponseP { get; set; }
         public List<Utilisateur> NoReponseD { get; set; }
         public bool ADispo { get; set; }
+        public int NonLu { get; set; }
     }
 }

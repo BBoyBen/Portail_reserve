@@ -313,12 +313,14 @@
     <Compile Include="ViewModel\ListeAlbumsViewModel.cs" />
     <Compile Include="ViewModel\ListeEventViewModel.cs" />
     <Compile Include="ViewModel\MessagerieViewModel.cs" />
+    <Compile Include="ViewModel\MessageViewModel.cs" />
     <Compile Include="ViewModel\ModifInfoCieViewModel.cs" />
     <Compile Include="ViewModel\ModifInfoSectionViewModel.cs" />
     <Compile Include="ViewModel\ModifMdpViewModel.cs" />
     <Compile Include="ViewModel\ModifProfilViewModel.cs" />
     <Compile Include="ViewModel\PremiereCoViewModel.cs" />
     <Compile Include="ViewModel\ProfilViewModel.cs" />
+    <Compile Include="ViewModel\ReponseViewModel.cs" />
     <Compile Include="ViewModel\SectionCommandementViewModel.cs" />
     <Compile Include="ViewModel\SectionViewModel.cs" />
     <Compile Include="ViewModel\SelectGradeViewModel.cs" />
@@ -361,6 +363,7 @@
     <Content Include="Content\image\icone_suivant.png" />
     <Content Include="Content\image\icone_supprimer.png" />
     <Content Include="Content\image\icon_modif.png" />
+    <Content Include="Content\image\notif_non_lu.png" />
     <Content Include="Content\image\point_bleu.png" />
     <Content Include="Content\image\point_jaune.png" />
     <Content Include="Content\image\point_rouge.png" />
@@ -591,6 +594,9 @@
     <Content Include="Views\Section\AfficherPopUpModifInfoSection.cshtml" />
     <Content Include="Views\Section\AfficherPopUpModifInfoCie.cshtml" />
     <Content Include="Views\Messagerie\AfficherMessagerie.cshtml" />
+    <Content Include="Views\Messagerie\AfficherReponses.cshtml" />
+    <Content Include="Views\Messagerie\AfficherMessage.cshtml" />
+    <Content Include="Views\Messagerie\AfficherNotifNonLu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

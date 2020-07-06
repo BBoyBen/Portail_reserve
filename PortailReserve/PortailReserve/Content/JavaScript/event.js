@@ -160,3 +160,30 @@ function afficherCacherPartPres(idChevron, idPart) {
         chevron.style.transform = "rotate(0deg)"
     }
 }
+
+function showMessagerie() {
+    var boutonAffichage = document.getElementById("boutonAfficherMessagerie");
+    var messagerie = document.getElementById("messagerie");
+
+    messagerie.classList.remove("animAFermerMessage");
+
+    boutonAffichage.style.display = "none";
+    messagerie.style.display = "block";
+    messagerie.classList.add("animAfficheMessage");
+}
+
+function closeMessagerie() {
+    var messagerie = document.getElementById("messagerie");
+
+    messagerie.classList.remove("animAfficheMessage");
+
+    messagerie.classList.add("animAFermerMessage");
+
+    setTimeout(function () {
+        var messagerie = document.getElementById("messagerie");
+        var boutonAffichage = document.getElementById("boutonAfficherMessagerie");
+
+        messagerie.style.display = "none";
+        boutonAffichage.style.display = "block";
+    }, 1500);
+}

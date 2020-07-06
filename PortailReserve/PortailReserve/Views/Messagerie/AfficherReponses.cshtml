@@ -1,0 +1,49 @@
+﻿@model PortailReserve.ViewModel.ReponseViewModel
+
+@if (Model.Reponse.Count.Equals(0))
+{
+    <div class="row">
+        <div class="col-12 text-center">
+            Pas de réponse.
+        </div>
+    </div>
+}
+else
+{
+    foreach (PortailReserve.Models.ReponseUtil rep in Model.Reponse)
+    {
+        <div class="row">
+            <div class="col-12">
+                <strong>@rep.Auteur</strong>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-justify">
+                @rep.Reponse.Texte
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-right dateMessage">
+                @rep.Reponse.Date.ToString()
+            </div>
+        </div>
+    }
+}
+@using (Ajax.BeginForm("Repondre", "Messagerie", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    UpdateTargetId = "rep_" + Model.Message
+}))
+{
+    <div class="row">
+        @Html.TextArea("rep", new { @class = "col-10 champsText selfCenter champsMessage" })
+    </div>
+
+    @Html.Hidden("idMessage", Model.Message)
+    @Html.Hidden("idUtil", Model.Util.Id)
+
+    <div class="row">
+        <input id="envoieMessage" type="submit" value="Répondre" class="col-6 bouton selfCenter boutonBleu" />
+    </div>
+}

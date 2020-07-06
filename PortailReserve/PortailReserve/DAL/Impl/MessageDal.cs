@@ -21,6 +21,8 @@ namespace PortailReserve.DAL.Impl
         {
             try
             {
+                message.Date = DateTime.Now;
+
                 bdd.Messages.Add(message);
                 bdd.SaveChanges();
 
