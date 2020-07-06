@@ -102,8 +102,6 @@
 }
 
 #enteteMessagerie{
-    min-height: 10vh;
-    max-height: 10vh;
 }
 
 #boutonAfficherMessagerie {
@@ -232,4 +230,61 @@
     position: absolute;
     right: 0;
     top: 0;
+}
+
+@media all and (max-width: 1320px) {
+    #messagerie {
+        width: 30%;
+    }
+}
+
+@media all and (max-width: 1120px) {
+    #messagerie {
+        width: 40%;
+    }
+
+    #ecrireMessage {
+        max-height: 15vh;
+        min-height: 15vh;
+    }
+}
+
+@media all and (max-width: 840px) {
+    #messagerie {
+        width: 45%;
+    }
+}
+
+@media all and (max-width: 748px) {
+    #messagerie {
+        width: 50%;
+    }
+}
+
+@media all and (max-height: 820px) {
+    #listeMessage {
+        max-height: 60vh;
+    }
+}
+
+@media all and (max-height: 640px) {
+    #listeMessage {
+        max-height: 50vh;
+    }
+
+    #ecrireMessage {
+        max-height: 25vh;
+        min-height: 25vh;
+    }
+}
+
+@media all and (max-height: 490px) {
+    #listeMessage {
+        max-height: 45vh;
+    }
+
+    #ecrireMessage {
+        max-height: 27vh;
+        min-height: 27vh;
+    }
 }
