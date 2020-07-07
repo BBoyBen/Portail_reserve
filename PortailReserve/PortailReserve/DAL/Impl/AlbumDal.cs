@@ -45,7 +45,7 @@ namespace PortailReserve.DAL.Impl
             {
                 Album trouve = bdd.Albums.FirstOrDefault(a => a.Dossier.Equals(dossier) && a.Cie.Equals(cie));
 
-                if (trouve.Equals(null))
+                if (trouve == null)
                     return false;
 
                 return true;

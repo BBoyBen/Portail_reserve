@@ -29,25 +29,28 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-3 champsTextDroit" id="boutonModifier" style="display: block;">
-            <button class="bouton boutonOrange allWidth marginTopZero" onclick="modifierAlbum();">
-                <span class="lienBouton lienBoutonBleu text-center"> Modifier </span>
-            </button>
+
+    @if (ViewBag.Role < 4)
+    {
+        <div class="row">
+            <div class="col-3 champsTextDroit" id="boutonModifier" style="display: block;">
+                <button class="bouton boutonOrange allWidth marginTopZero" onclick="modifierAlbum();">
+                    <span class="lienBouton lienBoutonBleu text-center"> Modifier </span>
+                </button>
+            </div>
+            <div class="col-3 champsTextDroit" id="boutonTerminer" style="display: none;">
+                <button class="bouton boutonVert allWidth" onclick="clickOn('lienBoutonTerminer');">
+                    @Ajax.ActionLink("Terminer", "AfficherListePhotos", new { id = Model.Album.Id }, new AjaxOptions
+               {
+                   InsertionMode = InsertionMode.Replace,
+                   UpdateTargetId = "listePhotos",
+                   HttpMethod = "GET",
+                   OnSuccess = "terminerAlbum();"
+               }, new { id = "lienBoutonTerminer", @class = "lienBouton lienBoutonVert text-center" })
+                </button>
+            </div>
         </div>
-        <div class="col-3 champsTextDroit" id="boutonTerminer" style="display: none;">
-            <button class="bouton boutonVert allWidth" onclick="clickOn('lienBoutonTerminer');">
-                @Ajax.ActionLink("Terminer", "AfficherListePhotos", new { id = Model.Album.Id }, new AjaxOptions
-                   {
-                       InsertionMode = InsertionMode.Replace,
-                       UpdateTargetId = "listePhotos",
-                       HttpMethod = "GET",
-                       OnSuccess = "terminerAlbum();"
-                   }, new { id = "lienBoutonTerminer", @class = "lienBouton lienBoutonVert text-center" })
-            </button>
-            
-        </div>
-    </div>
+    }
 </div>
 
 <h1> @Model.Album.Titre </h1>

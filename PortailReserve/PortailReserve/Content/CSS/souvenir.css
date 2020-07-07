@@ -58,6 +58,7 @@
 .imagePrevisu {
     width: 80%;
     height: auto;
+    padding: 2px;
 }
 
 #affichagePhotos {
@@ -127,6 +128,9 @@
 }
 
 .selecPourSupp {
-    border: 1px solid red;
+    padding: 0;
+    border: 2px solid red;
     box-shadow: 0px -1px 20px -5px red;
+    filter: grayscale(0.5);
+    -webkit-filter: grayscale(0.5);
 }
