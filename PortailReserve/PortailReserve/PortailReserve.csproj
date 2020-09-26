@@ -307,6 +307,7 @@
     <Compile Include="ViewModel\ChangementCdgViewModel.cs" />
     <Compile Include="ViewModel\ChangementGroupeViewModel.cs" />
     <Compile Include="ViewModel\ChangementSoaViewModel.cs" />
+    <Compile Include="ViewModel\ContactViewModel.cs" />
     <Compile Include="ViewModel\CreationAlbumViewModel.cs" />
     <Compile Include="ViewModel\EventPlanningViewModel.cs" />
     <Compile Include="ViewModel\EventViewModel.cs" />

@@ -307,5 +307,106 @@ namespace PortailReserve.Controllers
             ViewBag.Erreur = "Vérifiez les informations renseignées.";
             return View(vm);
         }
+
+        [Authorize]
+        public ActionResult Contact()
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
+
+            int numSection = u.Section;
+            int numCie = u.Compagnie;
+
+            Groupe g = gDal.GetGroupeById(u.Groupe);
+            if (g == null || g.Equals(typeof(GroupeNull)))
+                g = new Groupe
+                {
+                    CDG = Guid.Empty,
+                    Section = Guid.Empty
+                };
+
+            Section s = sDal.GetSectionByNumAndByCie(numSection, numCie);
+            if (s == null || s.Equals(typeof(SectionNull)))
+                s = new Section
+                {
+                    CDS = Guid.Empty,
+                    SOA = Guid.Empty,
+                    Compagnie = Guid.Empty
+                };
+
+            Compagnie c = cDal.GetCompagnieById(s.Compagnie);
+            if (c == null || c.Equals(typeof(CompagnieNull)))
+                c = new Compagnie
+                {
+                    ADU = Guid.Empty,
+                    CDU = Guid.Empty
+                };
+
+            Utilisateur cdg = uDal.GetUtilisateurById(g.CDG);
+            if (cdg == null || cdg.Equals(typeof(UtilisateurNull)))
+                cdg = new Utilisateur
+                {
+                    Id = Guid.Empty,
+                    Nom = "",
+                    Prenom = "",
+                    Grade = ""
+                };
+
+            Utilisateur cds = uDal.GetUtilisateurById(s.CDS);
+            if (cds == null || cds.Equals(typeof(UtilisateurNull)))
+                cds = new Utilisateur
+                {
+                    Id = Guid.Empty,
+                    Prenom = "",
+                    Nom = "",
+                    Grade = ""
+                };
+
+            Utilisateur soa = uDal.GetUtilisateurById(s.SOA);
+            if (soa == null || soa.Equals(typeof(UtilisateurNull)))
+                soa = new Utilisateur
+                {
+                    Id = Guid.Empty,
+                    Prenom = "",
+                    Nom = "",
+                    Grade = ""
+                };
+
+            Utilisateur cdu = uDal.GetUtilisateurById(c.CDU);
+            if (cdu == null || cdu.Equals(typeof(UtilisateurNull)))
+                cdu = new Utilisateur
+                {
+                    Id = Guid.Empty,
+                    Prenom = "",
+                    Nom = "",
+                    Grade = ""
+                };
+
+            ContactViewModel vm = new ContactViewModel
+            {
+                CDG = cdg,
+                SOA = soa,
+                CDS = cds,
+                CDU = cdu
+            };
+
+            return View(vm);
+        }
     }
 }
