@@ -104,11 +104,13 @@ function precendant(i) {
 function modifierAlbum() {
     var boutonModifier = document.getElementById("boutonModifier");
     var boutonTerminer = document.getElementById("boutonTerminer");
+    var boutonAjouterPhotos = document.getElementById("boutonAjoutPhoto");
     var listeClassique = document.getElementById("listePhotos");
     var listeSupp = document.getElementById("listePhotosSupp");
 
     boutonModifier.style.display = "none";
     listeClassique.style.display = "none";
+    boutonAjouterPhotos.style.display = "none";
 
     boutonTerminer.style.display = "block";
     listeSupp.style.display = "block";
@@ -117,11 +119,13 @@ function modifierAlbum() {
 function terminerAlbum() {
     var boutonModifier = document.getElementById("boutonModifier");
     var boutonTerminer = document.getElementById("boutonTerminer");
+    var boutonAjouterPhotos = document.getElementById("boutonAjoutPhoto");
     var listeClassique = document.getElementById("listePhotos");
     var listeSupp = document.getElementById("listePhotosSupp");
 
     boutonModifier.style.display = "block";
     listeClassique.style.display = "block";
+    boutonAjouterPhotos.style.display = "block";
 
     boutonTerminer.style.display = "none";
     listeSupp.style.display = "none";

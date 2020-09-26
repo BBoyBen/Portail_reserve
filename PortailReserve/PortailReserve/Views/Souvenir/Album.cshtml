@@ -16,7 +16,7 @@
             </button>
         </div>
         <div class="col-3 champsTextDroit">
-            <button class="bouton boutonBleu allWidth text-center" onclick="afficherCacherPopUp('popUpAjoutPhoto'); clickOn('boutonAjout');">
+            <button id="boutonAjoutPhoto" class="bouton boutonBleu allWidth text-center" onclick="afficherCacherPopUp('popUpAjoutPhoto'); clickOn('boutonAjout');">
                 <span class="lienBouton lienBoutonBleu"> Ajouter des photos </span>
             </button>
             <div style="display: none;">
@@ -34,19 +34,25 @@
     {
         <div class="row">
             <div class="col-3 champsTextDroit" id="boutonModifier" style="display: block;">
-                <button class="bouton boutonOrange allWidth marginTopZero" onclick="modifierAlbum();">
-                    <span class="lienBouton lienBoutonBleu text-center"> Modifier </span>
+                <button class="bouton boutonOrange allWidth marginTopZero" onclick="clickOn('lienBoutonModifier');">
+                    @Ajax.ActionLink("Modifier", "AfficherListePhotosPourSuppression", new { id = Model.Album.Id }, new AjaxOptions
+                       {
+                           InsertionMode = InsertionMode.Replace,
+                           UpdateTargetId = "listePhotosSupp",
+                           HttpMethod = "GET",
+                           OnSuccess = "modifierAlbum();"
+                       }, new { id = "lienBoutonModifier", @class = "lienBouton lienBoutonBleu text-center" })
                 </button>
             </div>
             <div class="col-3 champsTextDroit" id="boutonTerminer" style="display: none;">
                 <button class="bouton boutonVert allWidth" onclick="clickOn('lienBoutonTerminer');">
                     @Ajax.ActionLink("Terminer", "AfficherListePhotos", new { id = Model.Album.Id }, new AjaxOptions
-               {
-                   InsertionMode = InsertionMode.Replace,
-                   UpdateTargetId = "listePhotos",
-                   HttpMethod = "GET",
-                   OnSuccess = "terminerAlbum();"
-               }, new { id = "lienBoutonTerminer", @class = "lienBouton lienBoutonVert text-center" })
+                       {
+                           InsertionMode = InsertionMode.Replace,
+                           UpdateTargetId = "listePhotos",
+                           HttpMethod = "GET",
+                           OnSuccess = "terminerAlbum();"
+                       }, new { id = "lienBoutonTerminer", @class = "lienBouton lienBoutonVert text-center" })
                 </button>
             </div>
         </div>
