@@ -364,6 +364,7 @@
     <Content Include="Content\image\icone_suivant.png" />
     <Content Include="Content\image\icone_supprimer.png" />
     <Content Include="Content\image\icon_modif.png" />
+    <Content Include="Content\image\loading.gif" />
     <Content Include="Content\image\notif_non_lu.png" />
     <Content Include="Content\image\point_bleu.png" />
     <Content Include="Content\image\point_jaune.png" />

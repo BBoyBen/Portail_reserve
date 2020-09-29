@@ -12,11 +12,12 @@
         InsertionMode = InsertionMode.Replace,
         UpdateTargetId = "listePhotos",
         HttpMethod = "POST",
-        OnBegin = "afficherCacherPopUp('popUpAjoutPhoto')",
-        OnSuccess = "messageSuccess('Photos ajoutées avec succés !')",
+        OnBegin = "ajouterPhotoPopUp();",
+        OnSuccess = "afficherCacherPopUp('popUpAjoutPhoto')",
         OnFailure = "messageError('Echec ajout photos !')"
     }, new { enctype = "multipart/form-data" }))
 {
+    
     <div class="row">
         <div class="col-6 champsTextCenter text-center">
             @Html.Label("photos", "Ajouter des photos", new { id = "photoLabel" })
@@ -51,19 +52,22 @@
     <input type="submit" value="Ajouter" style="display: none;" id="ajouterPhoto" />
 }
 
-<div class="row ligneBouton">
-    <div class="col-6">
+<div class="row ligneBouton" id="ajouterPhotoPopUp" >
+    <div class="col-6" id="boutonAjouterPhotoPopUp" style="display: block;">
         <div class="row">
             <button id="valideAjoutPhoto" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="clickOn('ajouterPhoto');">
                 Ajouter
             </button>
         </div>
     </div>
-    <div class="col-6">
+    <div class="col-6" id="boutonAnnulerAjoutPhotoPopUp" style="display: block;">
         <div class="row">
             <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpAjoutPhoto'); ">
                 Annuler
             </button>
         </div>
     </div>
+</div>
+<div class="row">
+    <img class="col-4 champsTextCenter" id="loadingPopUpAjout" style="display: none;" src="~/Content/image/loading.gif" alt="Chargement en cours..." />
 </div>

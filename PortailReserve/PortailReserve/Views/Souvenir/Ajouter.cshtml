@@ -71,7 +71,10 @@
     }
 
     <div class="row">
-        <button class="col-4 btnSubmit boutonVert" id="valideAjoutAlbum" onclick="clickOn('creerAlbum'); "> Créer </button>
+        <button class="col-4 btnSubmit boutonVert" id="valideAjoutAlbum" onclick="clickOn('creerAlbum'); ajouterAlbum();" style="display: block;"> 
+            Créer 
+        </button>
+        <img class="col-4 champsTextCenter" id="loading" src="~/Content/image/loading.gif" alt="Chargement en cours..." style="display: none;" />
     </div>
 </div>
 

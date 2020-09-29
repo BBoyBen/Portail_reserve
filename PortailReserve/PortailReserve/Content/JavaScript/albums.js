@@ -42,6 +42,24 @@ $("#photos").change(function () {
     updatePrevisu(this);
 });
 
+function ajouterAlbum() {
+    var boutonCreer = document.getElementById("valideAjoutAlbum");
+    var chargement = document.getElementById("loading");
+
+    boutonCreer.style.display = "none";
+    chargement.style.display = "block";
+}
+
+function ajouterPhotoPopUp() {
+    var boutonValider = document.getElementById("boutonAjouterPhotoPopUp");
+    var boutonAnnuler = document.getElementById("boutonAnnulerAjoutPhotoPopUp");
+    var chargementPopUp = document.getElementById("loadingPopUpAjout");
+
+    boutonValider.style.display = "none";
+    boutonAnnuler.style.display = "none"
+    chargementPopUp.style.display = "block";
+}
+
 function afficherZoom(i) {
     var partieZoom = document.getElementById("partieZoom");
     var background = document.getElementById("background");
@@ -105,12 +123,14 @@ function modifierAlbum() {
     var boutonModifier = document.getElementById("boutonModifier");
     var boutonTerminer = document.getElementById("boutonTerminer");
     var boutonAjouterPhotos = document.getElementById("boutonAjoutPhoto");
+    var boutonTelechargement = document.getElementById("boutonTelechargement");
     var listeClassique = document.getElementById("listePhotos");
     var listeSupp = document.getElementById("listePhotosSupp");
 
     boutonModifier.style.display = "none";
     listeClassique.style.display = "none";
     boutonAjouterPhotos.style.display = "none";
+    boutonTelechargement.style.display = "none";
 
     boutonTerminer.style.display = "block";
     listeSupp.style.display = "block";
@@ -120,12 +140,15 @@ function terminerAlbum() {
     var boutonModifier = document.getElementById("boutonModifier");
     var boutonTerminer = document.getElementById("boutonTerminer");
     var boutonAjouterPhotos = document.getElementById("boutonAjoutPhoto");
+    var boutonTelechargement = document.getElementById("boutonTelechargement");
     var listeClassique = document.getElementById("listePhotos");
     var listeSupp = document.getElementById("listePhotosSupp");
 
     boutonModifier.style.display = "block";
     listeClassique.style.display = "block";
     boutonAjouterPhotos.style.display = "block";
+
+    boutonTelechargement.style.display = "inline";
 
     boutonTerminer.style.display = "none";
     listeSupp.style.display = "none";
