@@ -206,6 +206,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\CoursController.cs" />
     <Compile Include="Controllers\DisponibiliteController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -586,6 +587,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Content\PATRACDR\" />
     <Folder Include="Content\Souvenirs\6\" />
+    <Folder Include="Views\Cours\" />
     <Folder Include="Views\Disponibilite\" />
     <Folder Include="Views\Participation\" />
     <Folder Include="Views\Test\" />
