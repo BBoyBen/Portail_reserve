@@ -151,6 +151,9 @@ namespace PortailReserve.Controllers
                 return RedirectToAction("Index");
             }
 
+            Directory.CreateDirectory(HttpContext.Server.MapPath("~/Content/Souvenirs/") + numCie);
+            Directory.CreateDirectory(HttpContext.Server.MapPath("~/Content/Souvenirs/") + numCie + "/" + nomAlbum);
+
             int nbPhotoErreur = 0;
 
             int nbPhotos = Request.Files.Count;
@@ -158,14 +161,18 @@ namespace PortailReserve.Controllers
             {
                 var photo = Request.Files[i];
 
-                byte[] image = new byte[photo.ContentLength];
+                string path = HttpContext.Server.MapPath("~/Content/Souvenirs/") + numCie + "/" + nomAlbum + "/" + photo.FileName;
+                photo.SaveAs(path);
+                string url = "/Content/Souvenirs/" + numCie + "/" + nomAlbum + "/" + photo.FileName;
+
+                /*byte[] image = new byte[photo.ContentLength];
                 photo.InputStream.Read(image, 0, image.Length);
 
-                string fichier = @"data:" + photo.ContentType + ";base64," + Convert.ToBase64String(image);
+                string fichier = @"data:" + photo.ContentType + ";base64," + Convert.ToBase64String(image);*/
 
                 Photo toAdd = new Photo
                 {
-                    Fichier = fichier,
+                    Fichier = url,
                     Album = idAlbum
                 };
 
@@ -321,6 +328,9 @@ namespace PortailReserve.Controllers
 
                 foreach(Photo trash in toDelete)
                 {
+                    if (System.IO.File.Exists(trash.Fichier))
+                        System.IO.File.Delete(trash.Fichier);
+
                     pDal.SupprimerPhoto(trash.Id);
                 }
 
@@ -412,7 +422,15 @@ namespace PortailReserve.Controllers
 
             int retour = aDal.SupprimerAlbum(idAlbum);
 
-            if (retour != 1)
+            string cheminAlbum = HttpContext.Server.MapPath("~/Content/Souvenirs/") + numCie + "/" + album.Dossier;
+            if (retour == 1)
+            {
+                Directory.Delete(cheminAlbum, true);
+                if (System.IO.File.Exists(cheminAlbum + ".zip"))
+                    System.IO.File.Delete(cheminAlbum + ".zip");
+            }
+            else
+            //if (retour != 1)
             {
                 string e = "Erreur lors de la suppression de l'album.";
                 return RedirectToAction("Index", "Souvenir", new { erreur = e });
@@ -477,20 +495,30 @@ namespace PortailReserve.Controllers
                 if (numCie < 1)
                     return new HttpStatusCodeResult(400);
 
+                string dossier = Request.Form["dossier"];
+                string cheminDossier = HttpContext.Server.MapPath("~/Content/Souvenirs/") + numCie + "/" + dossier;
+
+                if (!Directory.Exists(cheminDossier))
+                    return new HttpStatusCodeResult(400);
+
                 int nbPhotoErreur = 0;
                 int nbPhotos = Request.Files.Count;
                 for (int i = 0; i < nbPhotos; i++)
                 {
                     var photo = Request.Files[i];
 
-                    byte[] image = new byte[photo.ContentLength];
+                    string path = cheminDossier + "/" + photo.FileName;
+                    photo.SaveAs(path);
+                    string url = "/Content/Souvenirs/" + numCie + "/" + dossier + "/" + photo.FileName;
+
+                    /*byte[] image = new byte[photo.ContentLength];
                     photo.InputStream.Read(image, 0, image.Length);
 
-                    string fichier = @"data:" + photo.ContentType + ";base64," + Convert.ToBase64String(image);
+                    string fichier = @"data:" + photo.ContentType + ";base64," + Convert.ToBase64String(image);*/
 
                     Photo toAdd = new Photo
                     {
-                        Fichier = fichier,
+                        Fichier = url,
                         Album = idAlbum
                     };
 

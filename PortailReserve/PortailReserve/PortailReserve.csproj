@@ -379,24 +379,6 @@
     <Content Include="Content\JavaScript\modifProfil.js" />
     <Content Include="Content\JavaScript\premiereCo.js" />
     <Content Include="Content\JavaScript\section.js" />
-    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013477.JPG" />
-    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013478.JPG" />
-    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013479.JPG" />
-    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013480.JPG" />
-    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013481.JPG" />
-    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013482.JPG" />
-    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013483.JPG" />
-    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013484.JPG" />
-    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013485.JPG" />
-    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013486.JPG" />
-    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0013487.JPG" />
-    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0023488.JPG" />
-    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0023489.JPG" />
-    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0023490.JPG" />
-    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0023491.JPG" />
-    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0023492.JPG" />
-    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0023493.JPG" />
-    <Content Include="Content\Souvenirs\6\Super_photos_de_lile_de_Re\G0023494.JPG" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -603,6 +585,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\PATRACDR\" />
+    <Folder Include="Content\Souvenirs\6\" />
     <Folder Include="Views\Disponibilite\" />
     <Folder Include="Views\Participation\" />
     <Folder Include="Views\Test\" />
