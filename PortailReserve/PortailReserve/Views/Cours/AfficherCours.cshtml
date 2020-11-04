@@ -1,0 +1,25 @@
+﻿@model List<PortailReserve.Models.Cours>
+
+<div class="row listCours">
+    <div class="col-12">
+        @if (Model.Count > 0)
+        {
+            foreach (PortailReserve.Models.Cours cours in Model)
+            {
+                <div class="row">
+                    <div class="col-10">
+                        @cours.Nom
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-12 text-center">
+                    Pas de cours disponible dans cette rubrique.
+                </div>
+            </div>
+        }
+    </div>
+</div>

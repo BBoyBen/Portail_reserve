@@ -1,0 +1,78 @@
+﻿@model PortailReserve.ViewModel.AjoutCoursViewModel
+
+<div class="row">
+    <div class="col-12 text-center titrePopUp">
+        Ajouter un nouveau cours
+    </div>
+</div>
+
+@using (Ajax.BeginForm("AjouterCours", "Cours", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "listeThemes",
+    HttpMethod = "POST",
+    OnBegin = "afficherCacherPopUp('popUpAjoutCours')",
+    OnSuccess = "messageSuccess('Nouveau cours ajouté')",
+    OnFailure = "messageError('Echec ajout nouveau cours !')"
+}, new { enctype = "multipart/form-data" }))
+{
+    <div class="row">
+        @Html.LabelFor(m => m.Cours.Nom, new { @class = "col-12 text-center" })
+    </div>
+    <div class="row">
+        @Html.TextBoxFor(m => m.Cours.Nom, new { @class = "col-6 champsTextCenter text-center champsText", required = "required" })
+    </div>
+
+    <div class="row">
+        @Html.LabelFor(m => m.Cours.Description, new { @class = "col-12 text-center" })
+    </div>
+    <div class="row">
+        @Html.TextAreaFor(m => m.Cours.Description, new { @class = "col-10 champsTextCenter champsText champsTextArea", required = "required" })
+    </div>
+
+    <div class="row">
+        @Html.LabelFor(m => m.Cours.Theme, new { @class = "col-12 text-center" })
+    </div>
+    <div class="row">
+        @Html.DropDownListFor(m => m.Cours.Theme, Model.Themes, new { @class = "col-6 champsTextCenter champsText", required = "required" })
+    </div>
+
+    <div class="row">
+        <div class="col-6 champsTextCenter text-center">
+            @Html.Label("fichierCours", "Sélectionner un fichier", new { id = "fichierCoursLabel" })
+            <span id="fichierChoisi"></span>
+        </div>
+        @Html.TextBox("fichierCours", null, new
+        {
+            type = "file",
+            id = "fichierCours",
+            style = "display: none;",
+            accept = ".doc, .docx, .pdf, .ppt, .pptx",
+            required = "required"
+        })
+    </div>
+    <div class="row">
+        <div class="col-12 erreur">
+            <span id="erreurFichierCours"></span>
+        </div>
+    </div>
+
+    <input type="submit" value="Ajouter" style="display: none;" id="ajouterCours" />
+}
+
+<div class="row ligneBouton" id="ajouterCoursPopUp">
+    <div class="col-6" id="boutonAjouterCoursPopUp" style="display: block;">
+        <div class="row">
+            <button id="valideAjoutCours" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="clickOn('ajouterCours');">
+                Ajouter
+            </button>
+        </div>
+    </div>
+    <div class="col-6" id="boutonAnnulerAjoutCoursPopUp" style="display: block;">
+        <div class="row">
+            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpAjoutCours'); ">
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>

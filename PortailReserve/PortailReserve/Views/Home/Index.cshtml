@@ -21,7 +21,8 @@
             <img src="~/Content/image/icone_groupe.png" alt="Groupe" class="imageBoiteAcceuil" />
             <h2 class="text-center titreBoiteAcceuil"> Section <br/> - <br/> Groupe </h2>
         </div>
-        <div class="col-3 boiteAcceuil champsTextDroit">
+        <div class="col-3 boiteAcceuil champsTextDroit" onclick="clickOn('iconeCours'); ">
+            @Html.ActionLink("Cours", "Index", "Cours", null, new { id = "iconeCours", style = "display: none;" })
             <img src="~/Content/image/icone_cours.png" alt="Cours" class="imageBoiteAcceuil" />
             <h2 class="text-center titreBoiteAcceuil"> Cours </h2>
         </div>

@@ -1,0 +1,81 @@
+﻿@{
+    ViewBag.Title = "Connaissances";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style {
+    <link rel="stylesheet" href="~/Content/CSS/cours.css" />
+}
+
+<h1> Connaissances </h1>
+
+@if (ViewBag.Role < 4)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-3 champsTextDroit">
+                <button id="boutonAjoutCours" class="bouton boutonBleu allWidth text-center" onclick="afficherCacherPopUp('popUpAjoutCours'); clickOn('boutonAjout');">
+                    <span class="lienBouton lienBoutonBleu"> Ajouter un cours </span>
+                </button>
+                <div style="display: none;">
+                    @Ajax.ActionLink("Ajouter un cours", "AfficherPopUpNouveauCours", null, new AjaxOptions
+               {
+                   InsertionMode = InsertionMode.Replace,
+                   UpdateTargetId = "popUpAjoutCours",
+                   HttpMethod = "GET"
+               }, new { id = "boutonAjout" })
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="container" id="listeThemes">
+    @{ Html.RenderAction("AfficherListeThemes", "Cours"); }
+</div>
+
+<!--
+#############################################################################################
+################################ Pop Up d'ajout d'un cours ##################################
+#############################################################################################
+-->
+
+@if (ViewBag.Role < 4)
+{
+    <div class="container popUp" id="popUpAjoutCours" style="display: none; ">
+        @{ Html.RenderAction("AfficherPopUpNouveauCours"); }
+    </div>
+}
+
+<!--
+#############################################################################################
+################################ Messages d'information #####################################
+#############################################################################################
+-->
+
+<div class="container popUpSuccess" id="suppressionOk" style="display: none;">
+    <div class="row">
+        <div class="col-2">
+            <img src="~/Content/image/icone_confirmation.png" alt="OK" class="imagePopUpSE" />
+        </div>
+        <div id="texteSuccess" class="col-10 text-center messageSuccess">
+
+        </div>
+    </div>
+</div>
+
+<div class="container popUpError" id="suppressionKo" style="display: none; ">
+    <div class="row">
+        <div class="col-2">
+            <img src="~/Content/image/icone_erreur.png" alt="KO" class="imagePopUpSE" />
+        </div>
+        <div id="texteError" class="col-10 text-center messageError">
+
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Content/JavaScript/section.js"></script>
+    <script src="~/Content/JavaScript/cours.js"></script>
+}

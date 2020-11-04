@@ -299,6 +299,7 @@
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\Utils.cs" />
     <Compile Include="ViewModel\AcceuilViewModel.cs" />
+    <Compile Include="ViewModel\AjoutCoursViewModel.cs" />
     <Compile Include="ViewModel\AjouterEventViewModel.cs" />
     <Compile Include="ViewModel\AjouterPersonnelViewModel.cs" />
     <Compile Include="ViewModel\AjoutGroupeViewModel.cs" />
@@ -339,6 +340,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\CSS\ajouterEvent.css" />
+    <Content Include="Content\CSS\cours.css" />
     <Content Include="Content\CSS\event.css" />
     <Content Include="Content\CSS\home.css" />
     <Content Include="Content\CSS\listeEvent.css" />
@@ -374,6 +376,7 @@
     <Content Include="Content\JavaScript\ajoutEvent.js" />
     <Content Include="Content\JavaScript\albums.js" />
     <Content Include="Content\JavaScript\autoload.js" />
+    <Content Include="Content\JavaScript\cours.js" />
     <Content Include="Content\JavaScript\event.js" />
     <Content Include="Content\JavaScript\listeEvent.js" />
     <Content Include="Content\JavaScript\modifMdp.js" />
@@ -582,12 +585,15 @@
     <Content Include="Views\Messagerie\AfficherReponses.cshtml" />
     <Content Include="Views\Messagerie\AfficherMessage.cshtml" />
     <Content Include="Views\Messagerie\AfficherNotifNonLu.cshtml" />
+    <Content Include="Views\Cours\Index.cshtml" />
+    <Content Include="Views\Cours\AfficherCours.cshtml" />
+    <Content Include="Views\Cours\AfficherPopUpNouveauCours.cshtml" />
+    <Content Include="Views\Cours\AfficherListeThemes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\PATRACDR\" />
     <Folder Include="Content\Souvenirs\6\" />
-    <Folder Include="Views\Cours\" />
     <Folder Include="Views\Disponibilite\" />
     <Folder Include="Views\Participation\" />
     <Folder Include="Views\Test\" />
