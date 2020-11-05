@@ -1,4 +1,5 @@
-﻿using PortailReserve.DAL;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using PortailReserve.DAL;
 using PortailReserve.DAL.Impl;
 using PortailReserve.Models;
 using PortailReserve.Models.NullObject;
@@ -6,6 +7,7 @@ using PortailReserve.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -59,6 +61,25 @@ namespace PortailReserve.Controllers
         {
             try
             {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
+
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
+
                 List<Cours> coursParTheme = cDal.GetCoursByTheme(theme);
 
                 return PartialView("AfficherCours", coursParTheme);
@@ -105,6 +126,126 @@ namespace PortailReserve.Controllers
         {
             try
             {
+                Cours toSave = vm.Cours;
+
+                var fichierCours = Request.Files["fichierCours"];
+                int taille = fichierCours.ContentLength;
+                if (taille >= 4096000)
+                {
+                    return new HttpStatusCodeResult(400);
+                }
+
+                string path = HttpContext.Server.MapPath("~/Content/Cours/") + toSave.Theme + "/" + fichierCours.FileName;
+                fichierCours.SaveAs(path);
+                string url = "/Content/Cours/" + toSave.Theme + "/" + fichierCours.FileName;
+
+                toSave.Fichier = url;
+
+                Guid idCours = cDal.AjouterCours(toSave);
+
+                if(idCours.Equals(Guid.Empty))
+                {
+                    return new HttpStatusCodeResult(400);
+                }
+
+                return RedirectToAction("AfficherListeThemes");
+            }
+            catch(Exception e)
+            {
+                return new HttpStatusCodeResult(500);
+            }
+        }
+
+        [Authorize]
+        public ActionResult AfficherPopUpSuppressionCours(Guid id)
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                if(u.Role > 3)
+                {
+                    return new HttpUnauthorizedResult();
+                }
+
+                Cours cours = cDal.GetCoursById(id);
+                if(cours == null || cours.Equals(typeof(CoursNull)))
+                {
+                    cours = new Cours
+                    {
+                        Nom = "Empty",
+                        Description = "Empty",
+                        Id = Guid.Empty
+                    };
+                }
+
+                return PartialView("AfficherPopUpSuppressionCours", cours);
+            }
+            catch(Exception e)
+            {
+                return new HttpStatusCodeResult(400);
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult SupprimerCours()
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                if (u.Role > 3)
+                {
+                    return new HttpUnauthorizedResult();
+                }
+
+                Guid idCours = Guid.Parse(Request.Form["idCours"]);
+                if(idCours.Equals(Guid.Empty))
+                {
+                    return new HttpStatusCodeResult(400);
+                }
+
+                Cours toDelete = cDal.GetCoursById(idCours);
+                if(toDelete == null || toDelete.Equals(typeof(CoursNull)))
+                {
+                    return new HttpStatusCodeResult(400);
+                }
+
+                int retour = cDal.SupprimerCours(idCours);
+                if(retour != 1)
+                {
+                    return new HttpStatusCodeResult(400);
+                }
+
+                if (System.IO.File.Exists(toDelete.Fichier))
+                    System.IO.File.Delete(toDelete.Fichier);
 
                 return RedirectToAction("AfficherListeThemes");
             }

@@ -6,9 +6,44 @@
         {
             foreach (PortailReserve.Models.Cours cours in Model)
             {
-                <div class="row">
-                    <div class="col-10">
-                        @cours.Nom
+                <div class="row ligneCours">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-1">
+                                <img src="~/Content/image/icone_cours.png" alt="Cours" class="iconeCours" />
+                            </div>
+                            <div class="col-9">
+                                <a class="lienCours" href="@cours.Fichier" target="_blank">@cours.Nom</a>
+                            </div>
+                            @if (ViewBag.Role < 4)
+                            {
+                                <div class="col-1">
+                                    <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeActionCours" />
+                                </div>
+
+                                <div class="col-1">
+                                    <img src="~/Content/image/icone_supprimer.png" alt="supprimer" class="iconeActionCours" 
+                                         onclick="clickOn('boutonSuppCours_@cours.Id.ToString()'); afficherCacherPopUp('popUpSuppressionCours');" />
+                                </div>
+                                <div style="display: none;">
+                                    @Ajax.ActionLink("Supprimer", "AfficherPopUpSuppressionCours", new { id = cours.Id }, new AjaxOptions
+                                        {
+                                        InsertionMode = InsertionMode.Replace,
+                                        UpdateTargetId = "popUpSuppressionCours",
+                                        HttpMethod = "GET"
+                                        }, new { id = "boutonSuppCours_" + @cours.Id.ToString() })
+                                </div>
+                            }
+                        </div>
+                        <div class="row dateCours">
+                            <div class="col-1"></div>
+                            <div class="col-3">
+                                Créé le @cours.Publication.ToString()
+                            </div>
+                            <div class="col-3">
+                                Modifié le @cours.Modification.ToString()
+                            </div>
+                        </div>
                     </div>
                 </div>
             }

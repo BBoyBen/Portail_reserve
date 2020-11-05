@@ -1,6 +1,6 @@
 ﻿
 $("#fichierCours").change(function () {
-    console.log("Salut");
+
     var file = document.getElementById("fichierCours").files[0];
     var fileName = file.name;
     var size = file.size;

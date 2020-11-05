@@ -1,0 +1,45 @@
+﻿@model PortailReserve.Models.Cours
+
+<div class="row">
+    <div class="col-12 text-center titrePopUp">
+        Suppression de cours
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 corpsPopUp text-center">
+        Voulez-vous supprimer le cours "@Model.Nom" de manière définitive ?
+    </div>
+</div>
+
+@using (Ajax.BeginForm("SupprimerCours", "Cours", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "listeThemes",
+    HttpMethod = "POST",
+    OnBegin = "afficherCacherPopUp('popUpSuppressionCours')",
+    OnSuccess = "messageSuccess('Cours supprimé')",
+    OnFailure = "messageError('Echec suppression du cours !')"
+}))
+{
+    @Html.Hidden("idCours", Model.Id);
+
+    <input type="submit" value="valider" id="suppCours" style="display: none;" />
+}
+
+<div class="row ligneBouton" id="suppCoursPopUp">
+    <div class="col-6" id="boutonSuppCoursPopUp" style="display: block;">
+        <div class="row">
+            <button id="valideSuppCours" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="clickOn('suppCours');">
+                Valider
+            </button>
+        </div>
+    </div>
+    <div class="col-6" id="boutonAnnulerSuppCoursPopUp" style="display: block;">
+        <div class="row">
+            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpSuppressionCours'); ">
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>

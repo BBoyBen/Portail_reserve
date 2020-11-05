@@ -13,91 +13,118 @@
 </div>
 
 <div class="row rubriqueCours">
-    <div class="col-10">
-        <div class="row titreCours">
+    <div class="col-12">
+        <div class="row titreCours" onclick="afficherCacherElement('combat');">
             <div class="col-8">
                 Combat
             </div>
         </div>
+        <div id="combat" style="display: none;">
+            @{ Html.RenderAction("AfficherCours", "Cours", new { theme = "Combat" }); }
+        </div>
     </div>
 </div>
 
 <div class="row rubriqueCours">
-    <div class="col-10">
-        <div class="row titreCours">
+    <div class="col-12">
+        <div class="row titreCours" onclick="afficherCacherElement('genie');">
             <div class="col-8">
                 Génie
             </div>
         </div>
+        <div id="genie" style="display: none;">
+            @{ Html.RenderAction("AfficherCours", "Cours", new { theme = "Genie" }); }
+        </div>
     </div>
 </div>
 
 <div class="row rubriqueCours">
-    <div class="col-10">
-        <div class="row titreCours">
+    <div class="col-12">
+        <div class="row titreCours" onclick="afficherCacherElement('istc');">
             <div class="col-8">
                 ISTC
             </div>
         </div>
+        <div id="istc" style="display: none;">
+            @{ Html.RenderAction("AfficherCours", "Cours", new { theme = "ISTC" }); }
+        </div>
     </div>
 </div>
 
 <div class="row rubriqueCours">
-    <div class="col-10">
-        <div class="row titreCours">
+    <div class="col-12">
+        <div class="row titreCours" onclick="afficherCacherElement('nrbc');">
             <div class="col-8">
                 NRBC
             </div>
         </div>
+        <div id="nrbc" style="display: none;">
+            @{ Html.RenderAction("AfficherCours", "Cours", new { theme = "NRBC" }); }
+        </div>
     </div>
 </div>
 
 <div class="row rubriqueCours">
-    <div class="col-10">
-        <div class="row titreCours">
+    <div class="col-12">
+        <div class="row titreCours" onclick="afficherCacherElement('rens');">
             <div class="col-8">
                 Renseignement
             </div>
         </div>
+        <div id="rens" style="display: none;">
+            @{ Html.RenderAction("AfficherCours", "Cours", new { theme = "Renseignement" }); }
+        </div>
     </div>
 </div>
 
 <div class="row rubriqueCours">
-    <div class="col-10">
-        <div class="row titreCours">
+    <div class="col-12">
+        <div class="row titreCours" onclick="afficherCacherElement('secourisme');">
             <div class="col-8">
                 Secourisme
             </div>
         </div>
+        <div id="secourisme" style="display: none;">
+            @{ Html.RenderAction("AfficherCours", "Cours", new { theme = "Secourisme" }); }
+        </div>
     </div>
 </div>
 
 <div class="row rubriqueCours">
-    <div class="col-10">
-        <div class="row titreCours">
+    <div class="col-12">
+        <div class="row titreCours" onclick="afficherCacherElement('trans');">
             <div class="col-8">
                 Transmission
             </div>
         </div>
-    </div>
-</div>
-
-<div class="row rubriqueCours">
-    <div class="col-10">
-        <div class="row titreCours">
-            <div class="col-8">
-                Topographie
-            </div>
+        <div id="trans" style="display: none;">
+            @{ Html.RenderAction("AfficherCours", "Cours", new { theme = "Transmission" }); }
         </div>
     </div>
 </div>
 
 <div class="row rubriqueCours">
-    <div class="col-10">
-        <div class="row titreCours">
+    <div class="col-12">
+        <div class="row titreCours" onclick="afficherCacherElement('topo');">
+            <div class="col-8">
+                Topographie
+            </div>
+        </div>
+        <div id="topo" style="display: none;">
+            @{ Html.RenderAction("AfficherCours", "Cours", new { theme = "Topographie" }); }
+        </div>
+    </div>
+</div>
+
+<div class="row rubriqueCours">
+    <div class="col-12">
+        <div class="row titreCours" onclick="afficherCacherElement('autres');">
             <div class="col-8">
                 Autres
             </div>
+        </div>
+        <div id="autres" style="display: none;">
+            @{ Html.RenderAction("AfficherCours", "Cours", new { theme = "Autres" }); }
         </div>
     </div>
 </div>
