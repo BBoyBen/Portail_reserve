@@ -19,6 +19,7 @@ namespace PortailReserve.Models
         public string Fichier { get; set; }
         [Display(Name = "Thématique")]
         public string Theme { get; set; }
+        public string Extension { get; set; }
         public DateTime Publication { get; set; }
         public DateTime Modification { get; set; }
     }

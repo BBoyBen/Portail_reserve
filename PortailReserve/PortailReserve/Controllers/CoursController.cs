@@ -6,6 +6,7 @@ using PortailReserve.Models.NullObject;
 using PortailReserve.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -140,6 +141,8 @@ namespace PortailReserve.Controllers
                 string url = "/Content/Cours/" + toSave.Theme + "/" + fichierCours.FileName;
 
                 toSave.Fichier = url;
+
+                toSave.Extension = Path.GetExtension(url);
 
                 Guid idCours = cDal.AjouterCours(toSave);
 
@@ -362,6 +365,7 @@ namespace PortailReserve.Controllers
                         System.IO.File.Delete(oldFichier);
 
                     vm.Cours.Fichier = newUrl;
+                    vm.Cours.Extension = Path.GetExtension(newUrl);
                 }
 
                 int retour = cDal.ModifierCours(vm.Cours.Id, vm.Cours);

@@ -97,6 +97,7 @@ namespace PortailReserve.DAL.Impl
                 toModify.Nom = cours.Nom;
                 toModify.Modification = DateTime.Now;
                 toModify.Theme = cours.Theme;
+                toModify.Extension = cours.Extension;
 
                 bdd.SaveChanges();
 
