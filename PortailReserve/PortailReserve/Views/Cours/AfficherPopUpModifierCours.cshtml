@@ -1,0 +1,84 @@
+﻿@model PortailReserve.ViewModel.AjoutCoursViewModel
+
+<div class="row">
+    <div class="col-12 titrePopUp text-center">
+        Modification du cours "@Model.Cours.Nom"
+    </div>
+</div>
+
+@using (Ajax.BeginForm("ModifierCours", "Cours", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "listeThemes",
+    HttpMethod = "POST",
+    OnBegin = "afficherCacherPopUp('popUpModificationCours')",
+    OnSuccess = "messageSuccess('Cours modifié')",
+    OnFailure = "messageError('Echec modification du cours !')"
+}, new { enctype = "multipart/form-data" }))
+{
+    <div class="row">
+        @Html.LabelFor(m => m.Cours.Nom, new { @class = "col-12 text-center" })
+    </div>
+    <div class="row">
+        @Html.TextBoxFor(m => m.Cours.Nom, new { @class = "col-6 champsTextCenter text-center champsText", required = "required" })
+    </div>
+
+    <div class="row">
+        @Html.LabelFor(m => m.Cours.Description, new { @class = "col-12 text-center" })
+    </div>
+    <div class="row">
+        @Html.TextAreaFor(m => m.Cours.Description, new { @class = "col-10 champsTextCenter champsText champsTextArea" })
+    </div>
+
+    <div class="row">
+        @Html.LabelFor(m => m.Cours.Theme, new { @class = "col-12 text-center" })
+    </div>
+    <div class="row">
+        @Html.DropDownListFor(m => m.Cours.Theme, Model.Themes, new { @class = "col-6 champsTextCenter text-center champsText", required = "required" })
+    </div>
+
+    <div class="row">
+        <div class="col-6 champsTextCenter text-center">
+            @Html.Label("nveauFichier", "Nouveau fichier", new { id = "nveauFichierCoursLabel" })
+            <span id="nveauFichierChoisi"></span>
+        </div>
+        @Html.TextBox("nveauFichier", null, new
+        {
+            type = "file",
+            id = "nveauFichier",
+            style = "display: none;",
+            accept = ".doc, .docx, .pdf, .ppt, .pptx"
+        })
+    </div>
+    <div class="row">
+        <div class="col-12 erreur">
+            <span id="erreurNveauFichierCours"></span>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.Cours.Id)
+    @Html.HiddenFor(m => m.Cours.Publication)
+    @Html.HiddenFor(m => m.Cours.Modification)
+    @Html.HiddenFor(m => m.Cours.Fichier)
+
+    <input type="submit" value="Modifier" style="display: none;" id="modifierCours" />
+}
+
+<div class="row ligneBouton" id="modifierCoursPopUp">
+    <div class="col-6" id="boutonModifierCoursPopUp" style="display: block;">
+        <div class="row">
+            <button id="valideModifCours" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="clickOn('modifierCours');">
+                Modifier
+            </button>
+        </div>
+    </div>
+    <div class="col-6" id="boutonAnnulerModifCoursPopUp" style="display: block;">
+        <div class="row">
+            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpModificationCours'); ">
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="~/Content/JavaScript/cours.js"></script>

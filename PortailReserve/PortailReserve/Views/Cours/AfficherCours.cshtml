@@ -18,11 +18,20 @@
                             @if (ViewBag.Role < 4)
                             {
                                 <div class="col-1">
-                                    <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeActionCours" />
+                                    <img src="~/Content/image/icon_modif.png" alt="modifier" class="iconeActionCours" 
+                                         onclick="clickOn('boutonModifCours_@cours.Id.ToString()'); afficherCacherPopUp('popUpModificationCours');" />
+                                </div>
+                                <div style="display: none;">
+                                    @Ajax.ActionLink("Modifier", "AfficherPopUpModifierCours", new { id = cours.Id }, new AjaxOptions
+                                        {
+                                        InsertionMode = InsertionMode.Replace,
+                                        UpdateTargetId = "popUpModificationCours",
+                                        HttpMethod = "GET"
+                                        }, new { id = "boutonModifCours_" + @cours.Id.ToString() })
                                 </div>
 
                                 <div class="col-1">
-                                    <img src="~/Content/image/icone_supprimer.png" alt="supprimer" class="iconeActionCours" 
+                                    <img src="~/Content/image/icone_supprimer.png" alt="supprimer" class="iconeActionCours"
                                          onclick="clickOn('boutonSuppCours_@cours.Id.ToString()'); afficherCacherPopUp('popUpSuppressionCours');" />
                                 </div>
                                 <div style="display: none;">

@@ -590,6 +590,7 @@
     <Content Include="Views\Cours\AfficherPopUpNouveauCours.cshtml" />
     <Content Include="Views\Cours\AfficherListeThemes.cshtml" />
     <Content Include="Views\Cours\AfficherPopUpSuppressionCours.cshtml" />
+    <Content Include="Views\Cours\AfficherPopUpModifierCours.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

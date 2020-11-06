@@ -254,5 +254,128 @@ namespace PortailReserve.Controllers
                 return new HttpStatusCodeResult(500);
             }
         }
+
+        [Authorize]
+        public ActionResult AfficherPopUpModifierCours(Guid id)
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                if (u.Role > 3)
+                {
+                    return new HttpUnauthorizedResult();
+                }
+
+                Cours toModif = cDal.GetCoursById(id);
+                if(toModif == null || toModif.Equals(typeof(CoursNull)))
+                {
+                    toModif = new Cours { 
+                        Nom = "",
+                        Id = Guid.Empty,
+                        Description = "",
+                        Theme = "CMG"
+                    };
+                }
+
+                List<SelectListItem> themes = new List<SelectListItem>();
+                themes.Add(new SelectListItem { Text = "Connaissances Militaire Générale", Value = "CMG", Selected = true });
+                themes.Add(new SelectListItem { Text = "Combat", Value = "Combat" });
+                themes.Add(new SelectListItem { Text = "Génie", Value = "Genie" });
+                themes.Add(new SelectListItem { Text = "ISTC", Value = "ISTC" });
+                themes.Add(new SelectListItem { Text = "NRBC", Value = "NRBC" });
+                themes.Add(new SelectListItem { Text = "Renseignement", Value = "Renseignement" });
+                themes.Add(new SelectListItem { Text = "Secourisme", Value = "Secourisme" });
+                themes.Add(new SelectListItem { Text = "Transmission", Value = "Transmission" });
+                themes.Add(new SelectListItem { Text = "Topographie", Value = "Topographie" });
+                themes.Add(new SelectListItem { Text = "Autres", Value = "Autres" });
+
+                AjoutCoursViewModel vm = new AjoutCoursViewModel
+                {
+                    Cours = toModif,
+                    Themes = themes
+                };
+
+                return PartialView("AfficherPopUpModifierCours", vm);
+            }
+            catch(Exception e)
+            {
+                return new HttpStatusCodeResult(500);
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult ModifierCours(AjoutCoursViewModel vm)
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                if (u.Role > 3)
+                {
+                    return new HttpUnauthorizedResult();
+                }
+
+                string oldFichier = vm.Cours.Fichier;
+
+                var nveauFichier = Request.Files["nveauFichier"];
+                if (nveauFichier != null)
+                {
+                    int taille = nveauFichier.ContentLength;
+                    if (taille >= 4096000)
+                    {
+                        return new HttpStatusCodeResult(400);
+                    }
+
+                    string path = HttpContext.Server.MapPath("~/Content/Cours/") + vm.Cours.Theme + "/" + nveauFichier.FileName;
+                    string newUrl = "/Content/Cours/" + vm.Cours.Theme + "/" + nveauFichier.FileName;
+
+                    nveauFichier.SaveAs(path);
+                    if (System.IO.File.Exists(oldFichier))
+                        System.IO.File.Delete(oldFichier);
+
+                    vm.Cours.Fichier = newUrl;
+                }
+
+                int retour = cDal.ModifierCours(vm.Cours.Id, vm.Cours);
+                if(retour != 1)
+                {
+                    return new HttpStatusCodeResult(400);
+                }
+
+                return RedirectToAction("AfficherListeThemes");
+            }
+            catch(Exception e)
+            {
+                return new HttpStatusCodeResult(500);
+            }
+        }
     }
 }
