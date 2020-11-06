@@ -74,3 +74,21 @@
 .dateCours {
     font-size: 0.5rem;
 }
+
+.nomCours .infoCours {
+    position: absolute;
+    margin-top: 23px;
+    margin-left: -35px;
+    color: #09c;
+    background: rgba(0,0,0,.9);
+    padding: 15px;
+    border-radius: 3px;
+    box-shadow: 0 0 2px rgba(0,0,0,.5);
+    transform: scale(0) rotate(-12deg);
+    transition: all .25s;
+    z-index: 1000;
+}
+
+.nomCours:hover .infoCours, .nomCours:focus .infoCours {
+    transform: scale(1) rotate(0);
+}

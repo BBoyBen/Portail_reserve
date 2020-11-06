@@ -12,8 +12,12 @@
                             <div class="col-1">
                                 <img src="~/Content/image/icone_cours.png" alt="Cours" class="iconeCours" />
                             </div>
-                            <div class="col-9">
+                            <div class="col-9 nomCours">
                                 <a class="lienCours" href="@cours.Fichier" target="_blank">@cours.Nom</a>
+                                @if (cours.Description != null && !cours.Description.Equals(""))
+                                {
+                                    <span class="infoCours">@cours.Description</span>
+                                }
                             </div>
                             @if (ViewBag.Role < 4)
                             {
