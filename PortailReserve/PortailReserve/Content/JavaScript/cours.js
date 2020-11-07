@@ -32,3 +32,20 @@ $("#nveauFichier").change(function () {
         document.getElementById("nveauFichierCoursLabel").style.marginBottom = "10px";
     }
 });
+
+function afficherCacherListeCours(id) {
+    var liste = document.getElementById(id);
+
+    var nbCours = liste.getElementsByClassName("ligneCours").length;
+    var taillePartCours = 5 + (5 * nbCours);
+
+    //partie liste de cours non visible
+    if (liste.style.maxHeight == "0rem") {
+        liste.style.transition = "2s max-height 0.1s";
+        liste.style.maxHeight = taillePartCours + "rem";
+    }
+    else {
+        liste.style.transition = "2s max-height 0.1s";
+        liste.style.maxHeight = "0rem";
+    }
+}

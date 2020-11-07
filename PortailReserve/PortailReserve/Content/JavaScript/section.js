@@ -1,5 +1,4 @@
-﻿
-function modifierSection() {
+﻿function modifierSection() {
     var boutonModif = document.getElementById("modifSection");
     var boutonValider = document.getElementById("valideModif");
     var boutonAjouter = document.getElementById("boutonAjouter");

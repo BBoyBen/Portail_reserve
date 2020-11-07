@@ -1,130 +1,180 @@
 ﻿
 <div class="row rubriqueCours">
     <div class="col-12">
-        <div class="row titreCours" onclick="afficherCacherElement('cmg');">
+        <div class="row titreCours" onclick="afficherCacherListeCours('cmg');">
             <div class="col-8">
                 Culture Militaire Générale
             </div>
         </div>
-        <div id="cmg" style="display: none;">
+        <div class="partListeCours" id="cmg" style="max-height: 0rem;">
             @{ Html.RenderAction("AfficherCours", "Cours", new { theme = "CMG" }); }
+            <div class="row">
+                <div class="col-1 champsTextDroit">
+                    <img src="~/Content/image/chevron_bas.png" alt="fermer" class="imgFermerCours" onclick="afficherCacherListeCours('cmg');" />
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="row rubriqueCours">
     <div class="col-12">
-        <div class="row titreCours" onclick="afficherCacherElement('combat');">
+        <div class="row titreCours" onclick="afficherCacherListeCours('combat');">
             <div class="col-8">
                 Combat
             </div>
         </div>
-        <div id="combat" style="display: none;">
+        <div class="partListeCours" id="combat" style="max-height: 0rem;">
             @{ Html.RenderAction("AfficherCours", "Cours", new { theme = "Combat" }); }
+            <div class="row">
+                <div class="col-1 champsTextDroit">
+                    <img src="~/Content/image/chevron_bas.png" alt="fermer" class="imgFermerCours" onclick="afficherCacherListeCours('combat');" />
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="row rubriqueCours">
     <div class="col-12">
-        <div class="row titreCours" onclick="afficherCacherElement('genie');">
+        <div class="row titreCours" onclick="afficherCacherListeCours('genie');">
             <div class="col-8">
                 Génie
             </div>
         </div>
-        <div id="genie" style="display: none;">
+        <div class="partListeCours" id="genie" style="max-height: 0rem;">
             @{ Html.RenderAction("AfficherCours", "Cours", new { theme = "Genie" }); }
+            <div class="row">
+                <div class="col-1 champsTextDroit">
+                    <img src="~/Content/image/chevron_bas.png" alt="fermer" class="imgFermerCours" onclick="afficherCacherListeCours('genie');" />
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="row rubriqueCours">
     <div class="col-12">
-        <div class="row titreCours" onclick="afficherCacherElement('istc');">
+        <div class="row titreCours" onclick="afficherCacherListeCours('istc');">
             <div class="col-8">
                 ISTC
             </div>
         </div>
-        <div id="istc" style="display: none;">
+        <div class="partListeCours" id="istc" style="max-height: 0rem;">
             @{ Html.RenderAction("AfficherCours", "Cours", new { theme = "ISTC" }); }
+            <div class="row">
+                <div class="col-1 champsTextDroit">
+                    <img src="~/Content/image/chevron_bas.png" alt="fermer" class="imgFermerCours" onclick="afficherCacherListeCours('istc');" />
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="row rubriqueCours">
     <div class="col-12">
-        <div class="row titreCours" onclick="afficherCacherElement('nrbc');">
+        <div class="row titreCours" onclick="afficherCacherListeCours('nrbc');">
             <div class="col-8">
                 NRBC
             </div>
         </div>
-        <div id="nrbc" style="display: none;">
+        <div class="partListeCours" id="nrbc" style="max-height: 0rem;">
             @{ Html.RenderAction("AfficherCours", "Cours", new { theme = "NRBC" }); }
+            <div class="row">
+                <div class="col-1 champsTextDroit">
+                    <img src="~/Content/image/chevron_bas.png" alt="fermer" class="imgFermerCours" onclick="afficherCacherListeCours('nrbc');" />
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="row rubriqueCours">
     <div class="col-12">
-        <div class="row titreCours" onclick="afficherCacherElement('rens');">
+        <div class="row titreCours" onclick="afficherCacherListeCours('rens');">
             <div class="col-8">
                 Renseignement
             </div>
         </div>
-        <div id="rens" style="display: none;">
+        <div class="partListeCours" id="rens" style="max-height: 0rem;">
             @{ Html.RenderAction("AfficherCours", "Cours", new { theme = "Renseignement" }); }
+            <div class="row">
+                <div class="col-1 champsTextDroit">
+                    <img src="~/Content/image/chevron_bas.png" alt="fermer" class="imgFermerCours" onclick="afficherCacherListeCours('rens');" />
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="row rubriqueCours">
     <div class="col-12">
-        <div class="row titreCours" onclick="afficherCacherElement('secourisme');">
+        <div class="row titreCours" onclick="afficherCacherListeCours('secourisme');">
             <div class="col-8">
                 Secourisme
             </div>
         </div>
-        <div id="secourisme" style="display: none;">
+        <div class="partListeCours" id="secourisme" style="max-height: 0rem;">
             @{ Html.RenderAction("AfficherCours", "Cours", new { theme = "Secourisme" }); }
+            <div class="row">
+                <div class="col-1 champsTextDroit">
+                    <img src="~/Content/image/chevron_bas.png" alt="fermer" class="imgFermerCours" onclick="afficherCacherListeCours('secourisme');" />
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="row rubriqueCours">
     <div class="col-12">
-        <div class="row titreCours" onclick="afficherCacherElement('trans');">
+        <div class="row titreCours" onclick="afficherCacherListeCours('trans');">
             <div class="col-8">
                 Transmission
             </div>
         </div>
-        <div id="trans" style="display: none;">
+        <div class="partListeCours" id="trans" style="max-height: 0rem;">
             @{ Html.RenderAction("AfficherCours", "Cours", new { theme = "Transmission" }); }
+            <div class="row">
+                <div class="col-1 champsTextDroit">
+                    <img src="~/Content/image/chevron_bas.png" alt="fermer" class="imgFermerCours" onclick="afficherCacherListeCours('trans');" />
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="row rubriqueCours">
     <div class="col-12">
-        <div class="row titreCours" onclick="afficherCacherElement('topo');">
+        <div class="row titreCours" onclick="afficherCacherListeCours('topo');">
             <div class="col-8">
                 Topographie
             </div>
         </div>
-        <div id="topo" style="display: none;">
+        <div class="partListeCours" id="topo" style="max-height: 0rem;">
             @{ Html.RenderAction("AfficherCours", "Cours", new { theme = "Topographie" }); }
+            <div class="row">
+                <div class="col-1 champsTextDroit">
+                    <img src="~/Content/image/chevron_bas.png" alt="fermer" class="imgFermerCours" onclick="afficherCacherListeCours('topo');" />
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="row rubriqueCours">
     <div class="col-12">
-        <div class="row titreCours" onclick="afficherCacherElement('autres');">
+        <div class="row titreCours" onclick="afficherCacherListeCours('autres');">
             <div class="col-8">
                 Autres
             </div>
         </div>
-        <div id="autres" style="display: none;">
+        <div class="partListeCours" id="autres" style="max-height: 0rem;">
             @{ Html.RenderAction("AfficherCours", "Cours", new { theme = "Autres" }); }
+            <div class="row">
+                <div class="col-1 champsTextDroit">
+                    <img src="~/Content/image/chevron_bas.png" alt="fermer" class="imgFermerCours" onclick="afficherCacherListeCours('autres');" />
+                </div>
+            </div>
         </div>
     </div>
 </div>

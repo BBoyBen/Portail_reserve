@@ -19,8 +19,13 @@
     font-size: 1.5rem;
     font-weight: bold;
     padding-top: 10px;
-    padding-bottom: 10px;
     margin-bottom: 30px;
+}
+
+.titreCours div {
+    padding-bottom: 10px;
+    padding-left: 0;
+    border-bottom: 1px solid darkgrey;
 }
 
 .titreCours:hover {
@@ -95,4 +100,19 @@
 
 .nomCours:hover .infoCours, .nomCours:focus .infoCours {
     transform: scale(1) rotate(0);
+}
+
+.imgFermerCours {
+    height: 2rem;
+    width: auto;
+    transform: rotate(180deg);
+}
+
+.imgFermerCours:hover {
+    cursor: pointer;
+}
+
+.partListeCours {
+    max-height: 0;
+    overflow: hidden;
 }
