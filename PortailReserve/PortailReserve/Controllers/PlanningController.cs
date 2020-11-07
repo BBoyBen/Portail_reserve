@@ -542,9 +542,23 @@ namespace PortailReserve.Controllers
                 isAllValid = false;
             }
 
-            var type = Request.Form["Event.Type"];
+            var type = Request.Form["typeEvent"];
             if (type.IsNullOrWhiteSpace())
                 type = "Instruction";
+
+            vm.Event.Type = type;
+            vm.Types = new List<SelectListItem>();
+            vm.Types.Add(new SelectListItem { Text = "Instruction", Value = "Instruction" });
+            vm.Types.Add(new SelectListItem { Text = "Exercice", Value = "Exercice" });
+            vm.Types.Add(new SelectListItem { Text = "Stage", Value = "Stage" });
+            vm.Types.Add(new SelectListItem { Text = "Mission", Value = "Mission" });
+            foreach (SelectListItem item in vm.Types)
+            {
+                if(item.Value.Equals(type))
+                    item.Selected = true;
+                else
+                    item.Selected = false;
+            }
 
             if(type.Equals("Mission") || type.Equals("Stage"))
             {

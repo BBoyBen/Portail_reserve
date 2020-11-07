@@ -39,7 +39,7 @@
             @Html.LabelFor(m => m.Event.Type, "Type d'événement", new { @class = "col-12 labelMiddle" })
         </div>
         <div class="row">
-            @Html.DropDownListFor(m => m.Event.Type, Model.Types, new { @class = "col-6 champsText champsTextCenter", id = "typeSelect" })
+            @Html.DropDownList("typeEvent", Model.Types, new { @class = "col-6 champsText champsTextCenter", id = "typeSelect" })
         </div>
 
         <div class="row">
