@@ -5,14 +5,18 @@ $("#fichierCours").change(function () {
     var fileName = file.name;
     var size = file.size;
 
-    if (size < 4096000) {
+    var boutonAjouter = document.getElementById("valideAjoutCours");
+
+    if (size / 1024 < 2097152) {
         document.getElementById("fichierChoisi").innerText = fileName;
         document.getElementById("erreurFichierCours").innerText = "";
+        boutonAjouter.disabled = "";
     }
     else {
         document.getElementById("fichierChoisi").innerText = "";
-        document.getElementById("erreurFichierCours").innerText = "La taille du fichier ne doit pas depasser 4096ko.";
+        document.getElementById("erreurFichierCours").innerText = "La taille du fichier ne doit pas depasser 2Go.";
         document.getElementById("fichierCoursLabel").style.marginBottom = "10px";
+        boutonAjouter.disabled = "disabled";
     }
 });
 
@@ -22,14 +26,18 @@ $("#nveauFichier").change(function () {
     var fileName = file.name;
     var size = file.size;
 
-    if (size < 4096000) {
+    var boutonModifier = document.getElementById("valideModifCours");
+
+    if (size / 1024 < 2097152) {
         document.getElementById("nveauFichierChoisi").innerText = fileName;
         document.getElementById("erreurNveauFichierCours").innerText = "";
+        boutonModifier.disabled = "";
     }
     else {
         document.getElementById("nveauFichierChoisi").innerText = "";
-        document.getElementById("erreurNveauFichierCours").innerText = "La taille du fichier ne doit pas depasser 4096ko.";
+        document.getElementById("erreurNveauFichierCours").innerText = "La taille du fichier ne doit pas depasser 2Go.";
         document.getElementById("nveauFichierCoursLabel").style.marginBottom = "10px";
+        boutonModifier.disabled = "disabled";
     }
 });
 

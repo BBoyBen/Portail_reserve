@@ -131,7 +131,7 @@ namespace PortailReserve.Controllers
 
                 var fichierCours = Request.Files["fichierCours"];
                 int taille = fichierCours.ContentLength;
-                if (taille >= 4096000)
+                if (taille/1024 >= 2097152)
                 {
                     return new HttpStatusCodeResult(400);
                 }
@@ -352,7 +352,7 @@ namespace PortailReserve.Controllers
                 if (nveauFichier != null)
                 {
                     int taille = nveauFichier.ContentLength;
-                    if (taille >= 4096000)
+                    if (taille/1024 >= 2097152)
                     {
                         return new HttpStatusCodeResult(400);
                     }
