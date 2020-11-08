@@ -11,6 +11,19 @@
     }
 });
 
+window.onload = function () {
+    var select = document.getElementById("typeSelect").options[document.getElementById("typeSelect").selectedIndex].text;
+    
+    var elem = document.getElementById("missionOuStage");
+
+    if (select === "Instruction" || select === "Exercice") {
+        elem.style.display = "none";
+    }
+    else {
+        elem.style.display = "block";
+    }
+}
+
 document.getElementById("patracdrFile").addEventListener("change", function (target) {
     var file = document.getElementById("patracdrFile").files[0];
     var fileName = file.name;
