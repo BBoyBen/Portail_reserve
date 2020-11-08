@@ -186,9 +186,18 @@
                     foreach (PortailReserve.Models.Disponibilite d in Model.AllDispo)
                     {
                         <div class="row ligneDispo">
-                            <div class="col-8 text-center boutonLike">
-                                Du <strong>@d.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong> au <strong>@d.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong>
-                            </div>
+                            @if (d.Debut.Equals(d.Fin))
+                            {
+                                <div class="col-8 text-center boutonLike">
+                                    Le <strong>@d.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-8 text-center boutonLike">
+                                    Du <strong>@d.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong> au <strong>@d.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong>
+                                </div>
+                            }
                             <div class="col-2 text-center boutonLike">
                                 @switch (d.Valide)
                                 {
@@ -662,9 +671,18 @@
                                 @foreach (PortailReserve.Models.Disponibilite d in u.Dispos)
                                 {
                                     <div class="row marginTop">
-                                        <div class="col-6 boutonLike text-center">
-                                            Du @d.Debut.ToString("dd/MM/yyyy") au @d.Fin.ToString("dd/MM/yyyy")
-                                        </div>
+                                        @if (d.Debut.Equals(d.Fin))
+                                        {
+                                            <div class="col-6 boutonLike text-center">
+                                                Le @d.Debut.ToString("dd/MM/yyyy")
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-6 boutonLike text-center">
+                                                Du @d.Debut.ToString("dd/MM/yyyy") au @d.Fin.ToString("dd/MM/yyyy")
+                                            </div>
+                                        }
                                         <div class="col-3">
                                             @if (d.Valide == 1)
                                             {

@@ -78,11 +78,22 @@
                         @e.Type
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 dateEvent">
-                        Du @e.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR")) au @e.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))
+                @if (e.Debut.Equals(e.Fin))
+                {
+                    <div class="row">
+                        <div class="col-12 dateEvent">
+                            Le @e.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR"))
+                        </div>
                     </div>
-                </div>
+                }
+                else
+                {
+                    <div class="row">
+                        <div class="col-12 dateEvent">
+                            Du @e.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR")) au @e.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))
+                        </div>
+                    </div>
+                }
             </div>
             @if (ViewBag.Role < 4)
             {
@@ -128,11 +139,23 @@
                     @e.Type
                 </div>
             </div>
-            <div class="row">
-                <div class="col-12 dateEvent">
-                    Du @e.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR")) au @e.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))
+
+            @if (e.Debut.Equals(e.Fin))
+            {
+                <div class="row">
+                    <div class="col-12 dateEvent">
+                        Le @e.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR"))
+                    </div>
                 </div>
-            </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-12 dateEvent">
+                        Du @e.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR")) au @e.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))
+                    </div>
+                </div>
+            }
         </div>
         @if (ViewBag.Role < 4)
         {

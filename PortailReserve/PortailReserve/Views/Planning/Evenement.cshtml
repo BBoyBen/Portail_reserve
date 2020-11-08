@@ -64,11 +64,22 @@
             </div>
         </div>
 
-        <div class="row" id="eventDate">
-            <div class="col-12">
-                Du <strong>@Model.Event.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong> au <strong>@Model.Event.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong>
+        @if (Model.Event.Debut.Equals(Model.Event.Fin))
+        {
+            <div class="row" id="eventDate">
+                <div class="col-12">
+                    Le <strong>@Model.Event.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong>
+                </div>
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="row" id="eventDate">
+                <div class="col-12">
+                    Du <strong>@Model.Event.Debut.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong> au <strong>@Model.Event.Fin.ToString("D", new System.Globalization.CultureInfo("fr-FR"))</strong>
+                </div>
+            </div>
+        }
 
         <div class="row" id="lieuEvent">
             <div class="col-12">
