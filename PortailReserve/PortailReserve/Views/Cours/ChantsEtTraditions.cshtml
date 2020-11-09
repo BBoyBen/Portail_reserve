@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "Chants et Traditions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style {
+    <link rel="stylesheet" href="~/Content/CSS/cours.css" />
+    <script src="~/Content/JavaScript/cours.js"></script>
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <button class="bouton boutonBleu allWidth" onclick="clickOn('retourCours'); ">
+                @Html.ActionLink("Retour", "Index", "Cours", null, new { @class = "lienBoutonBleu", id = "retourCours" })
+            </button>
+        </div>
+    </div>
+</div>
+
+<h1> Chants et Traditions </h1>
+
+@if (ViewBag.Role < 4)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-3 champsTextDroit">
+                <button class="bouton boutonBleu allWidth" onclick="clickOn('ajoutChant'); ">
+                    @Html.ActionLink("Ajouter un nouveau chant", "AjouterChant", "Cours", null, new { @class = "lienBoutonBleu", id = "ajoutChant" })
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="container" id="listeThemes">
+    @{ Html.RenderAction("AfficherListeTypeChants", "Cours"); }
+</div>
+

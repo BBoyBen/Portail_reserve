@@ -11,9 +11,10 @@ namespace PortailReserve.DAL
         Guid AjouterChant(Chant chant);
         Chant GetChantById(Guid id);
         List<Chant> GetAllChants();
-        List<Chant> GetChantsByType(int type);
+        List<Chant> GetChantsByType(string type);
         int ModifierChant(Guid id, Chant chant);
         int SupprimerChant(Guid id);
         Chant GetChantByTitre(string titre);
+        bool ValiderTitreChant(string titre);
     }
 }

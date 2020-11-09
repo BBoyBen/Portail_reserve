@@ -19,11 +19,13 @@ namespace PortailReserve.Controllers
     {
         private IUtilisateurDal uDal;
         private ICoursDal cDal;
+        private IChantDal chDal;
 
         public CoursController()
         {
             uDal = new UtilisateurDal();
             cDal = new CoursDal();
+            chDal = new ChantDal();
         }
 
         [Authorize]
@@ -380,6 +382,206 @@ namespace PortailReserve.Controllers
             {
                 return new HttpStatusCodeResult(500);
             }
+        }
+
+        [Authorize]
+        public ActionResult ChantsEtTraditions()
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
+
+            return View();
+        }
+
+        [Authorize]
+        public ActionResult AfficherListeTypeChants()
+        {
+            return PartialView("AfficherListeTypeChants");
+        }
+
+        [Authorize]
+        public ActionResult AfficherChants(string type)
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
+
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
+
+                List<Chant> chants = chDal.GetChantsByType(type);
+
+                return PartialView("AfficherChants", chants);
+            }
+            catch(Exception e)
+            {
+                return new HttpStatusCodeResult(500);
+            }
+        }
+
+        [Authorize]
+        public ActionResult Chant (string titre)
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
+
+            Chant chant = chDal.GetChantByTitre(titre);
+            if(chant == null || chant.Equals(typeof(ChantNull)))
+            {
+                chant = new Chant
+                {
+                    Titre = "Chant introuvable",
+                    Id = Guid.Empty
+                };
+            }
+
+            return View(chant);
+        }
+
+        [Authorize]
+        public ActionResult AjouterChant()
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            if(u.Role > 3)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
+
+            Chant chant = new Chant
+            {
+                Titre = "",
+                Texte = ""
+            };
+
+            List<SelectListItem> types = new List<SelectListItem>();
+            types.Add(new SelectListItem { Text = "Chant", Value = "trad", Selected = true });
+            types.Add(new SelectListItem { Text = "Chant Popote", Value = "popote" });
+
+            AjoutModifChantViewModel vm = new AjoutModifChantViewModel
+            {
+                Chant = chant,
+                Types = types
+            };
+
+            return View(vm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult AjouterChant(AjoutModifChantViewModel vm)
+        {
+            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            if (u == null)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.Equals(typeof(UtilisateurNull)))
+            {
+                FormsAuthentication.SignOut();
+                ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                return RedirectToAction("Index", "Login");
+            }
+            if (u.PremiereCo)
+                return RedirectToAction("PremiereCo", "Login");
+
+            if (u.Role > 3)
+            {
+                return RedirectToAction("ChantsEtTraditions");
+            }
+
+            ViewBag.Grade = u.Grade;
+            ViewBag.Nom = u.Nom.ToUpperInvariant();
+            ViewBag.Role = u.Role;
+
+            ViewBag.Erreur = "";
+
+            List<SelectListItem> types = new List<SelectListItem>();
+            types.Add(new SelectListItem { Text = "Chant", Value = "trad", Selected = true });
+            types.Add(new SelectListItem { Text = "Chant Popote", Value = "popote" });
+            vm.Types = types;
+
+            if (chDal.ValiderTitreChant(vm.Chant.Titre))
+            {
+                ModelState.AddModelError("Chant.Titre", "Un chant avec ce titre existe déjà.");
+                return View(vm);
+            }
+
+            var type = Request.Form["typeChant"];
+            vm.Chant.Type = type;
+
+            Guid idChant = chDal.AjouterChant(vm.Chant);
+            if(idChant.Equals(Guid.Empty))
+            {
+                ViewBag.Erreur = "Une erreur s'est produite lors de la création du nouveau chant. Veuillez réessayer plus tard.";
+                return View(vm);
+            }
+
+            return RedirectToAction("Chant", new { titre = vm.Chant.Titre });
         }
     }
 }

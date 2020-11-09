@@ -1,0 +1,33 @@
+﻿@model PortailReserve.Models.Chant
+@{
+    ViewBag.Title = "Chant";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style {
+    <link rel="stylesheet" href="~/Content/CSS/cours.css" />
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <button class="bouton boutonBleu allWidth" onclick="clickOn('retourChantTrad'); ">
+                @Html.ActionLink("Retour", "ChantsEtTraditions", "Cours", null, new { @class = "lienBoutonBleu", id = "retourChantTrad" })
+            </button>
+        </div>
+    </div>
+</div>
+
+<h1>@Model.Titre</h1>
+
+@if(!Model.Id.Equals(Guid.Empty))
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-10 selfCenter">
+                @Model.Texte
+            </div>
+        </div>
+    </div>
+}
+

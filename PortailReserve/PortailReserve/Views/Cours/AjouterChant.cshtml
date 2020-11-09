@@ -1,0 +1,53 @@
+﻿@model PortailReserve.ViewModel.AjoutModifChantViewModel
+@{
+    ViewBag.Title = "AjouterChant";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <button class="bouton boutonBleu allWidth" onclick="clickOn('retourChantTrad'); ">
+                @Html.ActionLink("Retour", "ChantsEtTraditions", "Cours", null, new { @class = "lienBoutonBleu", id = "retourChantTrad" })
+            </button>
+        </div>
+    </div>
+</div>
+
+<h1>Ajouter un nouveau chant</h1>
+
+<div class="container">
+    @using (Html.BeginForm("AjouterChant", "Cours", FormMethod.Post))
+    {
+        <div class="row">
+            @Html.LabelFor(m => m.Chant.Titre, new { @class = "col-12 text-center" })
+        </div>
+        <div class="row">
+            @Html.TextBoxFor(m => m.Chant.Titre, new { @class = "col-6 champsTextCenter text-center champsText", required = "required" })
+        </div>
+        <div class="row">
+            <div class="col-12 text-center erreur">
+                @Html.ValidationMessageFor(m => m.Chant.Titre)
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.Label("typeChant", "Type du chant", new { @class = "col-12 text-center" })
+        </div>
+        <div class="row">
+            @Html.DropDownList("typeChant", Model.Types, new { @class = "col-6 champsTextCenter text-center champsText", required = "required" })
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => m.Chant.Texte, new { @class = "col-12 text-center" })
+        </div>
+        <div class="row">
+            @Html.TextAreaFor(m => m.Chant.Texte, new { @class = "col-10 champsTextCenter champsText champsTextArea", required = "required" })
+        </div>
+
+        <div class="row">
+            <input type="submit" value="Ajouter" class="col-4 bouton boutonVert selfCenter text-center" />
+        </div>
+    }
+</div>
+

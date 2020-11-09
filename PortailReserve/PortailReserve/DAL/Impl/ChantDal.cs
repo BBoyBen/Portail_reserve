@@ -88,7 +88,7 @@ namespace PortailReserve.DAL.Impl
             }
         }
 
-        public List<Chant> GetChantsByType(int type)
+        public List<Chant> GetChantsByType(string type)
         {
             try
             {
@@ -139,6 +139,21 @@ namespace PortailReserve.DAL.Impl
             {
                 Log("ERROR", "Erreur suppression du chant : " + id + " -> " + e);
                 return -1;
+            }
+        }
+
+        public bool ValiderTitreChant(string titre)
+        {
+            try
+            {
+                List<Chant> find = bdd.Chants.Where(c => c.Titre == titre).ToList();
+
+                return find.Count > 0;
+            }
+            catch(Exception e)
+            {
+                Log("ERROR", "Erreur validation du titre d'un chant : " + titre + " -> " + e);
+                return false;
             }
         }
     }

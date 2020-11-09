@@ -14,7 +14,7 @@ namespace PortailReserve.Models
         public Guid Id { get; set; }
         public string Titre { get; set; }
         public string Texte { get; set; }
-        public int Type { get; set; }
+        public string Type { get; set; }
         public DateTime Publication { get; set; }
         public DateTime Modification { get; set; }
     }

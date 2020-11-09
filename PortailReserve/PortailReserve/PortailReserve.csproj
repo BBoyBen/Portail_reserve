@@ -303,6 +303,7 @@
     <Compile Include="ViewModel\AjouterEventViewModel.cs" />
     <Compile Include="ViewModel\AjouterPersonnelViewModel.cs" />
     <Compile Include="ViewModel\AjoutGroupeViewModel.cs" />
+    <Compile Include="ViewModel\AjoutModifChantViewModel.cs" />
     <Compile Include="ViewModel\AjoutSectionViewModel.cs" />
     <Compile Include="ViewModel\AlbumViewModel.cs" />
     <Compile Include="ViewModel\ChangementCadreComViewModel.cs" />
@@ -354,6 +355,7 @@
     <Content Include="Content\image\chevron_bas.png" />
     <Content Include="Content\image\couverture_uir.jpg" />
     <Content Include="Content\image\couverture_uir_short.jpg" />
+    <Content Include="Content\image\fleche_droite.png" />
     <Content Include="Content\image\icone_confirmation.png" />
     <Content Include="Content\image\icone_cours.png" />
     <Content Include="Content\image\icone_erreur.png" />
@@ -591,6 +593,11 @@
     <Content Include="Views\Cours\AfficherListeThemes.cshtml" />
     <Content Include="Views\Cours\AfficherPopUpSuppressionCours.cshtml" />
     <Content Include="Views\Cours\AfficherPopUpModifierCours.cshtml" />
+    <Content Include="Views\Cours\ChantsEtTraditions.cshtml" />
+    <Content Include="Views\Cours\AfficherListeTypeChants.cshtml" />
+    <Content Include="Views\Cours\AfficherChants.cshtml" />
+    <Content Include="Views\Cours\Chant.cshtml" />
+    <Content Include="Views\Cours\AjouterChant.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

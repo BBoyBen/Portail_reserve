@@ -32,6 +32,12 @@
 }
 
 <div class="container" id="listeThemes">
+    <div class="row">
+        <div class="col-4 boutonChantTrad text-center" onclick="clickOn('lienChantsTrad');">
+            @Html.ActionLink("Chants et Traditions", "ChantsEtTraditions", null, new { @class = "lienChantsTrad", id = "lienChantsTrad" })
+            <img src="~/Content/image/fleche_droite.png" alt="fleche" id="flecheLienChantTrad" />
+        </div>
+    </div>
     @{ Html.RenderAction("AfficherListeThemes", "Cours"); }
 </div>
 

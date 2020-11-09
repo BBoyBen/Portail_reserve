@@ -116,3 +116,34 @@
     max-height: 0;
     overflow: hidden;
 }
+
+.boutonChantTrad {
+    margin-bottom: 25px;
+    margin-top: 25px;
+    border: 1px solid grey;
+    border-radius: 4px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    box-shadow: 0px 10px 20px -10px rgba(0,0,0,0.3);
+    cursor: pointer;
+}
+
+.boutonChantTrad:hover {
+    box-shadow: 0px 10px 20px 1px rgba(0,0,0,0.3);
+}
+
+.lienChantsTrad {
+    color: black;
+}
+
+.lienChantsTrad:hover, .boutonChantTrad:hover .lienChantsTrad {
+    text-decoration: none;
+    color: darkgrey;
+    font-style: italic;
+}
+
+#flecheLienChantTrad {
+    height: 1.5rem;
+    width: auto;
+    padding-left: 10px;
+}

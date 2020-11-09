@@ -1,0 +1,41 @@
+﻿@model List<PortailReserve.Models.Chant>
+
+<div class="row listCours">
+    <div class="col-12">
+        @if (Model.Count > 0)
+        {
+            foreach (PortailReserve.Models.Chant chant in Model)
+            {
+                <div class="row ligneCours">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-1">
+                                <img src="~/Content/image/icone_cours.png" alt="Cours" class="iconeCours" />
+                            </div>
+                            <div class="col-9 nomCours">
+                                @Html.ActionLink(chant.Titre, "Chant", new { titre = chant.Titre}, new { @class = "lienCours" })
+                            </div>
+                        </div>
+                        <div class="row dateCours">
+                            <div class="col-1"></div>
+                            <div class="col-3">
+                                Créé le @chant.Publication.ToString()
+                            </div>
+                            <div class="col-3">
+                                Modifié le @chant.Modification.ToString()
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-12 text-center">
+                    Pas de chants dans cette rubrique.
+                </div>
+            </div>
+        }
+    </div>
+</div>

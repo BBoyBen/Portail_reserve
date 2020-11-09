@@ -1,0 +1,36 @@
+﻿
+<div class="row rubriqueCours">
+    <div class="col-12">
+        <div class="row titreCours" onclick="afficherCacherListeCours('chants');">
+            <div class="col-8">
+                Chants
+            </div>
+        </div>
+        <div class="partListeCours" id="chants" style="max-height: 0rem;">
+            @{ Html.RenderAction("AfficherChants", "Cours", new { type = "trad" }); }
+            <div class="row">
+                <div class="col-1 champsTextDroit">
+                    <img src="~/Content/image/chevron_bas.png" alt="fermer" class="imgFermerCours" onclick="afficherCacherListeCours('chants');" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row rubriqueCours">
+    <div class="col-12">
+        <div class="row titreCours" onclick="afficherCacherListeCours('popote');">
+            <div class="col-8">
+                Chants Popote
+            </div>
+        </div>
+        <div class="partListeCours" id="popote" style="max-height: 0rem;">
+            @{ Html.RenderAction("AfficherChants", "Cours", new { type = "popote" }); }
+            <div class="row">
+                <div class="col-1 champsTextDroit">
+                    <img src="~/Content/image/chevron_bas.png" alt="fermer" class="imgFermerCours" onclick="afficherCacherListeCours('popote');" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
