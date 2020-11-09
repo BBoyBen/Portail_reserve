@@ -35,6 +35,61 @@
 }
 
 <div class="container" id="listeThemes">
+    <div class="row">
+        <div class="col-12 text-center erreur">
+            @ViewBag.Erreur
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-center alert-success">
+            @ViewBag.Succes
+        </div>
+    </div>
     @{ Html.RenderAction("AfficherListeTypeChants", "Cours"); }
 </div>
+
+<!--
+#############################################################################################
+################################ Pop Up suppression chant ###################################
+#############################################################################################
+-->
+
+@if (ViewBag.Role < 4)
+{
+    <div class="container popUp" id="popUpSuppressionChant" style="display: none; ">
+        @{ Html.RenderAction("AfficherPopUpSupprimerChant", new { id = Guid.Empty }); }
+    </div>
+}
+
+<!--
+#############################################################################################
+################################ Messages d'information #####################################
+#############################################################################################
+-->
+
+<div class="container popUpSuccess" id="suppressionOk" style="display: none;">
+    <div class="row">
+        <div class="col-2">
+            <img src="~/Content/image/icone_confirmation.png" alt="OK" class="imagePopUpSE" />
+        </div>
+        <div id="texteSuccess" class="col-10 text-center messageSuccess">
+
+        </div>
+    </div>
+</div>
+
+<div class="container popUpError" id="suppressionKo" style="display: none; ">
+    <div class="row">
+        <div class="col-2">
+            <img src="~/Content/image/icone_erreur.png" alt="KO" class="imagePopUpSE" />
+        </div>
+        <div id="texteError" class="col-10 text-center messageError">
+
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Content/JavaScript/section.js"></script>
+}
 

@@ -1,0 +1,37 @@
+﻿@model PortailReserve.Models.Chant
+
+<div class="row">
+    <div class="col-12 titrePopUp text-center">
+        Suppression du chant @Model.Titre
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 text-center corpsPopUp">
+        Voulez-vous supprimer ce chant de manière définitive ?
+    </div>
+</div>
+
+@using (Html.BeginForm("SuuprimerChant", "Cours", FormMethod.Post))
+{
+    @Html.Hidden("idChant", Model.Id);
+
+    <input type="submit" value="valider" id="suppChant" style="display: none;" />
+}
+
+<div class="row ligneBouton" id="suppChantPopUp">
+    <div class="col-6" id="boutonSuppChantPopUp" style="display: block;">
+        <div class="row">
+            <button id="valideSuppChant" class="col-8 bouton boutonVert champsTextDroit text-center" onclick="clickOn('suppChant');">
+                Valider
+            </button>
+        </div>
+    </div>
+    <div class="col-6" id="boutonAnnulerSuppChantPopUp" style="display: block;">
+        <div class="row">
+            <button class="col-8 bouton boutonRouge text-center" onclick="afficherCacherPopUp('popUpSuppressionChant'); ">
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>

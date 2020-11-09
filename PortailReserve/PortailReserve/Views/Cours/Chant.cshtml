@@ -20,7 +20,7 @@
 
 <h1>@Model.Titre</h1>
 
-@if(!Model.Id.Equals(Guid.Empty))
+@if (!Model.Id.Equals(Guid.Empty))
 {
     <div class="container">
         <div class="row">
@@ -29,5 +29,33 @@
             </div>
         </div>
     </div>
+}
+
+<div class="row">
+    @Ajax.ActionLink("Supprimer ce chant", "AfficherPopUpSupprimerChant", new { id = Model.Id }, new AjaxOptions
+    {
+        InsertionMode = InsertionMode.Replace,
+        UpdateTargetId = "popUpSuppressionChant",
+        HttpMethod = "GET"
+    }, new { @class = "col-4 bouton boutonRouge text-center selfCenter lienBouton lienBoutonBleu marginTop", 
+             @onclick = "afficherCacherPopUp('popUpSuppressionChant');" 
+            })
+</div>
+
+<!--
+#############################################################################################
+################################ Pop Up suppression chant ###################################
+#############################################################################################
+-->
+
+@if (ViewBag.Role < 4)
+{
+    <div class="container popUp" id="popUpSuppressionChant" style="display: none; ">
+        @{ Html.RenderAction("AfficherPopUpSupprimerChant", new { id = Guid.Empty }); }
+    </div>
+}
+
+@section scripts {
+    <script src="~/Content/JavaScript/section.js"></script>
 }
 

@@ -598,6 +598,7 @@
     <Content Include="Views\Cours\AfficherChants.cshtml" />
     <Content Include="Views\Cours\Chant.cshtml" />
     <Content Include="Views\Cours\AjouterChant.cshtml" />
+    <Content Include="Views\Cours\AfficherPopUpSupprimerChant.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -385,7 +385,7 @@ namespace PortailReserve.Controllers
         }
 
         [Authorize]
-        public ActionResult ChantsEtTraditions()
+        public ActionResult ChantsEtTraditions(string success = "", string erreur = "")
         {
             Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
             if (u == null)
@@ -405,6 +405,9 @@ namespace PortailReserve.Controllers
             ViewBag.Grade = u.Grade;
             ViewBag.Nom = u.Nom.ToUpperInvariant();
             ViewBag.Role = u.Role;
+
+            ViewBag.Erreur = erreur;
+            ViewBag.succes = success;
 
             return View();
         }
@@ -582,6 +585,105 @@ namespace PortailReserve.Controllers
             }
 
             return RedirectToAction("Chant", new { titre = vm.Chant.Titre });
+        }
+
+        [Authorize]
+        public ActionResult AfficherPopUpSupprimerChant(Guid id)
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult();
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult();
+
+                if (u.Role > 3)
+                {
+                    return new HttpUnauthorizedResult();
+                }
+
+                Chant chant = chDal.GetChantById(id);
+                if(chant == null || chant.Equals(typeof(ChantNull)))
+                {
+                    chant = new Chant
+                    {
+                        Titre = "Empty",
+                        Id = Guid.Empty
+                    };
+                }
+
+                return PartialView("AfficherPopUpSupprimerChant", chant);
+            }
+            catch(Exception e) {
+                return new HttpStatusCodeResult(500);
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult SuuprimerChant()
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
+
+                if (u.Role > 3)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
+
+                string err = "";
+                string suc = "";
+
+                Guid idChant = Guid.Parse(Request.Form["idChant"]);
+                if (idChant.Equals(Guid.Empty))
+                {
+                    err = "Une erreur s'est produite lors de la suppression. Veuillez réessayer plus tard.";
+                    return RedirectToAction("ChantsEtTraditions", new { erreur = err });
+                }
+
+                int result = chDal.SupprimerChant(idChant);
+                if(result != 1)
+                {
+                    err = "Une erreur s'est produite lors de la suppression. Veuillez réessayer plus tard.";
+                    return RedirectToAction("ChantsEtTraditions", new { erreur = err });
+                }
+
+                suc = "Chant supprimé avec succés.";
+                return RedirectToAction("ChantsEtTraditions", new { success = suc });
+            }
+            catch(Exception e)
+            {
+                string err = "Une erreur s'est produite lors de la suppression. Veuillez réessayer plus tard.";
+                return RedirectToAction("ChantsEtTraditions", new { erreur = err });
+            }
         }
     }
 }
