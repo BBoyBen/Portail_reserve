@@ -9,7 +9,7 @@
 }
 
 <div class="container">
-    <div class="row">
+    <div class="row marginBottom">
         <div class="col-3">
             <button class="bouton boutonBleu allWidth" onclick="clickOn('retourChantTrad'); ">
                 @Html.ActionLink("Retour", "ChantsEtTraditions", "Cours", null, new { @class = "lienBoutonBleu", id = "retourChantTrad" })
@@ -20,9 +20,28 @@
 
 <h1>@Model.Titre</h1>
 
+@if (ViewBag.Role < 4)
+{
+    <div class="container">
+        <div class="row marginBottom">
+            <div class="col-3 champsTextDroit">
+                <button class="bouton boutonOrange allWidth marginTopZero" onclick="clickOn('modifChant'); ">
+                    @Html.ActionLink("Modifier", "ModifierChant", "Cours", new { titre = Model.Titre }, 
+                        new { @class = "lienBoutonVert", id = "modifChant" })
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
 @if (!Model.Id.Equals(Guid.Empty))
 {
     <div class="container">
+        <div class="row">
+            <div class="col-12 text-center alert-success">
+                @ViewBag.Succes
+            </div>
+        </div>
         <div class="row">
             <div class="col-10 selfCenter">
                 @Model.Texte
@@ -37,8 +56,10 @@
         InsertionMode = InsertionMode.Replace,
         UpdateTargetId = "popUpSuppressionChant",
         HttpMethod = "GET"
-    }, new { @class = "col-4 bouton boutonRouge text-center selfCenter lienBouton lienBoutonBleu marginTop", 
-             @onclick = "afficherCacherPopUp('popUpSuppressionChant');" 
+    }, new
+    {
+        @class = "col-4 bouton boutonRouge text-center selfCenter lienBouton lienBoutonBleu marginTop",
+             @onclick = "afficherCacherPopUp('popUpSuppressionChant');"
             })
 </div>
 
