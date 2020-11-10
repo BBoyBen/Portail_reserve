@@ -2,6 +2,10 @@
     font-size: 0.8rem;
 }
 
+.ligneMois {
+    padding-left: 3%;
+}
+
 .mois {
     text-align: center;
     padding-right: 4%;

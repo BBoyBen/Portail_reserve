@@ -61,7 +61,7 @@ namespace PortailReserve.DAL.Impl
                 if (nouvMdp.Equals(old_mdp))
                     return 0;
 
-                Utilisateur utilisateur = GetUtilisateurById(id);
+                Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id.Equals(id));
                 if (utilisateur == null || utilisateur.Equals(typeof(UtilisateurNull)))
                     return -1;
 
@@ -91,6 +91,7 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id.Equals(id));
+                utilisateur.MotDePasse = "";
                 return utilisateur;
             }catch(NullReferenceException nfe)
             {
@@ -114,6 +115,7 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id.ToString().Equals(id));
+                utilisateur.MotDePasse = "";
                 return utilisateur;
             }
             catch (NullReferenceException nfe)
@@ -135,6 +137,7 @@ namespace PortailReserve.DAL.Impl
                 if (ValideMatricule(matricule))
                 {
                     Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Matricule.Equals(matricule));
+                    utilisateur.MotDePasse = "";
                     return utilisateur;
                 }
                 return null;
@@ -205,6 +208,10 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 List<Utilisateur> utilisateurs = bdd.Utilisateurs.Where(u => u.Groupe.Equals(idGroupe)).ToList();
+                foreach(Utilisateur u in utilisateurs)
+                {
+                    u.MotDePasse = "";
+                }
                 return utilisateurs;
             }catch(Exception e)
             {
@@ -439,6 +446,10 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 List<Utilisateur> all = bdd.Utilisateurs.Where(u => u.Section.Equals(section) && u.Compagnie.Equals(cie)).ToList();
+                foreach(Utilisateur u in all)
+                {
+                    u.MotDePasse = "";
+                }
 
                 return all;
             }
@@ -498,6 +509,10 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 List<Utilisateur> utils = bdd.Utilisateurs.Where(u => u.Section == -1 && u.Compagnie == -1 && u.Groupe.Equals(Guid.Empty)).ToList();
+                foreach(Utilisateur u in utils)
+                {
+                    u.MotDePasse = "";
+                }
 
                 return utils;
             }
