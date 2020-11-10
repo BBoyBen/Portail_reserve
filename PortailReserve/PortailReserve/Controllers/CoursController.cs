@@ -483,9 +483,12 @@ namespace PortailReserve.Controllers
                 chant = new Chant
                 {
                     Titre = "Chant introuvable",
+                    Texte = "",
                     Id = Guid.Empty
                 };
             }
+
+            chant.Texte = chant.Texte.Replace(Environment.NewLine, "<br/>");
 
             ViewBag.Succes = success;
 
@@ -725,6 +728,7 @@ namespace PortailReserve.Controllers
                 {
                     Titre = "",
                     Type = "",
+                    Texte = "",
                     Id = Guid.Empty
                 };
             }
