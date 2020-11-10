@@ -2,3 +2,29 @@
 .elemProfil {
     margin-bottom: 20px;
 }
+
+.partContact{
+    margin-top: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid darkgrey;
+}
+
+.roleContact {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.imageMailContact {
+    height: 2rem;
+    width: auto;
+}
+
+.lienMailContact {
+    color: black;
+    text-decoration: none;
+}
+
+.lienMailContact:hover {
+    color: darkgrey;
+    text-decoration: underline;
+}

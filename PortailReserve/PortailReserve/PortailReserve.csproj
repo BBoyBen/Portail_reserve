@@ -362,6 +362,7 @@
     <Content Include="Content\image\icone_fermer.png" />
     <Content Include="Content\image\icone_fermeture.png" />
     <Content Include="Content\image\icone_groupe.png" />
+    <Content Include="Content\image\icone_mail.png" />
     <Content Include="Content\image\icone_planning.png" />
     <Content Include="Content\image\icone_precedent.png" />
     <Content Include="Content\image\icone_profile.png" />
@@ -600,6 +601,7 @@
     <Content Include="Views\Cours\AjouterChant.cshtml" />
     <Content Include="Views\Cours\AfficherPopUpSupprimerChant.cshtml" />
     <Content Include="Views\Cours\ModifierChant.cshtml" />
+    <Content Include="Views\Profil\Contact.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,102 @@
+﻿@model PortailReserve.ViewModel.ContactViewModel
+@{
+    ViewBag.Title = "Contact";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style {
+    <link rel="stylesheet" href="~/Content/CSS/profil.css" />
+}
+
+<h1>Listes des contacts</h1>
+
+<div class="container">
+    @if (!Model.CDG.Id.Equals(Guid.Empty))
+    {
+        <div class="partContact">
+            <div class="row">
+                <div class="col-12 roleContact">
+                    Chef de groupe
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-12">
+                    @Model.CDG.Grade @Model.CDG.Nom.ToUpper() @Model.CDG.Prenom
+                </div>
+                <div class="col-sm-6 col-12">
+                    <a href="mailto:@Model.CDG.Email" class="lienMailContact">
+                        <img src="~/Content/image/icone_mail.png" class="imageMailContact selfCenter" />
+                        @Model.CDG.Email
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!Model.SOA.Id.Equals(Guid.Empty))
+    {
+        <div class="partContact">
+            <div class="row">
+                <div class="col-12 roleContact">
+                    Sous-officier adjoint
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-12">
+                    @Model.SOA.Grade @Model.SOA.Nom.ToUpper() @Model.SOA.Prenom
+                </div>
+                <div class="col-sm-6 col-12">
+                    <a href="mailto:@Model.SOA.Email" class="lienMailContact">
+                        <img src="~/Content/image/icone_mail.png" class="imageMailContact selfCenter" />
+                        @Model.SOA.Email
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!Model.CDS.Id.Equals(Guid.Empty))
+    {
+        <div class="partContact">
+            <div class="row">
+                <div class="col-12 roleContact">
+                    Chef de section
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-12">
+                    @Model.CDS.Grade @Model.CDS.Nom.ToUpper() @Model.CDS.Prenom
+                </div>
+                <div class="col-sm-6 col-12">
+                    <a href="mailto:@Model.CDS.Email" class="lienMailContact">
+                        <img src="~/Content/image/icone_mail.png" class="imageMailContact selfCenter" />
+                        @Model.CDS.Email
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!Model.CDU.Id.Equals(Guid.Empty))
+    {
+        <div class="partContact">
+            <div class="row">
+                <div class="col-12 roleContact">
+                    Commandant d'unité
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-12">
+                    @Model.CDU.Grade @Model.CDU.Nom.ToUpper() @Model.CDU.Prenom
+                </div>
+                <div class="col-sm-6 col-12">
+                    <a href="mailto:@Model.CDU.Email" class="lienMailContact">
+                        <img src="~/Content/image/icone_mail.png" class="imageMailContact selfCenter" />
+                        @Model.CDU.Email
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
