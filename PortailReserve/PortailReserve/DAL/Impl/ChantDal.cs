@@ -1,20 +1,21 @@
 ﻿using PortailReserve.Models;
 using PortailReserve.Models.NullObject;
+using PortailReserve.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
     public class ChantDal : IChantDal
     {
         private BddContext bdd;
+        private readonly Logger LOGGER;
 
         public ChantDal()
         {
             bdd = new BddContext();
+            LOGGER = new Logger(this.GetType());
         }
 
         public Guid AjouterChant(Chant chant)
@@ -30,7 +31,7 @@ namespace PortailReserve.DAL.Impl
                 return chant.Id;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur ajout de nouveaux chant -> " + e);
+                LOGGER.Log("ERROR", "Erreur ajout de nouveaux chant -> " + e);
                 return Guid.Empty;
             }
         }
@@ -49,7 +50,7 @@ namespace PortailReserve.DAL.Impl
                 return chants;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération de tous les chants -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération de tous les chants -> " + e);
                 return new List<Chant>();
             }
         }
@@ -62,11 +63,11 @@ namespace PortailReserve.DAL.Impl
                 return chant;
             }catch(NullReferenceException nfe)
             {
-                Log("ERROR", "Aucun chant trouve pour l'id : " + id + " -> " + nfe);
+                LOGGER.Log("ERROR", "Aucun chant trouve pour l'id : " + id + " -> " + nfe);
                 return new ChantNull() { Error = "Chant introuvable." };
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération du chant id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération du chant id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -79,11 +80,11 @@ namespace PortailReserve.DAL.Impl
                 return chant;
             }catch(NullReferenceException nfe)
             {
-                Log("ERROR", "Aucun chant trouve pour le titre : " + titre + " -> " + nfe);
+                LOGGER.Log("ERROR", "Aucun chant trouve pour le titre : " + titre + " -> " + nfe);
                 return new ChantNull() { Error = "Chant introuvable pour le titre : " + titre };
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupration du chat au titre : " + titre + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupration du chat au titre : " + titre + " -> " + e);
                 return null;
             }
         }
@@ -96,7 +97,7 @@ namespace PortailReserve.DAL.Impl
                 return chants;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération des chants par type : " + type + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération des chants par type : " + type + " -> " + e);
                 return new List<Chant>();
             }
         }
@@ -118,7 +119,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur modification du chant : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur modification du chant : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -137,7 +138,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur suppression du chant : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur suppression du chant : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -152,7 +153,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur validation du titre d'un chant : " + titre + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur validation du titre d'un chant : " + titre + " -> " + e);
                 return false;
             }
         }

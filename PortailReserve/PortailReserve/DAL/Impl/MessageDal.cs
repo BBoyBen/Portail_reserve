@@ -1,20 +1,21 @@
 ﻿using PortailReserve.Models;
 using PortailReserve.Models.NullObject;
+using PortailReserve.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
     public class MessageDal : IMessageDal
     {
         private BddContext bdd;
+        private readonly Logger LOGGER;
 
         public MessageDal()
         {
             bdd = new BddContext();
+            LOGGER = new Logger(this.GetType());
         }
 
         public Guid AjouterMessage(Message message)
@@ -29,7 +30,7 @@ namespace PortailReserve.DAL.Impl
                 return message.Id;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur ajout d'un message -> " + e);
+                LOGGER.Log("ERROR", "Erreur ajout d'un message -> " + e);
                 return Guid.Empty;
             }
         }
@@ -47,7 +48,7 @@ namespace PortailReserve.DAL.Impl
                 return all;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération de tous les messages -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération de tous les messages -> " + e);
                 return new List<Message>();
             }
         }
@@ -60,12 +61,12 @@ namespace PortailReserve.DAL.Impl
                 return message;
             }catch(NullReferenceException nfe)
             {
-                Log("ERROR", "Aucun message trouve avec l'id : " + id + " -> " + nfe);
+                LOGGER.Log("ERROR", "Aucun message trouve avec l'id : " + id + " -> " + nfe);
                 return new MessageNull() { Error = "Message introuvable." };
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur récupértion messag par id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupértion messag par id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -78,7 +79,7 @@ namespace PortailReserve.DAL.Impl
                 return byEvent;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération des messages de l'event id : " + idEvent + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération des messages de l'event id : " + idEvent + " -> " + e);
                 return new List<Message>();
             }
         }
@@ -89,7 +90,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Message toDelete = GetMessageById(id);
                 if (toDelete == null || toDelete.Equals(typeof(MessageNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucun message à supprimer pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 bdd.Messages.Remove(toDelete);
                 bdd.SaveChanges();
@@ -97,7 +101,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur suppression message id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur suppression message id : " + id + " -> " + e);
                 return -1;
             }
         }

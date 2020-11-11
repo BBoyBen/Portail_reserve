@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Ajax.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,12 @@ namespace PortailReserve.Utils
 {
     public class Logger
     {
+        private Type Classe;
+
+        public Logger(Type classe)
+        {
+            Classe = classe;
+        } 
         private static string GetFilePath(string type)
         {
             //C:/Users/ben63/Documents/Projet/Logs/LogPortailReserve/
@@ -41,7 +48,7 @@ namespace PortailReserve.Utils
             return fileName;
         }
 
-        public static void Log(string type, string message)
+        public void Log(string type, string message)
         {
             string filePath = GetFilePath(type);
             string fileName = GetFileName(type);
@@ -49,7 +56,7 @@ namespace PortailReserve.Utils
             try
             {
                 StreamWriter fichierLog = new StreamWriter(filePath + fileName, true);
-                fichierLog.WriteLine(type + " " + DateTime.Now + " : " + message);
+                fichierLog.WriteLine(type + " " + DateTime.Now + " -> " + this.Classe + " : " + message);
                 fichierLog.Close();
             }
             catch (Exception e)

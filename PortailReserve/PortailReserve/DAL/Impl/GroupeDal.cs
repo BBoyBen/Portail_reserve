@@ -1,21 +1,21 @@
 ﻿using PortailReserve.Models;
 using PortailReserve.Models.NullObject;
+using PortailReserve.Utils;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Web;
-using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
     public class GroupeDal : IGroupeDal
     {
         private BddContext bdd;
+        private readonly Logger LOGGER;
 
         public GroupeDal ()
         {
             bdd = new BddContext();
+            LOGGER = new Logger(this.GetType());
         }
 
         public Guid AjouterGroupe(Groupe groupe)
@@ -28,7 +28,7 @@ namespace PortailReserve.DAL.Impl
                 return groupe.Id;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur ajout de groupe -> " + e);
+                LOGGER.Log("ERROR", "Erreur ajout de groupe -> " + e);
                 return Guid.Empty;
             }
         }
@@ -46,7 +46,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur changement de chef de groupe pour le groupe : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur changement de chef de groupe pour le groupe : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -64,7 +64,7 @@ namespace PortailReserve.DAL.Impl
                 return all;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupration de tous les groupes -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupration de tous les groupes -> " + e);
                 return new List<Groupe>();
             }
         }
@@ -77,12 +77,12 @@ namespace PortailReserve.DAL.Impl
                 return groupe;
             }catch(NullReferenceException nfe)
             {
-                Log("ERROR", "Auncun groupe trouve avec l'id : " + id + " -> " + nfe);
+                LOGGER.Log("ERROR", "Auncun groupe trouve avec l'id : " + id + " -> " + nfe);
                 return new GroupeNull() { Error = "Groupe introuvable." };
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération du group id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération du group id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -106,7 +106,7 @@ namespace PortailReserve.DAL.Impl
                 return toReturn;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération du groupe " + numGrp + "de la section " + numSection + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération du groupe " + numGrp + "de la section " + numSection + " -> " + e);
                 return null;
             }
         }
@@ -119,7 +119,7 @@ namespace PortailReserve.DAL.Impl
                 return bySection;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération des groupes de la saction : " + idSection + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération des groupes de la saction : " + idSection + " -> " + e);
                 return new List<Groupe>();
             }
         }
@@ -130,7 +130,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Groupe toModif = GetGroupeById(id);
                 if (toModif == null || toModif.Equals(typeof(GroupeNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucun groupe à modifier pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 toModif.Numero = groupe.Numero;
                 toModif.Section = groupe.Section;
@@ -139,7 +142,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur modification du groupe : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur modification du groupe : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -150,7 +153,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Groupe toDelete = GetGroupeById(id);
                 if (toDelete == null || toDelete.Equals(typeof(GroupeNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucun groupe à supprimer pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 bdd.Groupes.Remove(toDelete);
                 bdd.SaveChanges();
@@ -158,7 +164,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur suppression du groupe : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur suppression du groupe : " + id + " -> " + e);
                 return -1;
             }
         }

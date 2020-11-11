@@ -1,20 +1,21 @@
 ﻿using PortailReserve.Models;
 using PortailReserve.Models.NullObject;
+using PortailReserve.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
     public class ReponseDal : IReponseDal
     {
         private BddContext bdd;
+        private readonly Logger LOGGER;
 
         public ReponseDal()
         {
             bdd = new BddContext();
+            LOGGER = new Logger(this.GetType());
         }
 
         public Guid AjouterReponse(Reponse reponse)
@@ -29,7 +30,7 @@ namespace PortailReserve.DAL.Impl
                 return reponse.Id;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur ajout de reponse -> " + e);
+                LOGGER.Log("ERROR", "Erreur ajout de reponse -> " + e);
                 return Guid.Empty;
             }
         }
@@ -47,7 +48,7 @@ namespace PortailReserve.DAL.Impl
                 return all;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération de toutes les reponses -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération de toutes les reponses -> " + e);
                 return new List<Reponse>();
             }
         }
@@ -60,12 +61,12 @@ namespace PortailReserve.DAL.Impl
                 return reponse;
             }catch(NullReferenceException nfe)
             {
-                Log("ERROR", "Aucune reponse trouve pour l'id : " + id + " -> " + nfe);
+                LOGGER.Log("ERROR", "Aucune reponse trouve pour l'id : " + id + " -> " + nfe);
                 return new ReponseNull() { Error = "Reponse introuvable." };
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération de la reponse id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération de la reponse id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -78,7 +79,7 @@ namespace PortailReserve.DAL.Impl
                 return byMessage;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération des reponse du message id : " + idMessage + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération des reponse du message id : " + idMessage + " -> " + e);
                 return new List<Reponse>();
             }
         }
@@ -89,7 +90,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Reponse toDelete = GetReponseById(id);
                 if (toDelete == null || toDelete.Equals(typeof(ReponseNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucune reponse à supprimer pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 bdd.Reponses.Remove(toDelete);
                 bdd.SaveChanges();
@@ -97,7 +101,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur suppression de reponse id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur suppression de reponse id : " + id + " -> " + e);
                 return -1;
             }
         }

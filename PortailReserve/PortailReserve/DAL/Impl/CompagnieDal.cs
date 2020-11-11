@@ -1,21 +1,21 @@
 ﻿using PortailReserve.Models;
 using PortailReserve.Models.NullObject;
+using PortailReserve.Utils;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Web;
-using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
     public class CompagnieDal : ICompagnieDal
     {
         private BddContext bdd;
+        private readonly Logger LOGGER;
 
         public CompagnieDal ()
         {
             bdd = new BddContext();
+            LOGGER = new Logger(this.GetType());
         }
 
         public Guid AjouterCompagnie(Compagnie compagnie)
@@ -28,7 +28,7 @@ namespace PortailReserve.DAL.Impl
                 return compagnie.Id;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur ajout nouvelle compagnie -> " + e);
+                LOGGER.Log("ERROR", "Erreur ajout nouvelle compagnie -> " + e);
                 return Guid.Empty;
             }
         }
@@ -40,7 +40,7 @@ namespace PortailReserve.DAL.Impl
                 Compagnie cie = bdd.Compagnies.FirstOrDefault(c => c.Id.Equals(id));
                 if (cie == null || cie.Equals(typeof(CompagnieNull)))
                 {
-                    Log("EEROR", "La compagnie " + id + " est introuvable pour le changement de adu");
+                    LOGGER.Log("EEROR", "La compagnie " + id + " est introuvable pour le changement de adu");
                     return -1;
                 }
 
@@ -51,7 +51,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch (Exception e)
             {
-                Log("EEROR", "Une erreur est survenue lors du changement de ADU de la compagnie : " + id + " -> " + e);
+                LOGGER.Log("EEROR", "Une erreur est survenue lors du changement de ADU de la compagnie : " + id + " -> " + e);
                 return 0;
             }
         }
@@ -63,7 +63,7 @@ namespace PortailReserve.DAL.Impl
                 Compagnie cie = bdd.Compagnies.FirstOrDefault(c => c.Id.Equals(id));
                 if (cie == null || cie.Equals(typeof(CompagnieNull)))
                 {
-                    Log("EEROR", "La compagnie " + id + " est introuvable pour le changement de cdu");
+                    LOGGER.Log("EEROR", "La compagnie " + id + " est introuvable pour le changement de cdu");
                     return -1;
                 }
 
@@ -74,7 +74,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch (Exception e)
             {
-                Log("EEROR", "Une erreur est survenue lors du changement de CDU de la compagnie : " + id + " -> " + e);
+                LOGGER.Log("EEROR", "Une erreur est survenue lors du changement de CDU de la compagnie : " + id + " -> " + e);
                 return 0;
             }
         }
@@ -92,7 +92,7 @@ namespace PortailReserve.DAL.Impl
                 return compagnies;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération de toutes les compagnies -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération de toutes les compagnies -> " + e);
                 return new List<Compagnie>();
             }
         }
@@ -106,11 +106,11 @@ namespace PortailReserve.DAL.Impl
                 return compagnie;
             }catch(NullReferenceException nfe)
             {
-                Log("ERROR", "Aucune compagnie pour l'id : " + id + " -> " + nfe);
+                LOGGER.Log("ERROR", "Aucune compagnie pour l'id : " + id + " -> " + nfe);
                 return new CompagnieNull() { Error = "Compagnie introuvable." };
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération de la compagnie id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération de la compagnie id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -124,11 +124,11 @@ namespace PortailReserve.DAL.Impl
                 return compagnie;
             }catch(NullReferenceException nfe)
             {
-                Log("ERROR", "Aucune compagnie trouvée pour le numéro : " + numero + " -> " + nfe);
+                LOGGER.Log("ERROR", "Aucune compagnie trouvée pour le numéro : " + numero + " -> " + nfe);
                 return new CompagnieNull() { Error = "Compagnie introuvable." };
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération de compagnie par numéro : " + numero + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération de compagnie par numéro : " + numero + " -> " + e);
                 return null;
             }
         }
@@ -139,7 +139,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Compagnie toModify = GetCompagnieById(id);
                 if (toModify == null || toModify.Equals(typeof(CompagnieNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucune compagnie à modifier pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 toModify.Numero = compagnie.Numero;
                 toModify.Chant = compagnie.Chant;
@@ -149,7 +152,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur modification de la compagnie : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur modification de la compagnie : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -160,7 +163,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Compagnie toDelete = GetCompagnieById(id);
                 if (toDelete == null || toDelete.Equals(typeof(CompagnieNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucune compagnie à supprimer pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 bdd.Compagnies.Remove(toDelete);
                 bdd.SaveChanges();
@@ -168,7 +174,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur de suppression de la compagnie id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur de suppression de la compagnie id : " + id + " -> " + e);
                 return -1;
             }
         }

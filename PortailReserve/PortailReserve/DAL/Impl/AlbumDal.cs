@@ -1,20 +1,21 @@
 ﻿using PortailReserve.Models;
 using PortailReserve.Models.NullObject;
+using PortailReserve.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
     public class AlbumDal : IAlbumDal
     {
         private BddContext bdd;
+        private readonly Logger LOGGER;
 
         public AlbumDal()
         {
             bdd = new BddContext();
+            LOGGER = new Logger(this.GetType());
         }
 
         public Guid AjouterAlbum(Album album)
@@ -29,7 +30,7 @@ namespace PortailReserve.DAL.Impl
                 return album.Id;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur créer nouvel album -> " + e);
+                LOGGER.Log("ERROR", "Erreur créer nouvel album -> " + e);
                 return Guid.Empty;
             }
         }
@@ -52,6 +53,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch(Exception e)
             {
+                LOGGER.Log("ERROR", "Erreur vérification existence dossier " + dossier + " pour la compagnie " + cie + " -> " + e);
                 return false;
             }
         }
@@ -64,12 +66,12 @@ namespace PortailReserve.DAL.Impl
                 return album;
             }catch(NullReferenceException nfe)
             {
-                Log("ERROR", "Aucun album trouve pour l'id : " + id + " -> " + nfe);
+                LOGGER.Log("ERROR", "Aucun album trouve pour l'id : " + id + " -> " + nfe);
                 return new AlbumNull() { Error = "Album introuvable." };
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération albums id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération albums id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -84,7 +86,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération des albums de la cie : " + cie + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération des albums de la cie : " + cie + " -> " + e);
                 return new List<Album>();
             }
         }
@@ -105,7 +107,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur modiifer album id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur modiifer album id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -131,7 +133,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur suppression album id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur suppression album id : " + id + " -> " + e);
                 return -1;
             }
         }

@@ -1,20 +1,21 @@
 ﻿using PortailReserve.Models;
 using PortailReserve.Models.NullObject;
+using PortailReserve.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
     public class EvenementDal : IEvenementDal
     {
         private BddContext bdd;
+        private readonly Logger LOGGER;
 
         public EvenementDal ()
         {
             bdd = new BddContext();
+            LOGGER = new Logger(this.GetType());
         }
 
         public Guid CreerEvenement(Evenement evenement)
@@ -30,7 +31,7 @@ namespace PortailReserve.DAL.Impl
                 return evenement.Id;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur création d'evenement -> " + e);
+                LOGGER.Log("ERROR", "Erreur création d'evenement -> " + e);
                 return Guid.Empty;
             }
         }
@@ -49,7 +50,7 @@ namespace PortailReserve.DAL.Impl
                 return all;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération de tous les événements -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération de tous les événements -> " + e);
                 return new List<Evenement>();
             }
         }
@@ -62,12 +63,12 @@ namespace PortailReserve.DAL.Impl
                 return evenement;
             }catch(NullReferenceException nfe)
             {
-                Log("ERROR", "Aucun evenement trouvable pour l'id : " + id + " -> " + nfe);
+                LOGGER.Log("ERROR", "Aucun evenement trouvable pour l'id : " + id + " -> " + nfe);
                 return new EvenementNull() { Error = "Evenement introuvable." };
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération de l'evenement id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération de l'evenement id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -89,7 +90,7 @@ namespace PortailReserve.DAL.Impl
                 return aVenir;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération des evenements à venir -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération des evenements à venir -> " + e);
                 return new List<Evenement>();
             }
         }
@@ -102,7 +103,7 @@ namespace PortailReserve.DAL.Impl
                 return byType;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération des evenements du type : " + type + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération des evenements du type : " + type + " -> " + e);
                 return new List<Evenement>();
             }
         }
@@ -123,7 +124,7 @@ namespace PortailReserve.DAL.Impl
                 return passe;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération des evenements passe -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération des evenements passe -> " + e);
                 return new List<Evenement>();
             }
         }
@@ -138,7 +139,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur de la récupération des evenement pour le planning -> " + e);
+                LOGGER.Log("ERROR", "Erreur de la récupération des evenement pour le planning -> " + e);
                 return new List<Evenement>();
             }
         }
@@ -166,7 +167,7 @@ namespace PortailReserve.DAL.Impl
 
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération du prochain evenement -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération du prochain evenement -> " + e);
                 return null;
             }
         }
@@ -177,7 +178,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Evenement toModify = GetEvenementById(id);
                 if (toModify == null || toModify.Equals(typeof(EvenementNull)))
+                {
+                    LOGGER.Log("ERROR", "Auucn event à modifier pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 toModify.Debut = evenement.Debut;
                 toModify.Description = evenement.Description;
@@ -195,7 +199,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur modification evenement -> " + e);
+                LOGGER.Log("ERROR", "Erreur modification evenement -> " + e);
                 return -1;
             }
         }
@@ -206,7 +210,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Evenement evenement = GetEvenementById(id);
                 if (evenement == null || evenement.Equals(typeof(EvenementNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucun event à supprimer pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 Effectif effectif = bdd.Effectifs.FirstOrDefault(e => e.Id.Equals(evenement.Effectif));
                 List<Disponibilite> dispos = bdd.Disponibilites.Where(d => d.Evenement.Equals(evenement.Id)).ToList();
@@ -233,7 +240,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur suppression evenement id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur suppression evenement id : " + id + " -> " + e);
                 return -1;
             }
         }

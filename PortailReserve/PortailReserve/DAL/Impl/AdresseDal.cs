@@ -1,20 +1,20 @@
 ﻿using PortailReserve.Models;
 using PortailReserve.Models.NullObject;
+using PortailReserve.Utils;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
     public class AdresseDal : IAdresseDal
     {
         private BddContext bdd;
+        private readonly Logger LOGGER;
 
         public AdresseDal ()
         {
             bdd = new BddContext();
+            LOGGER = new Logger(this.GetType());
         }
 
         public Guid AjouterAdresse(Adresse adresse)
@@ -27,7 +27,7 @@ namespace PortailReserve.DAL.Impl
                 return adresse.Id;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur ajout d'une nouvelle adresse -> " + e);
+                LOGGER.Log("ERROR", "Erreur ajout d'une nouvelle adresse -> " + e);
                 return Guid.Empty;
             }
         }
@@ -46,12 +46,12 @@ namespace PortailReserve.DAL.Impl
                 return adresse;
             }catch(NullReferenceException nfe)
             {
-                Log("ERROR", "Aucune adresse trouvee avec l'id : " + id + " -> " + nfe);
+                LOGGER.Log("ERROR", "Aucune adresse trouvee avec l'id : " + id + " -> " + nfe);
                 return new AdresseNull() { Error = "Aucune adresse trouvée."};
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur récupéation de l'adresse id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupéation de l'adresse id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -74,7 +74,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Errerur modiication adresse id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Errerur modiication adresse id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -92,7 +92,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur suppression adress id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur suppression adress id : " + id + " -> " + e);
                 return -1;
             }
         }

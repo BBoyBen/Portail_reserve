@@ -4,18 +4,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static PortailReserve.Utils.Utils;
-using static PortailReserve.Utils.Logger;
-using System.Data.Entity;
+using PortailReserve.Utils;
 
 namespace PortailReserve.DAL.Impl
 {
     public class UtilisateurDal : IUtilisateurDal
     {
         private BddContext bdd;
+        private readonly Logger LOGGER;
 
         public UtilisateurDal ()
         {
             bdd = new BddContext();
+            LOGGER = new Logger(this.GetType());
         }
 
         public Guid AjouterUtilisateur(Utilisateur utilisateur)
@@ -29,7 +30,7 @@ namespace PortailReserve.DAL.Impl
                 return utilisateur.Id;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur ajout nouvel utilisateur -> " + e);
+                LOGGER.Log("ERROR", "Erreur ajout nouvel utilisateur -> " + e);
                 return Guid.Empty;
             }
         }
@@ -44,12 +45,12 @@ namespace PortailReserve.DAL.Impl
                 return utilisateur;
             }catch(NullReferenceException nfe)
             {
-                Log("ERROR", "Authentification échouer pour matricule : " + matricule + " -> " + nfe);
+                LOGGER.Log("ERROR", "Authentification échouer pour matricule : " + matricule + " -> " + nfe);
                 return new UtilisateurNull() { Error = "Matricule ou mot de passe incorrect." };
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur authentification matricule : " + matricule + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur authentification matricule : " + matricule + " -> " + e);
                 return null;
             }
         }
@@ -63,7 +64,10 @@ namespace PortailReserve.DAL.Impl
 
                 Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id.Equals(id));
                 if (utilisateur == null || utilisateur.Equals(typeof(UtilisateurNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucun utilisateur à changer le mdp pour l'id : " + id.ToString());
                     return -1;
+                }
 
                 string encodeOldMdp = EncodeSHA256(old_mdp);
                 if (!utilisateur.MotDePasse.Equals(encodeOldMdp))
@@ -76,7 +80,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch (Exception e)
             {
-                Log("ERROR", "Erreur changement de mot de mot pour l'utilisateur : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur changement de mot de mot pour l'utilisateur : " + id + " -> " + e);
                 return -10;
             }
         }
@@ -95,7 +99,7 @@ namespace PortailReserve.DAL.Impl
                 return utilisateur;
             }catch(NullReferenceException nfe)
             {
-                Log("ERROR", "Aucun utilisateur trouve pour l'id : " + id + " -> " + nfe);
+                LOGGER.Log("ERROR", "Aucun utilisateur trouve pour l'id : " + id + " -> " + nfe);
                 return new UtilisateurNull() { 
                     Error = "Utilisateur introuvable.",
                     Nom = "",
@@ -105,7 +109,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération utilisateurs par id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération utilisateurs par id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -120,12 +124,12 @@ namespace PortailReserve.DAL.Impl
             }
             catch (NullReferenceException nfe)
             {
-                Log("ERROR", "Aucun utilisateur trouve pour l'id : " + id + " -> " + nfe);
+                LOGGER.Log("ERROR", "Aucun utilisateur trouve pour l'id : " + id + " -> " + nfe);
                 return new UtilisateurNull() { Error = "Utilisateur introuvable." };
             }
             catch (Exception e)
             {
-                Log("ERROR", "Erreur récupération utilisateurs par id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération utilisateurs par id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -143,12 +147,12 @@ namespace PortailReserve.DAL.Impl
                 return null;
             }catch(NullReferenceException nfe)
             {
-                Log("ERROR", "Aucun utilisateur trouve avec le matricule : " + matricule + " -> " + nfe);
+                LOGGER.Log("ERROR", "Aucun utilisateur trouve avec le matricule : " + matricule + " -> " + nfe);
                 return new UtilisateurNull() { Error = "Utilisateur introuvable." };
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération utilisateur par matricule : " + matricule + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération utilisateur par matricule : " + matricule + " -> " + e);
                 return null;
             }
         }
@@ -173,7 +177,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération des users pour la dispo de l'event : " + idEVent + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération des users pour la dispo de l'event : " + idEVent + " -> " + e);
                 return new List<UtilisateurDispo>();
             }
         }
@@ -198,7 +202,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch (Exception e)
             {
-                Log("ERROR", "Erreur récupération des users pour la dispo de l'event : " + idEVent + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération des users pour la dispo de l'event : " + idEVent + " -> " + e);
                 return new List<UtilisateurDispo>();
             }
         }
@@ -215,7 +219,7 @@ namespace PortailReserve.DAL.Impl
                 return utilisateurs;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération utilisateur par id groupe : " + idGroupe + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération utilisateur par id groupe : " + idGroupe + " -> " + e);
                 return new List<Utilisateur>();
             }
         }
@@ -237,7 +241,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch (Exception e)
             {
-                Log("ERROR", "Erreur récupération des users pour la participation de l'event : " + idEvent + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération des users pour la participation de l'event : " + idEvent + " -> " + e);
                 return new List<UtilisateurParticipation>();
             }
         }
@@ -259,7 +263,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch (Exception e)
             {
-                Log("ERROR", "Erreur récupération des users pour la participation de l'event : " + idEvent + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération des users pour la participation de l'event : " + idEvent + " -> " + e);
                 return new List<UtilisateurParticipation>();
             }
         }
@@ -282,7 +286,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch (Exception e)
             {
-                Log("ERROR", "Erreur récupération des users sans réponse pour la dispo de l'event : " + idEVent + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération des users sans réponse pour la dispo de l'event : " + idEVent + " -> " + e);
                 return new List<Utilisateur>();
             }
         }
@@ -305,7 +309,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch (Exception e)
             {
-                Log("ERROR", "Erreur récupération des users sans réponses pour la participation de l'event : " + idEvent + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération des users sans réponses pour la participation de l'event : " + idEvent + " -> " + e);
                 return new List<Utilisateur>();
             }
         }
@@ -316,7 +320,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Utilisateur util = GetUtilisateurById(id);
                 if (util == null || util.Equals(typeof(UtilisateurNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucun utilisateur à modifier pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 util.Nom = utilisateur.Nom;
                 util.Prenom = utilisateur.Prenom;
@@ -331,7 +338,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur modification utilisateur id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur modification utilisateur id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -348,12 +355,12 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(NullReferenceException nfe)
             {
-                Log("ERROR", "Aucun utilisateur trouvé pour le matricule : " + matricule + " et le nom : " + nom + " et nait le " + naissance.ToString() + " -> " + nfe);
+                LOGGER.Log("ERROR", "Aucun utilisateur trouvé pour le matricule : " + matricule + " et le nom : " + nom + " et nait le " + naissance.ToString() + " -> " + nfe);
                 return 0;
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur mot de passe oublié nom : " + nom + " matricule : " + matricule + " date de naissance " + naissance.ToString() + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur mot de passe oublié nom : " + nom + " matricule : " + matricule + " date de naissance " + naissance.ToString() + " -> " + e);
                 return -1;
             }
         }
@@ -367,7 +374,10 @@ namespace PortailReserve.DAL.Impl
 
                 Utilisateur utilisateur = GetUtilisateurById(id);
                 if (utilisateur == null || utilisateur.Equals(typeof(UtilisateurNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucun utilisateur pour le premier changement de mdp pour l'id : " + id.ToString());
                     return -1;
+                }
 
                 string encodeNewMdp = EncodeSHA256(mdp);
                 utilisateur.MotDePasse = encodeNewMdp;
@@ -378,7 +388,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch (Exception e)
             {
-                Log("ERROR", "Erreur premier changement de mot de mot pour l'utilisateur : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur premier changement de mot de mot pour l'utilisateur : " + id + " -> " + e);
                 return -10;
             }
         }
@@ -389,7 +399,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Utilisateur utilisateur = GetUtilisateurById(id);
                 if (utilisateur == null || utilisateur.Equals(typeof(UtilisateurNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucun utilisateur à passer en premiere co KO pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 utilisateur.PremiereCo = true;
                 bdd.SaveChanges();
@@ -397,7 +410,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur reset de la premiere co id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur reset de la premiere co id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -408,7 +421,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Utilisateur utilisateur = GetUtilisateurById(id);
                 if (utilisateur == null || utilisateur.Equals(typeof(UtilisateurNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucun utilisateur à passer en premiere co OK pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 utilisateur.PremiereCo = false;
 
@@ -417,7 +433,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur passage de la premier co a false pour id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur passage de la premier co a false pour id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -428,7 +444,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Utilisateur utilisateur = GetUtilisateurById(id);
                 if (utilisateur == null || utilisateur.Equals(typeof(UtilisateurNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucun utilisateur à supprimer pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 bdd.Utilisateurs.Remove(utilisateur);
                 bdd.SaveChanges();
@@ -436,7 +455,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur suppression utilisateur id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur suppression utilisateur id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -455,7 +474,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération de tous les utilisateur de la cie : " + cie + " section : " + section + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération de tous les utilisateur de la cie : " + cie + " section : " + section + " -> " + e);
                 return new List<Utilisateur>();
             }
         }
@@ -466,7 +485,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Utilisateur util = GetUtilisateurById(id);
                 if (util == null || util.Equals(typeof(UtilisateurNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucun utilisateur pour modifier le grade de l'id : " + id.ToString());
                     return 0;
+                }
 
                 util.Grade = grade;
 
@@ -476,7 +498,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur lors du changement de grade sur l'utilisateur : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur lors du changement de grade sur l'utilisateur : " + id + " -> " + e);
                 return 0;
             }
         }
@@ -487,7 +509,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Utilisateur trouve = GetUtilisateurById(id);
                 if (trouve == null || trouve.Equals(typeof(UtilisateurNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucun utilisateur pour supprimer de la section pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 trouve.Groupe = Guid.Empty;
                 trouve.Section = -1;
@@ -499,7 +524,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur lors de la suppression de l'util " + id + " de sa section -> " + e);
+                LOGGER.Log("ERROR", "Erreur lors de la suppression de l'util " + id + " de sa section -> " + e);
                 return -1;
             }
         }
@@ -518,7 +543,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur lors de la récupération des utilisateurs sans section -> " + e);
+                LOGGER.Log("ERROR", "Erreur lors de la récupération des utilisateurs sans section -> " + e);
                 return new List<Utilisateur>();
             }
         }
@@ -529,10 +554,16 @@ namespace PortailReserve.DAL.Impl
             {
                 Utilisateur util = GetUtilisateurById(id);
                 if (util == null || util.Equals(typeof(UtilisateurNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucun utilisateur pour changer de groupe pour lm'id : " + id.ToString());
                     return 0;
+                }
 
                 if (util.Groupe.Equals(Guid.Empty))
+                {
+                    LOGGER.Log("ERROR", "Aucun groupe pour l'id : " + grp.ToString() + " pour le changement de groupe d'un utilisteur");
                     return -2;
+                }
 
                 util.Groupe = grp;
 
@@ -542,7 +573,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur changement de groupe de l'utilisateur : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur changement de groupe de l'utilisateur : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -553,7 +584,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Utilisateur util = GetUtilisateurById(id);
                 if (util == null || util.Equals(typeof(UtilisateurNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucun utilisateur à ajouter à la section pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 util.Nom = utilisateur.Nom;
                 util.Prenom = utilisateur.Prenom;
@@ -572,7 +606,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch (Exception e)
             {
-                Log("ERROR", "Erreur ajout utilisateur à une section id  : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur ajout utilisateur à une section id  : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -583,7 +617,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Utilisateur toModif = GetUtilisateurById(id);
                 if (toModif == null || toModif.Equals(typeof(UtilisateurNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucun utilisateur pour passer cadre pour l'id : " + id.ToString() + " section : " + section + " cie : " + cie);
                     return -1;
+                }
 
                 toModif.Groupe = Guid.Empty;
                 toModif.Section = section;
@@ -596,7 +633,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur lors du passage à cadre de l'utilisateur : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur lors du passage à cadre de l'utilisateur : " + id + " -> " + e);
                 return 0;
             }
         }

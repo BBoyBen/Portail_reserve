@@ -1,21 +1,21 @@
 ﻿using PortailReserve.Models;
 using PortailReserve.Models.NullObject;
+using PortailReserve.Utils;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Web;
-using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
     public class SectionDal : ISectionDal
     {
         private BddContext bdd;
+        private readonly Logger LOGGER;
 
         public SectionDal ()
         {
             bdd = new BddContext();
+            LOGGER = new Logger(this.GetType());
         }
 
         public Guid AjouterSection(Section section)
@@ -28,7 +28,7 @@ namespace PortailReserve.DAL.Impl
                 return section.Id;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur ajout de section -> " + e);
+                LOGGER.Log("ERROR", "Erreur ajout de section -> " + e);
                 return Guid.Empty;
             }
         }
@@ -40,7 +40,7 @@ namespace PortailReserve.DAL.Impl
                 Section section = bdd.Sections.FirstOrDefault(s => s.Id.Equals(id));
                 if (section == null || section.Equals(typeof(SectionNull)))
                 {
-                    Log("EEROR", "La section " + id + " est introuvable pour le changement de cds");
+                    LOGGER.Log("EEROR", "La section " + id + " est introuvable pour le changement de cds");
                     return -1;
                 }
 
@@ -51,7 +51,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch(Exception e)
             {
-                Log("EEROR", "Une erreur est survenue lors du changement de CDS de la section : " + id + " -> " + e);
+                LOGGER.Log("EEROR", "Une erreur est survenue lors du changement de CDS de la section : " + id + " -> " + e);
                 return 0;
             }
         }
@@ -63,7 +63,7 @@ namespace PortailReserve.DAL.Impl
                 Section section = bdd.Sections.FirstOrDefault(s => s.Id.Equals(id));
                 if (section == null || section.Equals(typeof(SectionNull)))
                 {
-                    Log("ERROR", "La section " + id + " est introuvable pour le changement de soa.");
+                    LOGGER.Log("ERROR", "La section " + id + " est introuvable pour le changement de soa.");
                     return -1;
                 }
 
@@ -74,7 +74,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch (Exception e)
             {
-                Log("EEROR", "Une erreur est survenue lors du changement de SOA de la section : " + id + " -> " + e);
+                LOGGER.Log("EEROR", "Une erreur est survenue lors du changement de SOA de la section : " + id + " -> " + e);
                 return 0;
             }
         }
@@ -92,7 +92,7 @@ namespace PortailReserve.DAL.Impl
                 return all;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération de toutes les sections -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération de toutes les sections -> " + e);
                 return new List<Section>();
             }
         }
@@ -105,12 +105,12 @@ namespace PortailReserve.DAL.Impl
                 return section;
             }catch(NullReferenceException nfe)
             {
-                Log("ERROR", "Aucune section trouvee pour l'id : " + id + " -> " + nfe);
+                LOGGER.Log("ERROR", "Aucune section trouvee pour l'id : " + id + " -> " + nfe);
                 return new SectionNull() { Error = "Section introuvable" };
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération de la section id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération de la section id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -124,7 +124,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération de la section numero " + section + " de la cie " + cie + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération de la section numero " + section + " de la cie " + cie + " -> " + e);
                 return null;
             }
         }
@@ -138,12 +138,12 @@ namespace PortailReserve.DAL.Impl
             }
             catch (NullReferenceException nfe)
             {
-                Log("ERROR", "Aucune section trouvee pour le numéro : " + numero + " -> " + nfe);
+                LOGGER.Log("ERROR", "Aucune section trouvee pour le numéro : " + numero + " -> " + nfe);
                 return new SectionNull() { Error = "Section introuvable" };
             }
             catch (Exception e)
             {
-                Log("ERROR", "Erreur récupération de la section numéro : " + numero + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération de la section numéro : " + numero + " -> " + e);
                 return null;
             }
         }
@@ -157,7 +157,7 @@ namespace PortailReserve.DAL.Impl
                 return sections;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération des sections par la compagnie : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération des sections par la compagnie : " + id + " -> " + e);
                 return new List<Section>();
             }
         }
@@ -168,7 +168,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Section toModif = GetSectionById(id);
                 if (toModif == null || toModif.Equals(typeof(SectionNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucune section à modifier pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 toModif.Devise = section.Devise;
                 toModif.Chant = section.Chant;
@@ -179,7 +182,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur modification de la section id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur modification de la section id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -190,7 +193,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Section toDelete = GetSectionById(id);
                 if (toDelete == null || toDelete.Equals(typeof(SectionNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucune section à supprimer pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 bdd.Sections.Remove(toDelete);
                 bdd.SaveChanges();
@@ -198,7 +204,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur suppression de la section id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur suppression de la section id : " + id + " -> " + e);
                 return -1;
             }
         }

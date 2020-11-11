@@ -1,20 +1,21 @@
 ﻿using PortailReserve.Models;
 using PortailReserve.Models.NullObject;
+using PortailReserve.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
     public class DisponibiliteDal : IDisponibiliteDal
     {
         private BddContext bdd;
+        private readonly Logger LOGGER;
 
         public DisponibiliteDal ()
         {
             bdd = new BddContext();
+            LOGGER = new Logger(this.GetType());
         }
 
         public Guid AjouterDispo(Disponibilite dispo)
@@ -29,7 +30,7 @@ namespace PortailReserve.DAL.Impl
                 return dispo.Id;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur ajout dispo -> " + e);
+                LOGGER.Log("ERROR", "Erreur ajout dispo -> " + e);
                 return Guid.Empty;
             }
         }
@@ -48,7 +49,7 @@ namespace PortailReserve.DAL.Impl
                 return byEvent;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupration dispo par evenet : " + idEvent + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupration dispo par evenet : " + idEvent + " -> " + e);
                 return new List<Disponibilite>();
             }
         }
@@ -62,7 +63,7 @@ namespace PortailReserve.DAL.Impl
                 return byUtil;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération des dispo de l'util : " + idUtil + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération des dispo de l'util : " + idUtil + " -> " + e);
                 return new List<Disponibilite>();
             }
         }
@@ -76,12 +77,12 @@ namespace PortailReserve.DAL.Impl
                 return dispo;
             }catch(NullReferenceException nfe)
             {
-                Log("ERROR", "Aucune disponibilité trouvee pour l'id : " + id + " -> " + nfe);
+                LOGGER.Log("ERROR", "Aucune disponibilité trouvee pour l'id : " + id + " -> " + nfe);
                 return new DisponibiliteNull() { Error = "Disponibilité introuvable." };
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération de la dispo par id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération de la dispo par id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -95,12 +96,12 @@ namespace PortailReserve.DAL.Impl
             }
             catch (NullReferenceException nfe)
             {
-                Log("ERROR", "Aucune disponibilite de l'utiliateur " + idUtil + " à l'event " + idEvent + " -> " + nfe);
+                LOGGER.Log("ERROR", "Aucune disponibilite de l'utiliateur " + idUtil + " à l'event " + idEvent + " -> " + nfe);
                 return new List<Disponibilite>();
             }
             catch (Exception e)
             {
-                Log("ERROR", "Erreur récupération disponibilite de l'util : " + idUtil + " pour l'event : " + idEvent + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération disponibilite de l'util : " + idUtil + " pour l'event : " + idEvent + " -> " + e);
                 return new List<Disponibilite>();
             }
         }
@@ -111,7 +112,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Disponibilite toModif = GetDispoById(id);
                 if (toModif == null || toModif.Equals(typeof(DisponibiliteNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucune dispo à modifier pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 toModif.TouteLaPeriode = dispo.TouteLaPeriode;
                 toModif.Debut = dispo.Debut;
@@ -123,7 +127,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur modificatio dispo id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur modificatio dispo id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -134,7 +138,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Disponibilite dispo = GetDispoById(id);
                 if (dispo == null || dispo.Equals(typeof(DisponibiliteNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucune dispo à refuser pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 dispo.Valide = 2;
                 bdd.SaveChanges();
@@ -142,7 +149,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur refuser dispo id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur refuser dispo id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -153,7 +160,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Disponibilite toDelete = GetDispoById(id);
                 if (toDelete == null || toDelete.Equals(typeof(DisponibiliteNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucune dispo à supprimer pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 bdd.Disponibilites.Remove(toDelete);
                 bdd.SaveChanges();
@@ -161,7 +171,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur suppression dispo id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur suppression dispo id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -172,7 +182,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Disponibilite dispo = GetDispoById(id);
                 if (dispo == null || dispo.Equals(typeof(DisponibiliteNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucune dispo à valider pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 dispo.Valide = 1;
                 bdd.SaveChanges();
@@ -180,7 +193,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur validation dispo id : " + id + "-> " + e);
+                LOGGER.Log("ERROR", "Erreur validation dispo id : " + id + "-> " + e);
                 return -1;
             }
         }

@@ -1,20 +1,19 @@
 ﻿using PortailReserve.Models;
+using PortailReserve.Utils;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using WebGrease.Activities;
-using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
     public class LectureDal : ILectureDal
     {
         private BddContext bdd;
+        private readonly Logger LOGGER;
 
         public LectureDal()
         {
             bdd = new BddContext();
+            LOGGER = new Logger(this.GetType());
         }
 
         public Guid AjouterLecture(Guid util, Guid message)
@@ -30,7 +29,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur lors de l'ajout d'une lecture -> " + e);
+                LOGGER.Log("ERROR", "Erreur lors de l'ajout d'une lecture -> " + e);
                 return Guid.Empty;
             }
         }
@@ -45,7 +44,7 @@ namespace PortailReserve.DAL.Impl
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération de la lecture pour un message -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération de la lecture pour un message -> " + e);
                 return null;
             }
         }

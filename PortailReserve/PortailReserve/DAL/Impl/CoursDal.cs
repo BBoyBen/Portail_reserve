@@ -1,19 +1,20 @@
 ﻿using PortailReserve.Models;
 using PortailReserve.Models.NullObject;
+using PortailReserve.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using static PortailReserve.Utils.Logger;
 
 namespace PortailReserve.DAL.Impl
 {
     public class CoursDal : ICoursDal
     {
         private BddContext bdd;
+        private readonly Logger LOGGER;
 
         public CoursDal ()
         {
+            LOGGER = new Logger(this.GetType());
             bdd = new BddContext();
         }
 
@@ -30,7 +31,7 @@ namespace PortailReserve.DAL.Impl
                 return cours.Id;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur ajouter un cours -> " + e);
+                LOGGER.Log("ERROR", "Erreur ajouter un cours -> " + e);
                 return Guid.Empty;
             }
         }
@@ -48,7 +49,7 @@ namespace PortailReserve.DAL.Impl
                 return all;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur rcupération de tous les cours -> " + e);
+                LOGGER.Log("ERROR", "Erreur rcupération de tous les cours -> " + e);
                 return new List<Cours>();
             }
         }
@@ -61,12 +62,12 @@ namespace PortailReserve.DAL.Impl
                 return cours;
             }catch(NullReferenceException nfe)
             {
-                Log("ERROR", "Aucun cours trouve pour l'id : " + id + " -> " + nfe);
+                LOGGER.Log("ERROR", "Aucun cours trouve pour l'id : " + id + " -> " + nfe);
                 return new CoursNull() { Error = "Cours introuvable." };
             }
             catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération cours id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération cours id : " + id + " -> " + e);
                 return null;
             }
         }
@@ -79,7 +80,7 @@ namespace PortailReserve.DAL.Impl
                 return coursByTheme;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur récupération des cours par theme : " + theme + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur récupération des cours par theme : " + theme + " -> " + e);
                 return new List<Cours>();
             }
         }
@@ -90,7 +91,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Cours toModify = GetCoursById(id);
                 if (toModify == null || toModify.Equals(typeof(CoursNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucun cours à modifier pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 toModify.Description = cours.Description;
                 toModify.Fichier = cours.Fichier;
@@ -104,7 +108,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur modification cours id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur modification cours id : " + id + " -> " + e);
                 return -1;
             }
         }
@@ -115,7 +119,10 @@ namespace PortailReserve.DAL.Impl
             {
                 Cours toDelete = GetCoursById(id);
                 if (toDelete == null || toDelete.Equals(typeof(CoursNull)))
+                {
+                    LOGGER.Log("ERROR", "Aucun cours à supprimer pour l'id : " + id.ToString());
                     return 0;
+                }
 
                 bdd.Cours.Remove(toDelete);
                 bdd.SaveChanges();
@@ -123,7 +130,7 @@ namespace PortailReserve.DAL.Impl
                 return 1;
             }catch(Exception e)
             {
-                Log("ERROR", "Erreur suppression cours id : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur suppression cours id : " + id + " -> " + e);
                 return -1;
             }
         }
