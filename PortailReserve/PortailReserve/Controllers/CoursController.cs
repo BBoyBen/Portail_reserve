@@ -1,16 +1,12 @@
-﻿using Microsoft.Extensions.Logging.Abstractions;
-using PortailReserve.DAL;
+﻿using PortailReserve.DAL;
 using PortailReserve.DAL.Impl;
 using PortailReserve.Models;
 using PortailReserve.Models.NullObject;
+using PortailReserve.Utils;
 using PortailReserve.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Web;
-using System.Web.Management;
 using System.Web.Mvc;
 using System.Web.Security;
 
@@ -21,43 +17,60 @@ namespace PortailReserve.Controllers
         private IUtilisateurDal uDal;
         private ICoursDal cDal;
         private IChantDal chDal;
+        private readonly Logger LOGGER;
 
         public CoursController()
         {
             uDal = new UtilisateurDal();
             cDal = new CoursDal();
             chDal = new ChantDal();
+            LOGGER = new Logger(this.GetType());
         }
 
         [Authorize]
         public ActionResult Index()
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
-            {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
-            }
-            if (u.Equals(typeof(UtilisateurNull)))
-            {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
-            }
-            if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
+            try {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
 
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
 
-            return View();
+                return View();
+            }
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur lors de l'affichage de la page index de cours -> " + e);
+                return new HttpStatusCodeResult(500, "Echec affichage de la page -> " + e.Message);
+            }
         }
 
         [Authorize]
         public ActionResult AfficherListeThemes()
         {
-            return PartialView("AfficherListeThemes");
+            try
+            {
+                return PartialView("AfficherListeThemes");
+            }
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur lors de l'affichage de la liste des thèmes -> " + e);
+                return new HttpStatusCodeResult(500, "Echec affichage de la liste des themes -> " + e.Message);
+            }
         }
 
         [Authorize]
@@ -90,6 +103,7 @@ namespace PortailReserve.Controllers
             }
             catch(Exception e)
             {
+                LOGGER.Log("ERROR", "Erreur affichage liste des cours pour le theme : " + theme + " -> " + e);
                 return new HttpStatusCodeResult(500);
             }
         }
@@ -97,31 +111,40 @@ namespace PortailReserve.Controllers
         [Authorize]
         public ActionResult AfficherPopUpNouveauCours()
         {
-            Cours cours = new Cours
+            try
             {
-                Nom = "",
-                Description = "",
-                Fichier = ""
-            };
+                Cours cours = new Cours
+                {
+                    Nom = "",
+                    Description = "",
+                    Fichier = ""
+                };
 
-            List<SelectListItem> themes = new List<SelectListItem>();
-            themes.Add(new SelectListItem { Text = "Connaissances Militaire Générale", Value = "CMG", Selected = true });
-            themes.Add(new SelectListItem { Text = "Combat", Value = "Combat" });
-            themes.Add(new SelectListItem { Text = "Génie", Value = "Genie" });
-            themes.Add(new SelectListItem { Text = "ISTC", Value = "ISTC" });
-            themes.Add(new SelectListItem { Text = "NRBC", Value = "NRBC" });
-            themes.Add(new SelectListItem { Text = "Renseignement", Value = "Renseignement" });
-            themes.Add(new SelectListItem { Text = "Secourisme", Value = "Secourisme" });
-            themes.Add(new SelectListItem { Text = "Transmission", Value = "Transmission" });
-            themes.Add(new SelectListItem { Text = "Topographie", Value = "Topographie" });
-            themes.Add(new SelectListItem { Text = "Autres", Value = "Autres" });
+                List<SelectListItem> themes = new List<SelectListItem>();
+                themes.Add(new SelectListItem { Text = "Connaissances Militaire Générale", Value = "CMG", Selected = true });
+                themes.Add(new SelectListItem { Text = "Combat", Value = "Combat" });
+                themes.Add(new SelectListItem { Text = "Génie", Value = "Genie" });
+                themes.Add(new SelectListItem { Text = "ISTC", Value = "ISTC" });
+                themes.Add(new SelectListItem { Text = "NRBC", Value = "NRBC" });
+                themes.Add(new SelectListItem { Text = "Renseignement", Value = "Renseignement" });
+                themes.Add(new SelectListItem { Text = "Secourisme", Value = "Secourisme" });
+                themes.Add(new SelectListItem { Text = "Transmission", Value = "Transmission" });
+                themes.Add(new SelectListItem { Text = "Topographie", Value = "Topographie" });
+                themes.Add(new SelectListItem { Text = "Autres", Value = "Autres" });
 
-            AjoutCoursViewModel vm = new AjoutCoursViewModel { 
-                Cours = cours,
-                Themes = themes
-            };
+                AjoutCoursViewModel vm = new AjoutCoursViewModel
+                {
+                    Cours = cours,
+                    Themes = themes
+                };
 
-            return PartialView("AfficherPopUpNouveauCours", vm);
+                return PartialView("AfficherPopUpNouveauCours", vm);
+            } 
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur affichage de la pop-up nouveau cours -> " + e);
+                return new HttpStatusCodeResult(500, "Echec affichage de la pop-up nouveau cours -> " + e.Message);
+            }
         }
 
         [Authorize]
@@ -136,7 +159,8 @@ namespace PortailReserve.Controllers
                 int taille = fichierCours.ContentLength;
                 if (taille/1024 >= 2097152)
                 {
-                    return new HttpStatusCodeResult(400);
+                    LOGGER.Log("ERROR", "Fichier trop volumineux pour ajout cours.");
+                    return new HttpStatusCodeResult(400, "Fichier trop volumineux.");
                 }
 
                 string path = HttpContext.Server.MapPath("~/Content/Cours/") + toSave.Theme + "/" + fichierCours.FileName;
@@ -151,14 +175,16 @@ namespace PortailReserve.Controllers
 
                 if(idCours.Equals(Guid.Empty))
                 {
-                    return new HttpStatusCodeResult(400);
+                    LOGGER.Log("ERROR", "Echec ajout d'un nouveau cours");
+                    return new HttpStatusCodeResult(400, "Erreur ajout nouveau cours.");
                 }
 
                 return RedirectToAction("AfficherListeThemes");
             }
             catch(Exception e)
             {
-                return new HttpStatusCodeResult(500);
+                LOGGER.Log("ERROR", "Erreur lors de l'ajout d'un nouveau cours -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur lors de l'ajout d'un nouveau cours -> " + e.Message);
             }
         }
 
@@ -171,20 +197,20 @@ namespace PortailReserve.Controllers
                 if (u == null)
                 {
                     FormsAuthentication.SignOut();
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.Equals(typeof(UtilisateurNull)))
                 {
                     FormsAuthentication.SignOut();
                     ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.PremiereCo)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
                 if(u.Role > 3)
                 {
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Vous n'avez pas le niveau d'autorisation pour cette action.");
                 }
 
                 Cours cours = cDal.GetCoursById(id);
@@ -202,7 +228,8 @@ namespace PortailReserve.Controllers
             }
             catch(Exception e)
             {
-                return new HttpStatusCodeResult(400);
+                LOGGER.Log("ERROR", "Erreur affichage pop-up suppression de cours -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur chargement de la pop-up -> " + e.Message);
             }
         }
 
@@ -216,38 +243,38 @@ namespace PortailReserve.Controllers
                 if (u == null)
                 {
                     FormsAuthentication.SignOut();
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.Equals(typeof(UtilisateurNull)))
                 {
                     FormsAuthentication.SignOut();
                     ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.PremiereCo)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
                 if (u.Role > 3)
                 {
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Vous n'êtes pas autorisé à réaliser cette action.");
                 }
 
                 Guid idCours = Guid.Parse(Request.Form["idCours"]);
                 if(idCours.Equals(Guid.Empty))
                 {
-                    return new HttpStatusCodeResult(400);
+                    return new HttpStatusCodeResult(400, "Echec récupération de l'id du cours à supprimer.");
                 }
 
                 Cours toDelete = cDal.GetCoursById(idCours);
                 if(toDelete == null || toDelete.Equals(typeof(CoursNull)))
                 {
-                    return new HttpStatusCodeResult(400);
+                    return new HttpStatusCodeResult(400, "Echec récupération du cours à supprimer.");
                 }
 
                 int retour = cDal.SupprimerCours(idCours);
                 if(retour != 1)
                 {
-                    return new HttpStatusCodeResult(400);
+                    return new HttpStatusCodeResult(400, "Echec suppression du cours.");
                 }
 
                 if (System.IO.File.Exists(toDelete.Fichier))
@@ -257,7 +284,8 @@ namespace PortailReserve.Controllers
             }
             catch(Exception e)
             {
-                return new HttpStatusCodeResult(500);
+                LOGGER.Log("ERROR", "Echec suppression du cours -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur lors de la suppression du cours -> " +e.Message);
             }
         }
 
@@ -270,20 +298,20 @@ namespace PortailReserve.Controllers
                 if (u == null)
                 {
                     FormsAuthentication.SignOut();
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.Equals(typeof(UtilisateurNull)))
                 {
                     FormsAuthentication.SignOut();
                     ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.PremiereCo)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
                 if (u.Role > 3)
                 {
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
                 }
 
                 Cours toModif = cDal.GetCoursById(id);
@@ -319,7 +347,8 @@ namespace PortailReserve.Controllers
             }
             catch(Exception e)
             {
-                return new HttpStatusCodeResult(500);
+                LOGGER.Log("ERROR", "Erreur affichage pop-up modification de cours -> " + e);
+                return new HttpStatusCodeResult(500, "Echec affichage pop-up -> " + e.Message);
             }
         }
 
@@ -333,20 +362,20 @@ namespace PortailReserve.Controllers
                 if (u == null)
                 {
                     FormsAuthentication.SignOut();
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.Equals(typeof(UtilisateurNull)))
                 {
                     FormsAuthentication.SignOut();
                     ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.PremiereCo)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Ceci est vote première connexion.");
 
                 if (u.Role > 3)
                 {
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
                 }
 
                 string oldFichier = vm.Cours.Fichier;
@@ -357,7 +386,7 @@ namespace PortailReserve.Controllers
                     int taille = nveauFichier.ContentLength;
                     if (taille/1024 >= 2097152)
                     {
-                        return new HttpStatusCodeResult(400);
+                        return new HttpStatusCodeResult(400, "La fichier est trop volumineux.");
                     }
 
                     string path = HttpContext.Server.MapPath("~/Content/Cours/") + vm.Cours.Theme + "/" + nveauFichier.FileName;
@@ -374,49 +403,66 @@ namespace PortailReserve.Controllers
                 int retour = cDal.ModifierCours(vm.Cours.Id, vm.Cours);
                 if(retour != 1)
                 {
-                    return new HttpStatusCodeResult(400);
+                    return new HttpStatusCodeResult(400, "Echec modification du cours.");
                 }
 
                 return RedirectToAction("AfficherListeThemes");
             }
             catch(Exception e)
             {
-                return new HttpStatusCodeResult(500);
+                LOGGER.Log("ERROR", "Erreur lors de la modification du cours -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur lors de la modification du cours -> " + e.Message);
             }
         }
 
         [Authorize]
         public ActionResult ChantsEtTraditions(string success = "", string erreur = "")
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
+
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
+
+                ViewBag.Erreur = erreur;
+                ViewBag.succes = success;
+
+                return View();
             }
-            if (u.Equals(typeof(UtilisateurNull)))
+            catch(Exception e)
             {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
+                LOGGER.Log("ERROR", "Erreur chargement de la page d'affichage des chants et des traditions -> " + e);
+                return new HttpStatusCodeResult(500, "Echec du chargement de la page -> " + e.Message);
             }
-            if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
-
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
-
-            ViewBag.Erreur = erreur;
-            ViewBag.succes = success;
-
-            return View();
         }
 
         [Authorize]
         public ActionResult AfficherListeTypeChants()
         {
-            return PartialView("AfficherListeTypeChants");
+            try
+            {
+                return PartialView("AfficherListeTypeChants");
+            }
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur lors de l'affichage de la liste des types de chant -> " + e);
+                return new HttpStatusCodeResult(500, "Echec du chargement de la liste des types de chants -> " + e.Message);
+            }
         }
 
         [Authorize]
@@ -449,6 +495,7 @@ namespace PortailReserve.Controllers
             }
             catch(Exception e)
             {
+                LOGGER.Log("ERROR", "Erreur affichage des chants par types : " + type + " -> " + e);
                 return new HttpStatusCodeResult(500);
             }
         }
@@ -456,143 +503,168 @@ namespace PortailReserve.Controllers
         [Authorize]
         public ActionResult Chant (string titre, string success = "")
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
-            }
-            if (u.Equals(typeof(UtilisateurNull)))
-            {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
-            }
-            if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
-
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
-
-            ViewBag.Succes = "";
-
-            Chant chant = chDal.GetChantByTitre(titre);
-            if(chant == null || chant.Equals(typeof(ChantNull)))
-            {
-                chant = new Chant
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
                 {
-                    Titre = "Chant introuvable",
-                    Texte = "",
-                    Id = Guid.Empty
-                };
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
+
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
+
+                ViewBag.Succes = "";
+
+                Chant chant = chDal.GetChantByTitre(titre);
+                if (chant == null || chant.Equals(typeof(ChantNull)))
+                {
+                    chant = new Chant
+                    {
+                        Titre = "Chant introuvable",
+                        Texte = "",
+                        Id = Guid.Empty
+                    };
+                }
+
+                chant.Texte = chant.Texte.Replace(Environment.NewLine, "<br/>");
+
+                ViewBag.Succes = success;
+
+                return View(chant);
             }
-
-            chant.Texte = chant.Texte.Replace(Environment.NewLine, "<br/>");
-
-            ViewBag.Succes = success;
-
-            return View(chant);
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur de l'affichage du chant : " + titre + " -> " + e);
+                return new HttpStatusCodeResult(500, "Echec de l'affichage du chant : " + titre + " -> " + e.Message);
+            }
         }
 
         [Authorize]
         public ActionResult AjouterChant()
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
+
+                if (u.Role > 3)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
+
+                Chant chant = new Chant
+                {
+                    Titre = "",
+                    Texte = ""
+                };
+
+                List<SelectListItem> types = new List<SelectListItem>();
+                types.Add(new SelectListItem { Text = "Chant", Value = "trad", Selected = true });
+                types.Add(new SelectListItem { Text = "Chant Popote", Value = "popote" });
+
+                AjoutModifChantViewModel vm = new AjoutModifChantViewModel
+                {
+                    Chant = chant,
+                    Types = types
+                };
+
+                return View(vm);
             }
-            if (u.Equals(typeof(UtilisateurNull)))
+            catch(Exception e)
             {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
+                LOGGER.Log("ERROR", "Erreur affichage de la page d'ajout de chant -> " + e);
+                return new HttpStatusCodeResult(500, "Echec de l'affichage de la page d'ajout de chant -> " + e.Message);
             }
-            if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
-
-            if(u.Role > 3)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
-
-            Chant chant = new Chant
-            {
-                Titre = "",
-                Texte = ""
-            };
-
-            List<SelectListItem> types = new List<SelectListItem>();
-            types.Add(new SelectListItem { Text = "Chant", Value = "trad", Selected = true });
-            types.Add(new SelectListItem { Text = "Chant Popote", Value = "popote" });
-
-            AjoutModifChantViewModel vm = new AjoutModifChantViewModel
-            {
-                Chant = chant,
-                Types = types
-            };
-
-            return View(vm);
         }
 
         [Authorize]
         [HttpPost]
         public ActionResult AjouterChant(AjoutModifChantViewModel vm)
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
+
+                if (u.Role > 3)
+                {
+                    return RedirectToAction("ChantsEtTraditions");
+                }
+
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
+
+                ViewBag.Erreur = "";
+
+                List<SelectListItem> types = new List<SelectListItem>();
+                types.Add(new SelectListItem { Text = "Chant", Value = "trad", Selected = true });
+                types.Add(new SelectListItem { Text = "Chant Popote", Value = "popote" });
+                vm.Types = types;
+
+                if (chDal.ValiderTitreChant(vm.Chant.Titre))
+                {
+                    ModelState.AddModelError("Chant.Titre", "Un chant avec ce titre existe déjà.");
+                    return View(vm);
+                }
+
+                var type = Request.Form["typeChant"];
+                vm.Chant.Type = type;
+
+                Guid idChant = chDal.AjouterChant(vm.Chant);
+                if (idChant.Equals(Guid.Empty))
+                {
+                    LOGGER.Log("ERROR", "Erreur ajout d'un nouveau chant.");
+                    ViewBag.Erreur = "Une erreur s'est produite lors de la création du nouveau chant. Veuillez réessayer plus tard.";
+                    return View(vm);
+                }
+
+                return RedirectToAction("Chant", new { titre = vm.Chant.Titre });
             }
-            if (u.Equals(typeof(UtilisateurNull)))
+            catch(Exception e)
             {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
+                LOGGER.Log("ERROR", "Erreur lors de l'ajout d'un nouveau chant -> " + e);
+                return new HttpStatusCodeResult(500, "Echec ajout de du nouveau chant -> " + e.Message);
             }
-            if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
-
-            if (u.Role > 3)
-            {
-                return RedirectToAction("ChantsEtTraditions");
-            }
-
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
-
-            ViewBag.Erreur = "";
-
-            List<SelectListItem> types = new List<SelectListItem>();
-            types.Add(new SelectListItem { Text = "Chant", Value = "trad", Selected = true });
-            types.Add(new SelectListItem { Text = "Chant Popote", Value = "popote" });
-            vm.Types = types;
-
-            if (chDal.ValiderTitreChant(vm.Chant.Titre))
-            {
-                ModelState.AddModelError("Chant.Titre", "Un chant avec ce titre existe déjà.");
-                return View(vm);
-            }
-
-            var type = Request.Form["typeChant"];
-            vm.Chant.Type = type;
-
-            Guid idChant = chDal.AjouterChant(vm.Chant);
-            if(idChant.Equals(Guid.Empty))
-            {
-                ViewBag.Erreur = "Une erreur s'est produite lors de la création du nouveau chant. Veuillez réessayer plus tard.";
-                return View(vm);
-            }
-
-            return RedirectToAction("Chant", new { titre = vm.Chant.Titre });
         }
 
         [Authorize]
@@ -604,20 +676,20 @@ namespace PortailReserve.Controllers
                 if (u == null)
                 {
                     FormsAuthentication.SignOut();
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.Equals(typeof(UtilisateurNull)))
                 {
                     FormsAuthentication.SignOut();
                     ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.PremiereCo)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
                 if (u.Role > 3)
                 {
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
                 }
 
                 Chant chant = chDal.GetChantById(id);
@@ -632,8 +704,10 @@ namespace PortailReserve.Controllers
 
                 return PartialView("AfficherPopUpSupprimerChant", chant);
             }
-            catch(Exception e) {
-                return new HttpStatusCodeResult(500);
+            catch(Exception e) 
+            {
+                LOGGER.Log("ERROR", "Erreur pour l'affichage de la pop-up du suppression de chant -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur lors de l'affichage de la pop-up -> " + e.Message);
             }
         }
 
@@ -673,6 +747,7 @@ namespace PortailReserve.Controllers
                 Guid idChant = Guid.Parse(Request.Form["idChant"]);
                 if (idChant.Equals(Guid.Empty))
                 {
+                    LOGGER.Log("ERROR", "Erreur récupération de l'id du chant.");
                     err = "Une erreur s'est produite lors de la suppression. Veuillez réessayer plus tard.";
                     return RedirectToAction("ChantsEtTraditions", new { erreur = err });
                 }
@@ -680,6 +755,7 @@ namespace PortailReserve.Controllers
                 int result = chDal.SupprimerChant(idChant);
                 if(result != 1)
                 {
+                    LOGGER.Log("ERROR", "Erreur suppression du chant : " + idChant);
                     err = "Une erreur s'est produite lors de la suppression. Veuillez réessayer plus tard.";
                     return RedirectToAction("ChantsEtTraditions", new { erreur = err });
                 }
@@ -689,6 +765,7 @@ namespace PortailReserve.Controllers
             }
             catch(Exception e)
             {
+                LOGGER.Log("ERROR", "Erreur lors de la suppression d'un chant -> " + e);
                 string err = "Une erreur s'est produite lors de la suppression. Veuillez réessayer plus tard.";
                 return RedirectToAction("ChantsEtTraditions", new { erreur = err });
             }
@@ -697,125 +774,141 @@ namespace PortailReserve.Controllers
         [Authorize]
         public ActionResult ModifierChant(string titre)
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
-            }
-            if (u.Equals(typeof(UtilisateurNull)))
-            {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
-            }
-            if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
-
-            if (u.Role > 3)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
-
-            Chant chant = chDal.GetChantByTitre(titre);
-            if(chant == null || chant.Equals(typeof(ChantNull)))
-            {
-                chant = new Chant
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
                 {
-                    Titre = "",
-                    Type = "",
-                    Texte = "",
-                    Id = Guid.Empty
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
+
+                if (u.Role > 3)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
+
+                Chant chant = chDal.GetChantByTitre(titre);
+                if (chant == null || chant.Equals(typeof(ChantNull)))
+                {
+                    chant = new Chant
+                    {
+                        Titre = "",
+                        Type = "",
+                        Texte = "",
+                        Id = Guid.Empty
+                    };
+                }
+
+                List<SelectListItem> types = new List<SelectListItem>();
+                if (chant.Type.Equals("popote"))
+                {
+                    types.Add(new SelectListItem { Text = "Chant", Value = "trad" });
+                    types.Add(new SelectListItem { Text = "Chant Popote", Value = "popote", Selected = true });
+                }
+                else
+                {
+                    types.Add(new SelectListItem { Text = "Chant", Value = "trad", Selected = true });
+                    types.Add(new SelectListItem { Text = "Chant Popote", Value = "popote" });
+                }
+
+                AjoutModifChantViewModel vm = new AjoutModifChantViewModel
+                {
+                    Chant = chant,
+                    Types = types
                 };
-            }
 
-            List<SelectListItem> types = new List<SelectListItem>();
-            if(chant.Type.Equals("popote"))
-            {
-                types.Add(new SelectListItem { Text = "Chant", Value = "trad" });
-                types.Add(new SelectListItem { Text = "Chant Popote", Value = "popote", Selected = true });
+                return View(vm);
             }
-            else
+            catch(Exception e)
             {
-                types.Add(new SelectListItem { Text = "Chant", Value = "trad", Selected = true });
-                types.Add(new SelectListItem { Text = "Chant Popote", Value = "popote" });
+                LOGGER.Log("ERROR", "Erreur lors de l'affichage de la page de modification de chant -> " + e);
+                return new HttpStatusCodeResult(500, "Echec affichage de la page de moidifcation de chant -> " + e.Message);
             }
-
-            AjoutModifChantViewModel vm = new AjoutModifChantViewModel
-            {
-                Chant = chant,
-                Types = types
-            };
-
-            return View(vm);
         }
 
         [Authorize]
         [HttpPost]
         public ActionResult ModifierChant (AjoutModifChantViewModel vm)
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
+
+                if (u.Role > 3)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
+
+                ViewBag.Erreur = "";
+
+                var type = Request.Form["typeChant"];
+                vm.Chant.Type = type;
+
+                List<SelectListItem> types = new List<SelectListItem>();
+                if (vm.Chant.Type.Equals("popote"))
+                {
+                    types.Add(new SelectListItem { Text = "Chant", Value = "trad" });
+                    types.Add(new SelectListItem { Text = "Chant Popote", Value = "popote", Selected = true });
+                }
+                else
+                {
+                    types.Add(new SelectListItem { Text = "Chant", Value = "trad", Selected = true });
+                    types.Add(new SelectListItem { Text = "Chant Popote", Value = "popote" });
+                }
+                vm.Types = types;
+
+                if (chDal.ValiderTitreChant(vm.Chant.Titre))
+                {
+                    ModelState.AddModelError("Chant.Titre", "Un chant avec ce titre existe déjà.");
+                    return View(vm);
+                }
+
+                int retour = chDal.ModifierChant(vm.Chant.Id, vm.Chant);
+                if (retour != 1)
+                {
+                    ViewBag.Erreur = "Une erreur s'est produite lors de la création du nouveau chant. Veuillez réessayer plus tard.";
+                    return View(vm);
+                }
+
+                string suc = "Modification apportée avec succés.";
+
+                return RedirectToAction("Chant", new { titre = vm.Chant.Titre, success = suc });
             }
-            if (u.Equals(typeof(UtilisateurNull)))
+            catch(Exception e)
             {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
+                LOGGER.Log("ERROR", "Erreur de la modification du chant -> " + e);
+                return new HttpStatusCodeResult(500, "Echech modification du chant -> " + e.Message);
             }
-            if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
-
-            if (u.Role > 3)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
-
-            ViewBag.Erreur = "";
-
-            var type = Request.Form["typeChant"];
-            vm.Chant.Type = type;
-
-            List<SelectListItem> types = new List<SelectListItem>();
-            if (vm.Chant.Type.Equals("popote"))
-            {
-                types.Add(new SelectListItem { Text = "Chant", Value = "trad" });
-                types.Add(new SelectListItem { Text = "Chant Popote", Value = "popote", Selected = true });
-            }
-            else
-            {
-                types.Add(new SelectListItem { Text = "Chant", Value = "trad", Selected = true });
-                types.Add(new SelectListItem { Text = "Chant Popote", Value = "popote" });
-            }
-            vm.Types = types;
-
-            if (chDal.ValiderTitreChant(vm.Chant.Titre))
-            {
-                ModelState.AddModelError("Chant.Titre", "Un chant avec ce titre existe déjà.");
-                return View(vm);
-            }
-
-            int retour = chDal.ModifierChant(vm.Chant.Id, vm.Chant);
-            if (retour != 1)
-            {
-                ViewBag.Erreur = "Une erreur s'est produite lors de la création du nouveau chant. Veuillez réessayer plus tard.";
-                return View(vm);
-            }
-
-            string suc = "Modification apportée avec succés.";
-
-            return RedirectToAction("Chant", new { titre = vm.Chant.Titre, success = suc });
         }
     }
 }

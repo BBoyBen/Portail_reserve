@@ -2,12 +2,10 @@
 using PortailReserve.DAL.Impl;
 using PortailReserve.Models;
 using PortailReserve.Models.NullObject;
+using PortailReserve.Utils;
 using PortailReserve.ViewModel;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 
@@ -22,6 +20,7 @@ namespace PortailReserve.Controllers
         private ICompagnieDal cDal;
         private IEvenementDal eDal;
         private IEffectifDal effDal;
+        private readonly Logger LOGGER;
 
         public HomeController()
         {
@@ -32,41 +31,49 @@ namespace PortailReserve.Controllers
             cDal = new CompagnieDal();
             eDal = new EvenementDal();
             effDal = new EffectifDal();
+            LOGGER = new Logger(this.GetType());
         }
 
         [Authorize]
         public ActionResult Index()
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
+
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
+
+                Evenement prochain = eDal.GetProchainEvenement();
+                AcceuilViewModel vm = new AcceuilViewModel()
+                {
+                    ProchainEvent = prochain,
+                    HasProchainEvent = true
+                };
+
+                if (prochain == null)
+                    vm.HasProchainEvent = false;
+
+                return View(vm);
             }
-            if (u.Equals(typeof(UtilisateurNull)))
+            catch(Exception e)
             {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
+                return new HttpStatusCodeResult(500, "Echec chargement de la page -> " + e.Message);
             }
-            if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
-
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
-
-            Evenement prochain = eDal.GetProchainEvenement();
-            AcceuilViewModel vm = new AcceuilViewModel()
-            {
-                ProchainEvent = prochain,
-                HasProchainEvent = true
-            };
-
-            if (prochain == null)
-                vm.HasProchainEvent = false;
-
-            return View(vm);
         }
 
         public ActionResult ResetBdd ()
