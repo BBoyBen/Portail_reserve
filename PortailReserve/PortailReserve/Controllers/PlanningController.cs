@@ -7,7 +7,6 @@ using PortailReserve.Utils;
 using PortailReserve.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -24,6 +23,7 @@ namespace PortailReserve.Controllers
         private IDisponibiliteDal dDal;
         private IMessageDal mDal;
         private ILectureDal lDal;
+        private readonly Logger LOGGER;
 
         public PlanningController()
         {
@@ -34,178 +34,187 @@ namespace PortailReserve.Controllers
             dDal = new DisponibiliteDal();
             mDal = new MessageDal();
             lDal = new LectureDal();
+            LOGGER = new Logger(this.GetType());
         }
 
         [Authorize]
         public ActionResult Index()
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
-            }
-            if (u.Equals(typeof(UtilisateurNull)))
-            {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
-            }
-            if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
-
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
-
-            // On créé une liste contenant toutes les dates sur la prochaine année
-            DateTime dateDuJour = DateTime.Now;
-            int numMois = dateDuJour.Month;
-            List<DateTime> listeDesDates = new List<DateTime>();
-            List<string> listeMois = new List<string>();
-
-            listeDesDates.Add(dateDuJour);
-            listeMois.Add(dateDuJour.ToString("Y").Substring(0, 4));
-            DateTime pourAjout = dateDuJour.AddDays(1);
-
-            while(pourAjout.CompareTo(dateDuJour.AddYears(1)) <= 0)
-            {
-                listeDesDates.Add(pourAjout);
-                if(pourAjout.Month != numMois)
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
                 {
-                    listeMois.Add(pourAjout.ToString("Y").Substring(0, 4));
-                    numMois = pourAjout.Month;
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
                 }
-                pourAjout = pourAjout.AddDays(1);
-            }
-
-            // on récupère tous les événement
-            List<Evenement> events = eDal.GetEvenementsPourPlanning();
-
-            // association des jour aux evenement
-            List<JourEvenement> eventsParJour = new List<JourEvenement>();
-            foreach(DateTime jour in listeDesDates)
-            {
-                JourEvenement je = new JourEvenement();
-                je.Jour = jour;
-                je.Evenement = null;
-                je.CarreBlanc = false;
-                je.Type = "";
-                je.AutresEvents = new List<Guid>();
-
-                foreach(Evenement e in events)
+                if (u.Equals(typeof(UtilisateurNull)))
                 {
-                    if(jour.CompareTo(e.Debut) >= 0 && jour.CompareTo(e.Fin.AddDays(1)) <= 0)
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
+
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
+
+                // On créé une liste contenant toutes les dates sur la prochaine année
+                DateTime dateDuJour = DateTime.Now;
+                int numMois = dateDuJour.Month;
+                List<DateTime> listeDesDates = new List<DateTime>();
+                List<string> listeMois = new List<string>();
+
+                listeDesDates.Add(dateDuJour);
+                listeMois.Add(dateDuJour.ToString("Y").Substring(0, 4));
+                DateTime pourAjout = dateDuJour.AddDays(1);
+
+                while (pourAjout.CompareTo(dateDuJour.AddYears(1)) <= 0)
+                {
+                    listeDesDates.Add(pourAjout);
+                    if (pourAjout.Month != numMois)
                     {
-                        if (je.Evenement == null)
+                        listeMois.Add(pourAjout.ToString("Y").Substring(0, 4));
+                        numMois = pourAjout.Month;
+                    }
+                    pourAjout = pourAjout.AddDays(1);
+                }
+
+                // on récupère tous les événement
+                List<Evenement> events = eDal.GetEvenementsPourPlanning();
+
+                // association des jour aux evenement
+                List<JourEvenement> eventsParJour = new List<JourEvenement>();
+                foreach (DateTime jour in listeDesDates)
+                {
+                    JourEvenement je = new JourEvenement();
+                    je.Jour = jour;
+                    je.Evenement = null;
+                    je.CarreBlanc = false;
+                    je.Type = "";
+                    je.AutresEvents = new List<Guid>();
+
+                    foreach (Evenement e in events)
+                    {
+                        if (jour.CompareTo(e.Debut) >= 0 && jour.CompareTo(e.Fin.AddDays(1)) <= 0)
                         {
-                            je.Evenement = e;
-                            je.Type = e.Type;
-                        }
-                        else
-                        {
-                            je.AutresEvents.Add(e.Id);
+                            if (je.Evenement == null)
+                            {
+                                je.Evenement = e;
+                                je.Type = e.Type;
+                            }
+                            else
+                            {
+                                je.AutresEvents.Add(e.Id);
+                            }
                         }
                     }
+
+                    eventsParJour.Add(je);
                 }
 
-                eventsParJour.Add(je);
+                // création d'une liste par jour de la semaine
+                List<JourEvenement> lundi = new List<JourEvenement>();
+                List<JourEvenement> mardi = new List<JourEvenement>();
+                List<JourEvenement> mercredi = new List<JourEvenement>();
+                List<JourEvenement> jeudi = new List<JourEvenement>();
+                List<JourEvenement> vendredi = new List<JourEvenement>();
+                List<JourEvenement> samedi = new List<JourEvenement>();
+                List<JourEvenement> dimanche = new List<JourEvenement>();
+
+                bool premierJourAjout = false;
+                foreach (JourEvenement je in eventsParJour)
+                {
+                    // Ajout des lundi
+                    if (je.Jour.DayOfWeek.Equals(DayOfWeek.Monday))
+                    {
+                        lundi.Add(je);
+                        premierJourAjout = true;
+                    }
+                    else if (!premierJourAjout)
+                        lundi.Add(new JourEvenement { CarreBlanc = true });
+
+                    // ajout des mardi
+                    if (je.Jour.DayOfWeek.Equals(DayOfWeek.Tuesday))
+                    {
+                        mardi.Add(je);
+                        premierJourAjout = true;
+                    }
+                    else if (!premierJourAjout)
+                        mardi.Add(new JourEvenement { CarreBlanc = true });
+
+                    // ajout des mercredi
+                    if (je.Jour.DayOfWeek.Equals(DayOfWeek.Wednesday))
+                    {
+                        mercredi.Add(je);
+                        premierJourAjout = true;
+                    }
+                    else if (!premierJourAjout)
+                        mercredi.Add(new JourEvenement { CarreBlanc = true });
+
+                    // ajout des jeudi
+                    if (je.Jour.DayOfWeek.Equals(DayOfWeek.Thursday))
+                    {
+                        jeudi.Add(je);
+                        premierJourAjout = true;
+                    }
+                    else if (!premierJourAjout)
+                        jeudi.Add(new JourEvenement { CarreBlanc = true });
+
+                    // ajout des vendredi
+                    if (je.Jour.DayOfWeek.Equals(DayOfWeek.Friday))
+                    {
+                        vendredi.Add(je);
+                        premierJourAjout = true;
+                    }
+                    else if (!premierJourAjout)
+                        vendredi.Add(new JourEvenement { CarreBlanc = true });
+
+                    // ajout des samedi
+                    if (je.Jour.DayOfWeek.Equals(DayOfWeek.Saturday))
+                    {
+                        samedi.Add(je);
+                        premierJourAjout = true;
+                    }
+                    else if (!premierJourAjout)
+                        samedi.Add(new JourEvenement { CarreBlanc = true });
+
+                    // ajout des dimanche
+                    if (je.Jour.DayOfWeek.Equals(DayOfWeek.Sunday))
+                    {
+                        dimanche.Add(je);
+                        premierJourAjout = true;
+                    }
+                    else if (!premierJourAjout)
+                        dimanche.Add(new JourEvenement { CarreBlanc = true });
+                }
+
+                Guid idEventAjd = Guid.Empty;
+                if (eventsParJour.ElementAt(0).Evenement != null)
+                    idEventAjd = eventsParJour.ElementAt(0).Evenement.Id;
+
+                TableauPlanningViewModel vm = new TableauPlanningViewModel
+                {
+                    Lundi = lundi,
+                    Mardi = mardi,
+                    Mercredi = mercredi,
+                    Jeudi = jeudi,
+                    Vendredi = vendredi,
+                    Samedi = samedi,
+                    Dimanche = dimanche,
+                    Mois = listeMois,
+                    IdEventDuJour = idEventAjd
+                };
+
+                return View(vm);
             }
-
-            // création d'une liste par jour de la semaine
-            List<JourEvenement> lundi = new List<JourEvenement>();
-            List<JourEvenement> mardi = new List<JourEvenement>();
-            List<JourEvenement> mercredi = new List<JourEvenement>();
-            List<JourEvenement> jeudi = new List<JourEvenement>();
-            List<JourEvenement> vendredi = new List<JourEvenement>();
-            List<JourEvenement> samedi = new List<JourEvenement>();
-            List<JourEvenement> dimanche = new List<JourEvenement>();
-
-            bool premierJourAjout = false;
-            foreach(JourEvenement je in eventsParJour)
+            catch(Exception e)
             {
-                // Ajout des lundi
-                if (je.Jour.DayOfWeek.Equals(DayOfWeek.Monday))
-                {
-                    lundi.Add(je);
-                    premierJourAjout = true;
-                }
-                else if (!premierJourAjout)
-                    lundi.Add(new JourEvenement { CarreBlanc = true });
-
-                // ajout des mardi
-                if (je.Jour.DayOfWeek.Equals(DayOfWeek.Tuesday))
-                {
-                    mardi.Add(je);
-                    premierJourAjout = true;
-                }
-                else if (!premierJourAjout)
-                    mardi.Add(new JourEvenement { CarreBlanc = true });
-
-                // ajout des mercredi
-                if (je.Jour.DayOfWeek.Equals(DayOfWeek.Wednesday))
-                {
-                    mercredi.Add(je);
-                    premierJourAjout = true;
-                }
-                else if (!premierJourAjout)
-                    mercredi.Add(new JourEvenement { CarreBlanc = true });
-
-                // ajout des jeudi
-                if (je.Jour.DayOfWeek.Equals(DayOfWeek.Thursday))
-                {
-                    jeudi.Add(je);
-                    premierJourAjout = true;
-                }
-                else if (!premierJourAjout)
-                    jeudi.Add(new JourEvenement { CarreBlanc = true });
-
-                // ajout des vendredi
-                if (je.Jour.DayOfWeek.Equals(DayOfWeek.Friday))
-                {
-                    vendredi.Add(je);
-                    premierJourAjout = true;
-                }
-                else if (!premierJourAjout)
-                    vendredi.Add(new JourEvenement { CarreBlanc = true });
-
-                // ajout des samedi
-                if (je.Jour.DayOfWeek.Equals(DayOfWeek.Saturday))
-                {
-                    samedi.Add(je);
-                    premierJourAjout = true;
-                }
-                else if (!premierJourAjout)
-                    samedi.Add(new JourEvenement { CarreBlanc = true });
-
-                // ajout des dimanche
-                if (je.Jour.DayOfWeek.Equals(DayOfWeek.Sunday))
-                {
-                    dimanche.Add(je);
-                    premierJourAjout = true;
-                }
-                else if (!premierJourAjout)
-                    dimanche.Add(new JourEvenement { CarreBlanc = true });
+                LOGGER.Log("ERROR", "Erreur affichage du planning -> " + e);
+                return new HttpStatusCodeResult(500, "Exception affichage du planning -> " + e.Message);
             }
-
-            Guid idEventAjd = Guid.Empty;
-            if (eventsParJour.ElementAt(0).Evenement != null)
-                idEventAjd = eventsParJour.ElementAt(0).Evenement.Id;
-
-            TableauPlanningViewModel vm = new TableauPlanningViewModel
-            {
-                Lundi = lundi,
-                Mardi = mardi,
-                Mercredi = mercredi,
-                Jeudi = jeudi,
-                Vendredi = vendredi,
-                Samedi = samedi,
-                Dimanche = dimanche,
-                Mois = listeMois,
-                IdEventDuJour = idEventAjd
-            };
-
-            return View(vm);
         }
 
         [Authorize]
@@ -251,539 +260,620 @@ namespace PortailReserve.Controllers
             }
             catch(Exception e)
             {
-                return new HttpStatusCodeResult(500);
+                LOGGER.Log("ERROR", "Erreur de l'aafichge de l'evenement : " + id + " -> " + e);
+                return new HttpStatusCodeResult(500, "Exception affichage de l'evenement -> " + e.Message);
             }
         }
 
         [Authorize]
         public ActionResult Evenement (Guid id)
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
+
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
+
+                Evenement e = eDal.GetEvenementById(id);
+                ViewBag.Erreur = "";
+                if (e == null || e.Equals(typeof(EvenementNull)))
+                    ViewBag.Erreur = "Une erreur s'est produite lors de la récupération de l'événement.";
+
+                Effectif eff = effDal.GetEffectifById(e.Effectif);
+
+                List<Disponibilite> allDispo = dDal.GetDispoByIdUtilAndByIdEvent(u.Id, e.Id);
+
+                Disponibilite dispo = new Disponibilite();
+                if (allDispo.Count > 0)
+                    dispo = (Disponibilite)allDispo.ToArray().GetValue(0);
+
+                List<Message> messages = mDal.GetMessagesByEvent(id);
+                int nbNonLu = 0;
+                foreach (Message m in messages)
+                {
+                    if (lDal.GetLectureByMessageAndByUtil(m.Id, u.Id) == null)
+                        nbNonLu++;
+                }
+
+                EventViewModel vm = new EventViewModel()
+                {
+                    Event = e,
+                    Util = u,
+                    Effectif = eff,
+                    Dispo = dispo,
+                    NonLu = nbNonLu
+                };
+
+                return View(vm);
             }
-            if (u.Equals(typeof(UtilisateurNull)))
+            catch(Exception e)
             {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
+                LOGGER.Log("ERROR", "Erreur lors de l'affichage de l'evenement : " + id + " -> " + e);
+                return new HttpStatusCodeResult(500, "Exception affichage de l'evenement -> " + e.Message);
             }
-            if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
-
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
-
-            Evenement e = eDal.GetEvenementById(id);
-            ViewBag.Erreur = "";
-            if (e == null || e.Equals(typeof(EvenementNull)))
-                ViewBag.Erreur = "Une erreur s'est produite lors de la récupération de l'événement.";
-
-            Effectif eff = effDal.GetEffectifById(e.Effectif);
-
-            List<Disponibilite> allDispo = dDal.GetDispoByIdUtilAndByIdEvent(u.Id, e.Id);
-
-            Disponibilite dispo = new Disponibilite();
-            if (allDispo.Count > 0)
-                dispo = (Disponibilite)allDispo.ToArray().GetValue(0);
-
-            List<Message> messages = mDal.GetMessagesByEvent(id);
-            int nbNonLu = 0;
-            foreach(Message m in messages)
-            {
-                if (lDal.GetLectureByMessageAndByUtil(m.Id, u.Id) == null)
-                    nbNonLu++;
-            }
-
-            EventViewModel vm = new EventViewModel()
-            {
-                Event = e,
-                Util = u,
-                Effectif = eff,
-                Dispo = dispo,
-                NonLu = nbNonLu
-            };  
-
-            return View(vm);
         }
 
         [Authorize]
         public ActionResult AfficherBoutonEtListeDispo(Guid id, string erreur = "")
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-
-            ViewBag.Erreur = erreur;
-
-            Evenement e = eDal.GetEvenementById(id);
-            ViewBag.Erreur = "";
-            if (e == null || e.Equals(typeof(EvenementNull)))
-                ViewBag.Erreur = "Une erreur s'est produite lors de la récupération de l'événement.";
-
-            Effectif eff = effDal.GetEffectifById(e.Effectif);
-
-            List<Disponibilite> allDispo = dDal.GetDispoByIdUtilAndByIdEvent(u.Id, e.Id);
-            bool aUneDispo = false;
-            foreach (Disponibilite d in allDispo)
+            try
             {
-                if (d.Disponible)
-                    aUneDispo = true;
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+
+                ViewBag.Erreur = erreur;
+
+                Evenement e = eDal.GetEvenementById(id);
+                ViewBag.Erreur = "";
+                if (e == null || e.Equals(typeof(EvenementNull)))
+                    ViewBag.Erreur = "Une erreur s'est produite lors de la récupération de l'événement.";
+
+                Effectif eff = effDal.GetEffectifById(e.Effectif);
+
+                List<Disponibilite> allDispo = dDal.GetDispoByIdUtilAndByIdEvent(u.Id, e.Id);
+                bool aUneDispo = false;
+                foreach (Disponibilite d in allDispo)
+                {
+                    if (d.Disponible)
+                        aUneDispo = true;
+                }
+
+                Disponibilite dispo = new Disponibilite();
+                if (allDispo.Count > 0)
+                    dispo = (Disponibilite)allDispo.ToArray().GetValue(0);
+
+                dispo.TouteLaPeriode = true;
+
+                EventViewModel vm = new EventViewModel()
+                {
+                    Event = e,
+                    Util = u,
+                    Effectif = eff,
+                    Dispo = dispo,
+                    AllDispo = allDispo,
+                    ADispo = aUneDispo,
+                    Participation = pDal.GetParticipationByUtilAndEvent(u.Id, e.Id),
+                    UtilParticipation = uDal.GetUtilisateursByParticipationOK(e.Id, u.Section, u.Compagnie),
+                    UtilDispo = uDal.GetUtilisateursByDispoOK(e.Id, u.Section, u.Compagnie),
+                    UtilNonParticipation = uDal.GetUtilisateursByParticipationKO(e.Id, u.Section, u.Compagnie),
+                    UtilNonDispo = uDal.GetUtilisateursByDispoKO(e.Id, u.Section, u.Compagnie),
+                    NoReponseD = uDal.GetUtilisateursSansReponseDispo(e.Id, u.Section, u.Compagnie),
+                    NoReponseP = uDal.GetUtilisateursSansReponseParticipation(e.Id, u.Section, u.Compagnie)
+                };
+
+                return PartialView("AfficherBoutonEtListeDispo", vm);
             }
-
-            Disponibilite dispo = new Disponibilite();
-            if (allDispo.Count > 0)
-                dispo = (Disponibilite)allDispo.ToArray().GetValue(0);
-
-            dispo.TouteLaPeriode = true;
-
-            EventViewModel vm = new EventViewModel()
+            catch(Exception e)
             {
-                Event = e,
-                Util = u,
-                Effectif = eff,
-                Dispo = dispo,
-                AllDispo = allDispo,
-                ADispo = aUneDispo,
-                Participation = pDal.GetParticipationByUtilAndEvent(u.Id, e.Id),
-                UtilParticipation = uDal.GetUtilisateursByParticipationOK(e.Id, u.Section, u.Compagnie),
-                UtilDispo = uDal.GetUtilisateursByDispoOK(e.Id, u.Section, u.Compagnie),
-                UtilNonParticipation = uDal.GetUtilisateursByParticipationKO(e.Id, u.Section, u.Compagnie),
-                UtilNonDispo = uDal.GetUtilisateursByDispoKO(e.Id, u.Section, u.Compagnie),
-                NoReponseD = uDal.GetUtilisateursSansReponseDispo(e.Id, u.Section, u.Compagnie),
-                NoReponseP = uDal.GetUtilisateursSansReponseParticipation(e.Id, u.Section, u.Compagnie)
-            };
-
-            return PartialView("AfficherBoutonEtListeDispo", vm);
+                LOGGER.Log("ERROR", "Erreur affichge de la liste des dispos et des boutons pour l'event : " + id + " -> " + e);
+                return new HttpStatusCodeResult(500, "Exception affichage de la liste des dispos -> " + e.Message);
+            }
         }
 
         [Authorize]
         public ActionResult AfficherPopUpAjoutDispo(Guid id)
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
 
-            Evenement e = eDal.GetEvenementById(id);
-            ViewBag.Erreur = "";
-            if (e == null || e.Equals(typeof(EvenementNull)))
-                e = new Evenement
+                Evenement e = eDal.GetEvenementById(id);
+                ViewBag.Erreur = "";
+                if (e == null || e.Equals(typeof(EvenementNull)))
+                    e = new Evenement
+                    {
+                        Id = Guid.Empty,
+                        Debut = DateTime.Now,
+                        Fin = DateTime.Now
+                    };
+
+                Disponibilite dispo = new Disponibilite();
+
+                EventViewModel vm = new EventViewModel
                 {
-                    Id = Guid.Empty,
-                    Debut = DateTime.Now,
-                    Fin = DateTime.Now
+                    Util = u,
+                    Event = e,
+                    Dispo = dispo
                 };
 
-            Disponibilite dispo = new Disponibilite();
-
-            EventViewModel vm = new EventViewModel
+                return PartialView("AfficherPopUpAjoutDispo", vm);
+            }
+            catch(Exception e)
             {
-                Util = u,
-                Event = e,
-                Dispo = dispo
-            };
-
-            return PartialView("AfficherPopUpAjoutDispo", vm);
+                LOGGER.Log("ERROR", "Erreur affichage de la pop-up ajout de dispo : " + id + " -> " + e);
+                return new HttpStatusCodeResult(500, "Exception affichage de la pop-up -> " + e.Message);
+            }
         }
 
         [Authorize]
         public ActionResult AfficherPopUpModifDispo(Guid id)
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
 
-            Evenement e = eDal.GetEvenementById(id);
-            ViewBag.Erreur = "";
-            if (e == null || e.Equals(typeof(EvenementNull)))
-                e = new Evenement
+                Evenement e = eDal.GetEvenementById(id);
+                ViewBag.Erreur = "";
+                if (e == null || e.Equals(typeof(EvenementNull)))
+                    e = new Evenement
+                    {
+                        Id = Guid.Empty,
+                        Debut = DateTime.Now,
+                        Fin = DateTime.Now
+                    };
+
+                List<Disponibilite> allDispo = dDal.GetDispoByIdUtilAndByIdEvent(u.Id, e.Id);
+
+                Disponibilite dispo = new Disponibilite();
+                if (allDispo.Count > 0)
+                    dispo = (Disponibilite)allDispo.ToArray().GetValue(0);
+
+                EventViewModel vm = new EventViewModel
                 {
-                    Id = Guid.Empty,
-                    Debut = DateTime.Now,
-                    Fin = DateTime.Now
+                    Util = u,
+                    Event = e,
+                    Dispo = dispo
                 };
 
-            List<Disponibilite> allDispo = dDal.GetDispoByIdUtilAndByIdEvent(u.Id, e.Id);
-
-            Disponibilite dispo = new Disponibilite();
-            if (allDispo.Count > 0)
-                dispo = (Disponibilite)allDispo.ToArray().GetValue(0);
-
-            EventViewModel vm = new EventViewModel
+                return PartialView("AfficherPopUpModifDispo", vm);
+            }
+            catch(Exception e)
             {
-                Util = u,
-                Event = e,
-                Dispo = dispo
-            };
-
-            return PartialView("AfficherPopUpModifDispo", vm);
+                LOGGER.Log("ERROR", "Erreur affichage de la pop-up modif dispo : " + id + " -> " + e);
+                return new HttpStatusCodeResult(500, "Exception affichage de la pop-up -> " + e.Message);
+            }
         }
 
         [Authorize]
         public ActionResult Liste ()
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
+
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
+
+                List<Evenement> aVenir = eDal.GetEvenementsAVenir();
+                aVenir = TrieEventAVenir(aVenir);
+
+                List<Evenement> passe = eDal.GetEvenementsPasse();
+                passe = TrieEventPasse(passe);
+
+                ListeEventViewModel vm = new ListeEventViewModel()
+                {
+                    AVenir = aVenir,
+                    Passe = passe
+                };
+
+                return View(vm);
             }
-            if (u.Equals(typeof(UtilisateurNull)))
+            catch(Exception e)
             {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
+                LOGGER.Log("ERROR", "Erreur de l'affichage de la liste des evenements -> " + e);
+                return new HttpStatusCodeResult(500, "Exception affichage de la liste des evenements -> " + e.Message);
             }
-            if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
-
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
-
-            List<Evenement> aVenir = eDal.GetEvenementsAVenir();
-            aVenir = TrieEventAVenir(aVenir);
-
-            List<Evenement> passe = eDal.GetEvenementsPasse();
-            passe = TrieEventPasse(passe);
-
-            ListeEventViewModel vm = new ListeEventViewModel()
-            {
-                AVenir =aVenir,
-                Passe = passe
-            };
-
-            return View(vm);
         }
 
         [Authorize]
         public ActionResult Ajouter()
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
+
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
+
+                List<SelectListItem> types = new List<SelectListItem>();
+                types.Add(new SelectListItem { Text = "Instruction", Value = "Instruction", Selected = true });
+                types.Add(new SelectListItem { Text = "Exercice", Value = "Exercice" });
+                types.Add(new SelectListItem { Text = "Stage", Value = "Stage" });
+                types.Add(new SelectListItem { Text = "Mission", Value = "Mission" });
+
+                Effectif eff = new Effectif
+                {
+                    Officier = 0,
+                    SousOfficier = 0,
+                    Militaire = 0
+                };
+
+                AjouterEventViewModel vm = new AjouterEventViewModel()
+                {
+                    Event = new Evenement(),
+                    Types = types,
+                    Effectif = eff
+                };
+
+                return View(vm);
             }
-            if (u.Equals(typeof(UtilisateurNull)))
+            catch(Exception e)
             {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
+                LOGGER.Log("ERROR", "Erreur affichage de la page d'ajout d'evenement -> " + e);
+                return new HttpStatusCodeResult(500, "Exception affichage de la page -> " + e.Message);
             }
-            if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
-
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
-
-            List<SelectListItem> types = new List<SelectListItem>();
-            types.Add(new SelectListItem { Text = "Instruction", Value = "Instruction", Selected = true });
-            types.Add(new SelectListItem { Text = "Exercice", Value = "Exercice" });
-            types.Add(new SelectListItem { Text = "Stage", Value = "Stage" });
-            types.Add(new SelectListItem { Text = "Mission", Value = "Mission" });
-
-            Effectif eff = new Effectif
-            {
-                Officier = 0,
-                SousOfficier = 0,
-                Militaire = 0
-            };
-
-            AjouterEventViewModel vm = new AjouterEventViewModel()
-            {
-                Event = new Evenement(),
-                Types = types,
-                Effectif = eff
-            };
-
-            return View(vm);
         }
 
         [Authorize]
         [HttpPost]
         public ActionResult Ajouter (AjouterEventViewModel vm)
         {
-            bool isAllValid = true;
-            if(vm.Event.Nom.IsNullOrWhiteSpace())
+            try
             {
-                ModelState.AddModelError("Event.Nom", "Le titre est obligatoire.");
-                isAllValid = false;
-            }
-
-            if(vm.Event.Description.IsNullOrWhiteSpace())
-            {
-                ModelState.AddModelError("Event.Description", "Les informations complémentaires sont obligatoires.");
-                isAllValid = false;
-            }
-
-            if (vm.Event.Lieu.IsNullOrWhiteSpace())
-            {
-                ModelState.AddModelError("Event.Lieu", "Le lieu est obligatoire.");
-                isAllValid = false;
-            }
-
-            if(vm.Event.Debut.Year == 1 && vm.Event.Fin.Year == 1)
-            {
-                ModelState.AddModelError("Event.Debut", "Les dates de d&ébut et de fin sont obligatoire.");
-                isAllValid = false;
-            }
-            else if(vm.Event.Debut.Year == 1)
-            {
-                ModelState.AddModelError("Event.Debut", "La date de début est obligatoire.");
-                isAllValid = false;
-            }
-            else if(vm.Event.Fin.Year == 1)
-            {
-                ModelState.AddModelError("Event.Debut", "La date de fin est obligatoire.");
-                isAllValid = false;
-            }
-            else if(vm.Event.Debut > vm.Event.Fin)
-            {
-                ModelState.AddModelError("Event.Debut", "La date de début doit être antérieure à la date de fin.");
-                isAllValid = false;
-            }
-
-            var type = Request.Form["typeEvent"];
-            if (type.IsNullOrWhiteSpace())
-                type = "Instruction";
-
-            vm.Event.Type = type;
-            vm.Types = new List<SelectListItem>();
-            vm.Types.Add(new SelectListItem { Text = "Instruction", Value = "Instruction" });
-            vm.Types.Add(new SelectListItem { Text = "Exercice", Value = "Exercice" });
-            vm.Types.Add(new SelectListItem { Text = "Stage", Value = "Stage" });
-            vm.Types.Add(new SelectListItem { Text = "Mission", Value = "Mission" });
-            foreach (SelectListItem item in vm.Types)
-            {
-                if(item.Value.Equals(type))
-                    item.Selected = true;
-                else
-                    item.Selected = false;
-            }
-
-            if(type.Equals("Mission") || type.Equals("Stage"))
-            {
-                if(vm.Event.LimiteReponse < DateTime.Now)
+                bool isAllValid = true;
+                if (vm.Event.Nom.IsNullOrWhiteSpace())
                 {
-                    ModelState.AddModelError("Event.LimiteReponse", "La date limite de réponse est déjà passée.");
+                    ModelState.AddModelError("Event.Nom", "Le titre est obligatoire.");
                     isAllValid = false;
                 }
-            }
 
-            var patracdrFile = Request.Files["patracdrFile"];
-            int taille = patracdrFile.ContentLength;
-            if(taille >= 4096000)
+                if (vm.Event.Description.IsNullOrWhiteSpace())
+                {
+                    ModelState.AddModelError("Event.Description", "Les informations complémentaires sont obligatoires.");
+                    isAllValid = false;
+                }
+
+                if (vm.Event.Lieu.IsNullOrWhiteSpace())
+                {
+                    ModelState.AddModelError("Event.Lieu", "Le lieu est obligatoire.");
+                    isAllValid = false;
+                }
+
+                if (vm.Event.Debut.Year == 1 && vm.Event.Fin.Year == 1)
+                {
+                    ModelState.AddModelError("Event.Debut", "Les dates de d&ébut et de fin sont obligatoire.");
+                    isAllValid = false;
+                }
+                else if (vm.Event.Debut.Year == 1)
+                {
+                    ModelState.AddModelError("Event.Debut", "La date de début est obligatoire.");
+                    isAllValid = false;
+                }
+                else if (vm.Event.Fin.Year == 1)
+                {
+                    ModelState.AddModelError("Event.Debut", "La date de fin est obligatoire.");
+                    isAllValid = false;
+                }
+                else if (vm.Event.Debut > vm.Event.Fin)
+                {
+                    ModelState.AddModelError("Event.Debut", "La date de début doit être antérieure à la date de fin.");
+                    isAllValid = false;
+                }
+
+                var type = Request.Form["typeEvent"];
+                if (type.IsNullOrWhiteSpace())
+                    type = "Instruction";
+
+                vm.Event.Type = type;
+                vm.Types = new List<SelectListItem>();
+                vm.Types.Add(new SelectListItem { Text = "Instruction", Value = "Instruction" });
+                vm.Types.Add(new SelectListItem { Text = "Exercice", Value = "Exercice" });
+                vm.Types.Add(new SelectListItem { Text = "Stage", Value = "Stage" });
+                vm.Types.Add(new SelectListItem { Text = "Mission", Value = "Mission" });
+                foreach (SelectListItem item in vm.Types)
+                {
+                    if (item.Value.Equals(type))
+                        item.Selected = true;
+                    else
+                        item.Selected = false;
+                }
+
+                if (type.Equals("Mission") || type.Equals("Stage"))
+                {
+                    if (vm.Event.LimiteReponse < DateTime.Now)
+                    {
+                        ModelState.AddModelError("Event.LimiteReponse", "La date limite de réponse est déjà passée.");
+                        isAllValid = false;
+                    }
+                }
+
+                var patracdrFile = Request.Files["patracdrFile"];
+                int taille = patracdrFile.ContentLength;
+                if (taille >= 4096000)
+                {
+                    ModelState.AddModelError("Event.Patracdr", "La taille du PATRACDR ne doit pas dépasser 4096ko.");
+                    isAllValid = false;
+                }
+
+                if (!isAllValid)
+                    return View(vm);
+
+                string path = HttpContext.Server.MapPath("~/Content/PATRACDR/") + patracdrFile.FileName;
+                patracdrFile.SaveAs(path);
+                string url = "/Content/PATRACDR/" + patracdrFile.FileName;
+
+                Guid idEffectif = Guid.Empty;
+                if (type.Equals("Mission") || type.Equals("Stage"))
+                    idEffectif = effDal.AjouterEffectif(vm.Effectif);
+
+                Evenement toCreate = vm.Event;
+                toCreate.Effectif = idEffectif;
+                toCreate.Type = type;
+                toCreate.Patracdr = url;
+
+                Guid idEvent = eDal.CreerEvenement(toCreate);
+
+                return RedirectToAction("Evenement", "Planning", new { id = idEvent });
+            }
+            catch(Exception e)
             {
-                ModelState.AddModelError("Event.Patracdr", "La taille du PATRACDR ne doit pas dépasser 4096ko.");
-                isAllValid = false;
+                LOGGER.Log("ERROR", "Erreur de l'ajout de l'evenement -> " + e);
+                return new HttpStatusCodeResult(500, "Exception ajout de l'evenement -> " + e.Message);
             }
-
-            if (!isAllValid)
-                return View(vm);
-
-            string path = HttpContext.Server.MapPath("~/Content/PATRACDR/") + patracdrFile.FileName;
-            patracdrFile.SaveAs(path);
-            string url = "/Content/PATRACDR/" + patracdrFile.FileName;
-
-            Guid idEffectif = Guid.Empty;
-            if(type.Equals("Mission") || type.Equals("Stage"))
-                idEffectif = effDal.AjouterEffectif(vm.Effectif);
-
-            Evenement toCreate = vm.Event;
-            toCreate.Effectif = idEffectif;
-            toCreate.Type = type;
-            toCreate.Patracdr = url;
-
-            Guid idEvent = eDal.CreerEvenement(toCreate);
-
-            return RedirectToAction("Evenement", "Planning", new { id = idEvent });
         }
 
         [Authorize]
         public ActionResult Supprimer (Guid id)
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
-            }
-            if (u.Equals(typeof(UtilisateurNull)))
-            {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
-            }
-            if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
 
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
 
-            if (u.Role > 3)
+                if (u.Role > 3)
+                    return RedirectToAction("Liste", "Planning");
+
+                int retour = eDal.SupprimerEvenement(id);
+                if (retour != 1)
+                    ViewBag.Erreur = "Un problème est surbenu lors de la suppression.";
+
                 return RedirectToAction("Liste", "Planning");
-
-            int retour = eDal.SupprimerEvenement(id);
-            if (retour != 1)
-                ViewBag.Erreur = "Un problème est surbenu lors de la suppression.";
-
-            return RedirectToAction("Liste", "Planning");
+            }
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur suppression de l'evenement : " + id + " -> " + e);
+                return new HttpStatusCodeResult(500, "Exception suppression de l'evenement -> " + e.Message);
+            }
         }
 
         [Authorize]
         public ActionResult Modifier (Guid id)
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
+
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
+
+                if (u.Role > 3)
+                    return RedirectToAction("Evenement", "Planning", new { id });
+
+                Evenement ev = eDal.GetEvenementById(id);
+                if (ev == null || ev.Equals(typeof(EvenementNull)))
+                    ev = new Evenement();
+
+                string[] urlSplit = new string[] { };
+                if (!ev.Patracdr.IsNullOrWhiteSpace())
+                    urlSplit = ev.Patracdr.Split('/');
+
+                ViewBag.FileName = "";
+                if (urlSplit.Length > 0)
+                    ViewBag.FileName = urlSplit[urlSplit.Length - 1];
+
+                Effectif eff = new Effectif();
+                ViewBag.Display = "none;";
+                if (ev.Effectif != null && !ev.Effectif.Equals(Guid.Empty))
+                {
+                    eff = effDal.GetEffectifById(ev.Effectif);
+                    ViewBag.Display = "block;";
+                }
+
+                List<SelectListItem> types = new List<SelectListItem>();
+                types.Add(new SelectListItem { Text = "Instruction", Value = "Instruction" });
+                types.Add(new SelectListItem { Text = "Exercice", Value = "Exercice" });
+                types.Add(new SelectListItem { Text = "Stage", Value = "Stage" });
+                types.Add(new SelectListItem { Text = "Mission", Value = "Mission" });
+
+                AjouterEventViewModel vm = new AjouterEventViewModel()
+                {
+                    Event = ev,
+                    Effectif = eff,
+                    Types = types
+                };
+
+                return View(vm);
             }
-            if (u.Equals(typeof(UtilisateurNull)))
+            catch(Exception e)
             {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
+                LOGGER.Log("ERROR", "Erreur affichage de la page de modification de l'evenement : " + id + " -> " + e);
+                return new HttpStatusCodeResult(500, "Exception affichage de la page -> " + e.Message);
             }
-            if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
-
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
-
-            if (u.Role > 3)
-                return RedirectToAction("Evenement", "Planning", new { id });
-
-            Evenement ev = eDal.GetEvenementById(id);
-            if (ev == null || ev.Equals(typeof(EvenementNull)))
-                ev = new Evenement();
-
-            string[] urlSplit = new string[] { };
-            if(!ev.Patracdr.IsNullOrWhiteSpace())
-                urlSplit = ev.Patracdr.Split('/');
-
-            ViewBag.FileName = "";
-            if (urlSplit.Length > 0)
-                ViewBag.FileName = urlSplit[urlSplit.Length - 1];
-
-            Effectif eff = new Effectif();
-            ViewBag.Display = "none;";
-            if (ev.Effectif != null && !ev.Effectif.Equals(Guid.Empty))
-            {
-                eff = effDal.GetEffectifById(ev.Effectif);
-                ViewBag.Display = "block;";
-            }
-
-            List<SelectListItem> types = new List<SelectListItem>();
-            types.Add(new SelectListItem { Text = "Instruction", Value = "Instruction" });
-            types.Add(new SelectListItem { Text = "Exercice", Value = "Exercice" });
-            types.Add(new SelectListItem { Text = "Stage", Value = "Stage" });
-            types.Add(new SelectListItem { Text = "Mission", Value = "Mission" });
-
-            AjouterEventViewModel vm = new AjouterEventViewModel()
-            {
-                Event = ev,
-                Effectif = eff,
-                Types = types
-            };
-
-            return View(vm);
         }
 
         [Authorize]
         [HttpPost]
         public ActionResult Modifier(AjouterEventViewModel vm)
         {
-            bool isAllValid = true;
-            if (vm.Event.Nom.IsNullOrWhiteSpace())
+            try
             {
-                ModelState.AddModelError("Event.Nom", "Le titre est obligatoire.");
-                isAllValid = false;
-            }
-
-            if (vm.Event.Description.IsNullOrWhiteSpace())
-            {
-                ModelState.AddModelError("Event.Description", "Les informations complémentaires sont obligatoires.");
-                isAllValid = false;
-            }
-
-            if (vm.Event.Lieu.IsNullOrWhiteSpace())
-            {
-                ModelState.AddModelError("Event.Lieu", "Le lieu est obligatoire.");
-                isAllValid = false;
-            }
-
-            if (vm.Event.Debut.Year == 1 && vm.Event.Fin.Year == 1)
-            {
-                ModelState.AddModelError("Event.Debut", "Les dates de d&ébut et de fin sont obligatoire.");
-                isAllValid = false;
-            }
-            else if (vm.Event.Debut.Year == 1)
-            {
-                ModelState.AddModelError("Event.Debut", "La date de début est obligatoire.");
-                isAllValid = false;
-            }
-            else if (vm.Event.Fin.Year == 1)
-            {
-                ModelState.AddModelError("Event.Debut", "La date de fin est obligatoire.");
-                isAllValid = false;
-            }
-            else if (vm.Event.Debut > vm.Event.Fin)
-            {
-                ModelState.AddModelError("Event.Debut", "La date de début doit être antérieure à la date de fin.");
-                isAllValid = false;
-            }
-
-            string type = Request.Form["Event.Type"];
-            if (type.IsNullOrWhiteSpace())
-                type = "Instruction";
-
-            if (type.Equals("Mission") || type.Equals("Stage"))
-            {
-                if (vm.Event.LimiteReponse < DateTime.Now)
+                bool isAllValid = true;
+                if (vm.Event.Nom.IsNullOrWhiteSpace())
                 {
-                    ModelState.AddModelError("Event.LimiteReponse", "La date limite de réponse est déjà passée.");
+                    ModelState.AddModelError("Event.Nom", "Le titre est obligatoire.");
                     isAllValid = false;
                 }
-            }
 
-            var patracdrFile = Request.Files["patracdrFile"];
-            string url = vm.Event.Patracdr;
-            if(!patracdrFile.FileName.Equals(""))
-            {
-                int taille = patracdrFile.ContentLength;
-                if(taille >= 4096000)
+                if (vm.Event.Description.IsNullOrWhiteSpace())
                 {
-                    ModelState.AddModelError("Event.Patracdr", "La taille du PATRACDR ne doit pas dépasser 4096ko.");
+                    ModelState.AddModelError("Event.Description", "Les informations complémentaires sont obligatoires.");
                     isAllValid = false;
                 }
-                else
+
+                if (vm.Event.Lieu.IsNullOrWhiteSpace())
                 {
-                    string path = HttpContext.Server.MapPath("~/Content/PATRACDR/") + patracdrFile.FileName;
-                    patracdrFile.SaveAs(path);
-                    url = "/Content/PATRACDR/" + patracdrFile.FileName;
+                    ModelState.AddModelError("Event.Lieu", "Le lieu est obligatoire.");
+                    isAllValid = false;
                 }
+
+                if (vm.Event.Debut.Year == 1 && vm.Event.Fin.Year == 1)
+                {
+                    ModelState.AddModelError("Event.Debut", "Les dates de d&ébut et de fin sont obligatoire.");
+                    isAllValid = false;
+                }
+                else if (vm.Event.Debut.Year == 1)
+                {
+                    ModelState.AddModelError("Event.Debut", "La date de début est obligatoire.");
+                    isAllValid = false;
+                }
+                else if (vm.Event.Fin.Year == 1)
+                {
+                    ModelState.AddModelError("Event.Debut", "La date de fin est obligatoire.");
+                    isAllValid = false;
+                }
+                else if (vm.Event.Debut > vm.Event.Fin)
+                {
+                    ModelState.AddModelError("Event.Debut", "La date de début doit être antérieure à la date de fin.");
+                    isAllValid = false;
+                }
+
+                string type = Request.Form["Event.Type"];
+                if (type.IsNullOrWhiteSpace())
+                    type = "Instruction";
+
+                if (type.Equals("Mission") || type.Equals("Stage"))
+                {
+                    if (vm.Event.LimiteReponse < DateTime.Now)
+                    {
+                        ModelState.AddModelError("Event.LimiteReponse", "La date limite de réponse est déjà passée.");
+                        isAllValid = false;
+                    }
+                }
+
+                var patracdrFile = Request.Files["patracdrFile"];
+                string url = vm.Event.Patracdr;
+                if (!patracdrFile.FileName.Equals(""))
+                {
+                    int taille = patracdrFile.ContentLength;
+                    if (taille >= 4096000)
+                    {
+                        ModelState.AddModelError("Event.Patracdr", "La taille du PATRACDR ne doit pas dépasser 4096ko.");
+                        isAllValid = false;
+                    }
+                    else
+                    {
+                        string path = HttpContext.Server.MapPath("~/Content/PATRACDR/") + patracdrFile.FileName;
+                        patracdrFile.SaveAs(path);
+                        url = "/Content/PATRACDR/" + patracdrFile.FileName;
+                    }
+                }
+
+                if (!isAllValid)
+                    return View(vm);
+
+                Guid idEffectif = vm.Effectif.Id;
+                if (type.Equals("Mission") || type.Equals("Stage"))
+                    effDal.ModifierEffectif(vm.Effectif.Id, vm.Effectif);
+
+                Evenement toModif = vm.Event;
+                toModif.Effectif = idEffectif;
+                toModif.Type = type;
+                toModif.Patracdr = url;
+
+                int retour = eDal.ModifierEvenement(vm.Event.Id, toModif);
+
+                if (retour != 1)
+                    ViewBag.Erreur = "Une erreure est survenue lors de la modification de lévénement.";
+
+                return RedirectToAction("Evenement", "Planning", new { id = vm.Event.Id });
             }
-
-            if (!isAllValid)
-                return View(vm);
-
-            Guid idEffectif = vm.Effectif.Id;
-            if (type.Equals("Mission") || type.Equals("Stage"))
-                 effDal.ModifierEffectif(vm.Effectif.Id, vm.Effectif);
-
-            Evenement toModif = vm.Event;
-            toModif.Effectif = idEffectif;
-            toModif.Type = type;
-            toModif.Patracdr = url;
-
-            int retour = eDal.ModifierEvenement(vm.Event.Id, toModif);
-
-            if (retour != 1)
-                ViewBag.Erreur = "Une erreure est survenue lors de la modification de lévénement.";
-
-            return RedirectToAction("Evenement", "Planning", new { id = vm.Event.Id });
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur modification de l'evenement -> " + e);
+                return new HttpStatusCodeResult(500, "Exception lors de la modification de l'evenement -> " + e.Message);
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Security;
 using static PortailReserve.Utils.Utils;
-using static PortailReserve.Utils.Logger;
+using PortailReserve.Utils;
 
 namespace PortailReserve.Controllers
 {
@@ -25,6 +25,8 @@ namespace PortailReserve.Controllers
         private List<SelectListItem> selectSansSection;
         private List<SelectListItem> roles;
 
+        private readonly Logger LOGGER;
+
         public SectionController()
         {
             uDal = new UtilisateurDal();
@@ -32,6 +34,8 @@ namespace PortailReserve.Controllers
             sDal = new SectionDal();
             cDal = new CompagnieDal();
             aDal = new AdresseDal();
+
+            LOGGER = new Logger(this.GetType());
 
             grades = new List<SelectListItem>();
             grades.Add(new SelectListItem { Text = "Soldat", Value = "Soldat", Selected = true });
@@ -70,202 +74,246 @@ namespace PortailReserve.Controllers
         [Authorize]
         public ActionResult Index()
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Login");
-            }
-            if (u.Equals(typeof(UtilisateurNull)))
-            {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return RedirectToAction("Index", "Login");
-            }
-            if (u.PremiereCo)
-                return RedirectToAction("PremiereCo", "Login");
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
 
-            ViewBag.Grade = u.Grade;
-            ViewBag.Nom = u.Nom.ToUpperInvariant();
-            ViewBag.Role = u.Role;
-            
-            return View(u);
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
+
+                return View(u);
+            }
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur de l'affichage de la page d'index de la section -> " + e);
+                return new HttpStatusCodeResult(500, "Exception affichage de la page -> " + e.Message);
+            }
         }
 
         [Authorize]
         public ActionResult AfficherPersonnelSection()
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return new HttpUnauthorizedResult();
-            }
-            if (u.Equals(typeof(UtilisateurNull)))
-            {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return new HttpUnauthorizedResult();
-            }
-            if (u.PremiereCo)
-                return new HttpUnauthorizedResult();
-
-            if (u.Section == -1 && u.Compagnie == -1)
-                return PartialView("AfficherSansSection");
-
-            if (u.Section == 0)
-                return RedirectToAction("AfficherPersonnelSectionCom");
-
-            Section userSection = sDal.GetSectionByNumAndByCie(u.Section, u.Compagnie);
-
-            List<Groupe> grpSection = gDal.GetGroupesBySection(userSection.Id);
-            grpSection = TrierGroupes(grpSection);
-
-            List<Utilisateur> listCdg = new List<Utilisateur>();
-            List<Utilisateur> listSdt = new List<Utilisateur>();
-            foreach (Groupe g in grpSection)
-            {
-                listCdg.Add(uDal.GetUtilisateurById(g.CDG));
-                listSdt.AddRange(uDal.GetUtilisateursByGroupe(g.Id));
-            }
-
-            Compagnie cie = cDal.GetCompagnieById(userSection.Compagnie);
-
-            Utilisateur soa = uDal.GetUtilisateurById(userSection.SOA);
-            if (soa == null || soa.Equals(typeof(UtilisateurNull)))
-                soa = new Utilisateur
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
                 {
-                    Id = Guid.Empty,
-                    Nom = "",
-                    Prenom = "",
-                    Grade = ""
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
+
+                if (u.Section == -1 && u.Compagnie == -1)
+                    return PartialView("AfficherSansSection");
+
+                if (u.Section == 0)
+                    return RedirectToAction("AfficherPersonnelSectionCom");
+
+                Section userSection = sDal.GetSectionByNumAndByCie(u.Section, u.Compagnie);
+
+                List<Groupe> grpSection = gDal.GetGroupesBySection(userSection.Id);
+                grpSection = TrierGroupes(grpSection);
+
+                List<Utilisateur> listCdg = new List<Utilisateur>();
+                List<Utilisateur> listSdt = new List<Utilisateur>();
+                foreach (Groupe g in grpSection)
+                {
+                    listCdg.Add(uDal.GetUtilisateurById(g.CDG));
+                    listSdt.AddRange(uDal.GetUtilisateursByGroupe(g.Id));
+                }
+
+                Compagnie cie = cDal.GetCompagnieById(userSection.Compagnie);
+
+                Utilisateur soa = uDal.GetUtilisateurById(userSection.SOA);
+                if (soa == null || soa.Equals(typeof(UtilisateurNull)))
+                    soa = new Utilisateur
+                    {
+                        Id = Guid.Empty,
+                        Nom = "",
+                        Prenom = "",
+                        Grade = ""
+                    };
+
+                Utilisateur cds = uDal.GetUtilisateurById(userSection.CDS);
+                if (cds == null || cds.Equals(typeof(UtilisateurNull)))
+                    cds = new Utilisateur
+                    {
+                        Id = Guid.Empty,
+                        Nom = "",
+                        Prenom = "",
+                        Grade = ""
+                    };
+
+                SectionViewModel vm = new SectionViewModel()
+                {
+                    Cie = cie,
+                    Section = userSection,
+                    CDS = cds,
+                    SOA = soa,
+                    Groupes = grpSection,
+                    CDGs = listCdg,
+                    Soldats = listSdt,
+                    Util = u
                 };
 
-            Utilisateur cds = uDal.GetUtilisateurById(userSection.CDS);
-            if (cds == null || cds.Equals(typeof(UtilisateurNull)))
-                cds = new Utilisateur
-                {
-                    Id = Guid.Empty,
-                    Nom = "",
-                    Prenom = "",
-                    Grade = ""
-                };
-
-            SectionViewModel vm = new SectionViewModel()
+                return PartialView("AfficherPersonnelSection", vm);
+            }
+            catch(Exception e)
             {
-                Cie = cie,
-                Section = userSection,
-                CDS = cds,
-                SOA = soa,
-                Groupes = grpSection,
-                CDGs = listCdg,
-                Soldats = listSdt,
-                Util = u
-            };
-
-            return PartialView("AfficherPersonnelSection", vm);
+                LOGGER.Log("ERROR", "Erreur affichage des personnels de la section -> " + e);
+                return new HttpStatusCodeResult(500, "Exception affichage personnel section -> " + e.Message);
+            }
         }
 
         [Authorize]
         public ActionResult AfficherPersonnelSectionCom()
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return new HttpUnauthorizedResult();
-            }
-            if (u.Equals(typeof(UtilisateurNull)))
-            {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return new HttpUnauthorizedResult();
-            }
-            if (u.PremiereCo)
-                return new HttpUnauthorizedResult();
-
-            if (u.Section == -1 && u.Compagnie == -1)
-                return PartialView("AfficherSansSection");
-
-            if (u.Section != 0)
-                return RedirectToAction("AfficherPersonnelSection");
-
-            Section userSection = sDal.GetSectionByNumAndByCie(u.Section, u.Compagnie);
-            Compagnie cie = cDal.GetCompagnieById(userSection.Compagnie);
-
-            Utilisateur cdu = uDal.GetUtilisateurById(cie.CDU);
-            if (cdu == null || cdu.Equals(typeof(UtilisateurNull)))
-                cdu = new Utilisateur
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
                 {
-                    Nom = "",
-                    Prenom = "",
-                    Grade = "",
-                    Id = Guid.Empty
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
+
+                if (u.Section == -1 && u.Compagnie == -1)
+                    return PartialView("AfficherSansSection");
+
+                if (u.Section != 0)
+                    return RedirectToAction("AfficherPersonnelSection");
+
+                Section userSection = sDal.GetSectionByNumAndByCie(u.Section, u.Compagnie);
+                Compagnie cie = cDal.GetCompagnieById(userSection.Compagnie);
+
+                Utilisateur cdu = uDal.GetUtilisateurById(cie.CDU);
+                if (cdu == null || cdu.Equals(typeof(UtilisateurNull)))
+                    cdu = new Utilisateur
+                    {
+                        Nom = "",
+                        Prenom = "",
+                        Grade = "",
+                        Id = Guid.Empty
+                    };
+
+                Utilisateur adu = uDal.GetUtilisateurById(cie.ADU);
+                if (adu == null || adu.Equals(typeof(UtilisateurNull)))
+                    adu = new Utilisateur
+                    {
+                        Nom = "",
+                        Prenom = "",
+                        Grade = "",
+                        Id = Guid.Empty
+                    };
+
+                List<Utilisateur> utilCom = uDal.GetUtilisateursBySectionByGroupe(u.Section, u.Compagnie);
+                List<Utilisateur> toSupp = new List<Utilisateur>();
+                foreach (Utilisateur us in utilCom)
+                {
+                    if (us.Id.Equals(cdu.Id) || us.Id.Equals(adu.Id))
+                        toSupp.Add(us);
+                }
+                foreach (Utilisateur i in toSupp)
+                {
+                    utilCom.Remove(i);
+                }
+
+                SectionCommandementViewModel vm = new SectionCommandementViewModel
+                {
+                    Util = u,
+                    CDU = cdu,
+                    ADU = adu,
+                    UtilCmdt = utilCom,
+                    Section = userSection,
+                    Cie = cie
                 };
 
-            Utilisateur adu = uDal.GetUtilisateurById(cie.ADU);
-            if (adu == null || adu.Equals(typeof(UtilisateurNull)))
-                adu = new Utilisateur
-                {
-                    Nom = "",
-                    Prenom = "",
-                    Grade = "",
-                    Id = Guid.Empty
-                };
-
-            List<Utilisateur> utilCom = uDal.GetUtilisateursBySectionByGroupe(u.Section, u.Compagnie);
-            List<Utilisateur> toSupp = new List<Utilisateur>();
-            foreach(Utilisateur us in utilCom)
-            {
-                if (us.Id.Equals(cdu.Id) || us.Id.Equals(adu.Id))
-                    toSupp.Add(us);
+                return PartialView("AfficherPersonnelSectionCom", vm);
             }
-            foreach(Utilisateur i in toSupp)
+            catch(Exception e)
             {
-                utilCom.Remove(i);
+                LOGGER.Log("ERROR", "Erreur affichage du personnel de la section commandement -> " + e);
+                return new HttpStatusCodeResult(500, "Exception affichage personnel section com -> " + e.Message);
             }
-
-            SectionCommandementViewModel vm = new SectionCommandementViewModel
-            {
-                Util = u,
-                CDU = cdu,
-                ADU = adu,
-                UtilCmdt = utilCom,
-                Section = userSection,
-                Cie = cie
-            };
-
-            return PartialView("AfficherPersonnelSectionCom", vm);
         }
 
         [Authorize]
         public ActionResult AfficherGrade(Guid id)
         {
-            Utilisateur util = uDal.GetUtilisateurById(id);
-            if (util == null)
-                util = new Utilisateur();
+            try
+            {
+                Utilisateur util = uDal.GetUtilisateurById(id);
+                if (util == null)
+                    util = new Utilisateur { 
+                        Grade = "",
+                        Id = Guid.Empty
+                    };
 
-            string grade = util.Grade;
+                string grade = util.Grade;
 
-            return PartialView("AfficherGrade", grade);
+                return PartialView("AfficherGrade", grade);
+            }
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur affichage du grade de l'utilisateur : " + id + " -> " + e);
+                return new HttpStatusCodeResult(500, "Echec affichage du grade -> " + e.Message);
+            }
         }
 
         [Authorize]
         public ActionResult AfficherSelectGrade(Guid id)
         {
-            Utilisateur util = uDal.GetUtilisateurById(id);
-            if (util == null)
-                util = new Utilisateur { 
-                    Id = Guid.Empty
+            try
+            {
+                Utilisateur util = uDal.GetUtilisateurById(id);
+                if (util == null)
+                    util = new Utilisateur
+                    {
+                        Id = Guid.Empty
+                    };
+
+                SelectGradeViewModel vm = new SelectGradeViewModel
+                {
+                    Util = util,
+                    Grades = this.grades
                 };
 
-            SelectGradeViewModel vm = new SelectGradeViewModel
+                return PartialView("AfficherSelectGrade", vm);
+            }
+            catch(Exception e)
             {
-                Util = util,
-                Grades = this.grades
-            };
-
-            return PartialView("AfficherSelectGrade", vm);
+                LOGGER.Log("ERROR", "Erreur affichage du selecteur de grade pour l'utilisateur : " + id + " -> " + e);
+                return new HttpStatusCodeResult(500, "Echec affichage selecteur grade -> " + e.Message);
+            }
         }
 
         [HttpPost]
@@ -303,6 +351,7 @@ namespace PortailReserve.Controllers
             }
             catch(Exception e)
             {
+                LOGGER.Log("ERROR", "Erreur changement de grade -> " + e);
                 return new HttpStatusCodeResult(400, "Une erreur est survenu lors du changement de grade.");
             }
         }
@@ -313,17 +362,25 @@ namespace PortailReserve.Controllers
         [Authorize]
         public ActionResult AfficherPopUpSuppSoldat(Guid id)
         {
-            Utilisateur util = uDal.GetUtilisateurById(id);
-            if (util == null)
-                util = new Utilisateur
-                {
-                    Id = Guid.Empty,
-                    Prenom = "Empty",
-                    Nom = "Empty",
-                    Grade = "Soldat"
-                };
+            try
+            {
+                Utilisateur util = uDal.GetUtilisateurById(id);
+                if (util == null)
+                    util = new Utilisateur
+                    {
+                        Id = Guid.Empty,
+                        Prenom = "Empty",
+                        Nom = "Empty",
+                        Grade = "Soldat"
+                    };
 
-            return PartialView("AfficherPopUpSuppSoldat", util);
+                return PartialView("AfficherPopUpSuppSoldat", util);
+            }
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur affichage pop-up supp soldat : " + id + " -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur affichage de la pop-up");
+            }
         }
 
         [Authorize]
@@ -340,19 +397,19 @@ namespace PortailReserve.Controllers
                 if (u == null)
                 {
                     FormsAuthentication.SignOut();
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.Equals(typeof(UtilisateurNull)))
                 {
                     FormsAuthentication.SignOut();
                     ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.PremiereCo)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
                 if (u.Role > 3)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
 
                 int retour = uDal.SupprimerUtilisateurSection(id);
 
@@ -363,7 +420,8 @@ namespace PortailReserve.Controllers
             }
             catch(Exception e)
             {
-                return new HttpStatusCodeResult(400, "Id utilisateur incorrect pour suppression");
+                LOGGER.Log("ERROR", "Erreur suppression de l'utilisateur -> " + e);
+                return new HttpStatusCodeResult(500, "Id utilisateur incorrect pour suppression");
             }
         }
 
@@ -374,38 +432,46 @@ namespace PortailReserve.Controllers
         [Authorize]
         public ActionResult AfficherPopUpChgmtGroupe(Guid id)
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
 
-            Utilisateur pourChange = uDal.GetUtilisateurById(id);
-            if (pourChange == null)
-                pourChange = new Utilisateur
+                Utilisateur pourChange = uDal.GetUtilisateurById(id);
+                if (pourChange == null)
+                    pourChange = new Utilisateur
+                    {
+                        Id = Guid.Empty,
+                        Prenom = "Empty",
+                        Nom = "Empry",
+                        Grade = "Soldat"
+                    };
+
+                Section section = sDal.GetSectionByNumAndByCie(u.Section, u.Compagnie);
+                List<Groupe> groupes = gDal.GetGroupesBySection(section.Id);
+                groupes = TrierGroupes(groupes);
+
+                List<SelectListItem> selectGroupe = new List<SelectListItem>();
+                foreach (Groupe g in groupes)
                 {
-                    Id = Guid.Empty,
-                    Prenom = "Empty",
-                    Nom = "Empry",
-                    Grade = "Soldat"
+                    if (g.Id.Equals(pourChange.Groupe))
+                        selectGroupe.Add(new SelectListItem { Text = "Groupe " + g.Numero, Value = g.Id.ToString(), Selected = true });
+                    else
+                        selectGroupe.Add(new SelectListItem { Text = "Groupe " + g.Numero, Value = g.Id.ToString() });
+                }
+
+                ChangementGroupeViewModel vm = new ChangementGroupeViewModel
+                {
+                    Util = pourChange,
+                    Groupe = selectGroupe
                 };
 
-            Section section = sDal.GetSectionByNumAndByCie(u.Section, u.Compagnie);
-            List<Groupe> groupes = gDal.GetGroupesBySection(section.Id);
-            groupes = TrierGroupes(groupes);
-
-            List<SelectListItem> selectGroupe = new List<SelectListItem>();
-            foreach(Groupe g in groupes)
-            {
-                if(g.Id.Equals(pourChange.Groupe))
-                    selectGroupe.Add(new SelectListItem { Text = "Groupe " + g.Numero, Value = g.Id.ToString(), Selected = true });
-                else
-                    selectGroupe.Add(new SelectListItem { Text = "Groupe " + g.Numero, Value = g.Id.ToString() });
+                return PartialView("AfficherPopUpChgmtGroupe", vm);
             }
-
-            ChangementGroupeViewModel vm = new ChangementGroupeViewModel
+            catch(Exception e)
             {
-                Util = pourChange,
-                Groupe = selectGroupe
-            };
-
-            return PartialView("AfficherPopUpChgmtGroupe", vm);
+                LOGGER.Log("ERROR", "Erreur affichage de la pop-up changement de groupe pour l'utilisateur : " + id + " -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur affichage de la pop-up");
+            }
         }
 
         [Authorize]
@@ -418,19 +484,19 @@ namespace PortailReserve.Controllers
                 if (u == null)
                 {
                     FormsAuthentication.SignOut();
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.Equals(typeof(UtilisateurNull)))
                 {
                     FormsAuthentication.SignOut();
                     ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.PremiereCo)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
                 if (u.Role > 3)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
 
                 Guid id = Guid.Parse(Request.Form["idUtilChgmnt"]);
                 if (id.Equals(Guid.Empty))
@@ -449,6 +515,7 @@ namespace PortailReserve.Controllers
             }
             catch(Exception e)
             {
+                LOGGER.Log("ERROR", "Erreur changement de groupe -> " + e);
                 return new HttpStatusCodeResult(400, "Erreur de parsing des ids changement utilisateur.");
             }
         }
@@ -459,59 +526,6 @@ namespace PortailReserve.Controllers
 
         [Authorize]
         public ActionResult AfficherPopUpAjouterPerso()
-        {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
-            {
-                FormsAuthentication.SignOut();
-                return new HttpUnauthorizedResult();
-            }
-            if (u.Equals(typeof(UtilisateurNull)))
-            {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return new HttpUnauthorizedResult();
-            }
-            if (u.PremiereCo)
-                return new HttpUnauthorizedResult();
-
-            Section section = sDal.GetSectionByNumAndByCie(u.Section, u.Compagnie);
-
-            List<Groupe> groupes = gDal.GetGroupesBySection(section.Id);
-            groupes = TrierGroupes(groupes);
-            List<SelectListItem> selectGroupe = new List<SelectListItem>();
-            bool premier = true;
-            foreach (Groupe g in groupes)
-            {
-                if (premier)
-                {
-                    selectGroupe.Add(new SelectListItem { Text = "Groupe " + g.Numero, Value = g.Id.ToString(), Selected = true });
-                    premier = false;
-                }
-                else
-                {
-                    selectGroupe.Add(new SelectListItem { Text = "Groupe " + g.Numero, Value = g.Id.ToString() });
-                }
-            }
-
-            string nouveauMdp = GenererMotDePasse();
-
-            AjouterPersonnelViewModel vm = new AjouterPersonnelViewModel
-            {
-                Groupes = selectGroupe,
-                SansSection = this.selectSansSection,
-                Grades = this.grades,
-                Roles = this.roles,
-                MotDePasse = nouveauMdp,
-                NumSection = u.Section
-            };
-
-            return PartialView("AfficherPopUpAjouterPerso", vm);
-        }
-
-        [HttpPost]
-        [Authorize]
-        public ActionResult AjouterPersonnel()
         {
             try
             {
@@ -530,8 +544,69 @@ namespace PortailReserve.Controllers
                 if (u.PremiereCo)
                     return new HttpUnauthorizedResult();
 
+                Section section = sDal.GetSectionByNumAndByCie(u.Section, u.Compagnie);
+
+                List<Groupe> groupes = gDal.GetGroupesBySection(section.Id);
+                groupes = TrierGroupes(groupes);
+                List<SelectListItem> selectGroupe = new List<SelectListItem>();
+                bool premier = true;
+                foreach (Groupe g in groupes)
+                {
+                    if (premier)
+                    {
+                        selectGroupe.Add(new SelectListItem { Text = "Groupe " + g.Numero, Value = g.Id.ToString(), Selected = true });
+                        premier = false;
+                    }
+                    else
+                    {
+                        selectGroupe.Add(new SelectListItem { Text = "Groupe " + g.Numero, Value = g.Id.ToString() });
+                    }
+                }
+
+                string nouveauMdp = GenererMotDePasse();
+
+                AjouterPersonnelViewModel vm = new AjouterPersonnelViewModel
+                {
+                    Groupes = selectGroupe,
+                    SansSection = this.selectSansSection,
+                    Grades = this.grades,
+                    Roles = this.roles,
+                    MotDePasse = nouveauMdp,
+                    NumSection = u.Section
+                };
+
+                return PartialView("AfficherPopUpAjouterPerso", vm);
+            }
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur affichage de la pop-up ajout de perso -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur affichage de la pop-up");
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult AjouterPersonnel()
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
+
                 if (u.Role > 3)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
 
                 int numSection = u.Section;
                 int numCie = u.Compagnie;
@@ -621,7 +696,8 @@ namespace PortailReserve.Controllers
             }
             catch(Exception e)
             {
-                return new HttpStatusCodeResult(400, "Erreur de l'ajout d'un utilisateur.");
+                LOGGER.Log("ERROR", "Erreur ajout de personnel -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur de l'ajout d'un utilisateur.");
             }
         }
 
@@ -632,40 +708,48 @@ namespace PortailReserve.Controllers
         [Authorize]
         public ActionResult AfficherPopUpChangementCdg(Guid id, Guid grp)
         {
-            Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
-            if (u == null)
+            try
             {
-                FormsAuthentication.SignOut();
-                return new HttpUnauthorizedResult();
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
+
+                Guid ancienCdg = id;
+
+                Section section = sDal.GetSectionByNumAndByCie(u.Section, u.Compagnie);
+                Groupe groupe = gDal.GetGroupeById(grp);
+                if (groupe == null || groupe.Equals(typeof(GroupeNull)))
+                    return new HttpNotFoundResult("Groupe non trouvé.");
+
+                ChangementCdgViewModel vm = new ChangementCdgViewModel
+                {
+                    AncienCdg = ancienCdg,
+                    Groupe = groupe,
+                    Section = section,
+                    Grades = this.grades,
+                    Roles = this.roles,
+                    SansSection = this.selectSansSection,
+                    MotDePasse = GenererMotDePasse()
+                };
+
+                return PartialView("AfficherPopUpChangementCdg", vm);
             }
-            if (u.Equals(typeof(UtilisateurNull)))
+            catch(Exception e)
             {
-                FormsAuthentication.SignOut();
-                ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                return new HttpUnauthorizedResult();
+                LOGGER.Log("ERROR", "Erreur affichage de la pop-up changement de cdg -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur affichage de la pop-up.");
             }
-            if (u.PremiereCo)
-                return new HttpUnauthorizedResult();
-
-            Guid ancienCdg = id;
-
-            Section section = sDal.GetSectionByNumAndByCie(u.Section, u.Compagnie);
-            Groupe groupe = gDal.GetGroupeById(grp);
-            if (groupe == null || groupe.Equals(typeof(GroupeNull)))
-                return new HttpNotFoundResult("Groupe non trouvé.");
-
-            ChangementCdgViewModel vm = new ChangementCdgViewModel
-            {
-                AncienCdg = ancienCdg,
-                Groupe = groupe,
-                Section = section,
-                Grades = this.grades,
-                Roles = this.roles,
-                SansSection = this.selectSansSection,
-                MotDePasse = GenererMotDePasse()
-            };
-
-            return PartialView("AfficherPopUpChangementCdg", vm);
         }
 
         [Authorize]
@@ -678,19 +762,19 @@ namespace PortailReserve.Controllers
                 if (u == null)
                 {
                     FormsAuthentication.SignOut();
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.Equals(typeof(UtilisateurNull)))
                 {
                     FormsAuthentication.SignOut();
                     ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.PremiereCo)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
                 if (u.Role > 3)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
 
                 int numSection = u.Section;
                 int numCie = u.Compagnie;
@@ -794,6 +878,7 @@ namespace PortailReserve.Controllers
             }
             catch(Exception e)
             {
+                LOGGER.Log("ERROR", "Erreur changement de chef de groupe -> " + e);
                 return new HttpStatusCodeResult(400, "Erreur changement de chef de groupe.");
             }
         }
@@ -805,31 +890,39 @@ namespace PortailReserve.Controllers
         [Authorize]
         public ActionResult AfficherPopUpSuppCdg(Guid id, Guid grp)
         {
-            Utilisateur cdg = uDal.GetUtilisateurById(id);
-            if (cdg == null || cdg.Equals(typeof(UtilisateurNull)))
-                cdg = new Utilisateur
-                {
-                    Id = Guid.Empty,
-                    Nom = "Empty",
-                    Prenom = "Empty",
-                    Grade = "Empty"
-                };
-
-            Groupe groupe = gDal.GetGroupeById(grp);
-            if (groupe == null || groupe.Equals(typeof(GroupeNull)))
-                groupe = new Groupe
-                {
-                    Numero = -1,
-                    Id = Guid.Empty
-                };
-
-            SuppressionCdgViewModel vm = new SuppressionCdgViewModel
+            try
             {
-                Groupe = groupe,
-                AncienCdg = cdg
-            };
+                Utilisateur cdg = uDal.GetUtilisateurById(id);
+                if (cdg == null || cdg.Equals(typeof(UtilisateurNull)))
+                    cdg = new Utilisateur
+                    {
+                        Id = Guid.Empty,
+                        Nom = "Empty",
+                        Prenom = "Empty",
+                        Grade = "Empty"
+                    };
 
-            return PartialView("AfficherPopUpSuppCdg", vm);
+                Groupe groupe = gDal.GetGroupeById(grp);
+                if (groupe == null || groupe.Equals(typeof(GroupeNull)))
+                    groupe = new Groupe
+                    {
+                        Numero = -1,
+                        Id = Guid.Empty
+                    };
+
+                SuppressionCdgViewModel vm = new SuppressionCdgViewModel
+                {
+                    Groupe = groupe,
+                    AncienCdg = cdg
+                };
+
+                return PartialView("AfficherPopUpSuppCdg", vm);
+            }
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur affichage de la pop-up supp cdg : " + id + " -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur affichage de la pop-up.");
+            }
         }
 
         [Authorize]
@@ -842,19 +935,19 @@ namespace PortailReserve.Controllers
                 if (u == null)
                 {
                     FormsAuthentication.SignOut();
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.Equals(typeof(UtilisateurNull)))
                 {
                     FormsAuthentication.SignOut();
                     ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.PremiereCo)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
                 if (u.Role > 3)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
 
                 Guid idAncienCdg = Guid.Parse(Request.Form["idAncienCdg"]);
                 if (idAncienCdg.Equals(Guid.Empty))
@@ -877,6 +970,7 @@ namespace PortailReserve.Controllers
             }
             catch(Exception e)
             {
+                LOGGER.Log("ERROR", "Erreur suppression du chef de groupe -> " + e);
                 return new HttpStatusCodeResult(400, "Erreur suppression du chef de groupe");
             }
         }
@@ -888,35 +982,43 @@ namespace PortailReserve.Controllers
         [Authorize]
         public ActionResult AfficherPopUpChgmntSoa(Guid id, Guid idSection)
         {
-            Utilisateur soa = uDal.GetUtilisateurById(id);
-            if (soa == null || soa.Equals(typeof(UtilisateurNull)))
-                soa = new Utilisateur
-                {
-                    Grade = "Soldat",
-                    Nom = "Empty",
-                    Prenom = "Empty",
-                    Id = Guid.Empty
-                };
-
-            Section section = sDal.GetSectionById(idSection);
-            if (section == null || section.Equals(typeof(SectionNull)))
-                section = new Section
-                {
-                    Id = Guid.Empty,
-                    Numero = -1
-                };
-
-            ChangementSoaViewModel vm = new ChangementSoaViewModel
+            try
             {
-                Section = section,
-                AncienSoa = soa,
-                SansSection = this.selectSansSection,
-                Grades = this.grades,
-                Roles = this.roles,
-                MotDePasse = GenererMotDePasse()
-            };
+                Utilisateur soa = uDal.GetUtilisateurById(id);
+                if (soa == null || soa.Equals(typeof(UtilisateurNull)))
+                    soa = new Utilisateur
+                    {
+                        Grade = "Soldat",
+                        Nom = "Empty",
+                        Prenom = "Empty",
+                        Id = Guid.Empty
+                    };
 
-            return PartialView("AfficherPopUpChgmntSoa", vm);
+                Section section = sDal.GetSectionById(idSection);
+                if (section == null || section.Equals(typeof(SectionNull)))
+                    section = new Section
+                    {
+                        Id = Guid.Empty,
+                        Numero = -1
+                    };
+
+                ChangementSoaViewModel vm = new ChangementSoaViewModel
+                {
+                    Section = section,
+                    AncienSoa = soa,
+                    SansSection = this.selectSansSection,
+                    Grades = this.grades,
+                    Roles = this.roles,
+                    MotDePasse = GenererMotDePasse()
+                };
+
+                return PartialView("AfficherPopUpChgmntSoa", vm);
+            }
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur affichage de la pop-up changement de soa -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur affichage de la pop-up.");
+            }
         }
 
         [Authorize]
@@ -929,19 +1031,19 @@ namespace PortailReserve.Controllers
                 if (u == null)
                 {
                     FormsAuthentication.SignOut();
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.Equals(typeof(UtilisateurNull)))
                 {
                     FormsAuthentication.SignOut();
                     ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.PremiereCo)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
                 if (u.Role > 2)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
 
                 int numSection = u.Section;
                 int numCie = u.Compagnie;
@@ -1041,6 +1143,7 @@ namespace PortailReserve.Controllers
             }
             catch(Exception e)
             {
+                LOGGER.Log("ERROR", "Erreur changement de SOA -> " + e);
                 return new HttpStatusCodeResult(400, "Erreur lors du changement de SOA");
             }
         }
@@ -1052,30 +1155,38 @@ namespace PortailReserve.Controllers
         [Authorize]
         public ActionResult AfficherPopUpSuppressionSoa(Guid id, Guid idSection)
         {
-            Utilisateur soa = uDal.GetUtilisateurById(id);
-            if (soa == null || soa.Equals(typeof(UtilisateurNull)))
-                soa = new Utilisateur
-                {
-                    Nom = "Empty",
-                    Prenom = "Empty",
-                    Grade = "Soldat",
-                    Id = Guid.Empty
-                };
-
-            Section section = sDal.GetSectionById(idSection);
-            if (section == null || section.Equals(typeof(SectionNull)))
-                section = new Section
-                {
-                    Id = Guid.Empty
-                };
-
-            SuppressionSoaViewModel vm = new SuppressionSoaViewModel
+            try
             {
-                Soa = soa,
-                Section = section
-            };
+                Utilisateur soa = uDal.GetUtilisateurById(id);
+                if (soa == null || soa.Equals(typeof(UtilisateurNull)))
+                    soa = new Utilisateur
+                    {
+                        Nom = "Empty",
+                        Prenom = "Empty",
+                        Grade = "Soldat",
+                        Id = Guid.Empty
+                    };
 
-            return PartialView("AfficherPopUpSuppressionSoa", vm);
+                Section section = sDal.GetSectionById(idSection);
+                if (section == null || section.Equals(typeof(SectionNull)))
+                    section = new Section
+                    {
+                        Id = Guid.Empty
+                    };
+
+                SuppressionSoaViewModel vm = new SuppressionSoaViewModel
+                {
+                    Soa = soa,
+                    Section = section
+                };
+
+                return PartialView("AfficherPopUpSuppressionSoa", vm);
+            }
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur affichage de la pop-up suppression SOA -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur affichage de la pop-up.");
+            }
         }
 
         [Authorize]
@@ -1088,19 +1199,19 @@ namespace PortailReserve.Controllers
                 if (u == null)
                 {
                     FormsAuthentication.SignOut();
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.Equals(typeof(UtilisateurNull)))
                 {
                     FormsAuthentication.SignOut();
                     ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.PremiereCo)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
                 if (u.Role > 2)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
 
                 Guid idAncienSoa = Guid.Parse(Request.Form["idAncienSoa"]);
                 if (idAncienSoa.Equals(Guid.Empty))
@@ -1122,7 +1233,8 @@ namespace PortailReserve.Controllers
             }
             catch(Exception e)
             {
-                return new HttpStatusCodeResult(400, "Erreur suppression SOA.");
+                LOGGER.Log("ERROR", "Erreur suppression SOA -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur suppression SOA.");
             }
         }
 
@@ -1133,35 +1245,43 @@ namespace PortailReserve.Controllers
         [Authorize]
         public ActionResult AfficherPopUpChgmntCds(Guid id, Guid idSection)
         {
-            Utilisateur cds = uDal.GetUtilisateurById(id);
-            if (cds == null || cds.Equals(typeof(UtilisateurNull)))
-                cds = new Utilisateur
-                {
-                    Grade = "Soldat",
-                    Nom = "Empty",
-                    Prenom = "Empty",
-                    Id = Guid.Empty
-                };
-
-            Section section = sDal.GetSectionById(idSection);
-            if (section == null || section.Equals(typeof(SectionNull)))
-                section = new Section
-                {
-                    Id = Guid.Empty,
-                    Numero = -1
-                };
-
-            ChangementSoaViewModel vm = new ChangementSoaViewModel
+            try
             {
-                Section = section,
-                AncienSoa = cds,
-                SansSection = this.selectSansSection,
-                Grades = this.grades,
-                Roles = this.roles,
-                MotDePasse = GenererMotDePasse()
-            };
+                Utilisateur cds = uDal.GetUtilisateurById(id);
+                if (cds == null || cds.Equals(typeof(UtilisateurNull)))
+                    cds = new Utilisateur
+                    {
+                        Grade = "Soldat",
+                        Nom = "Empty",
+                        Prenom = "Empty",
+                        Id = Guid.Empty
+                    };
 
-            return PartialView("AfficherPopUpChgmntCds", vm);
+                Section section = sDal.GetSectionById(idSection);
+                if (section == null || section.Equals(typeof(SectionNull)))
+                    section = new Section
+                    {
+                        Id = Guid.Empty,
+                        Numero = -1
+                    };
+
+                ChangementSoaViewModel vm = new ChangementSoaViewModel
+                {
+                    Section = section,
+                    AncienSoa = cds,
+                    SansSection = this.selectSansSection,
+                    Grades = this.grades,
+                    Roles = this.roles,
+                    MotDePasse = GenererMotDePasse()
+                };
+
+                return PartialView("AfficherPopUpChgmntCds", vm);
+            }
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur affichage de la pop-up changement de CDS -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur affichage de la pop-up.");
+            }
         }
 
         [Authorize]
@@ -1174,19 +1294,19 @@ namespace PortailReserve.Controllers
                 if (u == null)
                 {
                     FormsAuthentication.SignOut();
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.Equals(typeof(UtilisateurNull)))
                 {
                     FormsAuthentication.SignOut();
                     ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.PremiereCo)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
                 if (u.Role > 2)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
 
                 int numSection = u.Section;
                 int numCie = u.Compagnie;
@@ -1286,7 +1406,8 @@ namespace PortailReserve.Controllers
             }
             catch (Exception e)
             {
-                return new HttpStatusCodeResult(400, "Erreur lors du changement de CDS");
+                LOGGER.Log("ERROR", "Erreur changement de CDS -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur lors du changement de CDS");
             }
         }
 
@@ -1297,30 +1418,38 @@ namespace PortailReserve.Controllers
         [Authorize]
         public ActionResult AfficherPopUpSuppressionCds(Guid id, Guid idSection)
         {
-            Utilisateur cds = uDal.GetUtilisateurById(id);
-            if (cds == null || cds.Equals(typeof(UtilisateurNull)))
-                cds = new Utilisateur
-                {
-                    Nom = "Empty",
-                    Prenom = "Empty",
-                    Grade = "Soldat",
-                    Id = Guid.Empty
-                };
-
-            Section section = sDal.GetSectionById(idSection);
-            if (section == null || section.Equals(typeof(SectionNull)))
-                section = new Section
-                {
-                    Id = Guid.Empty
-                };
-
-            SuppressionSoaViewModel vm = new SuppressionSoaViewModel
+            try
             {
-                Soa = cds,
-                Section = section
-            };
+                Utilisateur cds = uDal.GetUtilisateurById(id);
+                if (cds == null || cds.Equals(typeof(UtilisateurNull)))
+                    cds = new Utilisateur
+                    {
+                        Nom = "Empty",
+                        Prenom = "Empty",
+                        Grade = "Soldat",
+                        Id = Guid.Empty
+                    };
 
-            return PartialView("AfficherPopUpSuppressionCds", vm);
+                Section section = sDal.GetSectionById(idSection);
+                if (section == null || section.Equals(typeof(SectionNull)))
+                    section = new Section
+                    {
+                        Id = Guid.Empty
+                    };
+
+                SuppressionSoaViewModel vm = new SuppressionSoaViewModel
+                {
+                    Soa = cds,
+                    Section = section
+                };
+
+                return PartialView("AfficherPopUpSuppressionCds", vm);
+            }
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur affichage de la pop-up de suppression de CDS -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur affichage de la pop-up.");
+            }
         }
 
         [Authorize]
@@ -1333,19 +1462,19 @@ namespace PortailReserve.Controllers
                 if (u == null)
                 {
                     FormsAuthentication.SignOut();
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.Equals(typeof(UtilisateurNull)))
                 {
                     FormsAuthentication.SignOut();
                     ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.PremiereCo)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
                 if (u.Role > 2)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
 
                 Guid idAncienCds = Guid.Parse(Request.Form["idAncienCds"]);
                 if (idAncienCds.Equals(Guid.Empty))
@@ -1367,7 +1496,8 @@ namespace PortailReserve.Controllers
             }
             catch (Exception e)
             {
-                return new HttpStatusCodeResult(400, "Erreur suppression CDS.");
+                LOGGER.Log("ERROR", "Erreur suppression de CDS -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur suppression CDS.");
             }
         }
 
@@ -1378,44 +1508,52 @@ namespace PortailReserve.Controllers
         [Authorize]
         public ActionResult AfficherPopUpAjoutGroupe(Guid id)
         {
-            int numSection = 0;
-            int numGroupe = 0;
-            if (id.Equals(Guid.Empty))
+            try
             {
-                AjoutGroupeViewModel vmEmpty = new AjoutGroupeViewModel
+                int numSection = 0;
+                int numGroupe = 0;
+                if (id.Equals(Guid.Empty))
+                {
+                    AjoutGroupeViewModel vmEmpty = new AjoutGroupeViewModel
+                    {
+                        Section = id,
+                        NumGroupe = numGroupe,
+                        NumSection = numSection
+                    };
+
+                    return PartialView("AfficherPopUpAjoutGroupe", vmEmpty);
+                }
+
+                Section section = sDal.GetSectionById(id);
+                if (section == null || section.Equals(typeof(SectionNull)))
+                {
+                    AjoutGroupeViewModel vmNull = new AjoutGroupeViewModel
+                    {
+                        Section = Guid.Empty,
+                        NumGroupe = numGroupe,
+                        NumSection = numSection
+                    };
+
+                    return PartialView("AfficherPopUpAjoutGroupe", vmNull);
+                }
+
+                numSection = section.Numero;
+                numGroupe = gDal.GetGroupesBySection(id).Count + 1;
+
+                AjoutGroupeViewModel vm = new AjoutGroupeViewModel
                 {
                     Section = id,
-                    NumGroupe = numGroupe,
-                    NumSection = numSection
+                    NumSection = numSection,
+                    NumGroupe = numGroupe
                 };
 
-                return PartialView("AfficherPopUpAjoutGroupe", vmEmpty);
+                return PartialView("AfficherPopUpAjoutGroupe", vm);
             }
-
-            Section section = sDal.GetSectionById(id);
-            if (section == null || section.Equals(typeof(SectionNull)))
+            catch(Exception e)
             {
-                AjoutGroupeViewModel vmNull = new AjoutGroupeViewModel
-                {
-                    Section = Guid.Empty,
-                    NumGroupe = numGroupe,
-                    NumSection = numSection
-                };
-
-                return PartialView("AfficherPopUpAjoutGroupe", vmNull);
+                LOGGER.Log("ERROR", "Erreur affichage de la pop-up ajout de groupe -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur affichage de la pop-up.");
             }
-
-            numSection = section.Numero;
-            numGroupe = gDal.GetGroupesBySection(id).Count + 1;
-
-            AjoutGroupeViewModel vm = new AjoutGroupeViewModel
-            {
-                Section = id,
-                NumSection = numSection,
-                NumGroupe = numGroupe
-            };
-
-            return PartialView("AfficherPopUpAjoutGroupe", vm);
         }
 
         [HttpPost]
@@ -1437,13 +1575,14 @@ namespace PortailReserve.Controllers
                 Guid idGroupe = gDal.AjouterGroupe(groupe);
 
                 if (idGroupe.Equals(Guid.Empty))
-                    return new HttpStatusCodeResult(500, "Erreur ajout du groupe");
+                    return new HttpStatusCodeResult(400, "Erreur ajout du groupe");
 
                 return RedirectToAction("AfficherPersonnelSection");
             }
             catch(Exception e)
             {
-                return new HttpStatusCodeResult(500);
+                LOGGER.Log("ERROR", "Erreur ajout de nouveau groupe -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur ajout de groupe.");
             }
         }
 
@@ -1454,35 +1593,43 @@ namespace PortailReserve.Controllers
         [Authorize]
         public ActionResult AfficherPopUpChgmntCdu(Guid id, Guid idCie)
         {
-            Utilisateur cdu = uDal.GetUtilisateurById(id);
-            if (cdu == null || cdu.Equals(typeof(UtilisateurNull)))
-                cdu = new Utilisateur
-                {
-                    Grade = "Soldat",
-                    Nom = "Empty",
-                    Prenom = "Empty",
-                    Id = Guid.Empty
-                };
-
-            Compagnie cie = cDal.GetCompagnieById(idCie);
-            if (cie == null || cie.Equals(typeof(CompagnieNull)))
-                cie = new Compagnie
-                {
-                    Id = Guid.Empty,
-                    Numero = -1
-                };
-
-            ChangementCadreComViewModel vm = new ChangementCadreComViewModel
+            try
             {
-                Cie = cie,
-                AncienCadre = cdu,
-                SansSection = this.selectSansSection,
-                Grades = this.grades,
-                Roles = this.roles,
-                MotDePasse = GenererMotDePasse()
-            };
+                Utilisateur cdu = uDal.GetUtilisateurById(id);
+                if (cdu == null || cdu.Equals(typeof(UtilisateurNull)))
+                    cdu = new Utilisateur
+                    {
+                        Grade = "Soldat",
+                        Nom = "Empty",
+                        Prenom = "Empty",
+                        Id = Guid.Empty
+                    };
 
-            return PartialView("AfficherPopUpChgmntCdu", vm);
+                Compagnie cie = cDal.GetCompagnieById(idCie);
+                if (cie == null || cie.Equals(typeof(CompagnieNull)))
+                    cie = new Compagnie
+                    {
+                        Id = Guid.Empty,
+                        Numero = -1
+                    };
+
+                ChangementCadreComViewModel vm = new ChangementCadreComViewModel
+                {
+                    Cie = cie,
+                    AncienCadre = cdu,
+                    SansSection = this.selectSansSection,
+                    Grades = this.grades,
+                    Roles = this.roles,
+                    MotDePasse = GenererMotDePasse()
+                };
+
+                return PartialView("AfficherPopUpChgmntCdu", vm);
+            }
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur affichage de la pop-up changement de CDU -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur affichage de la pop-up.");
+            }
         }
 
         [Authorize]
@@ -1495,19 +1642,19 @@ namespace PortailReserve.Controllers
                 if (u == null)
                 {
                     FormsAuthentication.SignOut();
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.Equals(typeof(UtilisateurNull)))
                 {
                     FormsAuthentication.SignOut();
                     ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.PremiereCo)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
                 if (u.Role > 2)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
 
                 int numSection = u.Section;
                 int numCie = u.Compagnie;
@@ -1607,7 +1754,8 @@ namespace PortailReserve.Controllers
             }
             catch (Exception e)
             {
-                return new HttpStatusCodeResult(400, "Erreur lors du changement de CDU");
+                LOGGER.Log("ERROR", "Erreur changement de CDU -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur lors du changement de CDU");
             }
         }
 
@@ -1618,30 +1766,38 @@ namespace PortailReserve.Controllers
         [Authorize]
         public ActionResult AfficherPopUpSuppressionCdu(Guid id, Guid idCie)
         {
-            Utilisateur cdu = uDal.GetUtilisateurById(id);
-            if (cdu == null || cdu.Equals(typeof(UtilisateurNull)))
-                cdu = new Utilisateur
-                {
-                    Nom = "Empty",
-                    Prenom = "Empty",
-                    Grade = "Soldat",
-                    Id = Guid.Empty
-                };
-
-            Compagnie cie = cDal.GetCompagnieById(idCie);
-            if (cie == null || cie.Equals(typeof(CompagnieNull)))
-                cie = new Compagnie
-                {
-                    Id = Guid.Empty
-                };
-
-            SuppressionCadreComViewModel vm = new SuppressionCadreComViewModel
+            try
             {
-                Cadre = cdu,
-                Cie = cie
-            };
+                Utilisateur cdu = uDal.GetUtilisateurById(id);
+                if (cdu == null || cdu.Equals(typeof(UtilisateurNull)))
+                    cdu = new Utilisateur
+                    {
+                        Nom = "Empty",
+                        Prenom = "Empty",
+                        Grade = "Soldat",
+                        Id = Guid.Empty
+                    };
 
-            return PartialView("AfficherPopUpSuppressionCdu", vm);
+                Compagnie cie = cDal.GetCompagnieById(idCie);
+                if (cie == null || cie.Equals(typeof(CompagnieNull)))
+                    cie = new Compagnie
+                    {
+                        Id = Guid.Empty
+                    };
+
+                SuppressionCadreComViewModel vm = new SuppressionCadreComViewModel
+                {
+                    Cadre = cdu,
+                    Cie = cie
+                };
+
+                return PartialView("AfficherPopUpSuppressionCdu", vm);
+            }
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur affichage de la pop suppression CDU -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur affichage de la pop-up.");
+            }
         }
 
         [Authorize]
@@ -1654,19 +1810,19 @@ namespace PortailReserve.Controllers
                 if (u == null)
                 {
                     FormsAuthentication.SignOut();
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.Equals(typeof(UtilisateurNull)))
                 {
                     FormsAuthentication.SignOut();
                     ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.PremiereCo)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
                 if (u.Role > 2)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
 
                 Guid idAncienCdu = Guid.Parse(Request.Form["idAncienCdu"]);
                 if (idAncienCdu.Equals(Guid.Empty))
@@ -1688,6 +1844,7 @@ namespace PortailReserve.Controllers
             }
             catch (Exception e)
             {
+                LOGGER.Log("ERROR", "Erreur suppression de CDU -> " + e);
                 return new HttpStatusCodeResult(400, "Erreur suppression CDU.");
             }
         }
@@ -1699,35 +1856,43 @@ namespace PortailReserve.Controllers
         [Authorize]
         public ActionResult AfficherPopUpChgmntAdu(Guid id, Guid idCie)
         {
-            Utilisateur adu = uDal.GetUtilisateurById(id);
-            if (adu == null || adu.Equals(typeof(UtilisateurNull)))
-                adu = new Utilisateur
-                {
-                    Grade = "Soldat",
-                    Nom = "Empty",
-                    Prenom = "Empty",
-                    Id = Guid.Empty
-                };
-
-            Compagnie cie = cDal.GetCompagnieById(idCie);
-            if (cie == null || cie.Equals(typeof(CompagnieNull)))
-                cie = new Compagnie
-                {
-                    Id = Guid.Empty,
-                    Numero = -1
-                };
-
-            ChangementCadreComViewModel vm = new ChangementCadreComViewModel
+            try
             {
-                Cie = cie,
-                AncienCadre = adu,
-                SansSection = this.selectSansSection,
-                Grades = this.grades,
-                Roles = this.roles,
-                MotDePasse = GenererMotDePasse()
-            };
+                Utilisateur adu = uDal.GetUtilisateurById(id);
+                if (adu == null || adu.Equals(typeof(UtilisateurNull)))
+                    adu = new Utilisateur
+                    {
+                        Grade = "Soldat",
+                        Nom = "Empty",
+                        Prenom = "Empty",
+                        Id = Guid.Empty
+                    };
 
-            return PartialView("AfficherPopUpChgmntAdu", vm);
+                Compagnie cie = cDal.GetCompagnieById(idCie);
+                if (cie == null || cie.Equals(typeof(CompagnieNull)))
+                    cie = new Compagnie
+                    {
+                        Id = Guid.Empty,
+                        Numero = -1
+                    };
+
+                ChangementCadreComViewModel vm = new ChangementCadreComViewModel
+                {
+                    Cie = cie,
+                    AncienCadre = adu,
+                    SansSection = this.selectSansSection,
+                    Grades = this.grades,
+                    Roles = this.roles,
+                    MotDePasse = GenererMotDePasse()
+                };
+
+                return PartialView("AfficherPopUpChgmntAdu", vm);
+            }
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur affichage de la pop-up changement d'adu -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur affichage de la pop-up.");
+            }
         }
 
         [Authorize]
@@ -1740,19 +1905,19 @@ namespace PortailReserve.Controllers
                 if (u == null)
                 {
                     FormsAuthentication.SignOut();
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.Equals(typeof(UtilisateurNull)))
                 {
                     FormsAuthentication.SignOut();
                     ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.PremiereCo)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
                 if (u.Role > 2)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'authorisation pour cette action.");
 
                 int numSection = u.Section;
                 int numCie = u.Compagnie;
@@ -1852,7 +2017,8 @@ namespace PortailReserve.Controllers
             }
             catch (Exception e)
             {
-                return new HttpStatusCodeResult(400, "Erreur lors du changement de ADU");
+                LOGGER.Log("ERROR", "Erreur changement de dl'adu -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur lors du changement de ADU");
             }
         }
 
@@ -1863,30 +2029,38 @@ namespace PortailReserve.Controllers
         [Authorize]
         public ActionResult AfficherPopUpSuppressionAdu(Guid id, Guid idCie)
         {
-            Utilisateur adu = uDal.GetUtilisateurById(id);
-            if (adu == null || adu.Equals(typeof(UtilisateurNull)))
-                adu = new Utilisateur
-                {
-                    Nom = "Empty",
-                    Prenom = "Empty",
-                    Grade = "Soldat",
-                    Id = Guid.Empty
-                };
-
-            Compagnie cie = cDal.GetCompagnieById(idCie);
-            if (cie == null || cie.Equals(typeof(CompagnieNull)))
-                cie = new Compagnie
-                {
-                    Id = Guid.Empty
-                };
-
-            SuppressionCadreComViewModel vm = new SuppressionCadreComViewModel
+            try
             {
-                Cadre = adu,
-                Cie = cie
-            };
+                Utilisateur adu = uDal.GetUtilisateurById(id);
+                if (adu == null || adu.Equals(typeof(UtilisateurNull)))
+                    adu = new Utilisateur
+                    {
+                        Nom = "Empty",
+                        Prenom = "Empty",
+                        Grade = "Soldat",
+                        Id = Guid.Empty
+                    };
 
-            return PartialView("AfficherPopUpSuppressionAdu", vm);
+                Compagnie cie = cDal.GetCompagnieById(idCie);
+                if (cie == null || cie.Equals(typeof(CompagnieNull)))
+                    cie = new Compagnie
+                    {
+                        Id = Guid.Empty
+                    };
+
+                SuppressionCadreComViewModel vm = new SuppressionCadreComViewModel
+                {
+                    Cadre = adu,
+                    Cie = cie
+                };
+
+                return PartialView("AfficherPopUpSuppressionAdu", vm);
+            }
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur affichage de la pop-up de suppression d'adu -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur affichage de la pop-up.");
+            }
         }
 
         [Authorize]
@@ -1899,19 +2073,19 @@ namespace PortailReserve.Controllers
                 if (u == null)
                 {
                     FormsAuthentication.SignOut();
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.Equals(typeof(UtilisateurNull)))
                 {
                     FormsAuthentication.SignOut();
                     ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.PremiereCo)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
                 if (u.Role > 2)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
 
                 Guid idAncienAdu = Guid.Parse(Request.Form["idAncienAdu"]);
                 if (idAncienAdu.Equals(Guid.Empty))
@@ -1933,6 +2107,7 @@ namespace PortailReserve.Controllers
             }
             catch (Exception e)
             {
+                LOGGER.Log("ERROR", "Erreur lors de la suppression de l'adu -> " + e);
                 return new HttpStatusCodeResult(400, "Erreur suppression ADU.");
             }
         }
@@ -1944,53 +2119,61 @@ namespace PortailReserve.Controllers
         [Authorize]
         public ActionResult AfficherPopUpAjoutSection(Guid id)
         {
-            int numSection = 0;
-            int numCie = 0;
-            if (id.Equals(Guid.Empty))
+            try
             {
-                AjoutSectionViewModel vmEmpty = new AjoutSectionViewModel
+                int numSection = 0;
+                int numCie = 0;
+                if (id.Equals(Guid.Empty))
+                {
+                    AjoutSectionViewModel vmEmpty = new AjoutSectionViewModel
+                    {
+                        Cie = id,
+                        NumCie = numCie,
+                        NumSection = numSection,
+                        Grades = this.grades,
+                        SansSection = this.selectSansSection,
+                        MotDePasse = GenererMotDePasse()
+                    };
+
+                    return PartialView("AfficherPopUpAjoutSection", vmEmpty);
+                }
+
+                Compagnie cie = cDal.GetCompagnieById(id);
+                if (cie == null || cie.Equals(typeof(SectionNull)))
+                {
+                    AjoutSectionViewModel vmNull = new AjoutSectionViewModel
+                    {
+                        Cie = Guid.Empty,
+                        NumCie = numCie,
+                        NumSection = numSection,
+                        Grades = this.grades,
+                        SansSection = this.selectSansSection,
+                        MotDePasse = GenererMotDePasse()
+                    };
+
+                    return PartialView("AfficherPopUpAjoutSection", vmNull);
+                }
+
+                numCie = cie.Numero;
+                numSection = sDal.GetSectionsByCompagnie(id).Count;
+
+                AjoutSectionViewModel vm = new AjoutSectionViewModel
                 {
                     Cie = id,
-                    NumCie = numCie,
                     NumSection = numSection,
+                    NumCie = numCie,
                     Grades = this.grades,
                     SansSection = this.selectSansSection,
                     MotDePasse = GenererMotDePasse()
                 };
 
-                return PartialView("AfficherPopUpAjoutSection", vmEmpty);
+                return PartialView("AfficherPopUpAjoutSection", vm);
             }
-
-            Compagnie cie = cDal.GetCompagnieById(id);
-            if (cie == null || cie.Equals(typeof(SectionNull)))
+            catch(Exception e)
             {
-                AjoutSectionViewModel vmNull = new AjoutSectionViewModel
-                {
-                    Cie = Guid.Empty,
-                    NumCie = numCie,
-                    NumSection = numSection,
-                    Grades = this.grades,
-                    SansSection = this.selectSansSection,
-                    MotDePasse = GenererMotDePasse()
-                };
-
-                return PartialView("AfficherPopUpAjoutSection", vmNull);
+                LOGGER.Log("ERROR", "Erreur affichage de la pop-up ajout de nouvelle section -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur affichage de la pop-up.");
             }
-
-            numCie = cie.Numero;
-            numSection = sDal.GetSectionsByCompagnie(id).Count;
-
-            AjoutSectionViewModel vm = new AjoutSectionViewModel
-            {
-                Cie = id,
-                NumSection = numSection,
-                NumCie = numCie,
-                Grades = this.grades,
-                SansSection = this.selectSansSection,
-                MotDePasse = GenererMotDePasse()
-            };
-
-            return PartialView("AfficherPopUpAjoutSection", vm);
         }
 
         [HttpPost]
@@ -1999,6 +2182,24 @@ namespace PortailReserve.Controllers
         {
             try
             {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
+
+                if (u.Role > 2)
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
+
                 var idCie = Guid.Parse(Request.Form["Cie"]);
                 var numSection = Int32.Parse(Request.Form["NumSection"]);
 
@@ -2022,7 +2223,7 @@ namespace PortailReserve.Controllers
 
                 if (idSection.Equals(Guid.Empty))
                 {
-                    Log("ERROR", "Id section empty pour ajout de nouvelle section.");
+                    LOGGER.Log("ERROR", "Id section empty pour ajout de nouvelle section.");
                     return new HttpStatusCodeResult(500, "Erreur ajout du section");
                 }
 
@@ -2054,7 +2255,7 @@ namespace PortailReserve.Controllers
                     Guid idAdresse = aDal.AjouterAdresse(adresse);
                     if (idAdresse.Equals(Guid.Empty))
                     {
-                        Log("ERROR", "Erreur ajout de l'adresse pour nouveau CDS lors d'une ajout section.");
+                        LOGGER.Log("ERROR", "Erreur ajout de l'adresse pour nouveau CDS lors d'une ajout section.");
                         sDal.SupprimerSection(idSection);
                         return new HttpNotFoundResult("Erreur ajout adresse pour nouveau cds.");
                     }
@@ -2080,7 +2281,7 @@ namespace PortailReserve.Controllers
                     Guid idAjout = uDal.AjouterUtilisateur(pourAjout);
                     if (idAjout.Equals(Guid.Empty))
                     {
-                        Log("ERROR", "Erreur ajout du noueau CDS lors de la création de nouvelle section.");
+                        LOGGER.Log("ERROR", "Erreur ajout du noueau CDS lors de la création de nouvelle section.");
                         sDal.SupprimerSection(idSection);
                         aDal.SupprimerAdresse(idAdresse);
                         return new HttpNotFoundResult("Erreur ajout nouvel utilisateur. ");
@@ -2089,7 +2290,7 @@ namespace PortailReserve.Controllers
                     int retour = sDal.ChangerCds(idSection, idAjout);
                     if (retour != 1)
                     {
-                        Log("ERROR", "Erreur changement de CDS lors de la création d'une nouvelle section.");
+                        LOGGER.Log("ERROR", "Erreur changement de CDS lors de la création d'une nouvelle section.");
                         sDal.SupprimerSection(idSection);
                         uDal.SupprimerUtilisateur(idAjout);
                         aDal.SupprimerAdresse(idAdresse);
@@ -2101,7 +2302,7 @@ namespace PortailReserve.Controllers
                     Guid nouveauCds = Guid.Parse(Request.Form["nvCdsExistant"]);
                     if (nouveauCds.Equals(Guid.Empty))
                     {
-                        Log("ERROR", "Erreur id nouveau CDS pour ajout de nouvelle section.");
+                        LOGGER.Log("ERROR", "Erreur id nouveau CDS pour ajout de nouvelle section.");
                         sDal.SupprimerSection(idSection);
                         return new HttpStatusCodeResult(400, "Erreur sur le nouveau cds.");
                     }
@@ -2109,7 +2310,7 @@ namespace PortailReserve.Controllers
                     int retour = uDal.PasserCadre(nouveauCds, numSection, numCie);
                     if (retour != 1)
                     {
-                        Log("ERROR", "Erreur passage cadre nouveau CDS pour ajout nouvelle section.");
+                        LOGGER.Log("ERROR", "Erreur passage cadre nouveau CDS pour ajout nouvelle section.");
                         sDal.SupprimerSection(idSection);
                         return new HttpStatusCodeResult(500, "Erreur passage cadre.");
                     }
@@ -2118,7 +2319,7 @@ namespace PortailReserve.Controllers
                     if (retour != 1)
                     {
                         sDal.SupprimerSection(idSection);
-                        Log("ERROR", "Erreur changement de CDS pour ajout section avec CDS existant.");
+                        LOGGER.Log("ERROR", "Erreur changement de CDS pour ajout section avec CDS existant.");
                         return new HttpStatusCodeResult(500, "Erreur changement de chef de section.");
                     }
                 }
@@ -2127,8 +2328,8 @@ namespace PortailReserve.Controllers
             }
             catch (Exception e)
             {
-                Log("ERROR", "Erreur lors de l'ajout d'une nouvelle section -> " + e);
-                return new HttpStatusCodeResult(500);
+                LOGGER.Log("ERROR", "Erreur lors de l'ajout d'une nouvelle section -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur ajout de nouvelle section.");
             }
         }
 
@@ -2142,19 +2343,19 @@ namespace PortailReserve.Controllers
                 if (u == null)
                 {
                     FormsAuthentication.SignOut();
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.Equals(typeof(UtilisateurNull)))
                 {
                     FormsAuthentication.SignOut();
                     ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
                 }
                 if (u.PremiereCo)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
                 if (u.Role > 3)
-                    return new HttpUnauthorizedResult();
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
 
                 int typePerso = Int32.Parse(Request.Form["typePerso"]);
 
@@ -2168,7 +2369,10 @@ namespace PortailReserve.Controllers
                     case 0:
                         int retour_zero = uDal.SupprimerUtilisateur(idPerso);
                         if (retour_zero != 1)
+                        {
+                            LOGGER.Log("ERROR", "Erreur suppresssion définitive du personnel -> " + idPerso);
                             return new HttpStatusCodeResult(400, "Erreur suppression définitive de personnel.");
+                        }
 
                         return RedirectToAction("AfficherPersonnelSection");
 
@@ -2176,91 +2380,136 @@ namespace PortailReserve.Controllers
                     case 1:
                         Guid idGroupe = Guid.Parse(Request.Form["idGroupe"]);
                         if (idGroupe.Equals(Guid.Empty))
+                        {
+                            LOGGER.Log("ERROR", "Erreur récupération id suppression chef de groupe.");
                             return new HttpStatusCodeResult(400, "Erreur id groupe pour supp def.");
+                        }
 
                         int retour_un = gDal.ChangerCdg(idGroupe, Guid.Empty);
                         if (retour_un != 1)
+                        {
+                            LOGGER.Log("ERROR", "Erreur remise à zéro du cdg pour le groupe -> " + idGroupe);
                             return new HttpStatusCodeResult(400, "Erreur de changer cdg groupe pour supp def.");
+                        }
 
                         retour_un = uDal.SupprimerUtilisateur(idPerso);
                         if (retour_un != 1)
+                        {
+                            LOGGER.Log("ERROR", "Erreur suppression définitive du cdg -> " + idPerso);
                             return new HttpStatusCodeResult(400, "Erreur supp def cdg de la section");
+                        }
 
                         return RedirectToAction("AfficherPersonnelSection");
 
                     // sous-officier adjoint
                     case 2:
                         if (u.Role > 2)
-                            return new HttpUnauthorizedResult();
+                            return new HttpUnauthorizedResult("Vous n'avez pas l'autorisationn pour cette action.");
 
                         Guid idSection = Guid.Parse(Request.Form["idSection"]);
                         if (idSection.Equals(Guid.Empty))
+                        {
+                            LOGGER.Log("ERROR", "Erreur récupération de l'id du SOA pour suppression définitive.");
                             return new HttpStatusCodeResult(400, "Erreur id section supp def.");
+                        }
 
                         int retour_deux = sDal.ChangerSoa(idSection, Guid.Empty);
                         if (retour_deux != 1)
+                        {
+                            LOGGER.Log("ERROR", "Erreur changement de SOA à zero pour supp def de la section -> " + idSection);
                             return new HttpStatusCodeResult(400, "Erreur changer soa supp def.");
+                        }
 
                         retour_deux = uDal.SupprimerUtilisateur(idPerso);
                         if (retour_deux != 1)
+                        {
+                            LOGGER.Log("ERROR", "Erreur suppression définitive du SOA -> " + idPerso);
                             return new HttpStatusCodeResult(400, "Erreur supp soa de la section pour supp def.");
+                        }
 
                         return RedirectToAction("AfficherPersonnelSection");
 
                     // chef de section
                     case 3:
                         if (u.Role > 2)
-                            return new HttpUnauthorizedResult();
+                            return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
 
                         Guid idSection_trois = Guid.Parse(Request.Form["idSection"]);
                         if (idSection_trois.Equals(Guid.Empty))
+                        {
+                            LOGGER.Log("ERROR", "Erreur récupération de l'id de section pour supp def du cds");
                             return new HttpStatusCodeResult(400, "Erreur id section pour supp dsc def.");
+                        }
 
                         int retour_trois = sDal.ChangerCds(idSection_trois, Guid.Empty);
                         if (retour_trois != 1)
+                        {
+                            LOGGER.Log("ERROR", "Erreur changemment du CDS à zéro pour supp def de la section -> " + idSection_trois);
                             return new HttpStatusCodeResult(400, "Erreur de changer cds pour supp def.");
+                        }
 
                         retour_trois = uDal.SupprimerUtilisateur(idPerso);
                         if (retour_trois != 1)
+                        {
+                            LOGGER.Log("ERROR", "Erreur suppression définitive du CDS -> " + idPerso);
                             return new HttpStatusCodeResult(400, "Erreur supp def cds.");
+                        }
 
                         return RedirectToAction("AfficherPersonnelSection");
 
                     // adjudant d'unité
                     case 4:
                         if (u.Role > 2)
-                            return new HttpUnauthorizedResult();
+                            return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
 
                         Guid idCie_quatre = Guid.Parse(Request.Form["idCie"]);
                         if (idCie_quatre.Equals(Guid.Empty))
+                        {
+                            LOGGER.Log("ERROR", "Erreur récupération de l'id cie pour supp def de l'adu");
                             return new HttpStatusCodeResult(400, "Erreur id compagnie supp def adu.");
+                        }
 
                         int retour_quatre = cDal.ChangerAdu(idCie_quatre, Guid.Empty);
                         if (retour_quatre != 1)
+                        {
+                            LOGGER.Log("ERROR", "Erreur changement adu pour supp def pour la cie -> " + idCie_quatre);
                             return new HttpStatusCodeResult(400, "Erreur de changer adu pour supp def.");
+                        }
 
                         retour_quatre = uDal.SupprimerUtilisateur(idPerso);
                         if (retour_quatre != 1)
+                        {
+                            LOGGER.Log("ERROR", "Erreur suppression définitive de l'adu -> " + idPerso);
                             return new HttpStatusCodeResult(400, "Erreur supp def adu de la compagnie");
+                        }
 
                         return RedirectToAction("AfficherPersonnelSectionCom");
 
-                    // commendant d'unité
+                    // commandant d'unité
                     case 5:
                         if (u.Role > 2)
-                            return new HttpUnauthorizedResult();
+                            return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
 
                         Guid idCie = Guid.Parse(Request.Form["idCie"]);
                         if (idCie.Equals(Guid.Empty))
+                        {
+                            LOGGER.Log("ERROR", "Erreur récupération de l'id cie pour supp def du cdu.");
                             return new HttpStatusCodeResult(400, "Erreur id compagnie pour supp def cdu.");
+                        }
 
                         int retour_cinq = cDal.ChangerCdu(idCie, Guid.Empty);
                         if (retour_cinq != 1)
+                        {
+                            LOGGER.Log("ERROR", "Erreur changement de cdu pour supp def pour la cie -> " + idCie);
                             return new HttpStatusCodeResult(400, "Erreur de changer cdu pour supp def.");
+                        }
 
                         retour_cinq = uDal.SupprimerUtilisateur(idPerso);
                         if (retour_cinq != 1)
+                        {
+                            LOGGER.Log("ERROR", "Erreur suppression définitive du cdu -> " + idPerso);
                             return new HttpStatusCodeResult(400, "Erreur supp def cdu.");
+                        }
 
                         return RedirectToAction("AfficherPersonnelSectionCom");
                     default:
@@ -2269,7 +2518,8 @@ namespace PortailReserve.Controllers
             }
             catch(Exception e)
             {
-                return new HttpStatusCodeResult(500);
+                LOGGER.Log("ERROR", "Erreur suppression définitive d'un personnel -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur suppression définitive d'un personnel");
             }
         }
 
@@ -2280,79 +2530,147 @@ namespace PortailReserve.Controllers
         [Authorize]
         public ActionResult AfficherPopUpModifInfoSection(Guid id, string info)
         {
-            Section section = sDal.GetSectionById(id);
-            if (section == null || section.Equals(typeof(SectionNull)))
-                section = new Section
+            try
+            {
+                Section section = sDal.GetSectionById(id);
+                if (section == null || section.Equals(typeof(SectionNull)))
+                    section = new Section
+                    {
+                        Id = Guid.Empty,
+                        Chant = "",
+                        Devise = "",
+                        Numero = -1
+                    };
+
+                ModifInfoSectionViewModel vm = new ModifInfoSectionViewModel
                 {
-                    Id = Guid.Empty,
-                    Chant = "",
-                    Devise = "",
-                    Numero = -1
+                    Section = section,
+                    Info = info
                 };
 
-            ModifInfoSectionViewModel vm = new ModifInfoSectionViewModel
+                return PartialView("AfficherPopUpModifInfoSection", vm);
+            }
+            catch(Exception e)
             {
-                Section = section,
-                Info = info
-            };
-
-            return PartialView("AfficherPopUpModifInfoSection", vm);
+                LOGGER.Log("ERROR", "Erreur affichage de la pop-up modif infos de la section -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur affichage de la pop-up.");
+            }
         }
 
         [Authorize]
         [HttpPost]
         public ActionResult ChangerInfoSection(ModifInfoSectionViewModel vm)
         {
-            if (vm.Section == null || vm.Section.Id.Equals(Guid.Empty))
-                return new HttpStatusCodeResult(400);
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
-            int retour = sDal.ModifierSection(vm.Section.Id, vm.Section);
-            if (retour != 1)
-                return new HttpStatusCodeResult(500);
+                if (u.Role > 3)
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
 
-            if(vm.Section.Numero.Equals(0))
-                return RedirectToAction("AfficherPersonnelSectionCom");
+                if (vm.Section == null || vm.Section.Id.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400);
 
-            return RedirectToAction("AfficherPersonnelSection");
+                int retour = sDal.ModifierSection(vm.Section.Id, vm.Section);
+                if (retour != 1)
+                    return new HttpStatusCodeResult(500);
+
+                if (vm.Section.Numero.Equals(0))
+                    return RedirectToAction("AfficherPersonnelSectionCom");
+
+                return RedirectToAction("AfficherPersonnelSection");
+            }
+             catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur changement des infos section -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur changement des infos section.");
+            }
         }
 
         [Authorize]
         public ActionResult AfficherPopUpModifInfoCie(Guid id, string info)
         {
-            Compagnie cie = cDal.GetCompagnieById(id);
-            if (cie == null || cie.Equals(typeof(CompagnieNull)))
-                cie = new Compagnie
+            try
+            {
+                Compagnie cie = cDal.GetCompagnieById(id);
+                if (cie == null || cie.Equals(typeof(CompagnieNull)))
+                    cie = new Compagnie
+                    {
+                        Id = Guid.Empty,
+                        Chant = "",
+                        Devise = "",
+                        Numero = -1
+                    };
+
+                ModifInfoCieViewModel vm = new ModifInfoCieViewModel
                 {
-                    Id = Guid.Empty,
-                    Chant = "",
-                    Devise = "",
-                    Numero = -1
+                    Cie = cie,
+                    Info = info
                 };
 
-            ModifInfoCieViewModel vm = new ModifInfoCieViewModel
+                return PartialView("AfficherPopUpModifInfoCie", vm);
+            }
+            catch(Exception e)
             {
-                Cie = cie,
-                Info = info
-            };
-
-            return PartialView("AfficherPopUpModifInfoCie", vm);
+                LOGGER.Log("ERROR", "Erreur affichage de la pop-up modif infos compagnie -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur affichage de la pop-up.");
+            }
         }
 
         [Authorize]
         [HttpPost]
         public ActionResult ChangerInfoCie(ModifInfoCieViewModel vm)
         {
-            if (vm.Cie == null || vm.Cie.Id.Equals(Guid.Empty))
-                return new HttpStatusCodeResult(400);
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return new HttpUnauthorizedResult("Veuillez vous authentifier.");
+                }
+                if (u.PremiereCo)
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
-            int retour = cDal.ModifierCompagnie(vm.Cie.Id, vm.Cie);
-            if (retour != 1)
-                return new HttpStatusCodeResult(500);
+                if (u.Role > 3)
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
 
-            if (vm.Cie.Numero.Equals(0))
-                return RedirectToAction("AfficherPersonnelSectionCom");
+                if (vm.Cie == null || vm.Cie.Id.Equals(Guid.Empty))
+                    return new HttpStatusCodeResult(400);
 
-            return RedirectToAction("AfficherPersonnelSection");
+                int retour = cDal.ModifierCompagnie(vm.Cie.Id, vm.Cie);
+                if (retour != 1)
+                    return new HttpStatusCodeResult(500);
+
+                if (vm.Cie.Numero.Equals(0))
+                    return RedirectToAction("AfficherPersonnelSectionCom");
+
+                return RedirectToAction("AfficherPersonnelSection");
+            }
+            catch(Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur changement des infos de la compagnie -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur changement des infos de la compagnie.");
+            }
         }
     }
 }

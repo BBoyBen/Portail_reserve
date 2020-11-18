@@ -27,7 +27,7 @@ namespace PortailReserve.Models
         public Guid Groupe { get; set; }
         /***
          * 1 : super admin
-         * 2 : section de commendement
+         * 2 : section de commandement
          * 3 : gestion de section
          * 4 : personnel classique
          ***/
