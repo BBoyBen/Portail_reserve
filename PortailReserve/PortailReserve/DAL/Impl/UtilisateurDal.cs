@@ -119,7 +119,10 @@ namespace PortailReserve.DAL.Impl
             try
             {
                 Utilisateur utilisateur = bdd.Utilisateurs.FirstOrDefault(u => u.Id.ToString().Equals(id));
-                utilisateur.MotDePasse = "";
+                if (utilisateur.MotDePasse != null)
+                {
+                    utilisateur.MotDePasse = "";
+                }
                 return utilisateur;
             }
             catch (NullReferenceException nfe)

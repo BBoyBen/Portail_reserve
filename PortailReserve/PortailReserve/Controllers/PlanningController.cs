@@ -482,24 +482,84 @@ namespace PortailReserve.Controllers
                 ViewBag.Nom = u.Nom.ToUpperInvariant();
                 ViewBag.Role = u.Role;
 
-                List<Evenement> aVenir = eDal.GetEvenementsAVenir();
-                aVenir = TrieEventAVenir(aVenir);
-
-                List<Evenement> passe = eDal.GetEvenementsPasse();
-                passe = TrieEventPasse(passe);
-
-                ListeEventViewModel vm = new ListeEventViewModel()
-                {
-                    AVenir = aVenir,
-                    Passe = passe
-                };
-
-                return View(vm);
+                return View();
             }
             catch(Exception e)
             {
                 LOGGER.Log("ERROR", "Erreur de l'affichage de la liste des evenements -> " + e);
                 return new HttpStatusCodeResult(500, "Exception affichage de la liste des evenements -> " + e.Message);
+            }
+        }
+
+        [Authorize]
+        public ActionResult AfficherEventAVenir()
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
+
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
+
+                List<Evenement> aVenir = eDal.GetEvenementsAVenir();
+                aVenir = TrieEventAVenir(aVenir);
+
+                return PartialView("AfficherEventAVenir", aVenir);
+            }
+            catch (Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur affichage des event à venir -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur affichage des evenements à venir.");
+            }
+        }
+
+        [Authorize]
+        public ActionResult AfficherEventPasse()
+        {
+            try
+            {
+                Utilisateur u = uDal.GetUtilisateurById(HttpContext.User.Identity.Name);
+                if (u == null)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.Equals(typeof(UtilisateurNull)))
+                {
+                    FormsAuthentication.SignOut();
+                    ViewBag.Erreur = ((UtilisateurNull)u).Error;
+                    return RedirectToAction("Index", "Login");
+                }
+                if (u.PremiereCo)
+                    return RedirectToAction("PremiereCo", "Login");
+
+                ViewBag.Grade = u.Grade;
+                ViewBag.Nom = u.Nom.ToUpperInvariant();
+                ViewBag.Role = u.Role;
+
+                List<Evenement> passe = eDal.GetEvenementsPasse();
+                passe = TrieEventPasse(passe);
+
+                return PartialView("AfficherEventPasse", passe);
+            }
+            catch (Exception e)
+            {
+                LOGGER.Log("ERROR", "Erreur affichage des event passé -> " + e);
+                return new HttpStatusCodeResult(500, "Erreur affichage des evenements passés.");
             }
         }
 
@@ -665,7 +725,8 @@ namespace PortailReserve.Controllers
         }
 
         [Authorize]
-        public ActionResult Supprimer (Guid id)
+        [HttpPost]
+        public ActionResult Supprimer ()
         {
             try
             {
@@ -673,33 +734,48 @@ namespace PortailReserve.Controllers
                 if (u == null)
                 {
                     FormsAuthentication.SignOut();
-                    return RedirectToAction("Index", "Login");
+                    return new HttpUnauthorizedResult("Veuillez vous connecter.");
                 }
                 if (u.Equals(typeof(UtilisateurNull)))
                 {
                     FormsAuthentication.SignOut();
                     ViewBag.Erreur = ((UtilisateurNull)u).Error;
-                    return RedirectToAction("Index", "Login");
+                    return new HttpUnauthorizedResult("Veuillez vous connecter.");
                 }
                 if (u.PremiereCo)
-                    return RedirectToAction("PremiereCo", "Login");
+                    return new HttpUnauthorizedResult("Ceci est votre première connexion.");
 
                 ViewBag.Grade = u.Grade;
                 ViewBag.Nom = u.Nom.ToUpperInvariant();
                 ViewBag.Role = u.Role;
 
                 if (u.Role > 3)
-                    return RedirectToAction("Liste", "Planning");
+                    return new HttpUnauthorizedResult("Vous n'avez pas l'autorisation pour cette action.");
+
+                Guid id = Guid.Parse(Request.Form["idEvent"]);
+                if (id.Equals(Guid.Empty))
+                {
+                    return new HttpStatusCodeResult(400, "Erreur suppression évenement.");
+                }
+
+                var type = Request.Form["typeEvent"];
 
                 int retour = eDal.SupprimerEvenement(id);
                 if (retour != 1)
                     ViewBag.Erreur = "Un problème est surbenu lors de la suppression.";
 
-                return RedirectToAction("Liste", "Planning");
+                if (type.Equals("avenir"))
+                {
+                    return RedirectToAction("AfficherEventAVenir");
+                }
+                else
+                {
+                    return RedirectToAction("AfficherEventPasse");
+                }
             }
             catch(Exception e)
             {
-                LOGGER.Log("ERROR", "Erreur suppression de l'evenement : " + id + " -> " + e);
+                LOGGER.Log("ERROR", "Erreur suppression de l'evenement -> " + e);
                 return new HttpStatusCodeResult(500, "Exception suppression de l'evenement -> " + e.Message);
             }
         }

@@ -602,6 +602,8 @@
     <Content Include="Views\Cours\AfficherPopUpSupprimerChant.cshtml" />
     <Content Include="Views\Cours\ModifierChant.cshtml" />
     <Content Include="Views\Profil\Contact.cshtml" />
+    <Content Include="Views\Planning\AfficherEventAVenir.cshtml" />
+    <Content Include="Views\Planning\AfficherEventPasse.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
